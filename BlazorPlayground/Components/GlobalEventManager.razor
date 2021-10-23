@@ -1,0 +1,10 @@
+﻿<CascadingValue Value="OnWindowKeyDown" Name="GlobalEventManager_OnWindowKeyDown">
+    @ChildContent
+</CascadingValue>
+
+@code {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    public HashSet<EventCallback<KeyboardEventArgs>> OnWindowKeyDown = new HashSet<EventCallback<KeyboardEventArgs>>();
+}

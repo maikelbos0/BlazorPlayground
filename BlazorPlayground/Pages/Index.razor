@@ -1,5 +1,13 @@
 ﻿@page "/"
 
+<GlobalEventHandler OnWindowKeyDown="@OnWindowKeyDown" />
+
 <h1>BlazorPlayground</h1>
 
 <p>Here I will try things!</p>
+
+@code {
+    public Task OnWindowKeyDown(KeyboardEventArgs args) {
+        return Task.CompletedTask;
+    }
+}

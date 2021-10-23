@@ -1,0 +1,21 @@
+﻿@implements IDisposable
+
+@code {
+    [CascadingParameter(Name = "GlobalEventManager_OnWindowKeyDown")]
+    private HashSet<EventCallback<KeyboardEventArgs>> OnKeyDown { get; set; }
+
+    [Parameter]
+    public EventCallback<KeyboardEventArgs> OnWindowKeyDown { get; set; }
+
+    protected override Task OnAfterRenderAsync(bool firstRender) {
+        if (firstRender) {
+            OnKeyDown.Add(OnWindowKeyDown);
+        }
+
+        return Task.CompletedTask;
+    }
+
+    public void Dispose() {
+        OnKeyDown.Remove(OnWindowKeyDown);
+    }
+}
