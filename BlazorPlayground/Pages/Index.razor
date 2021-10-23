@@ -6,8 +6,14 @@
 
 <p>Here I will try things!</p>
 
+<p>The last pressed key is: @key</p>
+
 @code {
+    private string key;
+
     public Task OnWindowKeyDown(KeyboardEventArgs args) {
+        key = args.Key;
+
         return Task.CompletedTask;
     }
 }
