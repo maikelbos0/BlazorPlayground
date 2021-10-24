@@ -2,9 +2,18 @@
 
 GlobalEventManager.register = function (dotNetObjectReference) {
     function keyDownHandler(e) {
-        // TODO expand with full keydown event args
+        console.log(e);
+
         dotNetObjectReference.invokeMethodAsync("OnKeyDown", {
-            key: e.key
+            altKey: e.altKey,
+            code: e.code,
+            ctrlKey: e.ctrlKey,
+            key: e.key,
+            location: e.location,
+            metaKey: e.metaKey,
+            repeat: e.repeat,
+            shiftKey: e.shiftKey,
+            type: 'keydown'
         })
             .catch(function (e) {
                 console.log(e);

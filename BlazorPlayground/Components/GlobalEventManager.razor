@@ -23,7 +23,7 @@
 
     [JSInvokable]
     public async Task OnKeyDown(KeyboardEventArgs args) {
-        await Task.WhenAll(OnWindowKeyDown.Select(e => e.InvokeAsync(new KeyboardEventArgs { Key = args.Key })));
+        await Task.WhenAll(OnWindowKeyDown.Select(e => e.InvokeAsync(args)));
     }
 
     public void Dispose() {

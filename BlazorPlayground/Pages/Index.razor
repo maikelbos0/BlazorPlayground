@@ -6,13 +6,27 @@
 
 <p>Here I will try things!</p>
 
-<p>The last pressed key is: @key</p>
+@if (args != null) {
+    <p>The last pressed key:</p>
+
+    <ul>
+        <li>Alt key: @args.AltKey</li>
+        <li>Code: @args.Code</li>
+        <li>Ctrl key: @args.CtrlKey</li>
+        <li>Key: @args.Key</li>
+        <li>Location: @args.Location</li>
+        <li>Meta key: @args.MetaKey</li>
+        <li>Repeat: @args.Repeat</li>
+        <li>Shift key: @args.ShiftKey</li>
+        <li>Type: @args.Type</li>
+    </ul>
+}
 
 @code {
-    private string key;
+    private KeyboardEventArgs args;
 
     public Task OnWindowKeyDown(KeyboardEventArgs args) {
-        key = args.Key;
+        this.args = args;
 
         return Task.CompletedTask;
     }
