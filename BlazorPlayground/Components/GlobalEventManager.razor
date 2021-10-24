@@ -1,16 +1,32 @@
-﻿<CascadingValue Value="OnWindowKeyDown" Name="GlobalEventManager_OnWindowKeyDown">
-    <button @onclick="Test">Test</button>
+﻿@implements IDisposable
+@inject IJSRuntime JSRuntime
 
+<CascadingValue Value="OnWindowKeyDown" Name="GlobalEventManager_OnWindowKeyDown">
     @ChildContent
 </CascadingValue>
 
 @code {
+    private DotNetObjectReference<GlobalEventManager> dotNetObjectReference;
+
     [Parameter]
     public RenderFragment ChildContent { get; set; }
 
     public HashSet<EventCallback<KeyboardEventArgs>> OnWindowKeyDown = new HashSet<EventCallback<KeyboardEventArgs>>();
 
-    public async Task Test() {
-        await Task.WhenAll(OnWindowKeyDown.Select(e => e.InvokeAsync(new KeyboardEventArgs { Key = "T" })));
+    protected override async Task OnAfterRenderAsync(bool firstRender) {
+        if (firstRender) {
+            dotNetObjectReference = DotNetObjectReference.Create(this);
+
+            await JSRuntime.InvokeVoidAsync("GlobalEventManager.register", dotNetObjectReference);
+        }
+    }
+
+    [JSInvokable]
+    public async Task OnKeyDown(KeyboardEventArgs args) {
+        await Task.WhenAll(OnWindowKeyDown.Select(e => e.InvokeAsync(new KeyboardEventArgs { Key = args.Key })));
+    }
+
+    public void Dispose() {
+        dotNetObjectReference.Dispose();
     }
 }
