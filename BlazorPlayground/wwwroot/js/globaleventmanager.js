@@ -1,9 +1,9 @@
 ﻿var GlobalEventManager = {};
 
-GlobalEventManager.register = function (dotNetObjectReference) {
-    function keyDownHandler(e) {
-        console.log(e);
+GlobalEventManager.handlers = {};
 
+GlobalEventManager.register = function (dotNetObjectReference) {
+    let keyDownHandler = function (e) {
         dotNetObjectReference.invokeMethodAsync("OnKeyDown", {
             altKey: e.altKey,
             code: e.code,
@@ -14,12 +14,15 @@ GlobalEventManager.register = function (dotNetObjectReference) {
             repeat: e.repeat,
             shiftKey: e.shiftKey,
             type: 'keydown'
-        })
-            .catch(function (e) {
-                console.log(e);
-                window.removeEventListener("keydown", keyDownHandler);
-            });
+        });
     }
 
+    this.handlers[dotNetObjectReference] = keyDownHandler;
+
     window.addEventListener("keydown", keyDownHandler);
+}
+
+GlobalEventManager.unregister = function (dotNetObjectReference) {
+    window.removeEventListener("keydown", this.handlers[dotNetObjectReference]);
+    delete this.handlers[dotNetObjectReference];
 }

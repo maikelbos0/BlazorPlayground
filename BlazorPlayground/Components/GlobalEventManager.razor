@@ -1,4 +1,4 @@
-﻿@implements IDisposable
+﻿@implements IAsyncDisposable
 @inject IJSRuntime JSRuntime
 
 <CascadingValue Value="OnWindowKeyDown" Name="GlobalEventManager_OnWindowKeyDown">
@@ -26,7 +26,9 @@
         await Task.WhenAll(OnWindowKeyDown.Select(e => e.InvokeAsync(args)));
     }
 
-    public void Dispose() {
+    public async ValueTask DisposeAsync() {
+        await JSRuntime.InvokeVoidAsync("GlobalEventManager.unregister", dotNetObjectReference);
+
         dotNetObjectReference.Dispose();
     }
 }
