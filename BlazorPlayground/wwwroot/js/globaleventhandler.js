@@ -1,8 +1,7 @@
-﻿export let GlobalEventHandler = {};
+﻿
+let handlers = {};
 
-GlobalEventHandler.handlers = {};
-
-GlobalEventHandler.register = function (dotNetObjectReference) {
+export function register(dotNetObjectReference) {
     let keyDownHandler = function (e) {
         dotNetObjectReference.invokeMethodAsync("OnKeyDown", {
             altKey: e.altKey,
@@ -17,12 +16,12 @@ GlobalEventHandler.register = function (dotNetObjectReference) {
         });
     }
 
-    this.handlers[dotNetObjectReference] = keyDownHandler;
+    handlers[dotNetObjectReference] = keyDownHandler;
 
     window.addEventListener("keydown", keyDownHandler);
 }
 
-GlobalEventHandler.unregister = function (dotNetObjectReference) {
-    window.removeEventListener("keydown", this.handlers[dotNetObjectReference]);
-    delete this.handlers[dotNetObjectReference];
+export function unregister (dotNetObjectReference) {
+    window.removeEventListener("keydown", handlers[dotNetObjectReference]);
+    delete handlers[dotNetObjectReference];
 }
