@@ -1,21 +1,29 @@
-﻿@implements IDisposable
+﻿@implements IAsyncDisposable
+@inject IJSRuntime JSRuntime
+
 
 @code {
-    [CascadingParameter(Name = "GlobalEventManager_OnWindowKeyDown")]
-    private HashSet<EventCallback<KeyboardEventArgs>> OnKeyDown { get; set; }
+    private DotNetObjectReference<GlobalEventHandler> dotNetObjectReference;
 
     [Parameter]
     public EventCallback<KeyboardEventArgs> OnWindowKeyDown { get; set; }
 
-    protected override Task OnAfterRenderAsync(bool firstRender) {
+    protected override async Task OnAfterRenderAsync(bool firstRender) {
         if (firstRender) {
-            OnKeyDown.Add(OnWindowKeyDown);
-        }
+            dotNetObjectReference = DotNetObjectReference.Create(this);
 
-        return Task.CompletedTask;
+            await JSRuntime.InvokeVoidAsync("GlobalEventManager.register", dotNetObjectReference);
+        }
     }
 
-    public void Dispose() {
-        OnKeyDown.Remove(OnWindowKeyDown);
+    [JSInvokable]
+    public async Task OnKeyDown(KeyboardEventArgs args) {
+        await OnWindowKeyDown.InvokeAsync(args);
+    }
+
+    public async ValueTask DisposeAsync() {
+        await JSRuntime.InvokeVoidAsync("GlobalEventManager.unregister", dotNetObjectReference);
+
+        dotNetObjectReference.Dispose();
     }
 }
