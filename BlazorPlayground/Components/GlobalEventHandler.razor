@@ -3,6 +3,7 @@
 
 
 @code {
+    private IJSObjectReference moduleReference;
     private DotNetObjectReference<GlobalEventHandler> dotNetObjectReference;
 
     [Parameter]
@@ -10,9 +11,10 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender) {
         if (firstRender) {
+            moduleReference = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./js/globaleventhandler.js");
             dotNetObjectReference = DotNetObjectReference.Create(this);
 
-            await JSRuntime.InvokeVoidAsync("GlobalEventHandler.register", dotNetObjectReference);
+            await moduleReference.InvokeVoidAsync("GlobalEventHandler.register", dotNetObjectReference);
         }
     }
 
@@ -22,7 +24,8 @@
     }
 
     public async ValueTask DisposeAsync() {
-        await JSRuntime.InvokeVoidAsync("GlobalEventHandler.unregister", dotNetObjectReference);
+        await moduleReference.InvokeVoidAsync("GlobalEventHandler.unregister", dotNetObjectReference);
+        await moduleReference.DisposeAsync();
 
         dotNetObjectReference.Dispose();
     }

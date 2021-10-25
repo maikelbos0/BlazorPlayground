@@ -1,4 +1,4 @@
-﻿var GlobalEventHandler = {};
+﻿export let GlobalEventHandler = {};
 
 GlobalEventHandler.handlers = {};
 
