@@ -1,0 +1,21 @@
+﻿
+@if (Parent?.ActiveStep == this) {
+    <h3>@Title</h3>
+
+    @ChildContent
+}
+
+@code {
+    [CascadingParameter]
+    private Wizard Parent { get; set; }
+
+    [Parameter]
+    public string Title { get; set; }
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    protected override void OnInitialized() {
+        Parent.AddStep(this);
+    }
+}

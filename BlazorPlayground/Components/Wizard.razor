@@ -1,0 +1,23 @@
+﻿<h3>Wizard</h3>
+
+<CascadingValue Value="this">
+    @ChildContent
+</CascadingValue>
+
+@code {
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    internal WizardStep ActiveStep { get; private set; }
+
+    private List<WizardStep> Steps { get; set; } = new List<WizardStep>();
+
+    internal void AddStep(WizardStep step) {
+        Steps.Add(step);
+
+        if (ActiveStep == null) {
+            ActiveStep = step;
+        }
+    }
+}
