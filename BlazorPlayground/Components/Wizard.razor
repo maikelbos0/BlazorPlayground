@@ -1,8 +1,21 @@
 ﻿<h3>Wizard</h3>
 
-<CascadingValue Value="this">
-    @ChildContent
-</CascadingValue>
+<div>
+    @foreach (var step in Steps) {
+        if (step == ActiveStep) {
+            <span class="text-primary">@step.Title</span>
+        }
+        else {
+            @step.Title
+        }
+    }
+</div>
+
+<div>
+    <CascadingValue Value="this">
+        @ChildContent
+    </CascadingValue>
+</div>
 
 @code {
 
@@ -19,5 +32,7 @@
         if (ActiveStep == null) {
             ActiveStep = step;
         }
+
+        StateHasChanged();
     }
 }
