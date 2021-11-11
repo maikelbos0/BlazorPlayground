@@ -11,6 +11,12 @@
     public string Title { get; set; }
 
     [Parameter]
+    public EventCallback<InitializeStepEventArgs> OnInitializeStep { get; set; }
+
+    [Parameter]
+    public EventCallback<TryCompleteStepEventArgs> OnTryCompleteStep { get; set; }
+
+    [Parameter]
     public RenderFragment ChildContent { get; set; }
 
     protected override void OnInitialized() {

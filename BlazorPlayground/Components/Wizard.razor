@@ -1,12 +1,12 @@
 ﻿<h3>Wizard</h3>
 
 <div>
-    @foreach (var step in Steps) {
-        if (step == ActiveStep) {
-            <span class="text-primary">@step.Title</span>
+    @for (var index = 0; index < Steps.Count; index++) {
+        if (index == ActiveStepIndex) {
+            <span class="text-primary">@Steps[index].Title</span>
         }
         else {
-            @step.Title
+            @Steps[index].Title
         }
     }
 </div>
@@ -17,22 +17,37 @@
     </CascadingValue>
 </div>
 
+<div>
+    @if (ActiveStepIndex < Steps.Count - 1) {
+        <button @onclick="TryCompleteStep">Next</button>
+    }
+    else if (ActiveStepIndex == Steps.Count - 1) {
+        <button @onclick="TryCompleteStep">Finish</button>
+    }
+</div>
+
 @code {
 
     [Parameter]
     public RenderFragment ChildContent { get; set; }
 
-    internal WizardStep ActiveStep { get; private set; }
-
     private List<WizardStep> Steps { get; set; } = new List<WizardStep>();
+    private int ActiveStepIndex { get; set; } = 0;
+    internal WizardStep ActiveStep => (ActiveStepIndex < Steps.Count) ? Steps[ActiveStepIndex] : null;
 
     internal void AddStep(WizardStep step) {
         Steps.Add(step);
 
-        if (ActiveStep == null) {
-            ActiveStep = step;
-        }
-
         StateHasChanged();
+    }
+
+    private async Task TryCompleteStep() {
+        var args = new TryCompleteStepEventArgs();
+
+        await ActiveStep.OnTryCompleteStep.InvokeAsync(args);
+
+        if (!args.IsCancelled) {
+            ActiveStepIndex++;
+        }
     }
 }

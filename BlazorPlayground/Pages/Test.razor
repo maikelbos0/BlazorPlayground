@@ -6,11 +6,24 @@
     <WizardStep Title="Step 1">
         A content 1
     </WizardStep>
-    <WizardStep Title="Step 2">
+    <WizardStep Title="Step 2" OnTryCompleteStep="TryCompleteStep2">
+        <div>
+            <input type="checkbox" @bind-value="Step2Check" /> Go next?
+        </div>
         A content 2
+    </WizardStep>
+    <WizardStep Title="Step 3">
+        A last content
     </WizardStep>
 </Wizard>
 
 @code {
+    // TODO maybe add an finished component?
+    // TODO initialize step?
 
+    public bool Step2Check { get; set; }
+
+    public void TryCompleteStep2(TryCompleteStepEventArgs args) {
+        args.IsCancelled = !Step2Check;
+    }
 }
