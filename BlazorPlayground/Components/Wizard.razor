@@ -28,15 +28,19 @@
 
 @code {
 
-    [Parameter]
-    public RenderFragment ChildContent { get; set; }
+        [Parameter]
+        public RenderFragment ChildContent { get; set; }
 
     private List<WizardStep> Steps { get; set; } = new List<WizardStep>();
     private int ActiveStepIndex { get; set; } = 0;
     internal WizardStep ActiveStep => (ActiveStepIndex < Steps.Count) ? Steps[ActiveStepIndex] : null;
 
-    internal void AddStep(WizardStep step) {
+    internal async Task AddStep(WizardStep step) {
         Steps.Add(step);
+
+        if (Steps.Count == 1) {
+            await ActiveStep.OnInitializeStep.InvokeAsync(new InitializeStepEventArgs());
+        }
 
         StateHasChanged();
     }
@@ -47,7 +51,12 @@
         await ActiveStep.OnTryCompleteStep.InvokeAsync(args);
 
         if (!args.IsCancelled) {
+
             ActiveStepIndex++;
+
+            if (ActiveStep != null) {
+                await ActiveStep.OnInitializeStep.InvokeAsync(new InitializeStepEventArgs());
+            }
         }
     }
 }

@@ -19,7 +19,7 @@
     [Parameter]
     public RenderFragment ChildContent { get; set; }
 
-    protected override void OnInitialized() {
-        Parent.AddStep(this);
+    protected override async Task OnInitializedAsync() {
+        await Parent.AddStep(this);
     }
 }

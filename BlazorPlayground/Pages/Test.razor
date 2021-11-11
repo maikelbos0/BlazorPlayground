@@ -3,10 +3,10 @@
 <h1>BlazorPlayground Test</h1>
 
 <Wizard>
-    <WizardStep Title="Step 1">
+    <WizardStep Title="Step 1" OnInitializeStep="InitStep1">
         A content 1
     </WizardStep>
-    <WizardStep Title="Step 2" OnTryCompleteStep="TryCompleteStep2">
+    <WizardStep Title="Step 2" OnInitializeStep="InitStep2" OnTryCompleteStep="TryCompleteStep2">
         <div>
             <input type="checkbox" @bind-value="Step2Check" /> Go next?
         </div>
@@ -17,13 +17,25 @@
     </WizardStep>
 </Wizard>
 
+<div>@Status</div>
+
 @code {
     // TODO maybe add an finished component?
     // TODO initialize step?
+
+    public string Status { get; set; } = string.Empty;
 
     public bool Step2Check { get; set; }
 
     public void TryCompleteStep2(TryCompleteStepEventArgs args) {
         args.IsCancelled = !Step2Check;
+    }
+
+    public void InitStep1() {
+        Status += "Step 1 init! ";
+    }
+
+    public void InitStep2(InitializeStepEventArgs args) {
+        Status += "Step 2 init! ";
     }
 }
