@@ -1,4 +1,5 @@
-﻿<h3>Wizard</h3>
+﻿
+@TitleContent
 
 <div>
     @for (var index = 0; index < Steps.Count; index++) {
@@ -28,10 +29,14 @@
 
 @code {
 
-        [Parameter]
-        public RenderFragment ChildContent { get; set; }
+    [Parameter]
+    public RenderFragment TitleContent { get; set; }
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
 
     private List<WizardStep> Steps { get; set; } = new List<WizardStep>();
+
     private int ActiveStepIndex { get; set; } = 0;
     internal WizardStep ActiveStep => (ActiveStepIndex < Steps.Count) ? Steps[ActiveStepIndex] : null;
 

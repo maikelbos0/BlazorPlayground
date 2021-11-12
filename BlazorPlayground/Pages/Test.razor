@@ -2,26 +2,33 @@
 
 <h1>BlazorPlayground Test</h1>
 
-<Wizard>
-    <WizardStep Title="Step 1" OnInitializeStep="InitStep1">
-        A content 1
-    </WizardStep>
-    <WizardStep Title="Step 2" OnInitializeStep="InitStep2" OnTryCompleteStep="TryCompleteStep2">
-        <div>
-            <input type="checkbox" @bind-value="Step2Check" /> Go next?
-        </div>
-        A content 2
-    </WizardStep>
-    <WizardStep Title="Step 3">
-        A last content
-    </WizardStep>
-</Wizard>
+<div>
+    <Wizard>
+        <TitleContent>
+            <h2>Test wizard</h2>
+        </TitleContent>
+        <ChildContent>
+            <WizardStep Title="Step 1" OnInitializeStep="InitStep1">
+                A content 1
+            </WizardStep>
+            <WizardStep Title="Step 2" OnInitializeStep="InitStep2" OnTryCompleteStep="TryCompleteStep2">
+                <div>
+                    <input type="checkbox" @bind-value="Step2Check" /> Go next?
+                </div>
+                A content 2
+            </WizardStep>
+            <WizardStep Title="Step 3">
+                A last content
+            </WizardStep>
+        </ChildContent>
+    </Wizard>
+</div>
 
 <div>@Status</div>
 
 @code {
-    // TODO maybe add an finished component?
-    // TODO initialize step?
+    // TODO fix child content situation
+    // TODO show/hide
 
     public string Status { get; set; } = string.Empty;
 
