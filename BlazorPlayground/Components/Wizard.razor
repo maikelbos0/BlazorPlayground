@@ -14,7 +14,7 @@
 
 <div>
     <CascadingValue Value="this">
-        @ChildContent
+        @WizardSteps
     </CascadingValue>
 </div>
 
@@ -33,7 +33,7 @@
     public RenderFragment TitleContent { get; set; }
 
     [Parameter]
-    public RenderFragment ChildContent { get; set; }
+    public RenderFragment WizardSteps { get; set; }
 
     private List<WizardStep> Steps { get; set; } = new List<WizardStep>();
 

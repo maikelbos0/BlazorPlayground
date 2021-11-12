@@ -7,7 +7,7 @@
         <TitleContent>
             <h2>Test wizard</h2>
         </TitleContent>
-        <ChildContent>
+        <WizardSteps>
             <WizardStep Title="Step 1" OnInitializeStep="InitStep1">
                 A content 1
             </WizardStep>
@@ -20,14 +20,13 @@
             <WizardStep Title="Step 3">
                 A last content
             </WizardStep>
-        </ChildContent>
+        </WizardSteps>
     </Wizard>
 </div>
 
 <div>@Status</div>
 
 @code {
-    // TODO fix child content situation
     // TODO show/hide
 
     public string Status { get; set; } = string.Empty;
