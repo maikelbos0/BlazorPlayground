@@ -17,7 +17,7 @@
             </WizardStep>
             <WizardStep Title="Step 2" OnInitializeStep="InitStep2" OnTryCompleteStep="TryCompleteStep2">
                 <div>
-                    <input type="checkbox" @bind-value="Step2Check" /> Go next?
+                    <input type="checkbox" @bind="Step2Check" /> Go next?
                 </div>
                 A content 2
             </WizardStep>
@@ -35,7 +35,7 @@
 
     public string Status { get; set; } = string.Empty;
 
-    public bool Step2Check { get; set; }
+    public bool Step2Check { get; set; } = true;
 
     public void TryCompleteStep2(TryCompleteStepEventArgs args) {
         args.IsCancelled = !Step2Check;
