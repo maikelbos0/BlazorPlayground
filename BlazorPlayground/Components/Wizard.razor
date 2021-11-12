@@ -1,33 +1,39 @@
-﻿
-@TitleContent
+﻿<CascadingValue Value="this">
+    @if (IsActive) {
+        @TitleContent
 
-<div>
-    @for (var index = 0; index < Steps.Count; index++) {
-        if (index == ActiveStepIndex) {
-            <span class="text-primary">@Steps[index].Title</span>
-        }
-        else {
-            @Steps[index].Title
-        }
+        <div>
+            @for (var index = 0; index < Steps.Count; index++) {
+                if (index == ActiveStepIndex) {
+                    <span class="text-primary">@Steps[index].Title</span>
+                }
+                else {
+                    @Steps[index].Title
+                }
+            }
+        </div>
     }
-</div>
 
-<div>
-    <CascadingValue Value="this">
+    <div>
         @WizardSteps
-    </CascadingValue>
-</div>
+    </div>
 
-<div>
-    @if (ActiveStepIndex < Steps.Count - 1) {
-        <button @onclick="TryCompleteStep">Next</button>
+    @if (IsActive) {
+        <div>
+            @if (ActiveStepIndex < Steps.Count - 1) {
+                <button @onclick="TryCompleteStep">Next</button>
+            }
+            else if (ActiveStepIndex == Steps.Count - 1) {
+                <button @onclick="TryCompleteStep">Finish</button>
+            }
+        </div>
     }
-    else if (ActiveStepIndex == Steps.Count - 1) {
-        <button @onclick="TryCompleteStep">Finish</button>
-    }
-</div>
+</CascadingValue>
 
 @code {
+
+    [Parameter]
+    public bool IsVisible { get; set; }
 
     [Parameter]
     public RenderFragment TitleContent { get; set; }
@@ -36,18 +42,26 @@
     public RenderFragment WizardSteps { get; set; }
 
     private List<WizardStep> Steps { get; set; } = new List<WizardStep>();
+    private int? ActiveStepIndex { get; set; }
+    private bool IsActive => ActiveStepIndex.HasValue;
+    internal WizardStep ActiveStep => ActiveStepIndex.HasValue && Steps.Count > ActiveStepIndex.Value ? Steps[ActiveStepIndex.Value] : null;
 
-    private int ActiveStepIndex { get; set; } = 0;
-    internal WizardStep ActiveStep => (ActiveStepIndex < Steps.Count) ? Steps[ActiveStepIndex] : null;
-
-    internal async Task AddStep(WizardStep step) {
-        Steps.Add(step);
-
-        if (Steps.Count == 1) {
-            await ActiveStep.OnInitializeStep.InvokeAsync(new InitializeStepEventArgs());
+    public async Task Start() {
+        if (IsActive) {
+            return;
         }
 
-        StateHasChanged();
+        if (Steps.Any()) {
+            ActiveStepIndex = 0;
+            await ActiveStep.OnInitializeStep.InvokeAsync(new InitializeStepEventArgs());
+            StateHasChanged();
+        }
+    }
+
+    // TODO cancel?
+
+    internal void AddStep(WizardStep step) {
+        Steps.Add(step);
     }
 
     private async Task TryCompleteStep() {
@@ -61,6 +75,9 @@
 
             if (ActiveStep != null) {
                 await ActiveStep.OnInitializeStep.InvokeAsync(new InitializeStepEventArgs());
+            }
+            else {
+                ActiveStepIndex = null;
             }
         }
     }

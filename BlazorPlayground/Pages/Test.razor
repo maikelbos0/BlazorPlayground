@@ -3,7 +3,11 @@
 <h1>BlazorPlayground Test</h1>
 
 <div>
-    <Wizard>
+    <button @onclick="() => Wizard.Start()">Show yourself, wizard!</button>
+</div>
+
+<div>
+    <Wizard @ref="Wizard">
         <TitleContent>
             <h2>Test wizard</h2>
         </TitleContent>
@@ -27,7 +31,7 @@
 <div>@Status</div>
 
 @code {
-    // TODO show/hide
+    public Wizard Wizard { get; set; }
 
     public string Status { get; set; } = string.Empty;
 
