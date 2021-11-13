@@ -87,9 +87,13 @@
 
     // TODO cancel?
 
-    internal void AddStep(WizardStep step) {
+    internal async Task AddStep(WizardStep step) {
         if (!StepsInternal.Contains(step)) {
             StepsInternal.Add(step);
+
+            if (StepsInternal.Count == 1) {
+                await ActiveStep.OnInitializeStep.InvokeAsync(new InitializeStepEventArgs());
+            }
         }
     }
 
@@ -105,6 +109,9 @@
             if (ActiveStep == null) {
                 ActiveStepIndex = null;
                 StepsInternal.Clear();
+            }
+            else {
+                await ActiveStep.OnInitializeStep.InvokeAsync(new InitializeStepEventArgs());
             }
         }
     }

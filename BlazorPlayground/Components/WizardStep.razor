@@ -20,9 +20,6 @@
     public RenderFragment ChildContent { get; set; }
 
     protected override async Task OnInitializedAsync() {
-        Parent.AddStep(this);
-
-        // TODO this inits all steps in one go, probably should change that
-        await OnInitializeStep.InvokeAsync(new InitializeStepEventArgs());
+        await Parent.AddStep(this);
     }
 }
