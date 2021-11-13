@@ -6,12 +6,12 @@
             </div>
 
             <div class="@MenuClass">
-                @for (var index = 0; index < Steps.Count; index++) {
+                @for (var index = 0; index < StepsInternal.Count; index++) {
                     if (index == ActiveStepIndex) {
-                        <div class="@MenuItemClass @ActiveMenuItemClass">@Steps[index].Title</div>
+                        <div class="@MenuItemClass @ActiveMenuItemClass">@StepsInternal[index].Title</div>
                     }
                     else {
-                        <div class="@MenuItemClass">@Steps[index].Title</div>
+                        <div class="@MenuItemClass">@StepsInternal[index].Title</div>
                     }
                 }
             </div>
@@ -22,7 +22,7 @@
 
             @if (IsActive) {
                 <div class="@ButtonBarClass">
-                    <button @onclick="TryCompleteStep" class="@ButtonClass">@(ActiveStepIndex < Steps.Count - 1 ? ButtonNextText : ButtonFinishText) </button>
+                    <button @onclick="TryCompleteStep" class="@ButtonClass">@(ActiveStepIndex < StepsInternal.Count - 1 ? ButtonNextText : ButtonFinishText) </button>
                 </div>
             }
         </div>
@@ -68,11 +68,11 @@
     public string ContentClass { get; set; }
 
     [Parameter]
-    public RenderFragment WizardSteps { get; set; }
+    public RenderFragment Steps { get; set; }
 
-    private List<WizardStep> Steps { get; set; } = new List<WizardStep>();
+    private List<WizardStep> StepsInternal { get; set; } = new List<WizardStep>();
     private int? ActiveStepIndex { get; set; }
-    internal WizardStep ActiveStep => ActiveStepIndex.HasValue && Steps.Count > ActiveStepIndex.Value ? Steps[ActiveStepIndex.Value] : null;
+    internal WizardStep ActiveStep => ActiveStepIndex.HasValue && StepsInternal.Count > ActiveStepIndex.Value ? StepsInternal[ActiveStepIndex.Value] : null;
 
     public bool IsActive => ActiveStepIndex.HasValue;
 
@@ -88,8 +88,8 @@
     // TODO cancel?
 
     internal void AddStep(WizardStep step) {
-        if (!Steps.Contains(step)) {
-            Steps.Add(step);
+        if (!StepsInternal.Contains(step)) {
+            StepsInternal.Add(step);
         }
     }
 
@@ -104,7 +104,7 @@
 
             if (ActiveStep == null) {
                 ActiveStepIndex = null;
-                Steps.Clear();
+                StepsInternal.Clear();
             }
         }
     }
