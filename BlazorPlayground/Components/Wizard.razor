@@ -1,28 +1,41 @@
 ﻿<CascadingValue Value="this">
     @if (IsActive) {
+        var renderedComponents = new HashSet<WizardComponent>();
+
         <div class="@ContainerClass">
-            <div class="@TitleClass">
-                @TitleContent
-            </div>
 
-            <div class="@MenuClass">
-                @for (var index = 0; index < StepsInternal.Count; index++) {
-                    if (index == ActiveStepIndex) {
-                        <div class="@MenuItemClass @ActiveMenuItemClass">@StepsInternal[index].Title</div>
-                    }
-                    else {
-                        <div class="@MenuItemClass">@StepsInternal[index].Title</div>
-                    }
+            @foreach (var component in LayoutOrder) {
+                switch (component) {
+                    case WizardComponent.Title:
+                        <div class="@TitleClass">
+                            @TitleContent
+                        </div>
+                        break;
+                    case WizardComponent.Menu:
+                        <div class="@MenuClass">
+                            @for (var index = 0; index < StepsInternal.Count; index++) {
+                                if (index == ActiveStepIndex) {
+                                    <div class="@MenuItemClass @ActiveMenuItemClass">@StepsInternal[index].Title</div>
+                                }
+                                else {
+                                    <div class="@MenuItemClass">@StepsInternal[index].Title</div>
+                                }
+                            }
+                        </div>
+                        break;
+
+                    case WizardComponent.Buttons:
+                        <div class="@ButtonBarClass">
+                            <button @onclick="TryCompleteStep" class="@ButtonClass">@(ActiveStepIndex < StepsInternal.Count - 1 ? ButtonNextText : ButtonFinishText) </button>
+                        </div>
+                        break;
+                    case WizardComponent.Content:
+                        <div class="@ContentClass">
+                            @Steps
+                        </div>
+                        break;
                 }
-            </div>
-
-            <div class="@ContentClass">
-                @Steps
-            </div>
-
-            <div class="@ButtonBarClass">
-                <button @onclick="TryCompleteStep" class="@ButtonClass">@(ActiveStepIndex < StepsInternal.Count - 1 ? ButtonNextText : ButtonFinishText) </button>
-            </div>
+            }
         </div>
     }
 </CascadingValue>
@@ -67,6 +80,9 @@
 
     [Parameter]
     public RenderFragment Steps { get; set; }
+
+    [Parameter]
+    public IList<WizardComponent> LayoutOrder { get; set; } = new List<WizardComponent>() { WizardComponent.Title, WizardComponent.Menu, WizardComponent.Buttons, WizardComponent.Content };
 
     private List<WizardStep> StepsInternal { get; set; } = new List<WizardStep>();
     private int? ActiveStepIndex { get; set; }
