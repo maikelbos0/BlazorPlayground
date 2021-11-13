@@ -20,11 +20,9 @@
                 @Steps
             </div>
 
-            @if (IsActive) {
-                <div class="@ButtonBarClass">
-                    <button @onclick="TryCompleteStep" class="@ButtonClass">@(ActiveStepIndex < StepsInternal.Count - 1 ? ButtonNextText : ButtonFinishText) </button>
-                </div>
-            }
+            <div class="@ButtonBarClass">
+                <button @onclick="TryCompleteStep" class="@ButtonClass">@(ActiveStepIndex < StepsInternal.Count - 1 ? ButtonNextText : ButtonFinishText) </button>
+            </div>
         </div>
     }
 </CascadingValue>
