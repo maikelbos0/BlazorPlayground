@@ -1,28 +1,29 @@
 ﻿<CascadingValue Value="this">
     @if (IsActive) {
-        @TitleContent
+        <div class="@ContainerClass">
+            <div class="@TitleClass">
+                @TitleContent
+            </div>
 
-        <div>
-            @for (var index = 0; index < Steps.Count; index++) {
-                if (index == ActiveStepIndex) {
-                    <span class="text-primary">@Steps[index].Title</span>
+            <div class="@MenuClass">
+                @for (var index = 0; index < Steps.Count; index++) {
+                    if (index == ActiveStepIndex) {
+                        <div class="@MenuItemClass @ActiveMenuItemClass">@Steps[index].Title</div>
+                    }
+                    else {
+                        <div class="@MenuItemClass">@Steps[index].Title</div>
+                    }
                 }
-                else {
-                    @Steps[index].Title
-                }
-            }
-        </div>
+            </div>
 
-        <div>
-            @WizardSteps
-        </div>
+            <div class="@ContentClass">
+                @Steps
+            </div>
 
-        <div>
-            @if (ActiveStepIndex < Steps.Count - 1) {
-                <button @onclick="TryCompleteStep">Next</button>
-            }
-            else if (ActiveStepIndex == Steps.Count - 1) {
-                <button @onclick="TryCompleteStep">Finish</button>
+            @if (IsActive) {
+                <div class="@ButtonBarClass">
+                    <button @onclick="TryCompleteStep" class="@ButtonClass">@(ActiveStepIndex < Steps.Count - 1 ? ButtonNextText : ButtonFinishText) </button>
+                </div>
             }
         </div>
     }
@@ -34,15 +35,46 @@
     public bool IsVisible { get; set; }
 
     [Parameter]
+    public string ContainerClass { get; set; }
+
+    [Parameter]
+    public string TitleClass { get; set; }
+
+    [Parameter]
     public RenderFragment TitleContent { get; set; }
+
+    [Parameter]
+    public string MenuClass { get; set; }
+
+    [Parameter]
+    public string MenuItemClass { get; set; }
+
+    [Parameter]
+    public string ActiveMenuItemClass { get; set; }
+
+    [Parameter]
+    public string ButtonBarClass { get; set; }
+
+    [Parameter]
+    public string ButtonClass { get; set; }
+
+    [Parameter]
+    public string ButtonNextText { get; set; } = "Next";
+
+    [Parameter]
+    public string ButtonFinishText { get; set; } = "Finish";
+
+    [Parameter]
+    public string ContentClass { get; set; }
 
     [Parameter]
     public RenderFragment WizardSteps { get; set; }
 
     private List<WizardStep> Steps { get; set; } = new List<WizardStep>();
     private int? ActiveStepIndex { get; set; }
-    private bool IsActive => ActiveStepIndex.HasValue;
     internal WizardStep ActiveStep => ActiveStepIndex.HasValue && Steps.Count > ActiveStepIndex.Value ? Steps[ActiveStepIndex.Value] : null;
+
+    public bool IsActive => ActiveStepIndex.HasValue;
 
     public void Start() {
         if (IsActive) {
