@@ -1,15 +1,23 @@
 ﻿@page "/test"
 
-<h1>BlazorPlayground Test</h1>
+<div class="container">
+    <h1>BlazorPlayground Test</h1>
 
-<div>
-    <button @onclick="() => Wizard.Start()">Show yourself, wizard!</button>
-</div>
+    <div>
+        <button @onclick="() => Wizard.Start()" class="btn btn-primary">Show yourself, wizard!</button>
+    </div>
 
-<div>
-    <Wizard @ref="Wizard">
+    <Wizard @ref="Wizard"
+            ContainerClass="wizard"
+            TitleClass="wizard-title"
+            MenuClass="wizard-menu"
+            MenuItemClass="wizard-menu-item" 
+            ActiveMenuItemClass="wizard-menu-item-active" 
+            ButtonBarClass="wizard-buttons"
+            ButtonClass="wizard-button"
+            ContentClass="wizard-body">
         <TitleContent>
-            <h2>Test wizard</h2>
+            Test wizard
         </TitleContent>
         <WizardSteps>
             <WizardStep Title="Step 1" OnInitializeStep="InitStep1">
@@ -26,9 +34,9 @@
             </WizardStep>
         </WizardSteps>
     </Wizard>
-</div>
 
-<div>@Status</div>
+    <div>@Status</div>
+</div>
 
 @code {
     public Wizard Wizard { get; set; }
