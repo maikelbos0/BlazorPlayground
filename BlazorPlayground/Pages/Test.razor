@@ -11,8 +11,8 @@
             ContainerClass="wizard"
             TitleClass="wizard-title"
             MenuClass="wizard-menu"
-            MenuItemClass="wizard-menu-item" 
-            ActiveMenuItemClass="wizard-menu-item-active" 
+            MenuItemClass="wizard-menu-item"
+            ActiveMenuItemClass="wizard-menu-item-active"
             ButtonBarClass="wizard-buttons"
             ButtonClass="wizard-button"
             ContentClass="wizard-body"
@@ -21,8 +21,14 @@
             Test wizard
         </TitleContent>
         <Steps>
-            <WizardStep Title="Step 1" OnInitializeStep="InitStep1">
-                A content 1
+            <WizardStep Title="Step 1" OnInitializeStep="InitStep1" OnTryCompleteStep="TryCompleteStep1">
+                <EditForm EditContext="Context">
+                    <DataAnnotationsValidator />
+
+                    <label for="Value">Value</label>
+                    <InputText @bind-Value="TestModel.Value" id="Value" />
+                    <ValidationMessage For="() => TestModel.Value" />
+                </EditForm>
             </WizardStep>
             <WizardStep Title="Step 2" OnInitializeStep="InitStep2" OnTryCompleteStep="TryCompleteStep2">
                 <div>
@@ -40,11 +46,22 @@
 </div>
 
 @code {
+    public EditContext Context { get; set; }
+    public Model TestModel { get; set; }
+
     public Wizard Wizard { get; set; }
 
     public string Status { get; set; } = string.Empty;
 
     public bool Step2Check { get; set; } = true;
+
+    protected override void OnInitialized() {
+        Context = new EditContext(TestModel = new Model());
+    }
+
+    public void TryCompleteStep1(TryCompleteStepEventArgs args) {
+        args.IsCancelled = !Context.Validate();
+    }
 
     public void TryCompleteStep2(TryCompleteStepEventArgs args) {
         args.IsCancelled = !Step2Check;
