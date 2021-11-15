@@ -55,10 +55,6 @@
 
     public bool Step2Check { get; set; } = true;
 
-    protected override void OnInitialized() {
-        Context = new EditContext(TestModel = new Model());
-    }
-
     public void TryCompleteStep1(TryCompleteStepEventArgs args) {
         args.IsCancelled = !Context.Validate();
     }
@@ -68,6 +64,7 @@
     }
 
     public void InitStep1() {
+        Context = new EditContext(TestModel = new Model());
         Status += "Step 1 init! ";
     }
 
