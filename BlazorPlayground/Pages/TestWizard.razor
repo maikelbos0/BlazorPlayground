@@ -1,4 +1,5 @@
 ﻿@page "/wizard"
+@page "/wizard/{autostart:bool}"
 
 <div class="container">
     <h1>BlazorPlayground Test</h1>
@@ -46,6 +47,9 @@
 </div>
 
 @code {
+    [Parameter]
+    public bool AutoStart { get; set; }
+
     public EditContext Context { get; set; }
     public Model TestModel { get; set; }
 
@@ -71,4 +75,13 @@
     public void InitStep2(InitializeStepEventArgs args) {
         Status += "Step 2 init! ";
     }
+
+    protected override void OnAfterRender(bool firstRender) {
+        if (firstRender && AutoStart) {
+            Wizard.Start();
+        }
+    }
+
+    // TODO on finished?
+    // TODO inner component test
 }
