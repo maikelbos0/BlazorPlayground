@@ -24,4 +24,20 @@
     protected override async Task OnInitializedAsync() {
         await Parent.AddStep(this);
     }
+
+    internal async Task<InitializeStepEventArgs> InitializeStep() {
+        var args = new InitializeStepEventArgs();
+
+        await OnInitializeStep.InvokeAsync(args);
+
+        return args;
+    }
+
+    internal async Task<TryCompleteStepEventArgs> TryCompleteStep() {
+        var args = new TryCompleteStepEventArgs();
+
+        await OnTryCompleteStep.InvokeAsync(args);
+
+        return args;
+    }
 }
