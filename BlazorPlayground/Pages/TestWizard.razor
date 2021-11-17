@@ -22,7 +22,7 @@
             Test wizard
         </TitleContent>
         <Steps>
-            <WizardStep Title="Step 1" OnInitializeStep="InitStep1" OnTryCompleteStep="TryCompleteStep1">
+            <WizardStep Title="EditForm" OnInitializeStep="InitStep1" OnTryCompleteStep="TryCompleteStep1">
                 <EditForm EditContext="Context">
                     <DataAnnotationsValidator />
 
@@ -37,7 +37,10 @@
                 </div>
                 A content 2
             </WizardStep>
-            <WizardStep Title="Step 3">
+            <WizardStep Title="Component">
+                <Step3 />
+            </WizardStep>
+            <WizardStep Title="Step 4">
                 A last content
             </WizardStep>
         </Steps>

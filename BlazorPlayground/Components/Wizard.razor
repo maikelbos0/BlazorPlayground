@@ -130,6 +130,7 @@
             StepsInternal.Add(step);
 
             if (StepsInternal.Count == 1) {
+                // TODO move to step
                 await ActiveStep.OnInitializeStep.InvokeAsync(new InitializeStepEventArgs());
             }
         }
@@ -138,6 +139,7 @@
     private async Task TryCompleteStep() {
         var args = new TryCompleteStepEventArgs();
 
+        // TODO move to step
         await ActiveStep.OnTryCompleteStep.InvokeAsync(args);
 
         if (!args.IsCancelled) {
@@ -149,6 +151,7 @@
                 StepsInternal.Clear();
             }
             else {
+                // TODO move to step
                 await ActiveStep.OnInitializeStep.InvokeAsync(new InitializeStepEventArgs());
             }
         }

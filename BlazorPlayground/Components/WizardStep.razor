@@ -1,6 +1,8 @@
 ﻿
 @if (Parent?.ActiveStep == this) {
-    @ChildContent
+    <CascadingValue Value="this">
+        @ChildContent
+    </CascadingValue>
 }
 
 @code {
