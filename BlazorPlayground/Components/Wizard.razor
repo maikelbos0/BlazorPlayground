@@ -127,13 +127,13 @@
             StepsInternal.Add(step);
 
             if (StepsInternal.Count == 1) {
-                await ActiveStep.InitializeStep();
+                await ActiveStep.InitializeStep(new InitializeStepEventArgs());
             }
         }
     }
 
     private async Task TryCompleteStep() {
-        var args = await ActiveStep.TryCompleteStep();
+        var args = await ActiveStep.TryCompleteStep(new TryCompleteStepEventArgs());
 
         if (!args.IsCancelled) {
 
@@ -144,7 +144,7 @@
                 StepsInternal.Clear();
             }
             else {
-                await ActiveStep.InitializeStep();
+                await ActiveStep.InitializeStep(new InitializeStepEventArgs());
             }
         }
     }

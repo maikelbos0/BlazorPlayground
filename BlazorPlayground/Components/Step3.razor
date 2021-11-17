@@ -1,28 +1,29 @@
-﻿<EditForm EditContext="Context">
-    <DataAnnotationsValidator />
+﻿@inherits WizardStep
 
-    <label for="Value">Value</label>
-    <InputText @bind-Value="TestModel.Value" id="Value" />
-    <ValidationMessage For="() => TestModel.Value" />
-</EditForm>
+@if (IsActive) {
+    <EditForm EditContext="Context">
+        <DataAnnotationsValidator />
+
+        <label for="Value">Value</label>
+        <InputText @bind-Value="TestModel.Value" id="Value" />
+        <ValidationMessage For="() => TestModel.Value" />
+    </EditForm>
+}
 
 @code {
-
-    [CascadingParameter]
-    public WizardStep WizardStep { get; set; }
 
     public EditContext Context { get; set; }
     public Model TestModel { get; set; }
 
     protected override void OnInitialized() {
         Context = new EditContext(TestModel = new Model());
-
-        // TODO work out how to expose a normal event callback AND a Blazor event callback
-        WizardStep.OnTryCompleteStep = EventCallback.Factory.Create<TryCompleteStepEventArgs>(this, TryCompleteStep);
     }
 
-    public void TryCompleteStep(TryCompleteStepEventArgs args) {
+    internal override async Task<TryCompleteStepEventArgs> TryCompleteStep(TryCompleteStepEventArgs args) {
+        await base.TryCompleteStep(args);
+
         args.IsCancelled = !Context.Validate();
-    }
 
+        return args;
+    }
 }
