@@ -33,7 +33,15 @@ namespace BlazorPlayground.Components {
             StateHasChanged();
         }
 
-        // TODO cancel
+        public void Cancel() {
+            if (!IsActive) {
+                return;
+            }
+
+            ActiveStepIndex = null;
+            StepsInternal.Clear();
+        }
+
         // TODO cancel event
         // TODO finish event
 

@@ -5,7 +5,12 @@
     <h1>BlazorPlayground Test</h1>
 
     <div>
-        <button @onclick="() => Wizard.Start()" class="btn btn-primary">Show yourself, wizard!</button>
+        @if (Wizard != null && Wizard.IsActive) {
+            <button @onclick="() => Wizard.Cancel()" class="btn btn-primary">Be gone, wizard!</button>
+        }
+        else if (Wizard != null) {
+            <button @onclick="() => Wizard.Start()" class="btn btn-primary">Show yourself, wizard!</button>
+        }
     </div>
 
     <Wizard @ref="Wizard"
