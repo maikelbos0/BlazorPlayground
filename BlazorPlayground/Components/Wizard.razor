@@ -44,7 +44,11 @@
                         renderedComponents.Add(WizardComponent.Buttons);
 
                         <div class="@ButtonBarClass">
-                            <button @onclick="TryCompleteStep" class="@ButtonClass">@(ActiveStepIndex < StepsInternal.Count - 1 ? ButtonNextText : ButtonFinishText) </button>
+                            @if (ShowCancelButton) {
+                                <button @onclick="Cancel" class="@ButtonClass">@ButtonCancelText</button>
+                            }
+
+                            <button @onclick="TryCompleteStep" class="@ButtonClass">@(ActiveStepIndex < StepsInternal.Count - 1 ? ButtonNextText : ButtonFinishText)</button>
                         </div>
                         break;
                     case WizardComponent.Content:

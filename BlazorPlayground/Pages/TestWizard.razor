@@ -5,12 +5,8 @@
     <h1>BlazorPlayground Test</h1>
 
     <div>
-        @if (Wizard != null && Wizard.IsActive) {
-            <button @onclick="() => Wizard.Cancel()" class="btn btn-primary">Be gone, wizard!</button>
-        }
-        else if (Wizard != null) {
-            <button @onclick="() => Wizard.Start()" class="btn btn-primary">Show yourself, wizard!</button>
-        }
+        <button @onclick="() => Wizard.Cancel()" class="btn btn-primary">Be gone, wizard!</button>
+        <button @onclick="() => Wizard.Start()" class="btn btn-primary">Show yourself, wizard!</button>
     </div>
 
     <Wizard @ref="Wizard"
@@ -22,7 +18,8 @@
             ButtonBarClass="wizard-buttons"
             ButtonClass="wizard-button"
             ContentClass="wizard-body"
-            LayoutOrder="new List<WizardComponent>() { WizardComponent.Title, WizardComponent.Menu, WizardComponent.Buttons }">
+            LayoutOrder="new List<WizardComponent>() { WizardComponent.Title, WizardComponent.Menu, WizardComponent.Buttons }"
+            ShowCancelButton="true">
         <TitleContent>
             Test wizard
         </TitleContent>
@@ -58,7 +55,6 @@
 
     public EditContext Context { get; set; }
     public Model TestModel { get; set; }
-
     public Wizard Wizard { get; set; }
 
     public string Status { get; set; } = string.Empty;

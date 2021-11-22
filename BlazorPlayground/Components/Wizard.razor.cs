@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 
 namespace BlazorPlayground.Components {
     public partial class Wizard : ComponentBase {
-
         [Parameter] public string ContainerClass { get; set; }
         [Parameter] public string TitleClass { get; set; }
         [Parameter] public RenderFragment TitleContent { get; set; }
@@ -13,6 +12,8 @@ namespace BlazorPlayground.Components {
         [Parameter] public string ActiveMenuItemClass { get; set; }
         [Parameter] public string ButtonBarClass { get; set; }
         [Parameter] public string ButtonClass { get; set; }
+        [Parameter] public bool ShowCancelButton { get; set; }
+        [Parameter] public string ButtonCancelText { get; set; } = "Cancel";
         [Parameter] public string ButtonNextText { get; set; } = "Next";
         [Parameter] public string ButtonFinishText { get; set; } = "Finish";
         [Parameter] public string ContentClass { get; set; }
@@ -40,6 +41,7 @@ namespace BlazorPlayground.Components {
 
             ActiveStepIndex = null;
             StepsInternal.Clear();
+            StateHasChanged();
         }
 
         // TODO cancel event
