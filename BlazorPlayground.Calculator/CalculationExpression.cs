@@ -1,10 +1,18 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace BlazorPlayground.Calculator {
     public class CalculationExpression {
+        private const char openingParenthesis = '(';
+        private const char closingParenthesis = ')';
+        private static readonly HashSet<char> unaryOperator = new HashSet<char>() { '±' };
+        private static readonly HashSet<char> digits = new HashSet<char>() { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+        private static readonly HashSet<char> decimalSeparators = new HashSet<char>() { '.', ',' };
+        private static readonly HashSet<char> binaryOperators = new HashSet<char>() { '/', '÷', '*', '×', '-', '−', '+' };
+
         private readonly List<char> characters = new List<char>();
 
-        public bool AcceptDigit => false;
+        public bool AcceptDigit => !characters.Any() || characters.Last() != closingParenthesis;
 
         public bool AcceptDecimalSeparator => false;
 
