@@ -1,4 +1,5 @@
 ﻿@page "/calculator"
+@using BlazorPlayground.Calculator
 
 <div class="container">
     <h1>Calculator</h1>
@@ -6,79 +7,78 @@
     <div class="row">
         <div class="col-12 col-md-6 col-xl-4">
             <div class="mb-4">
-                <input type="text" readonly="readonly" class="form-control" id="display">
-                <input type="text" class="form-control" id="input">
+                <input type="text" readonly="readonly" class="form-control" id="display" value="@expression.Display">
             </div>
 
             <div class="row mb-4">
                 <div class="col-3">
-                    <button class="btn btn-light w-100">AC</button>
+                    <button class="btn btn-secondary w-100" @onclick="expression.Clear">AC</button>
                 </div>
                 <div class="col-3">
-                    <button class="btn btn-light w-100">(</button>
+                    <button class="btn btn-light w-100" disabled="@(!expression.AcceptOpeningParenthesis)" @onclick="() => Append('(')">(</button>
                 </div>
                 <div class="col-3">
-                    <button class="btn btn-light w-100">)</button>
+                    <button class="btn btn-light w-100" disabled="@(!expression.AcceptClosingParenthesis)" @onclick="() => Append(')')">)</button>
                 </div>
                 <div class="col-3">
-                    <button class="btn btn-light w-100">&divide;</button>
-                </div>
-            </div>
-
-            <div class="row mb-4">
-                <div class="col-3">
-                    <button class="btn btn-light w-100">7</button>
-                </div>
-                <div class="col-3">
-                    <button class="btn btn-light w-100">8</button>
-                </div>
-                <div class="col-3">
-                    <button class="btn btn-light w-100">9</button>
-                </div>
-                <div class="col-3">
-                    <button class="btn btn-light w-100">&times;</button>
+                    <button class="btn btn-light w-100" disabled="@(!expression.AcceptBinaryOperator)" @onclick="() => Append('÷')">&divide;</button>
                 </div>
             </div>
 
             <div class="row mb-4">
                 <div class="col-3">
-                    <button class="btn btn-light w-100">4</button>
+                    <button class="btn btn-light w-100" disabled="@(!expression.AcceptDigit)" @onclick="() => Append('7')">7</button>
                 </div>
                 <div class="col-3">
-                    <button class="btn btn-light w-100">5</button>
+                    <button class="btn btn-light w-100" disabled="@(!expression.AcceptDigit)" @onclick="() => Append('8')">8</button>
                 </div>
                 <div class="col-3">
-                    <button class="btn btn-light w-100">6</button>
+                    <button class="btn btn-light w-100" disabled="@(!expression.AcceptDigit)" @onclick="() => Append('9')">9</button>
                 </div>
                 <div class="col-3">
-                    <button class="btn btn-light w-100">&minus;</button>
-                </div>
-            </div>
-
-            <div class="row mb-4">
-                <div class="col-3">
-                    <button class="btn btn-light w-100">1</button>
-                </div>
-                <div class="col-3">
-                    <button class="btn btn-light w-100">2</button>
-                </div>
-                <div class="col-3">
-                    <button class="btn btn-light w-100">3</button>
-                </div>
-                <div class="col-3">
-                    <button class="btn btn-light w-100">+</button>
+                    <button class="btn btn-light w-100" disabled="@(!expression.AcceptBinaryOperator)" @onclick="() => Append('×')">&times;</button>
                 </div>
             </div>
 
             <div class="row mb-4">
                 <div class="col-3">
-                    <button class="btn btn-light w-100">&plusmn;</button>
+                    <button class="btn btn-light w-100" disabled="@(!expression.AcceptDigit)" @onclick="() => Append('4')">4</button>
                 </div>
                 <div class="col-3">
-                    <button class="btn btn-light w-100">0</button>
+                    <button class="btn btn-light w-100" disabled="@(!expression.AcceptDigit)" @onclick="() => Append('5')">5</button>
                 </div>
                 <div class="col-3">
-                    <button class="btn btn-light w-100">,</button>
+                    <button class="btn btn-light w-100" disabled="@(!expression.AcceptDigit)" @onclick="() => Append('6')">6</button>
+                </div>
+                <div class="col-3">
+                    <button class="btn btn-light w-100" disabled="@(!expression.AcceptBinaryOperator)" @onclick="() => Append('−')">&minus;</button>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-3">
+                    <button class="btn btn-light w-100" disabled="@(!expression.AcceptDigit)" @onclick="() => Append('1')">1</button>
+                </div>
+                <div class="col-3">
+                    <button class="btn btn-light w-100" disabled="@(!expression.AcceptDigit)" @onclick="() => Append('2')">2</button>
+                </div>
+                <div class="col-3">
+                    <button class="btn btn-light w-100" disabled="@(!expression.AcceptDigit)" @onclick="() => Append('3')">3</button>
+                </div>
+                <div class="col-3">
+                    <button class="btn btn-light w-100" disabled="@(!expression.AcceptBinaryOperator)" @onclick="() => Append('+')">+</button>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-3">
+                    <button class="btn btn-light w-100" disabled="@(!expression.AcceptUnaryOperator)" @onclick="() => Append('±')">&plusmn;</button>
+                </div>
+                <div class="col-3">
+                    <button class="btn btn-light w-100" disabled="@(!expression.AcceptDigit)" @onclick="() => Append('0')">0</button>
+                </div>
+                <div class="col-3">
+                    <button class="btn btn-light w-100" disabled="@(!expression.AcceptDecimalSeparator)" @onclick="() => Append('.')">.</button>
                 </div>
                 <div class="col-3">
                     <button class="btn btn-primary w-100">=</button>
@@ -89,5 +89,9 @@
 </div>
 
 @code {
+    private CalculationExpression expression = new CalculationExpression();
 
+    private void Append(char c) {
+        
+    }
 }
