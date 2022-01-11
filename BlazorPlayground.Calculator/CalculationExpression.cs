@@ -18,6 +18,10 @@ namespace BlazorPlayground.Calculator {
 
         public string Display => new string(characters.ToArray());
 
+        public CalculationExpression() { }
+
+        internal CalculationExpression(string value) => characters.AddRange(value);
+
         public bool TryAppend(char c) {
             characters.Add(c);
 
