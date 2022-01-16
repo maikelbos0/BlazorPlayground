@@ -5,26 +5,25 @@
     <h1>BlazorPlayground Test</h1>
 
     <div>
-        <button @onclick="() => Wizard.Cancel()" class="btn btn-primary">Be gone, wizard!</button>
+        <button @onclick="() => Wizard.Stop()" class="btn btn-primary">Be gone, wizard!</button>
         <button @onclick="() => Wizard.Start()" class="btn btn-primary">Show yourself, wizard!</button>
     </div>
 
     <Wizard @ref="Wizard"
             ContainerClass="wizard"
-            TitleClass="wizard-title"
-            MenuClass="wizard-menu"
-            MenuItemClass="wizard-menu-item"
-            ActiveMenuItemClass="wizard-menu-item-active"
-            ButtonBarClass="wizard-buttons"
+            TitleContainerClass="wizard-title"
+            StepTitleContainerClass="wizard-menu"
+            StepTitleClass="wizard-menu-item"
+            ActiveStepTitleClass="wizard-menu-item-active"
+            ButtonContainerClass="wizard-buttons"
             ButtonClass="wizard-button"
-            ContentClass="wizard-body"
-            LayoutOrder="new List<WizardComponent>() { WizardComponent.Title, WizardComponent.Menu, WizardComponent.Buttons }"
-            ShowCancelButton="true">
+            ContentContainerClass="wizard-body"
+            AllowCancel="true">
         <TitleContent>
             Test wizard
         </TitleContent>
         <Steps>
-            <WizardStep Title="EditForm" OnInitializeStep="InitStep1" OnTryCompleteStep="TryCompleteStep1">
+            <WizardStep Title="EditForm" OnInitialize="InitStep1" OnTryComplete="TryCompleteStep1">
                 <EditForm EditContext="Context">
                     <DataAnnotationsValidator />
 
@@ -33,13 +32,15 @@
                     <ValidationMessage For="() => TestModel.Value" />
                 </EditForm>
             </WizardStep>
-            <WizardStep Title="Step 2" OnInitializeStep="InitStep2" OnTryCompleteStep="TryCompleteStep2">
+            <WizardStep Title="Step 2" OnInitialize="InitStep2" OnTryComplete="TryCompleteStep2">
                 <div>
                     <input type="checkbox" @bind="Step2Check" /> Go next?
                 </div>
                 A content 2
             </WizardStep>
-            <Step3 Title="Component" />
+            <WizardStep Title="Component">
+                <Step3/>
+            </WizardStep>
             <WizardStep Title="Step 4">
                 A last content
             </WizardStep>
@@ -61,11 +62,11 @@
 
     public bool Step2Check { get; set; } = true;
 
-    public void TryCompleteStep1(TryCompleteStepEventArgs args) {
+    public void TryCompleteStep1(WizardStepAttemptedCompleteEventArgs args) {
         args.IsCancelled = !Context.Validate();
     }
 
-    public void TryCompleteStep2(TryCompleteStepEventArgs args) {
+    public void TryCompleteStep2(WizardStepAttemptedCompleteEventArgs args) {
         args.IsCancelled = !Step2Check;
     }
 
@@ -74,15 +75,14 @@
         Status += "Step 1 init! ";
     }
 
-    public void InitStep2(InitializeStepEventArgs args) {
+    public void InitStep2(WizardStepInitializedEventArgs args) {
         Status += "Step 2 init! ";
     }
 
     protected override void OnAfterRender(bool firstRender) {
         if (firstRender && AutoStart) {
             Wizard.Start();
+            StateHasChanged();
         }
     }
-
-    // TODO on finished?
 }
