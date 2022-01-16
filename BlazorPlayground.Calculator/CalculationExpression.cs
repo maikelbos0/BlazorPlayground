@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace BlazorPlayground.Calculator {
     public class CalculationExpression {
@@ -19,16 +20,19 @@ namespace BlazorPlayground.Calculator {
         public bool AcceptBinaryOperator => false;
 
         public bool AcceptUnaryOperator => false;
-        
+
         public bool AcceptOpeningParenthesis => false;
-        
+
         public bool AcceptClosingParenthesis => false;
 
         public string Display => new string(characters.ToArray());
 
-        public CalculationExpression() { }
+        public CalculationExpression() {
+            groups = new();
+            groups.Push(new());
+        }
 
-        internal CalculationExpression(string value) => characters.AddRange(value);
+        internal CalculationExpression(string value) : this() => characters.AddRange(value);
 
         public bool TryAppend(char c) {
             characters.Add(c);
@@ -41,5 +45,77 @@ namespace BlazorPlayground.Calculator {
         }
 
         override public string ToString() => Display;
+
+        private readonly Stack<SymbolGroup> groups;
+        private StringBuilder? numberBuilder;
+
+        private SymbolGroup CurrentGroup => groups.Peek();
+
+        internal bool Append(ISymbol symbol) => CurrentGroup.Append(symbol);
+
+        internal bool OpenGroup() {
+            var group = new SymbolGroup();
+            var success = CurrentGroup.Append(group);
+
+            if (success) {
+                groups.Push(group);
+            }
+
+            return success;
+        }
+
+        internal bool CloseGroup() {
+            if (groups.Count == 1) {
+                return false;
+            }
+
+            groups.Pop().Close();
+
+            return true;
+        }
+    }
+
+    internal interface ISymbol { }
+
+    internal interface IEvaluatableSymbol : ISymbol { }
+
+    internal class Number : IEvaluatableSymbol {
+        public Number(decimal value) {
+            Value = value;
+        }
+
+        public decimal Value { get; }
+    }
+
+    internal abstract class Operator : ISymbol {
+        public abstract decimal Invoke(decimal left, decimal right);
+    }
+
+    internal class SymbolGroup : IEvaluatableSymbol {
+        private readonly List<ISymbol> symbols = new List<ISymbol>();
+
+        internal bool Append(ISymbol symbol) {
+            if (!symbols.Any() || symbol is IEvaluatableSymbol) {
+                symbols.Add(symbol);
+                return true;
+            }
+
+            if (symbols.LastOrDefault() is IEvaluatableSymbol && symbol is not IEvaluatableSymbol) {
+                symbols.Add(symbol);
+                return true;
+            }
+
+            return false;
+        }
+
+        internal void Close() {
+            while (symbols.LastOrDefault() is not IEvaluatableSymbol) {
+                symbols.RemoveAt(symbols.Count - 1);
+            }
+
+            if (!symbols.Any()) {
+                symbols.Add(new Number(0));
+            }
+        }
     }
 }
