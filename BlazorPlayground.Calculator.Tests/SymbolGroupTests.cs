@@ -94,7 +94,14 @@ namespace BlazorPlayground.Calculator.Tests {
         }
 
         [Fact]
-        public void SymbolGroup_Evaluate_Can_Evaluate_Simple_Expression() {
+        public void SymbolGroup_Can_Evaluate_Empty_Group() {
+            var group = new SymbolGroup();
+
+            Assert.Equal(0M, group.Evaluate());
+        }
+
+        [Fact]
+        public void SymbolGroup_Can_Evaluate_Simple_Expression() {
             var group = new SymbolGroup();
 
             group.Symbols.Add(new Number(2.8M));
@@ -104,11 +111,32 @@ namespace BlazorPlayground.Calculator.Tests {
             Assert.Equal(1.75M, group.Evaluate());
         }
 
-        /*
-         * To test:
-         * - Empty group evaluation
-         * - Multiple statements, same precedence
-         * - Multiple statements, different precedence
-         */
+        [Fact]
+        public void SymbolGroup_Can_Evaluate_Expression_With_Multiple_Same_Precedence_Operators() {
+            var group = new SymbolGroup();
+
+            group.Symbols.Add(new Number(2.8M));
+            group.Symbols.Add(new DivisionOperator());
+            group.Symbols.Add(new Number(1.6M));
+            group.Symbols.Add(new MultiplicationOperator());
+            group.Symbols.Add(new Number(3.2M));
+
+            Assert.Equal(5.6M, group.Evaluate());
+        }
+
+        [Fact]
+        public void SymbolGroup_Can_Evaluate_Expression_With_Multiple_Different_Precedence_Operators() {
+            var group = new SymbolGroup();
+
+            group.Symbols.Add(new Number(2.8M));
+            group.Symbols.Add(new AdditionOperator());
+            group.Symbols.Add(new Number(1.2M));
+            group.Symbols.Add(new MultiplicationOperator());
+            group.Symbols.Add(new Number(3.2M));
+            group.Symbols.Add(new AdditionOperator());
+            group.Symbols.Add(new Number(2.8M));
+
+            Assert.Equal(9.44M, group.Evaluate());
+        }
     }
 }
