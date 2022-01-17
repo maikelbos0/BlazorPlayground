@@ -74,23 +74,4 @@ namespace BlazorPlayground.Calculator {
             return true;
         }
     }
-
-    internal interface ISymbol { }
-
-    internal interface IEvaluatableSymbol : ISymbol {
-        decimal Evaluate();
-    }
-
-    internal class Number : IEvaluatableSymbol {
-        public Number(decimal value) {
-            Value = value;
-        }
-
-
-        public decimal Value { get; }
-
-        public decimal Evaluate() {
-            return Value;
-        }
-    }
 }

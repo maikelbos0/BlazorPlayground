@@ -22,7 +22,7 @@ namespace BlazorPlayground.Calculator {
             }
 
             if (!Symbols.Any()) {
-                Symbols.Add(new Number(0));
+                Symbols.Add(new LiteralNumber(0));
             }
         }
 
@@ -39,7 +39,7 @@ namespace BlazorPlayground.Calculator {
                         var left = (IEvaluatableSymbol)symbols[i - 1];
                         var right = (IEvaluatableSymbol)symbols[i + 1];
 
-                        symbols[i - 1] = new Number(op.Invoke(left.Evaluate(), right.Evaluate()));
+                        symbols[i - 1] = new LiteralNumber(op.Invoke(left.Evaluate(), right.Evaluate()));
                         symbols.RemoveAt(i);
                         symbols.RemoveAt(i);
 
