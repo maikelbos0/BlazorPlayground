@@ -89,8 +89,26 @@ namespace BlazorPlayground.Calculator.Tests {
             var group = new SymbolGroup();
 
             group.Close();
-                        
+
             Assert.Equal(0, Assert.IsType<Number>(Assert.Single(group.Symbols)).Value);
         }
+
+        [Fact]
+        public void SymbolGroup_Evaluate_Can_Evaluate_Simple_Expression() {
+            var group = new SymbolGroup();
+
+            group.Symbols.Add(new Number(2.8M));
+            group.Symbols.Add(new DivisionOperator());
+            group.Symbols.Add(new Number(1.6M));
+
+            Assert.Equal(1.75M, group.Evaluate());
+        }
+
+        /*
+         * To test:
+         * - Empty group evaluation
+         * - Multiple statements, same precedence
+         * - Multiple statements, different precedence
+         */
     }
 }
