@@ -78,7 +78,7 @@ namespace BlazorPlayground.Calculator {
     internal interface ISymbol { }
 
     internal interface IEvaluatableSymbol : ISymbol {
-        //decimal Evaluate();
+        decimal Evaluate();
     }
 
     internal class Number : IEvaluatableSymbol {
@@ -86,15 +86,11 @@ namespace BlazorPlayground.Calculator {
             Value = value;
         }
 
+
         public decimal Value { get; }
-    }
 
-    internal abstract class Operator : ISymbol {
-        // Precedence?
-        public abstract decimal Invoke(decimal left, decimal right);
-    }
-
-    internal class PlusOperator : Operator {
-        public override decimal Invoke(decimal left, decimal right) => left + right;
+        public decimal Evaluate() {
+            return Value;
+        }
     }
 }

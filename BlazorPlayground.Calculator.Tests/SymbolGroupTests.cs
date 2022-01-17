@@ -15,7 +15,7 @@ namespace BlazorPlayground.Calculator.Tests {
         [Fact]
         public void SymbolGroup_Can_Not_Append_Operator_When_Empty() {
             var group = new SymbolGroup();
-            var op = new PlusOperator();
+            var op = new AdditionOperator();
 
             Assert.False(group.Append(op));
             Assert.Empty(group.Symbols);
@@ -27,7 +27,7 @@ namespace BlazorPlayground.Calculator.Tests {
             var number = new Number(0);
 
             group.Symbols.Add(new Number(1));
-            group.Symbols.Add(new PlusOperator());
+            group.Symbols.Add(new AdditionOperator());
 
             Assert.True(group.Append(number));
             Assert.Equal(3, group.Symbols.Count);
@@ -37,10 +37,10 @@ namespace BlazorPlayground.Calculator.Tests {
         [Fact]
         public void SymbolGroup_Can_Not_Append_Operator_When_Last_Symbol_Is_Operator() {
             var group = new SymbolGroup();
-            var op = new PlusOperator();
+            var op = new AdditionOperator();
 
             group.Symbols.Add(new Number(1));
-            group.Symbols.Add(new PlusOperator());
+            group.Symbols.Add(new AdditionOperator());
 
             Assert.False(group.Append(op));
             Assert.Equal(2, group.Symbols.Count);
@@ -49,7 +49,7 @@ namespace BlazorPlayground.Calculator.Tests {
         [Fact]
         public void SymbolGroup_Can_Append_Operator_When_Last_Symbol_Is_Number() {
             var group = new SymbolGroup();
-            var op = new PlusOperator();
+            var op = new AdditionOperator();
 
             group.Symbols.Add(new Number(1));
 
@@ -74,10 +74,10 @@ namespace BlazorPlayground.Calculator.Tests {
             var group = new SymbolGroup();
 
             group.Symbols.Add(new Number(1));
-            group.Symbols.Add(new PlusOperator());
+            group.Symbols.Add(new AdditionOperator());
             group.Symbols.Add(new Number(1));
-            group.Symbols.Add(new PlusOperator());
-            group.Symbols.Add(new PlusOperator());
+            group.Symbols.Add(new AdditionOperator());
+            group.Symbols.Add(new AdditionOperator());
 
             group.Close();
 
