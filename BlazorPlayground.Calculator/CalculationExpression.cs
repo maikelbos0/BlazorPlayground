@@ -77,7 +77,9 @@ namespace BlazorPlayground.Calculator {
 
     internal interface ISymbol { }
 
-    internal interface IEvaluatableSymbol : ISymbol { }
+    internal interface IEvaluatableSymbol : ISymbol {
+        //decimal Evaluate();
+    }
 
     internal class Number : IEvaluatableSymbol {
         public Number(decimal value) {
@@ -88,34 +90,11 @@ namespace BlazorPlayground.Calculator {
     }
 
     internal abstract class Operator : ISymbol {
+        // Precedence?
         public abstract decimal Invoke(decimal left, decimal right);
     }
 
-    internal class SymbolGroup : IEvaluatableSymbol {
-        private readonly List<ISymbol> symbols = new List<ISymbol>();
-
-        internal bool Append(ISymbol symbol) {
-            if (!symbols.Any() || symbol is IEvaluatableSymbol) {
-                symbols.Add(symbol);
-                return true;
-            }
-
-            if (symbols.LastOrDefault() is IEvaluatableSymbol && symbol is not IEvaluatableSymbol) {
-                symbols.Add(symbol);
-                return true;
-            }
-
-            return false;
-        }
-
-        internal void Close() {
-            while (symbols.LastOrDefault() is not IEvaluatableSymbol) {
-                symbols.RemoveAt(symbols.Count - 1);
-            }
-
-            if (!symbols.Any()) {
-                symbols.Add(new Number(0));
-            }
-        }
+    internal class PlusOperator : Operator {
+        public override decimal Invoke(decimal left, decimal right) => left + right;
     }
 }
