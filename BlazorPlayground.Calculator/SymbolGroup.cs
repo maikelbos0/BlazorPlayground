@@ -4,10 +4,11 @@ using System.Linq;
 
 namespace BlazorPlayground.Calculator {
     internal class SymbolGroup : IEvaluatableSymbol {
-        public List<ISymbol> Symbols { get; } = new();
-        public bool LastSymbolIsEvaluatable => Symbols.LastOrDefault() is IEvaluatableSymbol;
+        internal List<ISymbol> Symbols { get; } = new();
+        internal ISymbol? LastSymbol => Symbols.LastOrDefault();
+        public bool LastSymbolIsEvaluatable => LastSymbol is IEvaluatableSymbol;
 
-        public bool Append(ISymbol symbol) {
+        internal bool Append(ISymbol symbol) {
             if (LastSymbolIsEvaluatable == symbol is not IEvaluatableSymbol) {
                 Symbols.Add(symbol);
                 return true;
@@ -16,7 +17,7 @@ namespace BlazorPlayground.Calculator {
             return false;
         }
 
-        public void Close() {
+        internal void Close() {
             while (Symbols.Any() && !LastSymbolIsEvaluatable) {
                 Symbols.RemoveAt(Symbols.Count - 1);
             }

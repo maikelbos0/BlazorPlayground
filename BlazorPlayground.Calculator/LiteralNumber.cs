@@ -2,7 +2,7 @@
     internal class LiteralNumber : IEvaluatableSymbol {
         private readonly decimal value;
 
-        public LiteralNumber(decimal value) {
+        internal LiteralNumber(decimal value) {
             this.value = value;
         }
 

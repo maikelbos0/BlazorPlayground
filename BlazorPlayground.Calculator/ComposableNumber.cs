@@ -7,8 +7,8 @@ namespace BlazorPlayground.Calculator {
         private static readonly HashSet<char> decimalSeparators = new HashSet<char>() { '.', ',' };
         private static readonly HashSet<char> minusCharacters = new HashSet<char>() { '-', '−', '±' };
 
-        public bool IsNegative { get; set; } = false;
-        public List<char> Characters { get; } = new();
+        internal bool IsNegative { get; set; } = false;
+        internal List<char> Characters { get; } = new();
 
         public bool Append(char c) {
             if (minusCharacters.Contains(c)) {
