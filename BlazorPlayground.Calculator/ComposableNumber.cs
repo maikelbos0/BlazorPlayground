@@ -5,10 +5,17 @@ using System.Linq;
 namespace BlazorPlayground.Calculator {
     internal class ComposableNumber : IEvaluatableSymbol {
         private static readonly HashSet<char> decimalSeparators = new HashSet<char>() { '.', ',' };
+        private static readonly HashSet<char> minusCharacters = new HashSet<char>() { '-', '−' };
 
+        public bool IsNegative { get; set; } = false;
         public List<char> Characters { get; } = new();
 
         public bool Append(char c) {
+            if (minusCharacters.Contains(c)) {
+                IsNegative = !IsNegative;
+                return true;
+            }
+
             if (!char.IsDigit(c) && !decimalSeparators.Contains(c)) {
                 return false;
             }
@@ -24,7 +31,12 @@ namespace BlazorPlayground.Calculator {
         public decimal Evaluate() {
             var value = new string(Characters.Select(Normalize).ToArray());
 
-            return decimal.Parse(value, CultureInfo.InvariantCulture);
+            if (IsNegative) {
+                return -decimal.Parse(value, CultureInfo.InvariantCulture);
+            }
+            else {
+                return decimal.Parse(value, CultureInfo.InvariantCulture);
+            }
         }
 
         private char Normalize(char c) {

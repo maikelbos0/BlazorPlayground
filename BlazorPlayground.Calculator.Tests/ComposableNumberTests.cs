@@ -63,16 +63,49 @@ namespace BlazorPlayground.Calculator.Tests {
             Assert.False(number.Append(character));
             Assert.Equal(previousCharacters.Length, number.Characters.Count);
         }
-                
+
         [Theory]
-        [InlineData(".25", 0.25)]
-        [InlineData("25.25", 25.25)]
-        [InlineData("25", 25)]
-        [InlineData(",25", 0.25)]
-        [InlineData("25,25", 25.25)]
-        public void ComposableNumber_Evaluate_Succeeds(string characters, decimal expectedValue) {
+        [InlineData('-')]
+        [InlineData('−')]
+        public void ComposableNumber_Append_Minus_Creates_Negative_Number(char minus) {
             var number = new ComposableNumber();
 
+            number.Characters.Add('5');
+
+            Assert.True(number.Append(minus));
+            Assert.True(number.IsNegative);
+        }
+
+        [Theory]
+        [InlineData('-', '-')]
+        [InlineData('−', '-')]
+        [InlineData('-', '−')]
+        [InlineData('−', '−')]
+        public void ComposableNumber_Append_Minus_Twice_Creates_Positive_Number(char firstMinus, char secondMinus) {
+            var number = new ComposableNumber();
+
+            number.Characters.Add('5');
+
+            Assert.True(number.Append(firstMinus));
+            Assert.True(number.Append(secondMinus));
+            Assert.False(number.IsNegative);
+        }
+
+        [Theory]
+        [InlineData(false, ".25", 0.25)]
+        [InlineData(false, "25.25", 25.25)]
+        [InlineData(false, "25", 25)]
+        [InlineData(false, ",25", 0.25)]
+        [InlineData(false, "25,25", 25.25)]
+        [InlineData(true, ".25", -0.25)]
+        [InlineData(true, "25.25", -25.25)]
+        [InlineData(true, "25", -25)]
+        [InlineData(true, ",25", -0.25)]
+        [InlineData(true, "25,25", -25.25)]
+        public void ComposableNumber_Evaluate_Succeeds(bool isNegative, string characters, decimal expectedValue) {
+            var number = new ComposableNumber();
+
+            number.IsNegative = isNegative;
             number.Characters.AddRange(characters);
 
             Assert.Equal(expectedValue, number.Evaluate());
