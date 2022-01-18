@@ -4,8 +4,8 @@ using System.Linq;
 
 namespace BlazorPlayground.Calculator {
     internal class ComposableNumber : IEvaluatableSymbol {
-        private static readonly HashSet<char> decimalSeparators = new HashSet<char>() { '.', ',' };
-        private static readonly HashSet<char> minusCharacters = new HashSet<char>() { '-', '−', '±' };
+        private static readonly HashSet<char> decimalSeparators = new() { '.', ',' };
+        private static readonly HashSet<char> minusCharacters = new() { '-', '−', '±' };
 
         internal bool IsNegative { get; set; } = false;
         internal List<char> Characters { get; } = new();

@@ -15,7 +15,7 @@ namespace BlazorPlayground.Calculator.Tests {
         [Fact]
         public void SymbolGroup_Can_Not_Append_Operator_When_Empty() {
             var group = new SymbolGroup();
-            var op = new AdditionOperator();
+            var op = new AdditionOperator('+');
 
             Assert.False(group.Append(op));
             Assert.Empty(group.Symbols);
@@ -27,7 +27,7 @@ namespace BlazorPlayground.Calculator.Tests {
             var LiteralNumber = new LiteralNumber(0);
 
             group.Symbols.Add(new LiteralNumber(1));
-            group.Symbols.Add(new AdditionOperator());
+            group.Symbols.Add(new AdditionOperator('+'));
 
             Assert.True(group.Append(LiteralNumber));
             Assert.Equal(3, group.Symbols.Count);
@@ -37,10 +37,10 @@ namespace BlazorPlayground.Calculator.Tests {
         [Fact]
         public void SymbolGroup_Can_Not_Append_Operator_When_Last_Symbol_Is_Operator() {
             var group = new SymbolGroup();
-            var op = new AdditionOperator();
+            var op = new AdditionOperator('+');
 
             group.Symbols.Add(new LiteralNumber(1));
-            group.Symbols.Add(new AdditionOperator());
+            group.Symbols.Add(new AdditionOperator('+'));
 
             Assert.False(group.Append(op));
             Assert.Equal(2, group.Symbols.Count);
@@ -49,7 +49,7 @@ namespace BlazorPlayground.Calculator.Tests {
         [Fact]
         public void SymbolGroup_Can_Append_Operator_When_Last_Symbol_Is_EvaluatableSymbol() {
             var group = new SymbolGroup();
-            var op = new AdditionOperator();
+            var op = new AdditionOperator('+');
 
             group.Symbols.Add(new LiteralNumber(1));
 
@@ -74,10 +74,10 @@ namespace BlazorPlayground.Calculator.Tests {
             var group = new SymbolGroup();
 
             group.Symbols.Add(new LiteralNumber(1));
-            group.Symbols.Add(new AdditionOperator());
+            group.Symbols.Add(new AdditionOperator('+'));
             group.Symbols.Add(new LiteralNumber(1));
-            group.Symbols.Add(new AdditionOperator());
-            group.Symbols.Add(new AdditionOperator());
+            group.Symbols.Add(new AdditionOperator('+'));
+            group.Symbols.Add(new AdditionOperator('+'));
 
             group.Close();
 
@@ -105,7 +105,7 @@ namespace BlazorPlayground.Calculator.Tests {
             var group = new SymbolGroup();
 
             group.Symbols.Add(new LiteralNumber(2.8M));
-            group.Symbols.Add(new DivisionOperator());
+            group.Symbols.Add(new DivisionOperator('/'));
             group.Symbols.Add(new LiteralNumber(1.6M));
 
             Assert.Equal(1.75M, group.Evaluate());
@@ -116,9 +116,9 @@ namespace BlazorPlayground.Calculator.Tests {
             var group = new SymbolGroup();
 
             group.Symbols.Add(new LiteralNumber(2.8M));
-            group.Symbols.Add(new DivisionOperator());
+            group.Symbols.Add(new DivisionOperator('/'));
             group.Symbols.Add(new LiteralNumber(1.6M));
-            group.Symbols.Add(new MultiplicationOperator());
+            group.Symbols.Add(new MultiplicationOperator('*'));
             group.Symbols.Add(new LiteralNumber(3.2M));
 
             Assert.Equal(5.6M, group.Evaluate());
@@ -129,11 +129,11 @@ namespace BlazorPlayground.Calculator.Tests {
             var group = new SymbolGroup();
 
             group.Symbols.Add(new LiteralNumber(2.8M));
-            group.Symbols.Add(new AdditionOperator());
+            group.Symbols.Add(new AdditionOperator('+'));
             group.Symbols.Add(new LiteralNumber(1.2M));
-            group.Symbols.Add(new MultiplicationOperator());
+            group.Symbols.Add(new MultiplicationOperator('*'));
             group.Symbols.Add(new LiteralNumber(3.2M));
-            group.Symbols.Add(new AdditionOperator());
+            group.Symbols.Add(new AdditionOperator('+'));
             group.Symbols.Add(new LiteralNumber(2.8M));
 
             Assert.Equal(9.44M, group.Evaluate());
