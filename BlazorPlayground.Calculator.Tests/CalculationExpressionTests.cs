@@ -1,38 +1,145 @@
+using System.Linq;
 using Xunit;
 
 namespace BlazorPlayground.Calculator.Tests {
     public class CalculationExpressionTests {
-        [Theory]
-        [InlineData("", true)]
-        [InlineData("1", true)]
-        [InlineData("1.", true)]
-        [InlineData("1.2", true)]
-        [InlineData("1+", true)]
-        [InlineData("1+2", true)]
-        [InlineData("(", true)]
-        [InlineData("(1", true)]
-        [InlineData("(1)", false)]
-        [InlineData("-", true)]
-        public void CalculationExpression_AcceptDigit(string value, bool expected) {
-            var expression = new CalculationExpression(value);
+        [Fact]
+        public void CalculationExpression_TryAppend_Open_Parenthesi_Opens_Group() {
+            var expression = new CalculationExpression();
 
-            Assert.Equal(expected, expression.AcceptDigit);
+            Assert.True(expression.TryAppend('('));
+            Assert.Equal(2, expression.Groups.Count);
         }
 
-        [Theory(Skip = "Refactoring")]
-        [InlineData("", true)]
-        [InlineData("1", true)]
-        [InlineData("1.", false)]
-        [InlineData("1.1", false)]
-        [InlineData("1.1+", true)]
-        [InlineData("(", true)]
-        [InlineData("(1", true)]
-        [InlineData("(1)", false)]
-        [InlineData("-", true)]
-        public void CalculationExpression_AcceptDecimalSeparator(string value, bool expected) {
-            var expression = new CalculationExpression(value);
+        [Fact]
+        public void CalculationExpression_TryAppend_Open_Parenthesi_Closes_Group() {
+            var expression = new CalculationExpression();
+            var group = new SymbolGroup();
 
-            Assert.Equal(expected, expression.AcceptDecimalSeparator);
+            expression.CurrentGroup.Symbols.Add(group);
+            expression.Groups.Push(group);
+
+            Assert.True(expression.TryAppend(')'));
+            Assert.Single(expression.Groups);
+        }
+
+        [Fact]
+        public void CalculationExpression_TryAppend_Operator_Creates_Operator() {
+            var expression = new CalculationExpression();
+
+            expression.CurrentGroup.Symbols.Add(new LiteralNumber(1));
+
+            Assert.True(expression.TryAppend('*'));
+            Assert.Single(expression.Groups);
+            Assert.Equal(2, expression.CurrentGroup.Symbols.Count);
+            Assert.IsType<MultiplicationOperator>(expression.CurrentGroup.Symbols.Last());
+        }
+
+        [Fact]
+        public void CalculationExpression_TryAppend_Operator_Does_Nothing_When_Operator_Not_Allowed() {
+            var expression = new CalculationExpression();
+
+            Assert.False(expression.TryAppend('*'));
+            Assert.Single(expression.Groups);
+            Assert.Empty(expression.CurrentGroup.Symbols);
+        }
+
+        [Fact]
+        public void CalculationExpression_TryAppend_Digit_Creates_New_ComposableNumber() {
+            var expression = new CalculationExpression();
+
+            Assert.True(expression.TryAppend('1'));
+            Assert.Single(expression.Groups);
+            Assert.Equal('1', Assert.Single(Assert.IsType<ComposableNumber>(Assert.Single(expression.CurrentGroup.Symbols)).Characters));
+        }
+
+        [Fact]
+        public void CalculationExpression_TryAppend_Adds_Digit_To_Existing_ComposableNumber() {
+            var expression = new CalculationExpression();
+            var number = new ComposableNumber();
+
+            expression.CurrentGroup.Symbols.Add(number);
+
+            Assert.True(expression.TryAppend('1'));
+            Assert.Single(expression.Groups);
+            Assert.Single(expression.CurrentGroup.Symbols);
+            Assert.Equal('1', Assert.Single(number.Characters));
+        }
+
+        [Fact]
+        public void CalculationExpression_TryAppend_Does_Nothing_For_Invalid_Character() {
+            var expression = new CalculationExpression();
+
+            Assert.False(expression.TryAppend('a'));
+            Assert.Single(expression.Groups);
+            Assert.Empty(expression.CurrentGroup.Symbols);
+        }
+
+        [Fact]
+        public void CalculationExpression_TryAppend_Does_Nothing_For_Invalid_Character_With_Existing_ComposableNumber() {
+            var expression = new CalculationExpression();
+            var number = new ComposableNumber();
+
+            expression.CurrentGroup.Symbols.Add(number);
+
+            Assert.False(expression.TryAppend('a'));
+            Assert.Single(expression.Groups);
+            Assert.Single(expression.CurrentGroup.Symbols);
+            Assert.Empty(number.Characters);
+        }
+
+        [Fact]
+        public void CalculationExpression_Clear_Clears_And_Starts_With_New_Group() {
+            var expression = new CalculationExpression();
+            var group = new SymbolGroup();
+
+            expression.CurrentGroup.Symbols.Add(group);
+            expression.Groups.Push(group);
+            expression.CurrentGroup.Symbols.Add(new LiteralNumber(0));
+
+            expression.Clear();
+
+            Assert.Single(expression.Groups);
+            Assert.Empty(expression.CurrentGroup.Symbols);
+        }
+
+        [Fact]
+        public void CalculationExpression_OpenGroup_Adds_New_Group_And_Opens_It() {
+            var expression = new CalculationExpression();
+
+            Assert.True(expression.OpenGroup());
+            Assert.Equal(2, expression.Groups.Count);
+            Assert.Equal(expression.Groups.Peek(), expression.Groups.Last().Symbols.FirstOrDefault());
+        }
+
+        [Fact]
+        public void CalculationExpression_OpenGroup_Does_Nothing_When_Not_Possible() {
+            var expression = new CalculationExpression();
+
+            expression.CurrentGroup.Symbols.Add(new LiteralNumber(0));
+
+            Assert.False(expression.OpenGroup());
+            Assert.Single(expression.Groups);
+        }
+
+        [Fact]
+        public void CalculationExpression_CloseGroup_Closes_Group() {
+            var expression = new CalculationExpression();
+            var group = new SymbolGroup();
+
+            expression.CurrentGroup.Symbols.Add(group);
+            expression.Groups.Push(group);
+
+            Assert.True(expression.CloseGroup());
+            Assert.Single(expression.Groups);
+        }
+
+        [Fact]
+        public void CalculationExpression_CloseGroup_Does_Nothing_For_Final_Group() {
+            var expression = new CalculationExpression();
+            
+            Assert.False(expression.CloseGroup());
+            Assert.Single(expression.Groups);
         }
     }
 }
