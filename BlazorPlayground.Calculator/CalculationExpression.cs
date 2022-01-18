@@ -34,11 +34,6 @@ namespace BlazorPlayground.Calculator {
             }
         }
 
-        public void Clear() {
-            Groups.Clear();
-            Groups.Push(new());
-        }
-
         internal bool OpenGroup() {
             var group = new SymbolGroup();
             var success = CurrentGroup.Append(group);
@@ -60,8 +55,23 @@ namespace BlazorPlayground.Calculator {
             return true;
         }
 
+        public void Clear() {
+            Groups.Clear();
+            Groups.Push(new());
+        }
+
+        public decimal Evaluate() {
+            while (CloseGroup()) { }
+
+            var value = Groups.Pop().Evaluate();
+
+            Groups.Push(new());
+            CurrentGroup.Append(new LiteralNumber(value));
+
+            return value;
+        }
+
         // TODO:
-        // - Evaluate
         // - ToString
     }
 }

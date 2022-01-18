@@ -89,21 +89,6 @@ namespace BlazorPlayground.Calculator.Tests {
         }
 
         [Fact]
-        public void CalculationExpression_Clear_Clears_And_Starts_With_New_Group() {
-            var expression = new CalculationExpression();
-            var group = new SymbolGroup();
-
-            expression.CurrentGroup.Symbols.Add(group);
-            expression.Groups.Push(group);
-            expression.CurrentGroup.Symbols.Add(new LiteralNumber(0));
-
-            expression.Clear();
-
-            Assert.Single(expression.Groups);
-            Assert.Empty(expression.CurrentGroup.Symbols);
-        }
-
-        [Fact]
         public void CalculationExpression_OpenGroup_Adds_New_Group_And_Opens_It() {
             var expression = new CalculationExpression();
 
@@ -137,9 +122,35 @@ namespace BlazorPlayground.Calculator.Tests {
         [Fact]
         public void CalculationExpression_CloseGroup_Does_Nothing_For_Final_Group() {
             var expression = new CalculationExpression();
-            
+
             Assert.False(expression.CloseGroup());
             Assert.Single(expression.Groups);
+        }
+
+        [Fact]
+        public void CalculationExpression_Clear_Clears_And_Starts_With_New_Group() {
+            var expression = new CalculationExpression();
+            var group = new SymbolGroup();
+
+            expression.CurrentGroup.Symbols.Add(group);
+            expression.Groups.Push(group);
+            expression.CurrentGroup.Symbols.Add(new LiteralNumber(0));
+
+            expression.Clear();
+
+            Assert.Single(expression.Groups);
+            Assert.Empty(expression.CurrentGroup.Symbols);
+        }
+
+        [Fact]
+        public void CalculationExpression_Evaluate_Gives_And_Stores_Result() {
+            var expression = new CalculationExpression();
+
+            expression.CurrentGroup.Symbols.Add(new LiteralNumber(5.5M));
+
+            Assert.Equal(5.5M, expression.Evaluate());
+            Assert.Single(expression.Groups);
+            Assert.Equal(5.5M, Assert.IsType<LiteralNumber>(Assert.Single(expression.CurrentGroup.Symbols)).Evaluate());
         }
     }
 }
