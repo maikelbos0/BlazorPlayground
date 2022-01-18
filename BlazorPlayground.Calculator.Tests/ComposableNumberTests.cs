@@ -67,6 +67,7 @@ namespace BlazorPlayground.Calculator.Tests {
         [Theory]
         [InlineData('-')]
         [InlineData('−')]
+        [InlineData('±')]
         public void ComposableNumber_Append_Minus_Creates_Negative_Number(char minus) {
             var number = new ComposableNumber();
 
@@ -79,8 +80,13 @@ namespace BlazorPlayground.Calculator.Tests {
         [Theory]
         [InlineData('-', '-')]
         [InlineData('−', '-')]
+        [InlineData('±', '-')]
         [InlineData('-', '−')]
         [InlineData('−', '−')]
+        [InlineData('±', '−')]
+        [InlineData('-', '±')]
+        [InlineData('−', '±')]
+        [InlineData('±', '±')]
         public void ComposableNumber_Append_Minus_Twice_Creates_Positive_Number(char firstMinus, char secondMinus) {
             var number = new ComposableNumber();
 

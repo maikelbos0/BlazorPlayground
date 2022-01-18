@@ -5,7 +5,7 @@ using System.Linq;
 namespace BlazorPlayground.Calculator {
     internal class ComposableNumber : IEvaluatableSymbol {
         private static readonly HashSet<char> decimalSeparators = new HashSet<char>() { '.', ',' };
-        private static readonly HashSet<char> minusCharacters = new HashSet<char>() { '-', '−' };
+        private static readonly HashSet<char> minusCharacters = new HashSet<char>() { '-', '−', '±' };
 
         public bool IsNegative { get; set; } = false;
         public List<char> Characters { get; } = new();
