@@ -42,7 +42,6 @@ namespace BlazorPlayground.Calculator {
                         symbols[i - 1] = new LiteralNumber(op.Invoke(left.Evaluate(), right.Evaluate()));
                         symbols.RemoveAt(i);
                         symbols.RemoveAt(i);
-
                         i -= 2;
                     }
                 }
