@@ -138,5 +138,17 @@ namespace BlazorPlayground.Calculator.Tests {
 
             Assert.Equal(9.44M, group.Evaluate());
         }
+
+        [Fact]
+        public void SymbolGroup_ToString_Succeeds() {
+            var group = new SymbolGroup();
+
+            group.Symbols.Add(new LiteralNumber(2.8M));
+            group.Symbols.Add(new AdditionOperator('+'));
+            group.Symbols.Add(new LiteralNumber(1.2M));
+            group.Symbols.Add(new AdditionOperator('*'));
+
+            Assert.Equal("(2.8 + 1.2 *)", group.ToString());
+        }
     }
 }

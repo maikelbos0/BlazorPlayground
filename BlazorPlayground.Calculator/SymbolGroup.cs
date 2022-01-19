@@ -50,5 +50,7 @@ namespace BlazorPlayground.Calculator {
 
             return ((IEvaluatableSymbol)symbols.Single()).Evaluate();
         }
+
+        public override string ToString() => $"({string.Join(' ', Symbols)})";
     }
 }

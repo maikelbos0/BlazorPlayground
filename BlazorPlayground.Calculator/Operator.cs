@@ -8,8 +8,7 @@
         public char Character { get; }
 
         public abstract decimal Invoke(decimal left, decimal right);
-        public override string ToString() {
-            return Character.ToString();
-        }
+
+        public override string ToString() => Character.ToString();
     }
 }
