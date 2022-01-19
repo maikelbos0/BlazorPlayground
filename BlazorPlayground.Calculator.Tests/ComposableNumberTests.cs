@@ -103,11 +103,13 @@ namespace BlazorPlayground.Calculator.Tests {
         [InlineData(false, "25", 25)]
         [InlineData(false, ",25", 0.25)]
         [InlineData(false, "25,25", 25.25)]
+        [InlineData(false, "", 0)]
         [InlineData(true, ".25", -0.25)]
         [InlineData(true, "25.25", -25.25)]
         [InlineData(true, "25", -25)]
         [InlineData(true, ",25", -0.25)]
         [InlineData(true, "25,25", -25.25)]
+        [InlineData(true, "", 0)]
         public void ComposableNumber_Evaluate_Succeeds(bool isNegative, string characters, decimal expectedValue) {
             var number = new ComposableNumber();
 
@@ -120,8 +122,10 @@ namespace BlazorPlayground.Calculator.Tests {
         [Theory]
         [InlineData(false, ".25", ".25")]
         [InlineData(false, "25.25", "25.25")]
+        [InlineData(false, "", "0")]
         [InlineData(true, ".25", "-.25")]
         [InlineData(true, "25.25", "-25.25")]
+        [InlineData(true, "", "-0")]
         public void ComposableNumber_ToString_Succeeds(bool isNegative, string characters, string expectedValue) {
             var number = new ComposableNumber();
 

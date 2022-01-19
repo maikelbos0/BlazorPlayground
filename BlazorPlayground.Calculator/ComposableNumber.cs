@@ -29,7 +29,11 @@ namespace BlazorPlayground.Calculator {
         }
 
         public decimal Evaluate() {
-            var value = new string(Characters.Select(Normalize).ToArray());
+            var value = "0";
+
+            if (Characters.Any()) {
+                value = new string(Characters.Select(Normalize).ToArray());
+            }
 
             if (IsNegative) {
                 return -decimal.Parse(value, CultureInfo.InvariantCulture);
@@ -48,7 +52,11 @@ namespace BlazorPlayground.Calculator {
         }
 
         override public string ToString() {
-            var value = new string(Characters.ToArray());
+            var value = "0";
+
+            if (Characters.Any()) {
+                value = new string(Characters.ToArray());
+            }
 
             if (IsNegative) {
                 return $"-{value}";
