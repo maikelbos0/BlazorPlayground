@@ -116,5 +116,19 @@ namespace BlazorPlayground.Calculator.Tests {
 
             Assert.Equal(expectedValue, number.Evaluate());
         }
+
+        [Theory]
+        [InlineData(false, ".25", ".25")]
+        [InlineData(false, "25.25", "25.25")]
+        [InlineData(true, ".25", "-.25")]
+        [InlineData(true, "25.25", "-25.25")]
+        public void ComposableNumber_ToString_Succeeds(bool isNegative, string characters, string expectedValue) {
+            var number = new ComposableNumber();
+
+            number.IsNegative = isNegative;
+            number.Characters.AddRange(characters);
+
+            Assert.Equal(expectedValue, number.ToString());
+        }
     }
 }

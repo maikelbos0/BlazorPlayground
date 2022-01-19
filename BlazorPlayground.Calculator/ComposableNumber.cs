@@ -46,5 +46,16 @@ namespace BlazorPlayground.Calculator {
 
             return c;
         }
+
+        override public string ToString() {
+            var value = new string(Characters.ToArray());
+
+            if (IsNegative) {
+                return $"-{value}";
+            }
+            else {
+                return value;
+            }
+        }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace BlazorPlayground.Calculator {
+﻿using System.Globalization;
+
+namespace BlazorPlayground.Calculator {
     internal class LiteralNumber : IEvaluatableSymbol {
         private readonly decimal value;
 
@@ -6,8 +8,8 @@
             this.value = value;
         }
 
-        public decimal Evaluate() {
-            return value;
-        }
+        public decimal Evaluate() => value;
+
+        override public string ToString() => value.ToString(CultureInfo.InvariantCulture);
     }
 }
