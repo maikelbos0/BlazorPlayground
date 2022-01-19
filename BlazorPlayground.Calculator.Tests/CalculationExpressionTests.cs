@@ -120,7 +120,7 @@ namespace BlazorPlayground.Calculator.Tests {
         }
 
         [Fact]
-        public void CalculationExpression_CloseGroup_Does_Nothing_For_Final_Group() {
+        public void CalculationExpression_CloseGroup_Does_Nothing_For_Root_Group() {
             var expression = new CalculationExpression();
 
             Assert.False(expression.CloseGroup());
@@ -151,6 +151,29 @@ namespace BlazorPlayground.Calculator.Tests {
             Assert.Equal(5.5M, expression.Evaluate());
             Assert.Single(expression.Groups);
             Assert.Equal(5.5M, Assert.IsType<LiteralNumber>(Assert.Single(expression.CurrentGroup.Symbols)).Evaluate());
+        }
+
+        [Fact]
+        public void CalculationExpression_ToString_Succeeds() {
+
+            var expression = new CalculationExpression();
+            var group1 = new SymbolGroup();
+            var group2 = new SymbolGroup();
+
+            expression.CurrentGroup.Symbols.Add(new LiteralNumber(5.5M));
+            expression.CurrentGroup.Symbols.Add(new AdditionOperator('+'));
+            expression.CurrentGroup.Symbols.Add(group1);
+            expression.Groups.Push(group1);
+            expression.CurrentGroup.Symbols.Add(new LiteralNumber(4.5M));
+            expression.CurrentGroup.Symbols.Add(new MultiplicationOperator('*'));
+            expression.CurrentGroup.Symbols.Add(new LiteralNumber(3.5M));
+            expression.CurrentGroup.Symbols.Add(new DivisionOperator('/'));
+            expression.CurrentGroup.Symbols.Add(group2);
+            expression.Groups.Push(group2);
+            expression.CurrentGroup.Symbols.Add(new LiteralNumber(6.5M));
+            expression.Groups.Pop().Close();
+
+            Assert.Equal("5.5 + (4.5 * 3.5 / (6.5)", expression.ToString());
         }
     }
 }

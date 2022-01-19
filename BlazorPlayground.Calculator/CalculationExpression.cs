@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace BlazorPlayground.Calculator {
     public class CalculationExpression {
@@ -71,7 +72,10 @@ namespace BlazorPlayground.Calculator {
             return value;
         }
 
-        // TODO:
-        // - ToString
+        override public string ToString() {
+            var value = Groups.Last().ToString();
+            
+            return value.Substring(1, value.Length - 1 - Groups.Count);
+        }
     }
 }
