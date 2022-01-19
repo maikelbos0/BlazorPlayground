@@ -1,5 +1,6 @@
 ﻿@page "/calculator"
 @using BlazorPlayground.Calculator
+@using System.Threading
 
 <div class="container">
     <h1>Calculator</h1>
@@ -92,6 +93,7 @@
 
 @code {
     private string errorClass = "";
+    private CancellationTokenSource? clearErrorCancellationTokenSource;
     private CalculationExpression expression = new CalculationExpression();
 
     private async Task HandleKey(string s) {
@@ -108,8 +110,13 @@
 
     private async Task Append(char c) {
         if (!expression.TryAppend(c)) {
+            if (clearErrorCancellationTokenSource != null) {
+                clearErrorCancellationTokenSource.Cancel();
+            }
+
+            clearErrorCancellationTokenSource = new CancellationTokenSource();
             errorClass = "is-invalid";
-            await Task.Delay(500);
+            await Task.Delay(300, clearErrorCancellationTokenSource.Token);
             errorClass = "";
         }
     }
