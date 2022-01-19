@@ -4,10 +4,12 @@
 <div class="container">
     <h1>Calculator</h1>
 
+    <GlobalEventHandler OnKeyUp="(e) => HandleKey(e.Key)"/>
+
     <div class="row">
         <div class="col-12 col-md-6 col-xl-4">
             <div class="mb-4">
-                <input type="text" readonly="readonly" class="form-control" id="display" value="@expression.ToString()">
+                <input type="text" readonly="readonly" class="form-control text-end @errorClass" id="display" value="@expression">
             </div>
 
             <div class="row mb-4">
@@ -81,7 +83,7 @@
                     <button class="btn btn-light w-100" @onclick="() => Append('.')">.</button>
                 </div>
                 <div class="col-3">
-                    <button class="btn btn-primary w-100">=</button>
+                    <button class="btn btn-primary w-100" @onclick="() => expression.Evaluate()">=</button>
                 </div>
             </div>
         </div>
@@ -89,9 +91,26 @@
 </div>
 
 @code {
+    private string errorClass = "";
     private CalculationExpression expression = new CalculationExpression();
 
-    private void Append(char c) {
-        
+    private async Task HandleKey(string s) {
+        if (s == "=" || s == "Enter") {
+            expression.Evaluate();
+        }
+        else if (s == "Delete") {
+            expression.Clear();
+        }
+        else if (s.Length == 1) {
+            await Append(s[0]);
+        }
+    }
+
+    private async Task Append(char c) {
+        if (!expression.TryAppend(c)) {
+            errorClass = "is-invalid";
+            await Task.Delay(500);
+            errorClass = "";
+        }
     }
 }
