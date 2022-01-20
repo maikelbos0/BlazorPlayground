@@ -11,5 +11,12 @@ namespace BlazorPlayground.Calculator.Tests {
 
             Assert.Equal(expectedValue, op.Evaluate());
         }
+
+        [Fact]
+        public void NegationOperator_ToString_Succeeds() {
+            var op = new NegationOperator(new LiteralNumber(5.5M));
+
+            Assert.Equal("-5.5", op.ToString());
+        }
     }
 }
