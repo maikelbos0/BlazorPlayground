@@ -13,37 +13,40 @@ namespace BlazorPlayground.Calculator.Tests {
         }
 
         [Fact]
-        public void SymbolGroup_Can_Not_Append_Operator_When_Empty() {
+        public void SymbolGroup_Can_Append_Operator_When_Empty() {
             var group = new SymbolGroup();
             var op = new AdditionOperator('+');
 
-            Assert.False(group.Append(op));
-            Assert.Empty(group.Symbols);
+            Assert.True(group.Append(op));            
+            Assert.Equal(2, group.Symbols.Count);
+            Assert.Equal(op, group.Symbols[1]);
+            Assert.Equal(0, Assert.IsType<LiteralNumber>(group.Symbols[0]).Evaluate());
         }
 
         [Fact]
         public void SymbolGroup_Can_Append_EvaluatableSymbol_When_Last_Symbol_Is_Operator() {
             var group = new SymbolGroup();
-            var LiteralNumber = new LiteralNumber(0);
+            var literalNumber = new LiteralNumber(0);
 
             group.Symbols.Add(new LiteralNumber(1));
             group.Symbols.Add(new AdditionOperator('+'));
 
-            Assert.True(group.Append(LiteralNumber));
+            Assert.True(group.Append(literalNumber));
             Assert.Equal(3, group.Symbols.Count);
-            Assert.Equal(LiteralNumber, group.Symbols.Last());
+            Assert.Equal(literalNumber, group.Symbols[2]);
         }
 
         [Fact]
-        public void SymbolGroup_Can_Not_Append_Operator_When_Last_Symbol_Is_Operator() {
+        public void SymbolGroup_Append_Operator_Replaces_Last_Symbol_If_Operator() {
             var group = new SymbolGroup();
             var op = new AdditionOperator('+');
 
             group.Symbols.Add(new LiteralNumber(1));
             group.Symbols.Add(new AdditionOperator('+'));
 
-            Assert.False(group.Append(op));
+            Assert.True(group.Append(op));
             Assert.Equal(2, group.Symbols.Count);
+            Assert.Equal(op, group.Symbols[1]);
         }
 
         [Fact]
@@ -55,7 +58,7 @@ namespace BlazorPlayground.Calculator.Tests {
 
             Assert.True(group.Append(op));
             Assert.Equal(2, group.Symbols.Count);
-            Assert.Equal(op, group.Symbols.Last());
+            Assert.Equal(op, group.Symbols[1]);
         }
 
         [Fact]

@@ -36,12 +36,15 @@ namespace BlazorPlayground.Calculator.Tests {
         }
 
         [Fact]
-        public void CalculationExpression_TryAppend_Operator_Does_Nothing_When_Operator_Not_Allowed() {
+        public void CalculationExpression_TryAppend_Uses_Subtraction_Operator_Instead_Of_Negation_When_Possible() {
             var expression = new CalculationExpression();
 
-            Assert.False(expression.TryAppend('*'));
+            expression.CurrentGroup.Symbols.Add(new ComposableNumber());
+
+            Assert.True(expression.TryAppend('-'));
             Assert.Single(expression.Groups);
-            Assert.Empty(expression.CurrentGroup.Symbols);
+            Assert.Equal(2, expression.CurrentGroup.Symbols.Count);
+            Assert.IsType<SubtractionOperator>(expression.CurrentGroup.Symbols.Last());
         }
 
         [Fact]

@@ -5,11 +5,22 @@ using System.Linq;
 namespace BlazorPlayground.Calculator {
     internal class SymbolGroup : IEvaluatableSymbol {
         internal List<ISymbol> Symbols { get; } = new();
-        internal ISymbol? LastSymbol => Symbols.LastOrDefault();
-        public bool LastSymbolIsEvaluatable => LastSymbol is IEvaluatableSymbol;
 
         internal bool Append(ISymbol symbol) {
-            if (LastSymbolIsEvaluatable == symbol is not IEvaluatableSymbol) {
+            if (symbol is Operator) {
+                if (Symbols.Count == 0) {
+                    Symbols.Add(new LiteralNumber(0));
+                }
+
+                if (Symbols.Last() is Operator) {
+                    Symbols[^1] = symbol;
+                }
+                else {
+                    Symbols.Add(symbol);
+                }
+                return true;
+            }
+            else if (Symbols.Count == 0 || Symbols.Last() is Operator) {
                 Symbols.Add(symbol);
                 return true;
             }
@@ -18,7 +29,7 @@ namespace BlazorPlayground.Calculator {
         }
 
         internal void Close() {
-            while (Symbols.Any() && !LastSymbolIsEvaluatable) {
+            while (Symbols.Count > 0 && Symbols.Last() is Operator) {
                 Symbols.RemoveAt(Symbols.Count - 1);
             }
 

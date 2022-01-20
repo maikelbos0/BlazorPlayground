@@ -3,7 +3,6 @@ using System.Linq;
 
 namespace BlazorPlayground.Calculator {
     public class CalculationExpression {
-
         public CalculationExpression() {
             Groups = new();
             Groups.Push(new());
@@ -19,17 +18,16 @@ namespace BlazorPlayground.Calculator {
             else if (c == ')') {
                 return CloseGroup();
             }
-            else if (CurrentGroup.LastSymbol is ComposableNumber number && number.Append(c)) {
-                return true;
-            }
-
             var op = OperatorFactory.GetOperator(c);
 
             if (op != null && CurrentGroup.Append(op)) {
                 return true;
             }
+            else if (CurrentGroup.Symbols.LastOrDefault() is ComposableNumber number && number.Append(c)) {
+                return true;
+            }
             else {
-                var number = new ComposableNumber();
+                number = new ComposableNumber();
 
                 return number.Append(c) && CurrentGroup.Append(number);
             }
