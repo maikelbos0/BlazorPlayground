@@ -7,6 +7,8 @@ namespace BlazorPlayground.Calculator {
         internal List<ISymbol> Symbols { get; } = new();
 
         internal bool Append(ISymbol symbol) {
+            // TODO refactor this and expression... does this branching logic belong here?
+
             if (symbol is IBinaryOperator) {
                 if (Symbols.Count == 0) {
                     Symbols.Add(new LiteralNumber(0));
@@ -24,6 +26,10 @@ namespace BlazorPlayground.Calculator {
                 Symbols.Add(symbol);
                 return true;
             }
+            else if (Symbols.Count > 0 && symbol is IUnaryOperator op && op.Symbol == Symbols.Last()) {
+                Symbols[^1] = symbol;
+                return true;
+            } 
 
             return false;
         }

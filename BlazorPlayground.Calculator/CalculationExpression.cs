@@ -18,18 +18,39 @@ namespace BlazorPlayground.Calculator {
             else if (c == ')') {
                 return CloseGroup();
             }
-            var op = BinaryOperatorFactory.GetOperator(c);
-
-            if (op != null && CurrentGroup.Append(op)) {
+            else if (TryAppendBinaryOperator(c)) {
                 return true;
             }
-            else if (CurrentGroup.Symbols.LastOrDefault() is ComposableNumber number && number.Append(c)) {
+            else if (TryAppendUnaryOperator(c)) {
+                return true;
+            }
+            else if (TryAppendDigit(c)) {
                 return true;
             }
             else {
-                number = new ComposableNumber();
+                var number = new ComposableNumber();
 
                 return number.Append(c) && CurrentGroup.Append(number);
+            }
+
+            bool TryAppendBinaryOperator(char c) {
+                var op = BinaryOperatorFactory.GetOperator(c);
+
+                return op != null && CurrentGroup.Append(op);
+            }
+
+            bool TryAppendUnaryOperator(char c) {
+                if (CurrentGroup.Symbols.LastOrDefault() is IEvaluatableSymbol symbol) {
+                    var op = UnaryOperatorFactory.GetOperator(c, symbol);
+
+                    return op != null && CurrentGroup.Append(op);
+                }
+
+                return false;
+            }
+
+            bool TryAppendDigit(char c) {
+                return CurrentGroup.Symbols.LastOrDefault() is ComposableNumber number && number.Append(c);
             }
         }
 

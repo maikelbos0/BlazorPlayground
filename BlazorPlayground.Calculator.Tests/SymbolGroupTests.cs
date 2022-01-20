@@ -1,19 +1,18 @@
-﻿using System.Linq;
-using Xunit;
+﻿using Xunit;
 
 namespace BlazorPlayground.Calculator.Tests {
     public class SymbolGroupTests {
         [Fact]
         public void SymbolGroup_Can_Append_EvaluatableSymbol_When_Empty() {
             var group = new SymbolGroup();
-            var LiteralNumber = new LiteralNumber(0);
+            var literalNumber = new LiteralNumber(0);
 
-            Assert.True(group.Append(LiteralNumber));
-            Assert.Equal(LiteralNumber, Assert.Single(group.Symbols));
+            Assert.True(group.Append(literalNumber));
+            Assert.Equal(literalNumber, Assert.Single(group.Symbols));
         }
 
         [Fact]
-        public void SymbolGroup_Can_Append_Operator_When_Empty() {
+        public void SymbolGroup_Can_Append_BinaryOperator_When_Empty() {
             var group = new SymbolGroup();
             var op = new AdditionOperator('+');
 
@@ -24,7 +23,7 @@ namespace BlazorPlayground.Calculator.Tests {
         }
 
         [Fact]
-        public void SymbolGroup_Can_Append_EvaluatableSymbol_When_Last_Symbol_Is_Operator() {
+        public void SymbolGroup_Can_Append_EvaluatableSymbol_When_Last_Symbol_Is_BinaryOperator() {
             var group = new SymbolGroup();
             var literalNumber = new LiteralNumber(0);
 
@@ -37,7 +36,7 @@ namespace BlazorPlayground.Calculator.Tests {
         }
 
         [Fact]
-        public void SymbolGroup_Append_Operator_Replaces_Last_Symbol_If_Operator() {
+        public void SymbolGroup_Append_BinaryOperator_Replaces_Last_Symbol_If_BinaryOperator() {
             var group = new SymbolGroup();
             var op = new AdditionOperator('+');
 
@@ -50,7 +49,7 @@ namespace BlazorPlayground.Calculator.Tests {
         }
 
         [Fact]
-        public void SymbolGroup_Can_Append_Operator_When_Last_Symbol_Is_EvaluatableSymbol() {
+        public void SymbolGroup_Can_Append_BinaryOperator_When_Last_Symbol_Is_EvaluatableSymbol() {
             var group = new SymbolGroup();
             var op = new AdditionOperator('+');
 
@@ -64,12 +63,40 @@ namespace BlazorPlayground.Calculator.Tests {
         [Fact]
         public void SymbolGroup_Can_Not_Append_EvaluatableSymbol_When_Last_Symbol_Is_EvaluatableSymbol() {
             var group = new SymbolGroup();
-            var LiteralNumber = new LiteralNumber(1);
+            var literalNumber = new LiteralNumber(1);
 
             group.Symbols.Add(new LiteralNumber(1));
 
-            Assert.False(group.Append(LiteralNumber));
+            Assert.False(group.Append(literalNumber));
             Assert.Single(group.Symbols);
+        }
+
+        [Fact]
+        public void SymbolGroup_Can_Append_UnaryOperator_When_Last_Symbol_Is_BinaryOperator() {
+            var group = new SymbolGroup();
+            var op = new NegationOperator(new LiteralNumber(1));
+
+            group.Symbols.Add(new LiteralNumber(1));
+            group.Symbols.Add(new AdditionOperator('+'));
+
+            Assert.True(group.Append(op));
+            Assert.Equal(3, group.Symbols.Count);
+            Assert.Equal(op, group.Symbols[2]);
+        }
+
+        [Fact]
+        public void SymbolGroup_Append_UnaryOperator_Replaces_Last_Symbol_If_EvaluatableSymbol() {
+            var group = new SymbolGroup();
+            var number = new LiteralNumber(1);
+            var op = new NegationOperator(number);
+
+            group.Symbols.Add(new LiteralNumber(1));
+            group.Symbols.Add(new AdditionOperator('+'));
+            group.Symbols.Add(number);
+
+            Assert.True(group.Append(op));
+            Assert.Equal(3, group.Symbols.Count);
+            Assert.Equal(op, group.Symbols[2]);
         }
 
         [Fact]
