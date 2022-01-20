@@ -10,6 +10,6 @@ namespace BlazorPlayground.Calculator {
 
         public decimal Evaluate() => value;
 
-        override public string ToString() => value.ToString(CultureInfo.InvariantCulture);
+        override public string ToString() => value.RemovePrecision().ToString(CultureInfo.InvariantCulture);
     }
 }
