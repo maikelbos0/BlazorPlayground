@@ -1,6 +1,6 @@
 ﻿namespace BlazorPlayground.Calculator {
     internal static class OperatorFactory {
-        public static Operator? GetOperator(char character) => character switch {
+        public static IOperator? GetOperator(char character) => character switch {
             '/' => new DivisionOperator(character),
             '÷' => new DivisionOperator(character),
             '*' => new MultiplicationOperator(character),

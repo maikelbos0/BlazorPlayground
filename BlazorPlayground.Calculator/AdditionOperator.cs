@@ -1,10 +1,15 @@
 ﻿namespace BlazorPlayground.Calculator {
-    internal class AdditionOperator : Operator {
-        public AdditionOperator(char character) : base(character) { }
+    internal class AdditionOperator : IOperator {
+        internal AdditionOperator(char character) {
+            Character = character;
+        }
 
-        public override OperatorPrecedence Precedence => OperatorPrecedence.Low;
+        public OperatorPrecedence Precedence => OperatorPrecedence.Low;
 
+        internal char Character { get; }
 
-        public override decimal Invoke(decimal left, decimal right) => left + right;
+        public decimal Invoke(decimal left, decimal right) => left + right;
+
+        public override string ToString() => Character.ToString();
     }
 }

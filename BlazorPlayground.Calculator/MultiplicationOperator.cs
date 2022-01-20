@@ -1,9 +1,15 @@
 ﻿namespace BlazorPlayground.Calculator {
-    internal class MultiplicationOperator : Operator {
-        public MultiplicationOperator(char character) : base(character) { }
+    internal class MultiplicationOperator : IOperator {
+        internal MultiplicationOperator(char character) {
+            Character = character;
+        }
 
-        public override OperatorPrecedence Precedence => OperatorPrecedence.High;
+        public OperatorPrecedence Precedence => OperatorPrecedence.High;
 
-        public override decimal Invoke(decimal left, decimal right) => left * right;
+        internal char Character { get; }
+
+        public decimal Invoke(decimal left, decimal right) => left * right;
+
+        public override string ToString() => Character.ToString();
     }
 }
