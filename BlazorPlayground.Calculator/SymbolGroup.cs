@@ -7,12 +7,12 @@ namespace BlazorPlayground.Calculator {
         internal List<ISymbol> Symbols { get; } = new();
 
         internal bool Append(ISymbol symbol) {
-            if (symbol is IOperator) {
+            if (symbol is IBinaryOperator) {
                 if (Symbols.Count == 0) {
                     Symbols.Add(new LiteralNumber(0));
                 }
 
-                if (Symbols.Last() is IOperator) {
+                if (Symbols.Last() is IBinaryOperator) {
                     Symbols[^1] = symbol;
                 }
                 else {
@@ -20,7 +20,7 @@ namespace BlazorPlayground.Calculator {
                 }
                 return true;
             }
-            else if (Symbols.Count == 0 || Symbols.Last() is IOperator) {
+            else if (Symbols.Count == 0 || Symbols.Last() is IBinaryOperator) {
                 Symbols.Add(symbol);
                 return true;
             }
@@ -29,7 +29,7 @@ namespace BlazorPlayground.Calculator {
         }
 
         internal void Close() {
-            while (Symbols.Count > 0 && Symbols.Last() is IOperator) {
+            while (Symbols.Count > 0 && Symbols.Last() is IBinaryOperator) {
                 Symbols.RemoveAt(Symbols.Count - 1);
             }
 
@@ -45,7 +45,7 @@ namespace BlazorPlayground.Calculator {
 
             foreach (var precedence in Enum.GetValues<OperatorPrecedence>().OrderBy(p => p)) {
                 for (var i = 1; i < symbols.Count - 1; i += 2) {
-                    var op = (IOperator)symbols[i];
+                    var op = (IBinaryOperator)symbols[i];
 
                     if (op.Precedence == precedence) {
                         var left = (IEvaluatableSymbol)symbols[i - 1];

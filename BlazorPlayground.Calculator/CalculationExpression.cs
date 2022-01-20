@@ -18,7 +18,7 @@ namespace BlazorPlayground.Calculator {
             else if (c == ')') {
                 return CloseGroup();
             }
-            var op = OperatorFactory.GetOperator(c);
+            var op = BinaryOperatorFactory.GetOperator(c);
 
             if (op != null && CurrentGroup.Append(op)) {
                 return true;

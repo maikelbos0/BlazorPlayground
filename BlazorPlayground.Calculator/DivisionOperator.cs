@@ -1,5 +1,5 @@
 ﻿namespace BlazorPlayground.Calculator {
-    internal class DivisionOperator : IOperator {
+    internal class DivisionOperator : IBinaryOperator {
         internal DivisionOperator(char character) {
             Character = character;
         }

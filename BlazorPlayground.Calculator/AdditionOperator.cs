@@ -1,5 +1,5 @@
 ﻿namespace BlazorPlayground.Calculator {
-    internal class AdditionOperator : IOperator {
+    internal class AdditionOperator : IBinaryOperator {
         internal AdditionOperator(char character) {
             Character = character;
         }
