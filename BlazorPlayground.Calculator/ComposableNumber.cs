@@ -8,7 +8,7 @@ namespace BlazorPlayground.Calculator {
 
         internal List<char> Characters { get; } = new();
 
-        public bool Append(char c) {
+        public bool TryAppend(char c) {
             if (!char.IsDigit(c) && !decimalSeparators.Contains(c)) {
                 return false;
             }

@@ -12,7 +12,7 @@ namespace BlazorPlayground.Calculator.Tests {
 
             number.Characters.AddRange(previousCharacters);
 
-            Assert.True(number.Append(digit));
+            Assert.True(number.TryAppend(digit));
             Assert.Equal(previousCharacters.Length + 1, number.Characters.Count);
             Assert.Equal(digit, number.Characters.Last());
         }
@@ -27,7 +27,7 @@ namespace BlazorPlayground.Calculator.Tests {
 
             number.Characters.AddRange(previousCharacters);
 
-            Assert.True(number.Append(separator));
+            Assert.True(number.TryAppend(separator));
             Assert.Equal(previousCharacters.Length + 1, number.Characters.Count);
             Assert.Equal(separator, number.Characters.Last());
         }
@@ -46,7 +46,7 @@ namespace BlazorPlayground.Calculator.Tests {
 
             number.Characters.AddRange(previousCharacters);
 
-            Assert.False(number.Append(separator));
+            Assert.False(number.TryAppend(separator));
             Assert.Equal(previousCharacters.Length, number.Characters.Count);
         }
 
@@ -60,7 +60,7 @@ namespace BlazorPlayground.Calculator.Tests {
 
             number.Characters.AddRange(previousCharacters);
 
-            Assert.False(number.Append(character));
+            Assert.False(number.TryAppend(character));
             Assert.Equal(previousCharacters.Length, number.Characters.Count);
         }
 

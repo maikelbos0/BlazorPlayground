@@ -30,7 +30,7 @@ namespace BlazorPlayground.Calculator {
             else {
                 var number = new ComposableNumber();
 
-                return number.Append(c) && CurrentGroup.Append(number);
+                return number.TryAppend(c) && CurrentGroup.Append(number);
             }
 
             bool TryAppendBinaryOperator(char c) {
@@ -50,7 +50,7 @@ namespace BlazorPlayground.Calculator {
             }
 
             bool TryAppendDigit(char c) {
-                return CurrentGroup.Symbols.LastOrDefault() is ComposableNumber number && number.Append(c);
+                return CurrentGroup.Symbols.LastOrDefault() is ComposableNumber number && number.TryAppend(c);
             }
         }
 
