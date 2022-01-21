@@ -4,7 +4,7 @@ using Xunit;
 namespace BlazorPlayground.Calculator.Tests {
     public class EvaluatableSymbolTests {
         [Fact]
-        public void SymbolGroup_Can_Append_EvaluatableSymbol_When_Empty() {
+        public void EvaluableSymbol_TryAppendTo_Succeeds_When_Symbols_Is_Empty() {
             var number = new LiteralNumber(0);
             var symbols = new List<ISymbol>();
 
@@ -13,7 +13,7 @@ namespace BlazorPlayground.Calculator.Tests {
         }
 
         [Fact]
-        public void SymbolGroup_Can_Append_EvaluatableSymbol_When_Last_Symbol_Is_BinaryOperator() {
+        public void EvaluableSymbol_TryAppendTo_Succeeds_When_Last_Symbol_Is_BinaryOperator() {
             var number = new LiteralNumber(0);
             var symbols = new List<ISymbol>() {
                 new LiteralNumber(1),
@@ -26,14 +26,14 @@ namespace BlazorPlayground.Calculator.Tests {
         }
 
         [Fact]
-        public void SymbolGroup_Can_Not_Append_EvaluatableSymbol_When_Last_Symbol_Is_EvaluatableSymbol() {
-            var group = new SymbolGroup();
-            var literalNumber = new LiteralNumber(1);
+        public void EvaluableSymbol_TryAppendTo_Fails_When_Last_Symbol_Is_EvaluatableSymbol() {
+            var number = new LiteralNumber(1);
+            var symbols = new List<ISymbol>() {
+                new LiteralNumber(1)
+            };
 
-            group.Symbols.Add(new LiteralNumber(1));
-
-            Assert.False(group.Append(literalNumber));
-            Assert.Single(group.Symbols);
+            Assert.False(number.TryAppendTo(symbols));
+            Assert.NotEqual(number, Assert.Single(symbols));
         }
     }
 }

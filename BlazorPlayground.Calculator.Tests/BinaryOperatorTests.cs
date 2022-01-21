@@ -15,7 +15,7 @@ namespace BlazorPlayground.Calculator.Tests {
         }
 
         [Fact]
-        public void SymbolGroup_Append_BinaryOperator_Replaces_Last_Symbol_If_BinaryOperator() {
+        public void BinaryOperator_TryAppendTo_Replaces_Last_Symbol_If_BinaryOperator() {
             var op = new AdditionOperator('+');
             var symbols = new List<ISymbol>() {
                 new LiteralNumber(1),
@@ -28,7 +28,7 @@ namespace BlazorPlayground.Calculator.Tests {
         }
 
         [Fact]
-        public void SymbolGroup_Can_Append_BinaryOperator_When_Last_Symbol_Is_EvaluatableSymbol() {
+        public void BinaryOperator_TryAppendTo_Succeeds_When_Last_Symbol_Is_EvaluatableSymbol() {
             var op = new AdditionOperator('+');
             var symbols = new List<ISymbol>() {
                 new LiteralNumber(1)
@@ -38,6 +38,5 @@ namespace BlazorPlayground.Calculator.Tests {
             Assert.Equal(2, symbols.Count);
             Assert.Equal(op, symbols[1]);
         }
-
     }
 }

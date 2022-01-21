@@ -3,101 +3,13 @@
 namespace BlazorPlayground.Calculator.Tests {
     public class SymbolGroupTests {
         [Fact]
-        public void SymbolGroup_Can_Append_EvaluatableSymbol_When_Empty() {
+        public void SymbolGroup_TryAppend_Calls_Symbol_TryAppendTo() {
             var group = new SymbolGroup();
             var literalNumber = new LiteralNumber(0);
 
-            Assert.True(group.Append(literalNumber));
+            Assert.True(group.TryAppend(literalNumber));
             Assert.Equal(literalNumber, Assert.Single(group.Symbols));
         }
-
-        [Fact]
-        public void SymbolGroup_Can_Append_BinaryOperator_When_Empty() {
-            var group = new SymbolGroup();
-            var op = new AdditionOperator('+');
-
-            Assert.True(group.Append(op));            
-            Assert.Equal(2, group.Symbols.Count);
-            Assert.Equal(op, group.Symbols[1]);
-            Assert.Equal(0, Assert.IsType<LiteralNumber>(group.Symbols[0]).Evaluate());
-        }
-
-        [Fact]
-        public void SymbolGroup_Can_Append_EvaluatableSymbol_When_Last_Symbol_Is_BinaryOperator() {
-            var group = new SymbolGroup();
-            var literalNumber = new LiteralNumber(0);
-
-            group.Symbols.Add(new LiteralNumber(1));
-            group.Symbols.Add(new AdditionOperator('+'));
-
-            Assert.True(group.Append(literalNumber));
-            Assert.Equal(3, group.Symbols.Count);
-            Assert.Equal(literalNumber, group.Symbols[2]);
-        }
-
-        [Fact]
-        public void SymbolGroup_Append_BinaryOperator_Replaces_Last_Symbol_If_BinaryOperator() {
-            var group = new SymbolGroup();
-            var op = new AdditionOperator('+');
-
-            group.Symbols.Add(new LiteralNumber(1));
-            group.Symbols.Add(new AdditionOperator('+'));
-
-            Assert.True(group.Append(op));
-            Assert.Equal(2, group.Symbols.Count);
-            Assert.Equal(op, group.Symbols[1]);
-        }
-
-        [Fact]
-        public void SymbolGroup_Can_Append_BinaryOperator_When_Last_Symbol_Is_EvaluatableSymbol() {
-            var group = new SymbolGroup();
-            var op = new AdditionOperator('+');
-
-            group.Symbols.Add(new LiteralNumber(1));
-
-            Assert.True(group.Append(op));
-            Assert.Equal(2, group.Symbols.Count);
-            Assert.Equal(op, group.Symbols[1]);
-        }
-
-        [Fact]
-        public void SymbolGroup_Can_Not_Append_EvaluatableSymbol_When_Last_Symbol_Is_EvaluatableSymbol() {
-            var group = new SymbolGroup();
-            var literalNumber = new LiteralNumber(1);
-
-            group.Symbols.Add(new LiteralNumber(1));
-
-            Assert.False(group.Append(literalNumber));
-            Assert.Single(group.Symbols);
-        }
-
-        //[Fact]
-        //public void SymbolGroup_Can_Append_UnaryOperator_When_Last_Symbol_Is_BinaryOperator() {
-        //    var group = new SymbolGroup();
-        //    var op = new NegationOperator(new LiteralNumber(1));
-
-        //    group.Symbols.Add(new LiteralNumber(1));
-        //    group.Symbols.Add(new AdditionOperator('+'));
-
-        //    Assert.True(group.Append(op));
-        //    Assert.Equal(3, group.Symbols.Count);
-        //    Assert.Equal(op, group.Symbols[2]);
-        //}
-
-        //[Fact]
-        //public void SymbolGroup_Append_UnaryOperator_Replaces_Last_Symbol_If_EvaluatableSymbol() {
-        //    var group = new SymbolGroup();
-        //    var number = new LiteralNumber(1);
-        //    var op = new NegationOperator(number);
-
-        //    group.Symbols.Add(new LiteralNumber(1));
-        //    group.Symbols.Add(new AdditionOperator('+'));
-        //    group.Symbols.Add(number);
-
-        //    Assert.True(group.Append(op));
-        //    Assert.Equal(3, group.Symbols.Count);
-        //    Assert.Equal(op, group.Symbols[2]);
-        //}
 
         [Fact]
         public void SymbolGroup_Close_Removes_Trailing_Operators() {

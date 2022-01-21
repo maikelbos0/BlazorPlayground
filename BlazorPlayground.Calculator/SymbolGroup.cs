@@ -6,31 +6,7 @@ namespace BlazorPlayground.Calculator {
     internal class SymbolGroup : EvaluatableSymbol {
         internal List<ISymbol> Symbols { get; } = new();
 
-        internal bool Append(ISymbol symbol) {
-            if (symbol is BinaryOperator) {
-                if (Symbols.Count == 0) {
-                    Symbols.Add(new LiteralNumber(0));
-                }
-
-                if (Symbols.Last() is BinaryOperator) {
-                    Symbols[^1] = symbol;
-                }
-                else {
-                    Symbols.Add(symbol);
-                }
-                return true;
-            }
-            else if (Symbols.Count == 0 || Symbols.Last() is BinaryOperator) {
-                Symbols.Add(symbol);
-                return true;
-            }
-            else if (Symbols.Count > 0 && symbol is UnaryOperator op && op.Symbol == Symbols.Last()) {
-                Symbols[^1] = symbol;
-                return true;
-            } 
-
-            return false;
-        }
+        internal bool TryAppend(ISymbol symbol) => symbol.TryAppendTo(Symbols);
 
         internal void Close() {
             while (Symbols.Count > 0 && Symbols.Last() is BinaryOperator) {

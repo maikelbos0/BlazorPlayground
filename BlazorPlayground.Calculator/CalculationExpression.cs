@@ -30,20 +30,20 @@ namespace BlazorPlayground.Calculator {
             else {
                 var number = new ComposableNumber();
 
-                return number.TryAppend(c) && CurrentGroup.Append(number);
+                return number.TryAppend(c) && CurrentGroup.TryAppend(number);
             }
 
             bool TryAppendBinaryOperator(char c) {
                 var op = BinaryOperatorFactory.GetOperator(c);
 
-                return op != null && CurrentGroup.Append(op);
+                return op != null && CurrentGroup.TryAppend(op);
             }
 
             bool TryAppendUnaryOperator(char c) {
                 if (CurrentGroup.Symbols.LastOrDefault() is EvaluatableSymbol symbol) {
                     var op = UnaryOperatorFactory.GetOperator(c);
 
-                    return op != null && CurrentGroup.Append(op);
+                    return op != null && CurrentGroup.TryAppend(op);
                 }
 
                 return false;
@@ -56,7 +56,7 @@ namespace BlazorPlayground.Calculator {
 
         internal bool OpenGroup() {
             var group = new SymbolGroup();
-            var success = CurrentGroup.Append(group);
+            var success = CurrentGroup.TryAppend(group);
 
             if (success) {
                 Groups.Push(group);
@@ -86,7 +86,7 @@ namespace BlazorPlayground.Calculator {
             var value = Groups.Pop().Evaluate();
 
             Groups.Push(new());
-            CurrentGroup.Append(new LiteralNumber(value));
+            CurrentGroup.TryAppend(new LiteralNumber(value));
 
             return value;
         }
