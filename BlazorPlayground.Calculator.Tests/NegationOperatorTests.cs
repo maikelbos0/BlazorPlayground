@@ -21,7 +21,7 @@ namespace BlazorPlayground.Calculator.Tests {
                 Symbol = new LiteralNumber(5.5M)
             };
 
-            Assert.Equal("-(5.5)", op.ToString());
+            Assert.Equal("-5.5", op.ToString());
         }
 
         [Fact]

@@ -14,6 +14,23 @@ namespace BlazorPlayground.Calculator.Tests {
         }
 
         [Fact]
+        public void Character_TryAppendTo_Succeeds_When_Last_Symbol_Is_Unary_Operator_For_ComposableNumber() {
+            var character = new Character('1');
+            var number = new ComposableNumber();
+            var symbols = new List<ISymbol>() {
+                new NegationOperator() {
+                    Symbol = new NegationOperator(){
+                        Symbol = number
+                    }
+                }                
+            };
+
+            Assert.True(character.TryAppendTo(symbols));
+            Assert.Single(symbols);
+            Assert.Equal('1', Assert.Single(number.Characters));
+        }
+
+        [Fact]
         public void Character_TryAppendTo_Succeeds_When_Last_Symbol_Is_ComposableNumber() {
             var character = new Character('1');
             var symbols = new List<ISymbol>() {

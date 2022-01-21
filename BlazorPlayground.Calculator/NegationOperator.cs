@@ -17,6 +17,6 @@ namespace BlazorPlayground.Calculator {
             return base.TryAppendTo(symbols);
         }
 
-        public override string ToString() => $"-({Symbol})";
+        public override string ToString() => $"-{Symbol}";
     }
 }
