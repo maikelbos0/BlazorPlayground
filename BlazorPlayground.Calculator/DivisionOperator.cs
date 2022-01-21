@@ -1,15 +1,9 @@
 ﻿namespace BlazorPlayground.Calculator {
-    internal class DivisionOperator : IBinaryOperator {
-        internal DivisionOperator(char character) {
-            Character = character;
-        }
+    internal class DivisionOperator : BinaryOperator {
+        internal DivisionOperator(char character) : base(character) { }
 
-        public OperatorPrecedence Precedence => OperatorPrecedence.High;
+        public override OperatorPrecedence Precedence => OperatorPrecedence.High;
 
-        internal char Character { get; }
-
-        public decimal Invoke(decimal left, decimal right) => left / right;
-
-        public override string ToString() => Character.ToString();
+        public override decimal Invoke(decimal left, decimal right) => left / right;
     }
 }

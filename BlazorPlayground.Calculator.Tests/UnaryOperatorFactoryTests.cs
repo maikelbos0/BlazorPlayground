@@ -6,7 +6,7 @@ namespace BlazorPlayground.Calculator.Tests {
         [Theory]
         [InlineData('±', typeof(NegationOperator))]
         public void UnaryOperatorFactory_Creates_Correct_Operator(char character, Type expectedType) {
-            var op = UnaryOperatorFactory.GetOperator(character, new LiteralNumber(5.5M));
+            var op = UnaryOperatorFactory.GetOperator(character);
 
             Assert.IsType(expectedType, op);
         }
@@ -24,7 +24,7 @@ namespace BlazorPlayground.Calculator.Tests {
         [InlineData('−')]
         [InlineData('+')]
         public void UnaryOperatorFactory_Does_Not_Create_Operator_For_Unknown_Operator(char character) {
-            var op = UnaryOperatorFactory.GetOperator(character, new LiteralNumber(5.5M));
+            var op = UnaryOperatorFactory.GetOperator(character);
 
             Assert.Null(op);
         }

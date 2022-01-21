@@ -1,13 +1,9 @@
-﻿namespace BlazorPlayground.Calculator {
-    internal class NegationOperator : IUnaryOperator {
-        internal NegationOperator(IEvaluatableSymbol symbol) {
-            Symbol = symbol;
-        }
+﻿using System;
 
-        public IEvaluatableSymbol Symbol { get; }
-
-        public decimal Evaluate() {
-            return -Symbol.Evaluate();
+namespace BlazorPlayground.Calculator {
+    internal class NegationOperator : UnaryOperator {
+        internal override decimal Evaluate() {
+            return -Symbol?.Evaluate() ?? throw new InvalidOperationException();
         }
 
         public override string ToString() => $"-({Symbol})";

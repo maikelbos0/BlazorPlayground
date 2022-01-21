@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Linq;
 
 namespace BlazorPlayground.Calculator {
-    internal class ComposableNumber : IEvaluatableSymbol {
+    internal class ComposableNumber : EvaluatableSymbol {
         private static readonly HashSet<char> decimalSeparators = new() { '.', ',' };
 
         internal List<char> Characters { get; } = new();
@@ -21,7 +21,7 @@ namespace BlazorPlayground.Calculator {
             return true;
         }
 
-        public decimal Evaluate() {
+        internal override decimal Evaluate() {
             var value = "0";
 
             if (Characters.Any()) {

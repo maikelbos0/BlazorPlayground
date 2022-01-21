@@ -71,33 +71,33 @@ namespace BlazorPlayground.Calculator.Tests {
             Assert.Single(group.Symbols);
         }
 
-        [Fact]
-        public void SymbolGroup_Can_Append_UnaryOperator_When_Last_Symbol_Is_BinaryOperator() {
-            var group = new SymbolGroup();
-            var op = new NegationOperator(new LiteralNumber(1));
+        //[Fact]
+        //public void SymbolGroup_Can_Append_UnaryOperator_When_Last_Symbol_Is_BinaryOperator() {
+        //    var group = new SymbolGroup();
+        //    var op = new NegationOperator(new LiteralNumber(1));
 
-            group.Symbols.Add(new LiteralNumber(1));
-            group.Symbols.Add(new AdditionOperator('+'));
+        //    group.Symbols.Add(new LiteralNumber(1));
+        //    group.Symbols.Add(new AdditionOperator('+'));
 
-            Assert.True(group.Append(op));
-            Assert.Equal(3, group.Symbols.Count);
-            Assert.Equal(op, group.Symbols[2]);
-        }
+        //    Assert.True(group.Append(op));
+        //    Assert.Equal(3, group.Symbols.Count);
+        //    Assert.Equal(op, group.Symbols[2]);
+        //}
 
-        [Fact]
-        public void SymbolGroup_Append_UnaryOperator_Replaces_Last_Symbol_If_EvaluatableSymbol() {
-            var group = new SymbolGroup();
-            var number = new LiteralNumber(1);
-            var op = new NegationOperator(number);
+        //[Fact]
+        //public void SymbolGroup_Append_UnaryOperator_Replaces_Last_Symbol_If_EvaluatableSymbol() {
+        //    var group = new SymbolGroup();
+        //    var number = new LiteralNumber(1);
+        //    var op = new NegationOperator(number);
 
-            group.Symbols.Add(new LiteralNumber(1));
-            group.Symbols.Add(new AdditionOperator('+'));
-            group.Symbols.Add(number);
+        //    group.Symbols.Add(new LiteralNumber(1));
+        //    group.Symbols.Add(new AdditionOperator('+'));
+        //    group.Symbols.Add(number);
 
-            Assert.True(group.Append(op));
-            Assert.Equal(3, group.Symbols.Count);
-            Assert.Equal(op, group.Symbols[2]);
-        }
+        //    Assert.True(group.Append(op));
+        //    Assert.Equal(3, group.Symbols.Count);
+        //    Assert.Equal(op, group.Symbols[2]);
+        //}
 
         [Fact]
         public void SymbolGroup_Close_Removes_Trailing_Operators() {

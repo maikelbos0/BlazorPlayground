@@ -40,8 +40,8 @@ namespace BlazorPlayground.Calculator {
             }
 
             bool TryAppendUnaryOperator(char c) {
-                if (CurrentGroup.Symbols.LastOrDefault() is IEvaluatableSymbol symbol) {
-                    var op = UnaryOperatorFactory.GetOperator(c, symbol);
+                if (CurrentGroup.Symbols.LastOrDefault() is EvaluatableSymbol symbol) {
+                    var op = UnaryOperatorFactory.GetOperator(c);
 
                     return op != null && CurrentGroup.Append(op);
                 }

@@ -3,18 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace BlazorPlayground.Calculator {
-    internal class SymbolGroup : IEvaluatableSymbol {
+    internal class SymbolGroup : EvaluatableSymbol {
         internal List<ISymbol> Symbols { get; } = new();
 
         internal bool Append(ISymbol symbol) {
-            // TODO refactor this and expression... does this branching logic belong here?
-
-            if (symbol is IBinaryOperator) {
+            if (symbol is BinaryOperator) {
                 if (Symbols.Count == 0) {
                     Symbols.Add(new LiteralNumber(0));
                 }
 
-                if (Symbols.Last() is IBinaryOperator) {
+                if (Symbols.Last() is BinaryOperator) {
                     Symbols[^1] = symbol;
                 }
                 else {
@@ -22,11 +20,11 @@ namespace BlazorPlayground.Calculator {
                 }
                 return true;
             }
-            else if (Symbols.Count == 0 || Symbols.Last() is IBinaryOperator) {
+            else if (Symbols.Count == 0 || Symbols.Last() is BinaryOperator) {
                 Symbols.Add(symbol);
                 return true;
             }
-            else if (Symbols.Count > 0 && symbol is IUnaryOperator op && op.Symbol == Symbols.Last()) {
+            else if (Symbols.Count > 0 && symbol is UnaryOperator op && op.Symbol == Symbols.Last()) {
                 Symbols[^1] = symbol;
                 return true;
             } 
@@ -35,7 +33,7 @@ namespace BlazorPlayground.Calculator {
         }
 
         internal void Close() {
-            while (Symbols.Count > 0 && Symbols.Last() is IBinaryOperator) {
+            while (Symbols.Count > 0 && Symbols.Last() is BinaryOperator) {
                 Symbols.RemoveAt(Symbols.Count - 1);
             }
 
@@ -44,18 +42,18 @@ namespace BlazorPlayground.Calculator {
             }
         }
 
-        public decimal Evaluate() {
+        internal override decimal Evaluate() {
             Close();
 
             var symbols = new List<ISymbol>(Symbols);
 
             foreach (var precedence in Enum.GetValues<OperatorPrecedence>().OrderBy(p => p)) {
                 for (var i = 1; i < symbols.Count - 1; i += 2) {
-                    var op = (IBinaryOperator)symbols[i];
+                    var op = (BinaryOperator)symbols[i];
 
                     if (op.Precedence == precedence) {
-                        var left = (IEvaluatableSymbol)symbols[i - 1];
-                        var right = (IEvaluatableSymbol)symbols[i + 1];
+                        var left = (EvaluatableSymbol)symbols[i - 1];
+                        var right = (EvaluatableSymbol)symbols[i + 1];
 
                         symbols[i - 1] = new LiteralNumber(op.Invoke(left.Evaluate(), right.Evaluate()));
                         symbols.RemoveAt(i);
@@ -65,7 +63,7 @@ namespace BlazorPlayground.Calculator {
                 }
             }
 
-            return ((IEvaluatableSymbol)symbols.Single()).Evaluate();
+            return ((EvaluatableSymbol)symbols.Single()).Evaluate();
         }
 
         public override string ToString() => $"({string.Join(' ', Symbols)})";
