@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace BlazorPlayground.Calculator {
     internal abstract class BinaryOperator : ISymbol {
@@ -12,7 +13,18 @@ namespace BlazorPlayground.Calculator {
         public abstract decimal Invoke(decimal left, decimal right);
 
         public bool TryAppendTo(IList<ISymbol> symbols) {
-            throw new System.NotImplementedException();
+            if (symbols.Count == 0) {
+                symbols.Add(new LiteralNumber(0));
+            }
+
+            if (symbols.Last() is BinaryOperator) {
+                symbols[^1] = this;
+            }
+            else {
+                symbols.Add(this);
+            }
+
+            return true;
         }
 
         public override string ToString() => Character.ToString();
