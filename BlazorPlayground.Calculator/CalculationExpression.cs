@@ -11,47 +11,17 @@ namespace BlazorPlayground.Calculator {
         internal Stack<SymbolGroup> Groups { get; }
         internal SymbolGroup CurrentGroup => Groups.Peek();
 
-        public bool TryAppend(char c) {
-            if (c == '(') {
+        public bool TryAppend(char character) {
+            if (character == '(') {
                 return OpenGroup();
             }
-            else if (c == ')') {
+            else if (character == ')') {
                 return CloseGroup();
             }
-            else if (TryAppendBinaryOperator(c)) {
-                return true;
-            }
-            else if (TryAppendUnaryOperator(c)) {
-                return true;
-            }
-            else if (TryAppendDigit(c)) {
-                return true;
-            }
-            else {
-                var number = new ComposableNumber();
 
-                return number.TryAppend(c) && CurrentGroup.TryAppend(number);
-            }
+            var symbol = SymbolFactory.GetSymbol(character);
 
-            bool TryAppendBinaryOperator(char c) {
-                var op = BinaryOperatorFactory.GetOperator(c);
-
-                return op != null && CurrentGroup.TryAppend(op);
-            }
-
-            bool TryAppendUnaryOperator(char c) {
-                if (CurrentGroup.Symbols.LastOrDefault() is EvaluatableSymbol symbol) {
-                    var op = UnaryOperatorFactory.GetOperator(c);
-
-                    return op != null && CurrentGroup.TryAppend(op);
-                }
-
-                return false;
-            }
-
-            bool TryAppendDigit(char c) {
-                return CurrentGroup.Symbols.LastOrDefault() is ComposableNumber number && number.TryAppend(c);
-            }
+            return CurrentGroup.TryAppend(symbol);
         }
 
         internal bool OpenGroup() {
@@ -93,7 +63,7 @@ namespace BlazorPlayground.Calculator {
 
         override public string ToString() {
             var value = Groups.Last().ToString();
-            
+
             return value.Substring(1, value.Length - 1 - Groups.Count);
         }
     }

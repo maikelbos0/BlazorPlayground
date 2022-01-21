@@ -8,16 +8,16 @@ namespace BlazorPlayground.Calculator {
 
         internal List<char> Characters { get; } = new();
 
-        public bool TryAppend(char c) {
-            if (!char.IsDigit(c) && !decimalSeparators.Contains(c)) {
+        public bool TryAppend(char character) {
+            if (!char.IsDigit(character) && !decimalSeparators.Contains(character)) {
                 return false;
             }
 
-            if (!char.IsDigit(c) && decimalSeparators.Any(s => Characters.Contains(s))) {
+            if (!char.IsDigit(character) && decimalSeparators.Any(s => Characters.Contains(s))) {
                 return false;
             }
 
-            Characters.Add(c);
+            Characters.Add(character);
             return true;
         }
 
@@ -31,12 +31,12 @@ namespace BlazorPlayground.Calculator {
             return decimal.Parse(value, CultureInfo.InvariantCulture);
         }
 
-        private char Normalize(char c) {
-            if (decimalSeparators.Contains(c)) {
+        private char Normalize(char character) {
+            if (decimalSeparators.Contains(character)) {
                 return '.';
             }
 
-            return c;
+            return character;
         }
 
         override public string ToString() {

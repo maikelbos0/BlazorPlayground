@@ -2,7 +2,7 @@
 using Xunit;
 
 namespace BlazorPlayground.Calculator.Tests {
-    public class BinaryOperatorFactoryTests {
+    public class SymbolFactoryTests {
         [Theory]
         [InlineData('/', typeof(DivisionOperator))]
         [InlineData('÷', typeof(DivisionOperator))]
@@ -11,10 +11,11 @@ namespace BlazorPlayground.Calculator.Tests {
         [InlineData('-', typeof(SubtractionOperator))]
         [InlineData('−', typeof(SubtractionOperator))]
         [InlineData('+', typeof(AdditionOperator))]
-        public void BinaryOperatorFactory_Creates_Correct_Operator(char character, Type expectedType) {
-            var op = BinaryOperatorFactory.GetOperator(character);
+        [InlineData('±', typeof(NegationOperator))]
+        public void SymbolFactory_Creates_Correct_Operator(char character, Type expectedType) {
+            var symbol = SymbolFactory.GetSymbol(character);
 
-            Assert.IsType(expectedType, op);
+            Assert.IsType(expectedType, symbol);
         }
 
         [Theory]
@@ -22,11 +23,12 @@ namespace BlazorPlayground.Calculator.Tests {
         [InlineData('9')]
         [InlineData('.')]
         [InlineData(',')]
-        [InlineData('±')]
-        public void BinaryOperatorFactory_Does_Not_Create_Operator_For_Unknown_Operator(char character) {
-            var op = BinaryOperatorFactory.GetOperator(character);
+        [InlineData('a')]
+        [InlineData('z')]
+        public void SymbolFactory_Creates_Character_For_Unknown_Operator(char character) {
+            var symbol = SymbolFactory.GetSymbol(character);
 
-            Assert.Null(op);
+            Assert.IsType<Character>(symbol);
         }
     }
 }
