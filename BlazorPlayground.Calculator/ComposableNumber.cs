@@ -22,13 +22,11 @@ namespace BlazorPlayground.Calculator {
         }
 
         internal override decimal Evaluate() {
-            var value = "0";
-
             if (Characters.Any()) {
-                value = new string(Characters.Select(Normalize).ToArray());
+                return decimal.Parse(new string(Characters.Select(Normalize).ToArray()), CultureInfo.InvariantCulture);
             }
 
-            return decimal.Parse(value, CultureInfo.InvariantCulture);
+            return 0M;
         }
 
         private char Normalize(char character) {
