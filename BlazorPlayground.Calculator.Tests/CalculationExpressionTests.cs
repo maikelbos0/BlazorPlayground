@@ -153,7 +153,7 @@ namespace BlazorPlayground.Calculator.Tests {
 
             Assert.Equal(5.5M, expression.Evaluate());
             Assert.Single(expression.Groups);
-            Assert.Equal(5.5M, Assert.IsType<LiteralNumber>(Assert.Single(expression.CurrentGroup.Symbols)).Evaluate());
+            Assert.Equal(5.5M, Assert.IsType<LiteralNumber>(Assert.Single(expression.CurrentGroup.Symbols)).Value);
         }
 
         [Fact]

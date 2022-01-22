@@ -2,14 +2,14 @@
 
 namespace BlazorPlayground.Calculator {
     internal class LiteralNumber : EvaluatableSymbol {
-        private readonly decimal value;
+        internal decimal Value { get; set; }
 
         internal LiteralNumber(decimal value) {
-            this.value = value;
+            Value = value;
         }
 
-        internal override decimal Evaluate() => value;
+        internal override decimal Evaluate() => Value;
 
-        override public string ToString() => value.RemovePrecision().ToString(CultureInfo.InvariantCulture);
+        override public string ToString() => Value.RemovePrecision().ToString(CultureInfo.InvariantCulture);
     }
 }

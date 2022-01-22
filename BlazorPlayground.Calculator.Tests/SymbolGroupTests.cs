@@ -32,7 +32,7 @@ namespace BlazorPlayground.Calculator.Tests {
 
             group.Close();
 
-            Assert.Equal(0, Assert.IsType<LiteralNumber>(Assert.Single(group.Symbols)).Evaluate());
+            Assert.Equal(0, Assert.IsType<LiteralNumber>(Assert.Single(group.Symbols)).Value);
         }
 
         [Fact]

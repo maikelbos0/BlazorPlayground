@@ -14,6 +14,11 @@ namespace BlazorPlayground.Calculator {
                 return true;
             }
 
+            if (symbols.LastOrDefault() is LiteralNumber number && number.Value < 0) {
+                number.Value = -number.Value;
+                return true;
+            }
+
             return base.TryAppendTo(symbols);
         }
 

@@ -11,7 +11,7 @@ namespace BlazorPlayground.Calculator.Tests {
             Assert.True(op.TryAppendTo(symbols));
             Assert.Equal(2, symbols.Count);
             Assert.Equal(op, symbols[1]);
-            Assert.Equal(0, Assert.IsType<LiteralNumber>(symbols[0]).Evaluate());
+            Assert.Equal(0, Assert.IsType<LiteralNumber>(symbols[0]).Value);
         }
 
         [Fact]

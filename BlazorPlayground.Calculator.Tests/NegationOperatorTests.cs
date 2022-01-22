@@ -39,6 +39,17 @@ namespace BlazorPlayground.Calculator.Tests {
         }
 
         [Fact]
+        public void NegationOperator_TryAppendTo_Negates__LiteralNumber_Value_When_Negation() {
+            var op = new NegationOperator();
+            var symbols = new List<ISymbol>() {
+                new LiteralNumber(-5.5M)
+            };
+
+            Assert.True(op.TryAppendTo(symbols));
+            Assert.Equal(5.5M, Assert.IsType<LiteralNumber>(Assert.Single(symbols)).Value);
+        }
+
+        [Fact]
         public void UnaryOperator_TryAppendTo_Succeeds_When_Previous_Symbol_Is_Evaluatable() {
             var op = new NegationOperator();
             var number = new LiteralNumber(5.5M);
