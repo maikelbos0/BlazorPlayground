@@ -10,6 +10,7 @@
             '+' => new AdditionOperator(character),
             '±' => new NegationOperator(),
             'π' => new Pi(),
+            '²' => new SquareOperator(),
             _ => new Character(character)
         };
     }
