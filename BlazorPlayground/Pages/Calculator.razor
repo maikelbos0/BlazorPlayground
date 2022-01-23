@@ -5,7 +5,7 @@
 <div class="container">
     <h1>Calculator</h1>
 
-    <GlobalEventHandler OnKeyUp="(e) => HandleKey(e.Key)"/>
+    <GlobalEventHandler OnKeyUp="(e) => HandleKey(e.Key)" />
 
     <div class="row">
         <div class="col-12 col-md-6 col-xl-4">
@@ -22,6 +22,21 @@
                 </div>
                 <div class="col-3">
                     <button class="btn btn-light w-100" @onclick="() => Append(')')">)</button>
+                </div>
+                <div class="col-3">
+                    <button class="btn btn-light w-100" @onclick="() => Append('⌫')">&#x232B;</button>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-3">
+                    <button class="btn btn-light w-100" @onclick="() => Append('π')">&pi;</button>
+                </div>
+                <div class="col-3">
+                    <button class="btn btn-light w-100" @onclick="() => Append('²')">x&sup2;</button>
+                </div>
+                <div class="col-3">
+                    <button class="btn btn-light w-100" @onclick="() => Append('√')">&#x221A;</button>
                 </div>
                 <div class="col-3">
                     <button class="btn btn-light w-100" @onclick="() => Append('÷')">&divide;</button>
