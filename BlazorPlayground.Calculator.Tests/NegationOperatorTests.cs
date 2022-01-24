@@ -25,6 +25,17 @@ namespace BlazorPlayground.Calculator.Tests {
         }
 
         [Fact]
+        public void NegationOperator_ToString_Adds_Parentheses_For_UnaryOperator_Symbol() {
+            var op = new NegationOperator() {
+                Symbol = new SquareOperator() {
+                    Symbol = new LiteralNumber(5.5M)
+                }
+            };
+
+            Assert.Equal("-(5.5²)", op.ToString());
+        }
+
+        [Fact]
         public void NegationOperator_TryAppendTo_Replaces_Symbol_For_Double_Negation() {
             var op = new NegationOperator();
             var number = new LiteralNumber(5.5M);

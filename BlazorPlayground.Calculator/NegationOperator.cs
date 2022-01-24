@@ -22,6 +22,13 @@ namespace BlazorPlayground.Calculator {
             return base.TryAppendTo(symbols);
         }
 
-        public override string ToString() => $"-{Symbol}";
+        public override string ToString() {
+            if (Symbol is UnaryOperator) {
+                return $"-({Symbol})";
+            }
+            else {
+                return $"-{Symbol}";
+            }
+        }
     }
 }
