@@ -64,6 +64,25 @@ namespace BlazorPlayground.Calculator.Tests {
             Assert.Equal(previousCharacters.Length, number.Characters.Count);
         }
 
+        [Fact]
+        public void ComposableNumber_Can_Remove_Character() {
+            var number = new ComposableNumber();
+
+            number.Characters.Add('4');
+            number.Characters.Add('5');
+
+            Assert.True(number.TryRemoveCharacter());
+            Assert.Equal('4', Assert.Single(number.Characters));
+        }
+
+        [Fact]
+        public void ComposableNumber_TryRemoveCharacter_Does_Nothing_When_Emtpy() {
+            var number = new ComposableNumber();
+
+            Assert.False(number.TryRemoveCharacter());
+            Assert.Empty(number.Characters);
+        }
+
         [Theory]
         [InlineData(".25", 0.25)]
         [InlineData("25.25", 25.25)]

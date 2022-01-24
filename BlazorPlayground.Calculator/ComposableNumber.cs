@@ -8,7 +8,7 @@ namespace BlazorPlayground.Calculator {
 
         internal List<char> Characters { get; } = new();
 
-        public bool TryAppend(char character) {
+        internal bool TryAppend(char character) {
             if (!char.IsDigit(character) && !decimalSeparators.Contains(character)) {
                 return false;
             }
@@ -18,6 +18,15 @@ namespace BlazorPlayground.Calculator {
             }
 
             Characters.Add(character);
+            return true;
+        }
+
+        internal bool TryRemoveCharacter() {
+            if (Characters.Count == 0) {
+                return false;
+            }
+
+            Characters.RemoveAt(Characters.Count - 1);
             return true;
         }
 

@@ -15,6 +15,7 @@ namespace BlazorPlayground.Calculator.Tests {
         [InlineData('²', typeof(SquareOperator))]
         [InlineData('√', typeof(SquareRootOperator))]
         [InlineData('π', typeof(Pi))]
+        [InlineData('⌫', typeof(Backspace))]
         public void SymbolFactory_Creates_Correct_Operator(char character, Type expectedType) {
             var symbol = SymbolFactory.GetSymbol(character);
 

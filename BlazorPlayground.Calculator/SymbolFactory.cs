@@ -12,6 +12,7 @@
             '²' => new SquareOperator(),
             '√' => new SquareRootOperator(),
             'π' => new Pi(),
+            '⌫' => new Backspace(),
             _ => new Character(character)
         };
     }

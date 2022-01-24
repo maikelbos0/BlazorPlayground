@@ -118,6 +118,9 @@
         else if (s == "Delete") {
             expression.Clear();
         }
+        else if (s == "Backspace") {
+            await Append('⌫');
+        }
         else if (s.Length == 1) {
             await Append(s[0]);
         }
