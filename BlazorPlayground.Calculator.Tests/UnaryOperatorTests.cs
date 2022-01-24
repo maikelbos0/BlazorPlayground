@@ -4,14 +4,9 @@ using Xunit;
 
 namespace BlazorPlayground.Calculator.Tests {
     public class UnaryOperatorTests {
-        // If a vanilla unary operator gets added, replace this testclass with the new operator
-        private class TestOperator : UnaryOperator {
-            internal override decimal Evaluate() => throw new System.NotImplementedException();
-        }
-
         [Fact]
         public void UnaryOperator_TryAppendTo_Succeeds_When_Previous_Symbol_Is_Evaluatable() {
-            var op = new TestOperator();
+            var op = new SquareOperator();
             var number = new LiteralNumber(5.5M);
             var symbols = new List<ISymbol>() {
                 number
@@ -24,7 +19,7 @@ namespace BlazorPlayground.Calculator.Tests {
 
         [Fact]
         public void UnaryOperator_TryAppendTo_Fails_When_Symbols_Is_Empty() {
-            var op = new TestOperator();
+            var op = new SquareOperator();
             var symbols = new List<ISymbol>();
 
             Assert.False(op.TryAppendTo(symbols));
@@ -34,7 +29,7 @@ namespace BlazorPlayground.Calculator.Tests {
 
         [Fact]
         public void UnaryOperator_TryAppendTo_Fails_When_Previous_Symbol_Is_Not_Evaluatable() {
-            var op = new TestOperator();
+            var op = new SquareOperator();
             var binaryOp = new AdditionOperator('+');
             var symbols = new List<ISymbol>() {
                 new LiteralNumber(5.5M),
