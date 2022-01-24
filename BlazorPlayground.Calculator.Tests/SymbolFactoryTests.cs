@@ -13,6 +13,7 @@ namespace BlazorPlayground.Calculator.Tests {
         [InlineData('+', typeof(AdditionOperator))]
         [InlineData('±', typeof(NegationOperator))]
         [InlineData('²', typeof(SquareOperator))]
+        [InlineData('√', typeof(SquareRootOperator))]
         [InlineData('π', typeof(Pi))]
         public void SymbolFactory_Creates_Correct_Operator(char character, Type expectedType) {
             var symbol = SymbolFactory.GetSymbol(character);

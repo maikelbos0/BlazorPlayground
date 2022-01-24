@@ -9,8 +9,9 @@
             '−' => new SubtractionOperator(character),
             '+' => new AdditionOperator(character),
             '±' => new NegationOperator(),
-            'π' => new Pi(),
             '²' => new SquareOperator(),
+            '√' => new SquareRootOperator(),
+            'π' => new Pi(),
             _ => new Character(character)
         };
     }
