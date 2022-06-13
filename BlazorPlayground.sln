@@ -5,9 +5,9 @@ VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorPlayground", "BlazorPlayground\BlazorPlayground.csproj", "{F271A8A8-9C29-4CDA-A4A5-6F6AFB25DED1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorPlayground.Calculator", "BlazorPlayground.Calculator\BlazorPlayground.Calculator.csproj", "{23BC4C6A-5CC5-4B23-9AC2-725C2C4C0010}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorPlayground.Calculator", "BlazorPlayground.Calculator\BlazorPlayground.Calculator.csproj", "{23BC4C6A-5CC5-4B23-9AC2-725C2C4C0010}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorPlayground.Calculator.Tests", "BlazorPlayground.Calculator.Tests\BlazorPlayground.Calculator.Tests.csproj", "{AE3CD460-F83D-4F02-95DE-ADED7A8F60E6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorPlayground.Calculator.Tests", "BlazorPlayground.Calculator.Tests\BlazorPlayground.Calculator.Tests.csproj", "{AE3CD460-F83D-4F02-95DE-ADED7A8F60E6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
