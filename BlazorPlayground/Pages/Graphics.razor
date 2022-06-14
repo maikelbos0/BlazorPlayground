@@ -2,6 +2,14 @@
 
 <h1>Graphics</h1>
 
+<EditForm Model="drawType">
+    <InputRadioGroup @bind-Value="@drawType">
+        <div>
+            <InputRadio Value="DrawType.Line" /> Line
+            <InputRadio Value="DrawType.Square" /> Square
+        </div>
+    </InputRadioGroup>
+</EditForm>
 
 <svg width="500" height="500" style="border: 1px solid grey" @onmousedown="OnStart" @onmouseup="OnEnd">
     @foreach (var line in Lines) {
@@ -11,13 +19,19 @@
     @foreach (var square in Squares) {
         <g @key="square">
             @foreach (var line in square.GetLines()) {
-                <line x1="@line.StartPoint.X" y1="@line.StartPoint.Y" x2="@line.EndPoint.X" y2="@line.EndPoint.Y" style="stroke:rgb(0, 0, 0); stroke-width:2" />        
+                <line x1="@line.StartPoint.X" y1="@line.StartPoint.Y" x2="@line.EndPoint.X" y2="@line.EndPoint.Y" style="stroke:rgb(0, 0, 0); stroke-width:2" />
             }
         </g>
     }
 </svg>
 
 @code {
+    public enum DrawType {
+        Line,
+        Square
+    }
+
+    private DrawType drawType = DrawType.Line;
     private Point? startPoint;
 
     public void OnStart(MouseEventArgs args) {
@@ -26,7 +40,17 @@
 
     public void OnEnd(MouseEventArgs args) {
         if (startPoint != null) {
-            Lines.Add(new Line() { StartPoint = startPoint.Value, EndPoint = new Point(args.OffsetX, args.OffsetY) });
+            var endPoint = new Point(args.OffsetX, args.OffsetY);
+
+            switch (drawType) {
+                case DrawType.Line:
+                    Lines.Add(new Line() { StartPoint = startPoint.Value, EndPoint = endPoint });
+                    break;
+                case DrawType.Square:
+                    var radius = Math.Min(Math.Abs(startPoint.Value.X - endPoint.X), Math.Abs(startPoint.Value.Y - endPoint.Y)) / 2;
+                    Squares.Add(new Square() { Center = (startPoint.Value + endPoint) / 2, Radius = radius });
+                    break;
+            }
 
             startPoint = null;
         }
@@ -52,6 +76,7 @@
         }
 
         public static Point operator +(Point p1, Point p2) => new Point(p1.X + p2.X, p1.Y + p2.Y);
+        public static Point operator /(Point p, double x) => new Point(p.X / x, p.Y / x);
     }
 
     public class Square {
