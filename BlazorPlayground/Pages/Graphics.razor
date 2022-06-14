@@ -2,9 +2,18 @@
 
 <h1>Graphics</h1>
 
+
 <svg width="500" height="500" style="border: 1px solid grey" @onmousedown="OnStart" @onmouseup="OnEnd">
     @foreach (var line in Lines) {
         <line @key="@line" x1="@line.StartPoint.X" y1="@line.StartPoint.Y" x2="@line.EndPoint.X" y2="@line.EndPoint.Y" style="stroke:rgb(0, 0, 0); stroke-width:2" />
+    }
+
+    @foreach (var square in Squares) {
+        <g @key="square">
+            @foreach (var line in square.GetLines()) {
+                <line x1="@line.StartPoint.X" y1="@line.StartPoint.Y" x2="@line.EndPoint.X" y2="@line.EndPoint.Y" style="stroke:rgb(0, 0, 0); stroke-width:2" />        
+            }
+        </g>
     }
 </svg>
 
@@ -24,10 +33,13 @@
     }
 
     public List<Line> Lines { get; set; } = new List<Line>() {
-        new Line() { StartPoint = new Point(10, 10), EndPoint = new Point(490, 490) },
-        new Line() { StartPoint = new Point(250, 10), EndPoint = new Point(250, 490) },
-        new Line() { StartPoint = new Point(10, 250), EndPoint = new Point(490, 250) },
-        new Line() { StartPoint = new Point(490, 10), EndPoint = new Point(10, 490) },
+        new Line() { StartPoint = new Point(10, 10), EndPoint = new Point(250, 490) },
+        new Line() { StartPoint = new Point(490, 10), EndPoint = new Point(250, 250) },
+    };
+
+    public List<Square> Squares { get; set; } = new List<Square>() {
+        new Square() { Center = new Point(140, 140), Radius = 100 },
+        new Square() { Center = new Point(180, 180), Radius = 100 }
     };
 
     public struct Point {
@@ -37,6 +49,20 @@
         public Point(double x, double y) {
             X = x;
             Y = y;
+        }
+
+        public static Point operator +(Point p1, Point p2) => new Point(p1.X + p2.X, p1.Y + p2.Y);
+    }
+
+    public class Square {
+        public Point Center { get; set; }
+        public double Radius { get; set; } // radius is wrong, but what is the proper term?
+
+        public IEnumerable<Line> GetLines() {
+            yield return new Line() { StartPoint = Center + new Point(-Radius, -Radius), EndPoint = Center + new Point(-Radius, Radius) };
+            yield return new Line() { StartPoint = Center + new Point(-Radius, Radius), EndPoint = Center + new Point(Radius, Radius) };
+            yield return new Line() { StartPoint = Center + new Point(Radius, Radius), EndPoint = Center + new Point(Radius, -Radius) };
+            yield return new Line() { StartPoint = Center + new Point(Radius, -Radius), EndPoint = Center + new Point(-Radius, -Radius) };
         }
     }
 
