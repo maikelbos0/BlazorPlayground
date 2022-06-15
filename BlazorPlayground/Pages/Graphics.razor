@@ -13,11 +13,12 @@
 
 <svg width="500" height="500" style="border: 1px solid grey" @onmousedown="OnStart" @onmouseup="OnEnd">
     @foreach (var line in Lines) {
+        // TODO fix double formatting to be invariant here
         <line @key="@line" x1="@line.StartPoint.X" y1="@line.StartPoint.Y" x2="@line.EndPoint.X" y2="@line.EndPoint.Y" style="stroke: #000; stroke-width: 2;" />
     }
 
     @foreach (var square in Squares) {
-        <polyline @key="@square" points="@string.Join(" ", square.GetPoints().Select(p => $"{p.X},{p.Y}"))" style="stroke: #000; stroke-width: 2; fill: transparent;" />
+        <polyline @key="@square" points="@string.Join(" ", square.GetPoints().Select(p => FormattableString.Invariant($"{p.X},{p.Y}")))" style="stroke: #000; stroke-width: 2; fill: transparent;" />
     }
 </svg>
 
@@ -83,10 +84,20 @@
         }
 
         public IEnumerable<Point> GetPoints() {
+            // TODO fix bug when drawing it creates not quite a square
+            var points = 4;
+            var radius = Math.Sqrt(Math.Pow(RadiusPoint.X - CenterPoint.X, 2) + Math.Pow(RadiusPoint.Y - CenterPoint.Y, 2));
+            var startingAngle = Math.Asin((RadiusPoint.X - CenterPoint.X) / radius);
+            var pointAngle = Math.PI / points * 2;
+
             yield return RadiusPoint;
-            yield return RadiusPoint + new Point(0, 100);
-            yield return RadiusPoint + new Point(100, 100);
-            yield return RadiusPoint + new Point(100, 0);
+
+            for (var i = 1; i <= points; i++) {
+                var angle = startingAngle + pointAngle * i;
+
+                yield return CenterPoint + new Point(radius * Math.Cos(angle), radius * Math.Sin(angle));
+            }
+            
             yield return RadiusPoint;
         }
     }
