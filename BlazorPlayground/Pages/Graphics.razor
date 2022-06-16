@@ -1,4 +1,5 @@
 ﻿@page "/graphics"
+@using BlazorPlayground.Graphics
 
 <h1>Graphics</h1>
 
@@ -29,7 +30,7 @@
     }
 
     private DrawType drawType = DrawType.Line;
-    private Point? startPoint;
+    private Point startPoint;
 
     public void OnStart(MouseEventArgs args) {
         startPoint = new Point(args.OffsetX, args.OffsetY);
@@ -62,53 +63,4 @@
         new Square(new Point(180, 180), new Point(280, 280))
     };
 
-    public class Point {
-        public double X { get; }
-        public double Y { get; }
-
-        public Point(double x, double y) {
-            X = x;
-            Y = y;
-        }
-
-        public static Point operator +(Point p1, Point p2) => new Point(p1.X + p2.X, p1.Y + p2.Y);
-    }
-
-    public class Square {
-        public Point CenterPoint { get; }
-        public Point RadiusPoint { get; }
-
-        public Square(Point centerPoint, Point radiusPoint) {
-            CenterPoint = centerPoint;
-            RadiusPoint = radiusPoint;
-        }
-
-        public IEnumerable<Point> GetPoints() {
-            // TODO fix bug when drawing it creates not quite a square
-            var points = 4;
-            var radius = Math.Sqrt(Math.Pow(RadiusPoint.X - CenterPoint.X, 2) + Math.Pow(RadiusPoint.Y - CenterPoint.Y, 2));
-            var startingAngle = Math.Asin((RadiusPoint.X - CenterPoint.X) / radius);
-            var pointAngle = Math.PI / points * 2;
-
-            yield return RadiusPoint;
-
-            for (var i = 1; i <= points; i++) {
-                var angle = startingAngle + pointAngle * i;
-
-                yield return CenterPoint + new Point(radius * Math.Cos(angle), radius * Math.Sin(angle));
-            }
-            
-            yield return RadiusPoint;
-        }
-    }
-
-    public class Line {
-        public Point StartPoint { get; }
-        public Point EndPoint { get; }
-
-        public Line(Point startPoint, Point endPoint) {
-            StartPoint = startPoint;
-            EndPoint = endPoint;
-        }
-    }
 }
