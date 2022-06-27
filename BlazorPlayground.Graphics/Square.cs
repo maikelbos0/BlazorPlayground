@@ -1,5 +1,7 @@
 ﻿namespace BlazorPlayground.Graphics {
     public class Square {
+        public const int Points = 4;
+
         public Point CenterPoint { get; }
         public Point RadiusPoint { get; }
 
@@ -9,12 +11,12 @@
         }
 
         public IEnumerable<Point> GetPoints() {
-            var points = 4;
-            var radius = Math.Sqrt(Math.Pow(RadiusPoint.X - CenterPoint.X, 2) + Math.Pow(RadiusPoint.Y - CenterPoint.Y, 2));
-            var startingAngle = Math.Asin((RadiusPoint.X - CenterPoint.X) / radius);
-            var pointAngle = Math.PI / points * 2;
+            var vector = RadiusPoint - CenterPoint;
+            var radius = Math.Sqrt(Math.Pow(vector.X, 2) + Math.Pow(vector.Y, 2));
+            var startingAngle = Math.Atan2(vector.Y, vector.X);
+            var pointAngle = Math.PI / Points * 2;
 
-            for (var i = 0; i <= points; i++) {
+            for (var i = 0; i <= Points; i++) {
                 var angle = startingAngle + pointAngle * i;
 
                 yield return CenterPoint + new Point(radius * Math.Cos(angle), radius * Math.Sin(angle));

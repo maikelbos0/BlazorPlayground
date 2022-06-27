@@ -12,7 +12,7 @@
     </InputRadioGroup>
 </EditForm>
 
-<svg width="500" height="500" style="border: 1px solid grey" @onmousedown="OnStart" @onmouseup="OnEnd">
+<svg width="800" height="800" style="border: 1px solid grey" @onmousedown="OnStart" @onmouseup="OnEnd">
     @foreach (var line in Lines) {
         // TODO fix double formatting to be invariant here
         <line @key="@line" x1="@line.StartPoint.X" y1="@line.StartPoint.Y" x2="@line.EndPoint.X" y2="@line.EndPoint.Y" style="stroke: #000; stroke-width: 2;" />
