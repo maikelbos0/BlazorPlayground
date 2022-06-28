@@ -13,13 +13,8 @@
 </EditForm>
 
 <svg width="800" height="800" style="border: 1px solid grey" @onmousedown="OnStart" @onmouseup="OnEnd">
-    @foreach (var line in Lines) {
-        // TODO fix double formatting to be invariant here
-        <line @key="@line" x1="@line.StartPoint.X" y1="@line.StartPoint.Y" x2="@line.EndPoint.X" y2="@line.EndPoint.Y" style="stroke: #000; stroke-width: 2;" />
-    }
-
-    @foreach (var square in Squares) {
-        <polyline @key="@square" points="@string.Join(" ", square.GetPoints().Select(p => FormattableString.Invariant($"{p.X},{p.Y}")))" style="stroke: #000; stroke-width: 2; fill: transparent;" />
+    @foreach (var pointSeries in PointSeries) {
+        <Shape @key="pointSeries" PointSeries="pointSeries"/>
     }
 </svg>
 
@@ -42,10 +37,10 @@
 
             switch (drawType) {
                 case DrawType.Line:
-                    Lines.Add(new Line(startPoint, endPoint));
+                    PointSeries.Add(new Line(startPoint, endPoint));
                     break;
                 case DrawType.Square:
-                    Squares.Add(new Square(startPoint, endPoint));
+                    PointSeries.Add(new Square(startPoint, endPoint));
                     break;
             }
 
@@ -53,12 +48,9 @@
         }
     }
 
-    public List<Line> Lines { get; set; } = new List<Line>() {
+    public List<IPointSeries> PointSeries { get; set; } = new List<IPointSeries>() {
         new Line(new Point(10, 10), new Point(250, 490)),
         new Line(new Point(490, 10), new Point(250, 250)),
-    };
-
-    public List<Square> Squares { get; set; } = new List<Square>() {
         new Square(new Point(140, 140), new Point(240, 240)),
         new Square(new Point(180, 180), new Point(280, 280))
     };
