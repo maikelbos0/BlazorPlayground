@@ -16,7 +16,7 @@
             var startingAngle = Math.Atan2(vector.Y, vector.X);
             var pointAngle = Math.PI / Points * 2;
 
-            for (var i = 0; i <= Points; i++) {
+            for (var i = 0; i < Points; i++) {
                 var angle = startingAngle + pointAngle * i;
 
                 yield return CenterPoint + new Point(radius * Math.Cos(angle), radius * Math.Sin(angle));
