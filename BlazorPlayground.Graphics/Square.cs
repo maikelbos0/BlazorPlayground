@@ -1,5 +1,5 @@
 ﻿namespace BlazorPlayground.Graphics {
-    public class Square {
+    public class Square : IPointSeries {
         public const int Points = 4;
 
         public Point CenterPoint { get; }
@@ -22,5 +22,7 @@
                 yield return CenterPoint + new Point(radius * Math.Cos(angle), radius * Math.Sin(angle));
             }
         }
+
+        public PointSeriesType GetSeriesType() => PointSeriesType.Polygon;
     }
 }
