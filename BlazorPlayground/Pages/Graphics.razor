@@ -10,7 +10,8 @@
                 <InputRadio Value="ShapeType.Line" /> Line
             </div>
             <div>
-                <InputRadio Value="ShapeType.Square" /> Square
+                <InputRadio Value="ShapeType.RegularPolygon" /> Regular polygon<br />
+                Sides: <InputNumber @bind-Value="sides" />
             </div>
         </div>
     </InputRadioGroup>
@@ -25,11 +26,12 @@
 @code {
     public enum ShapeType {
         Line,
-        Square
+        RegularPolygon
     }
 
     private ShapeType shapeType = ShapeType.Line;
     private Point startPoint;
+    private int? sides = 4;
 
     public void OnStart(MouseEventArgs args) {
         startPoint = new Point(args.OffsetX, args.OffsetY);
@@ -43,8 +45,8 @@
                 case ShapeType.Line:
                     Shapes.Add(new Line(startPoint, endPoint));
                     break;
-                case ShapeType.Square:
-                    Shapes.Add(new Square(startPoint, endPoint));
+                case ShapeType.RegularPolygon:
+                    Shapes.Add(new RegularPolygon(startPoint, endPoint, sides ?? 4));
                     break;
             }
 
@@ -55,8 +57,8 @@
     public List<IShape> Shapes { get; set; } = new List<IShape>() {
         new Line(new Point(10, 10), new Point(250, 490)),
         new Line(new Point(490, 10), new Point(250, 250)),
-        new Square(new Point(140, 140), new Point(240, 240)),
-        new Square(new Point(180, 180), new Point(280, 280))
+        new RegularPolygon(new Point(140, 140), new Point(240, 240), 4),
+        new RegularPolygon(new Point(180, 180), new Point(280, 280), 4)
     };
 
 }

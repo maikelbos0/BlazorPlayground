@@ -2,10 +2,10 @@
 using Xunit;
 
 namespace BlazorPlayground.Graphics.Tests {
-    public class SquareTests {
+    public class RegularPolygonTests {
         [Fact]
-        public void GetPoints_0_Degrees() {
-            var square = new Square(new Point(100, 100), new Point(50, 50));
+        public void GetPoints_Square_0_Degrees() {
+            var square = new RegularPolygon(new Point(100, 100), new Point(50, 50), 4);
 
             var result = square.GetPoints().ToList();
 
@@ -18,8 +18,8 @@ namespace BlazorPlayground.Graphics.Tests {
         }
 
         [Fact]
-        public void GetPoints_45_Degrees() {
-            var square = new Square(new Point(100, 100), new Point(50, 100));
+        public void GetPoints_Square_45_Degrees() {
+            var square = new RegularPolygon(new Point(100, 100), new Point(50, 100), 4);
 
             var result = square.GetPoints().ToList();
 
@@ -32,8 +32,8 @@ namespace BlazorPlayground.Graphics.Tests {
         }
 
         [Fact]
-        public void GetPoints_22_Degrees() {
-            var square = new Square(new Point(100, 100), new Point(50, 120));
+        public void GetPoints_Square_22_Degrees() {
+            var square = new RegularPolygon(new Point(100, 100), new Point(50, 120), 4);
 
             var result = square.GetPoints().ToList();
 
@@ -46,8 +46,8 @@ namespace BlazorPlayground.Graphics.Tests {
         }
 
         [Fact]
-        public void GetPoints_112_Degrees() {
-            var square = new Square(new Point(100, 100), new Point(150, 120));
+        public void GetPoints_Square_112_Degrees() {
+            var square = new RegularPolygon(new Point(100, 100), new Point(150, 120), 4);
 
             var result = square.GetPoints().ToList();
 
