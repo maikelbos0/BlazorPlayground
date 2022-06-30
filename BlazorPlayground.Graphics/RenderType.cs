@@ -1,5 +1,5 @@
 ﻿namespace BlazorPlayground.Graphics {
-    public enum PointSeriesType {
+    public enum RenderType {
         Polygon,
         Polyline
     }

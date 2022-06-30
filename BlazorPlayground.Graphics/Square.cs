@@ -1,5 +1,5 @@
 ﻿namespace BlazorPlayground.Graphics {
-    public class Square : IPointSeries {
+    public class Square : IShape {
         public const int Points = 4;
 
         public Point CenterPoint { get; }
@@ -23,6 +23,6 @@
             }
         }
 
-        public PointSeriesType GetSeriesType() => PointSeriesType.Polygon;
+        public RenderType GetSeriesType() => RenderType.Polygon;
     }
 }

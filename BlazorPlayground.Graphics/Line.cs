@@ -1,5 +1,5 @@
 ﻿namespace BlazorPlayground.Graphics {
-    public class Line : IPointSeries {
+    public class Line : IShape {
         public Point StartPoint { get; set; }
         public Point EndPoint { get; set; }
 
@@ -13,6 +13,6 @@
             yield return EndPoint;
         }
 
-        public PointSeriesType GetSeriesType() => PointSeriesType.Polyline;
+        public RenderType GetSeriesType() => RenderType.Polyline;
     }
 }

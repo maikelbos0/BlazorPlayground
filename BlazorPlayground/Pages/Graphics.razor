@@ -3,28 +3,32 @@
 
 <h1>Graphics</h1>
 
-<EditForm Model="drawType">
-    <InputRadioGroup @bind-Value="@drawType">
+<EditForm Model="shapeType">
+    <InputRadioGroup @bind-Value="@shapeType">
         <div>
-            <InputRadio Value="DrawType.Line" /> Line
-            <InputRadio Value="DrawType.Square" /> Square
+            <div>
+                <InputRadio Value="ShapeType.Line" /> Line
+            </div>
+            <div>
+                <InputRadio Value="ShapeType.Square" /> Square
+            </div>
         </div>
     </InputRadioGroup>
 </EditForm>
 
 <svg width="800" height="800" style="border: 1px solid grey" @onmousedown="OnStart" @onmouseup="OnEnd">
-    @foreach (var pointSeries in PointSeries) {
-        <Shape @key="pointSeries" PointSeries="pointSeries"/>
+    @foreach (var shape in Shapes) {
+        <ShapeRenderer @key="shape" Shape="shape" />
     }
 </svg>
 
 @code {
-    public enum DrawType {
+    public enum ShapeType {
         Line,
         Square
     }
 
-    private DrawType drawType = DrawType.Line;
+    private ShapeType shapeType = ShapeType.Line;
     private Point startPoint;
 
     public void OnStart(MouseEventArgs args) {
@@ -35,12 +39,12 @@
         if (startPoint != null) {
             var endPoint = new Point(args.OffsetX, args.OffsetY);
 
-            switch (drawType) {
-                case DrawType.Line:
-                    PointSeries.Add(new Line(startPoint, endPoint));
+            switch (shapeType) {
+                case ShapeType.Line:
+                    Shapes.Add(new Line(startPoint, endPoint));
                     break;
-                case DrawType.Square:
-                    PointSeries.Add(new Square(startPoint, endPoint));
+                case ShapeType.Square:
+                    Shapes.Add(new Square(startPoint, endPoint));
                     break;
             }
 
@@ -48,7 +52,7 @@
         }
     }
 
-    public List<IPointSeries> PointSeries { get; set; } = new List<IPointSeries>() {
+    public List<IShape> Shapes { get; set; } = new List<IShape>() {
         new Line(new Point(10, 10), new Point(250, 490)),
         new Line(new Point(490, 10), new Point(250, 250)),
         new Square(new Point(140, 140), new Point(240, 240)),
