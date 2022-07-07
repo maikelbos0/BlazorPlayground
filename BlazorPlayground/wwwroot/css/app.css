@@ -112,3 +112,15 @@ a, .btn-link {
     border-bottom: 1px solid rgba(0, 0, 0, 0.125);
     padding: 1rem;
 }
+
+.graphics-main {
+    width: 800px;
+    height: 800px;
+    border: 1px solid grey;
+}
+
+.graphics-main .shape {
+    stroke: #000000;
+    stroke-width: 2;
+    fill: transparent;
+}

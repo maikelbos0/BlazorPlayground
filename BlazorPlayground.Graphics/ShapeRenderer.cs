@@ -9,7 +9,7 @@ namespace BlazorPlayground.Graphics {
         protected override void BuildRenderTree(RenderTreeBuilder builder) {
             if (Shape != null) {
                 builder.OpenElement(1, GetElementName(Shape.GetSeriesType()));
-                builder.AddAttribute(2, "style", "stroke: #000; stroke-width: 2; fill: transparent;");
+                builder.AddAttribute(2, "class", "shape");
                 builder.AddAttribute(3, "points", string.Join(" ", Shape.GetPoints().Select(p => FormattableString.Invariant($"{p.X},{p.Y}"))));
                 builder.CloseElement();
             }
