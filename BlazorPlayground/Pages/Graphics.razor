@@ -3,7 +3,7 @@
 
 <h1>Graphics</h1>
 
-<ul class="nav nav-tabs">
+<ul class="nav nav-tabs mb-3">
     @foreach (var type in Enum.GetValues<ActionType>()) {
         <li class="nav-item">
             <a class="nav-link @(currentActionType == type ? "active" : "")" @onclick="() => currentActionType = type">@actionDefinitions[type].Name</a>
@@ -11,37 +11,30 @@
     }
 </ul>
 
-<div class="card">
-    <div class="card-body container-fluid">
-        <h5 class="card-title">Settings</h5>
+<div class="container-fluid mb-3">
+    <div class="row">
+        @if (currentActionType == ActionType.DrawLine) {
 
-        <div class="row">
-            @if (currentActionType == ActionType.DrawLine) {
-
-            }
-            else if (currentActionType == ActionType.DrawRegularPolygon) {
-                <div class="mb-3 col-6 col-md-3 col-xl-2">
-                    <label for="regularPolygonSides" class="form-label">Sides (minimum 3)</label>
-                    <input type="text" class="form-control" id="regularPolygonSides" @bind-value="RegularPolygonSides" />
-                </div>
-            }
-
-        </div>
+        }
+        else if (currentActionType == ActionType.DrawRegularPolygon) {
+            <div class="mb-3 col-6 col-md-3 col-xl-2">
+                <label for="regularPolygonSides" class="form-label">Sides (minimum 3)</label>
+                <input type="text" class="form-control" id="regularPolygonSides" @bind-value="RegularPolygonSides" />
+            </div>
+        }
     </div>
 </div>
 
-<div class="card">
-    <div class="card-body container-fluid">
-        <svg class="graphics-main" @onmousedown="OnMouseDown" @onmousemove="OnMouseMove" @onmouseup="OnMouseUp">
-            @foreach (var shape in shapes) {
-                <ShapeRenderer @key="shape" Shape="shape" />
-            }
+<div class="container-fluid graphics-main">
+    <svg @onmousedown="OnMouseDown" @onmousemove="OnMouseMove" @onmouseup="OnMouseUp">
+        @foreach (var shape in shapes) {
+            <ShapeRenderer @key="shape" Shape="shape" />
+        }
 
-            @if (startPoint != null && currentPoint != null && CurrentActionDefinition is DrawActionDefinition drawActionDefinition) {
-                <ShapeRenderer @key="startPoint" Shape="drawActionDefinition.CreateShape(this, currentPoint)" RenderMode="ShapeRenderMode.New" />
-            }
-        </svg>
-    </div>
+        @if (startPoint != null && currentPoint != null && CurrentActionDefinition is DrawActionDefinition drawActionDefinition) {
+            <ShapeRenderer @key="startPoint" Shape="drawActionDefinition.CreateShape(this, currentPoint)" RenderMode="ShapeRenderMode.New" />
+        }
+    </svg>
 </div>
 
 @code {
