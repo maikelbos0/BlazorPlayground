@@ -124,3 +124,9 @@ a, .btn-link {
     stroke-width: 2;
     fill: transparent;
 }
+
+.graphics-main .shape.shape-new {
+    stroke: #999999;
+    stroke-dasharray: 5;
+    stroke-width: 1;
+}

@@ -36,12 +36,16 @@
             @foreach (var shape in shapes) {
                 <ShapeRenderer @key="shape" Shape="shape" />
             }
+
+            @if (startPoint != null && currentPoint != null) {
+                <ShapeRenderer @key="startPoint" Shape="ShapeFactory(this, currentPoint)" RenderMode="ShapeRenderMode.New" />
+            }
         </svg>
     </div>
 </div>
 
 @code {
-    private static Dictionary<ShapeType, (string Name, Func<Graphics, Point, IShape> Factory)> shapeData = new Dictionary<ShapeType, (string Name, Func<Graphics, Point, IShape> ShapeFactory)>() {
+    private static Dictionary<ShapeType, (string Name, Func<Graphics, Point, IShape> Factory)> shapeData = new Dictionary<ShapeType, (string Name, Func<Graphics, Point, IShape> Factory)>() {
         { ShapeType.Line, ("Line", (graphics, endPoint) => new Line(graphics.startPoint, endPoint)) },
         { ShapeType.RegularPolygon, ("Polygon", (graphics, endPoint) => new RegularPolygon(graphics.startPoint, endPoint, graphics.regularPolygonSides)) }
     };
@@ -52,22 +56,30 @@
     private Point currentPoint;
     private int regularPolygonSides = 4;
 
-
     public int RegularPolygonSides {
         get => regularPolygonSides;
         set => regularPolygonSides = Math.Max(value, 3);
     }
+
+    public bool IsDrawing => startPoint != null;
+
+    public Func<Graphics, Point, IShape> ShapeFactory => shapeData[shapeType].Factory;
 
     public void OnMouseDown(MouseEventArgs args) {
         startPoint = new Point(args.OffsetX, args.OffsetY);
     }
 
     public void OnMouseMove(MouseEventArgs args) {
-        currentPoint = new Point(args.OffsetX, args.OffsetY);
+        if (startPoint != null) {
+            currentPoint = new Point(args.OffsetX, args.OffsetY);
+        }
     }
 
     public void OnMouseUp(MouseEventArgs args) {
-        shapes.Add(shapeData[shapeType].Factory(this, new Point(args.OffsetX, args.OffsetY)));
-        startPoint = null;
+        if (startPoint != null) {
+            shapes.Add(ShapeFactory(this, new Point(args.OffsetX, args.OffsetY)));
+            startPoint = null;
+            currentPoint = null;
+        }
     }
 }

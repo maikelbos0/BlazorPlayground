@@ -23,6 +23,6 @@
             }
         }
 
-        public RenderType GetSeriesType() => RenderType.Polygon;
+        public ShapeRenderType GetSeriesType() => ShapeRenderType.Polygon;
     }
 }

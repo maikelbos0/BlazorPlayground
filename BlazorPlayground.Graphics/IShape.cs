@@ -1,6 +1,6 @@
 ﻿namespace BlazorPlayground.Graphics {
     public interface IShape {
-        RenderType GetSeriesType();
+        ShapeRenderType GetSeriesType();
         IEnumerable<Point> GetPoints();
     }
 }

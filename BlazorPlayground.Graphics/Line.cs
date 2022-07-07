@@ -13,6 +13,6 @@
             yield return EndPoint;
         }
 
-        public RenderType GetSeriesType() => RenderType.Polyline;
+        public ShapeRenderType GetSeriesType() => ShapeRenderType.Polyline;
     }
 }
