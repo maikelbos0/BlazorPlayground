@@ -3,33 +3,55 @@
 
 <h1>Graphics</h1>
 
-<EditForm Model="shapeType">
-    <InputRadioGroup @bind-Value="@shapeType">
-        <div>
-            <div>
-                <InputRadio Value="ShapeType.Line" /> Line
-            </div>
-            <div>
-                <InputRadio Value="ShapeType.RegularPolygon" /> Regular polygon<br />
-                <!-- TODO validate 3+ no decimals -->
-                Sides: <InputNumber @bind-Value="regularPolygonSides" />
-            </div>
-        </div>
-    </InputRadioGroup>
-</EditForm>
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link @(shapeType == ShapeType.Line ? "active" : "")" @onclick="() => shapeType = ShapeType.Line">Line</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link @(shapeType == ShapeType.RegularPolygon ? "active" : "")" @onclick="() => shapeType = ShapeType.RegularPolygon">Regular polygon</a>
+    </li>
+</ul>
 
-<svg class="graphics-main" @onmousedown="OnMouseDown" @onmouseup="OnMouseUp">
-    @foreach (var shape in Shapes) {
-        <ShapeRenderer @key="shape" Shape="shape" />
-    }
-</svg>
+<div class="card">
+    <div class="card-body container-fluid">
+        <h5 class="card-title">Settings</h5>
+
+        <div class="row">
+            @if (shapeType == ShapeType.Line) {
+
+            }
+            else if (shapeType == ShapeType.RegularPolygon) {
+                <div class="mb-3 col-6 col-md-3 col-xl-2">
+                    <label for="regularPolygonSides" class="form-label">Sides (minimum 3)</label>
+                    <input type="text" class="form-control" id="regularPolygonSides" @bind-value="RegularPolygonSides" />
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body container-fluid">
+        <svg class="graphics-main" @onmousedown="OnMouseDown" @onmouseup="OnMouseUp">
+            @foreach (var shape in shapes) {
+                <ShapeRenderer @key="shape" Shape="shape" />
+            }
+        </svg>
+    </div>
+</div>
 
 @code {
 
-    private List<IShape> Shapes = new List<IShape>();
-    private ShapeType shapeType = ShapeType.Line;
+    private List<IShape> shapes = new List<IShape>();
+    private ShapeType shapeType = ShapeType.RegularPolygon;
     private Point startingPosition;
-    private int? regularPolygonSides = 4;
+    private int regularPolygonSides = 4;
+
+    public int RegularPolygonSides {
+        get => regularPolygonSides;
+        set => regularPolygonSides = Math.Max(value, 3);
+    }
 
     public void OnMouseDown(MouseEventArgs args) {
         startingPosition = new Point(args.OffsetX, args.OffsetY);
@@ -41,10 +63,10 @@
 
             switch (shapeType) {
                 case ShapeType.Line:
-                    Shapes.Add(new Line(startingPosition, endPoint));
+                    shapes.Add(new Line(startingPosition, endPoint));
                     break;
                 case ShapeType.RegularPolygon:
-                    Shapes.Add(new RegularPolygon(startingPosition, endPoint, regularPolygonSides ?? 4));
+                    shapes.Add(new RegularPolygon(startingPosition, endPoint, regularPolygonSides));
                     break;
             }
 

@@ -40,12 +40,12 @@ a, .btn-link {
     z-index: 1000;
 }
 
-    #blazor-error-ui .dismiss {
-        cursor: pointer;
-        position: absolute;
-        right: 0.75rem;
-        top: 0.5rem;
-    }
+#blazor-error-ui .dismiss {
+    cursor: pointer;
+    position: absolute;
+    right: 0.75rem;
+    top: 0.5rem;
+}
 
 .wizard {
     width: 50%;
@@ -114,7 +114,7 @@ a, .btn-link {
 }
 
 .graphics-main {
-    width: 800px;
+    width: 100%;
     height: 800px;
     border: 1px solid grey;
 }
