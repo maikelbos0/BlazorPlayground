@@ -4,12 +4,11 @@
 <h1>Graphics</h1>
 
 <ul class="nav nav-tabs">
-    <li class="nav-item">
-        <a class="nav-link @(shapeType == ShapeType.Line ? "active" : "")" @onclick="() => shapeType = ShapeType.Line">Line</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link @(shapeType == ShapeType.RegularPolygon ? "active" : "")" @onclick="() => shapeType = ShapeType.RegularPolygon">Regular polygon</a>
-    </li>
+    @foreach (var type in Enum.GetValues<ShapeType>()) {
+        <li class="nav-item">
+            <a class="nav-link @(shapeType == type ? "active" : "")" @onclick="() => shapeType = type">@shapeData[type].Name</a>
+        </li>
+    }
 </ul>
 
 <div class="card">
@@ -33,7 +32,7 @@
 
 <div class="card">
     <div class="card-body container-fluid">
-        <svg class="graphics-main" @onmousedown="OnMouseDown" @onmouseup="OnMouseUp">
+        <svg class="graphics-main" @onmousedown="OnMouseDown" @onmousemove="OnMouseMove" @onmouseup="OnMouseUp">
             @foreach (var shape in shapes) {
                 <ShapeRenderer @key="shape" Shape="shape" />
             }
@@ -42,11 +41,17 @@
 </div>
 
 @code {
+    private static Dictionary<ShapeType, (string Name, Func<Graphics, Point, IShape> Factory)> shapeData = new Dictionary<ShapeType, (string Name, Func<Graphics, Point, IShape> ShapeFactory)>() {
+        { ShapeType.Line, ("Line", (graphics, endPoint) => new Line(graphics.startPoint, endPoint)) },
+        { ShapeType.RegularPolygon, ("Polygon", (graphics, endPoint) => new RegularPolygon(graphics.startPoint, endPoint, graphics.regularPolygonSides)) }
+    };
 
     private List<IShape> shapes = new List<IShape>();
     private ShapeType shapeType = ShapeType.RegularPolygon;
-    private Point startingPosition;
+    private Point startPoint;
+    private Point currentPoint;
     private int regularPolygonSides = 4;
+
 
     public int RegularPolygonSides {
         get => regularPolygonSides;
@@ -54,23 +59,15 @@
     }
 
     public void OnMouseDown(MouseEventArgs args) {
-        startingPosition = new Point(args.OffsetX, args.OffsetY);
+        startPoint = new Point(args.OffsetX, args.OffsetY);
+    }
+
+    public void OnMouseMove(MouseEventArgs args) {
+        currentPoint = new Point(args.OffsetX, args.OffsetY);
     }
 
     public void OnMouseUp(MouseEventArgs args) {
-        if (startingPosition != null) {
-            var endPoint = new Point(args.OffsetX, args.OffsetY);
-
-            switch (shapeType) {
-                case ShapeType.Line:
-                    shapes.Add(new Line(startingPosition, endPoint));
-                    break;
-                case ShapeType.RegularPolygon:
-                    shapes.Add(new RegularPolygon(startingPosition, endPoint, regularPolygonSides));
-                    break;
-            }
-
-            startingPosition = null;
-        }
+        shapes.Add(shapeData[shapeType].Factory(this, new Point(args.OffsetX, args.OffsetY)));
+        startPoint = null;
     }
 }
