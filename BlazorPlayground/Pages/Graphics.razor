@@ -4,9 +4,9 @@
 <h1>Graphics</h1>
 
 <ul class="nav nav-tabs">
-    @foreach (var type in Enum.GetValues<ShapeType>()) {
+    @foreach (var type in Enum.GetValues<ActionType>()) {
         <li class="nav-item">
-            <a class="nav-link @(shapeType == type ? "active" : "")" @onclick="() => shapeType = type">@shapeData[type].Name</a>
+            <a class="nav-link @(currentActionType == type ? "active" : "")" @onclick="() => currentActionType = type">@actionDefinitions[type].Name</a>
         </li>
     }
 </ul>
@@ -16,10 +16,10 @@
         <h5 class="card-title">Settings</h5>
 
         <div class="row">
-            @if (shapeType == ShapeType.Line) {
+            @if (currentActionType == ActionType.DrawLine) {
 
             }
-            else if (shapeType == ShapeType.RegularPolygon) {
+            else if (currentActionType == ActionType.DrawRegularPolygon) {
                 <div class="mb-3 col-6 col-md-3 col-xl-2">
                     <label for="regularPolygonSides" class="form-label">Sides (minimum 3)</label>
                     <input type="text" class="form-control" id="regularPolygonSides" @bind-value="RegularPolygonSides" />
@@ -37,21 +37,44 @@
                 <ShapeRenderer @key="shape" Shape="shape" />
             }
 
-            @if (startPoint != null && currentPoint != null) {
-                <ShapeRenderer @key="startPoint" Shape="ShapeFactory(this, currentPoint)" RenderMode="ShapeRenderMode.New" />
+            @if (startPoint != null && currentPoint != null && CurrentActionDefinition is DrawActionDefinition drawActionDefinition) {
+                <ShapeRenderer @key="startPoint" Shape="drawActionDefinition.CreateShape(this, currentPoint)" RenderMode="ShapeRenderMode.New" />
             }
         </svg>
     </div>
 </div>
 
 @code {
-    private static Dictionary<ShapeType, (string Name, Func<Graphics, Point, IShape> Factory)> shapeData = new Dictionary<ShapeType, (string Name, Func<Graphics, Point, IShape> Factory)>() {
-        { ShapeType.Line, ("Line", (graphics, endPoint) => new Line(graphics.startPoint, endPoint)) },
-        { ShapeType.RegularPolygon, ("Polygon", (graphics, endPoint) => new RegularPolygon(graphics.startPoint, endPoint, graphics.regularPolygonSides)) }
+    private enum ActionType {
+        DrawLine,
+        DrawRegularPolygon
+    }
+
+    public class ActionDefinition {
+        public string Name { get; }
+        public Action<Graphics, Point> Execute { get; }
+
+        public ActionDefinition(string name, Action<Graphics, Point> Execute) {
+            Name = name;
+            this.Execute = Execute;
+        }
+    }
+
+    public class DrawActionDefinition : ActionDefinition {
+        public Func<Graphics, Point, IShape> CreateShape { get; }
+
+        public DrawActionDefinition(string name, Func<Graphics, Point, IShape> createShape) : base(name, (graphics, endPoint) => graphics.shapes.Add(createShape(graphics, endPoint))) {
+            CreateShape = createShape;
+        }
+    }
+
+    private static Dictionary<ActionType, ActionDefinition> actionDefinitions = new Dictionary<ActionType, ActionDefinition>() {
+        { ActionType.DrawLine, new DrawActionDefinition("Line", (graphics, endPoint) => new Line(graphics.startPoint, endPoint)) },
+        { ActionType.DrawRegularPolygon, new DrawActionDefinition("Regular polygon", (graphics, endPoint) => new RegularPolygon(graphics.startPoint, endPoint, graphics.regularPolygonSides)) }
     };
 
     private List<IShape> shapes = new List<IShape>();
-    private ShapeType shapeType = ShapeType.RegularPolygon;
+    private ActionType currentActionType = ActionType.DrawRegularPolygon;
     private Point startPoint;
     private Point currentPoint;
     private int regularPolygonSides = 4;
@@ -63,7 +86,7 @@
 
     public bool IsDrawing => startPoint != null;
 
-    public Func<Graphics, Point, IShape> ShapeFactory => shapeData[shapeType].Factory;
+    public ActionDefinition CurrentActionDefinition => actionDefinitions[currentActionType];
 
     public void OnMouseDown(MouseEventArgs args) {
         startPoint = new Point(args.OffsetX, args.OffsetY);
@@ -77,7 +100,7 @@
 
     public void OnMouseUp(MouseEventArgs args) {
         if (startPoint != null) {
-            shapes.Add(ShapeFactory(this, new Point(args.OffsetX, args.OffsetY)));
+            CurrentActionDefinition.Execute(this, new Point(args.OffsetX, args.OffsetY));
             startPoint = null;
             currentPoint = null;
         }
