@@ -1,5 +1,6 @@
 ﻿namespace BlazorPlayground.Graphics {
-    public class Line : IShape {
+    public class Line : Shape {
+        public override ShapeRenderType RenderType => ShapeRenderType.Polyline;
         public Point StartPoint { get; set; }
         public Point EndPoint { get; set; }
 
@@ -8,11 +9,9 @@
             EndPoint = endPoint;
         }
 
-        public IEnumerable<Point> GetPoints() {
+        public override IEnumerable<Point> GetPoints() {
             yield return StartPoint;
             yield return EndPoint;
         }
-
-        public ShapeRenderType GetSeriesType() => ShapeRenderType.Polyline;
     }
 }

@@ -1,5 +1,6 @@
 ﻿namespace BlazorPlayground.Graphics {
-    public class RegularPolygon : IShape {
+    public class RegularPolygon : Shape {
+        public override ShapeRenderType RenderType => ShapeRenderType.Polygon;
         public Point CenterPoint { get; }
         public Point RadiusPoint { get; }
         public int Sides { get; }
@@ -10,7 +11,7 @@
             Sides = sides;
         }
 
-        public IEnumerable<Point> GetPoints() {
+        public override IEnumerable<Point> GetPoints() {
             var vector = RadiusPoint - CenterPoint;
             var radius = Math.Sqrt(Math.Pow(vector.X, 2) + Math.Pow(vector.Y, 2));
             var startingAngle = Math.Atan2(vector.Y, vector.X);
@@ -22,7 +23,5 @@
                 yield return CenterPoint + new Point(radius * Math.Cos(angle), radius * Math.Sin(angle));
             }
         }
-
-        public ShapeRenderType GetSeriesType() => ShapeRenderType.Polygon;
     }
 }

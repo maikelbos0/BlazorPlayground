@@ -26,13 +26,16 @@
 </div>
 
 <div class="container-fluid graphics-main">
-    <svg @onmousedown="OnMouseDown" @onmousemove="OnMouseMove" @onmouseup="OnMouseUp">
+    <svg @onmousedown="OnDrawingStarting" @onmousemove="OnDrawing" @onmouseup="OnDrawingCompleted">
         @foreach (var shape in shapes) {
             <ShapeRenderer @key="shape" Shape="shape" />
         }
 
-        @if (IsDrawing && currentPoint != null && CurrentActionDefinition is DrawActionDefinition drawActionDefinition) {
-            <ShapeRenderer @key="startPoint" Shape="drawActionDefinition.CreateShape(this, currentPoint)" RenderMode="ShapeRenderMode.New" />
+        @if (IsDrawing && CurrentActionDefinition is DrawActionDefinition drawActionDefinition) {
+            var newShape = drawActionDefinition.CreateShape(this, currentPoint);
+            newShape.RenderMode = ShapeRenderMode.New;
+
+            <ShapeRenderer @key="startPoint" Shape="newShape" />
         }
     </svg>
 </div>
@@ -54,9 +57,9 @@
     }
 
     public class DrawActionDefinition : ActionDefinition {
-        public Func<Graphics, Point, IShape> CreateShape { get; }
+        public Func<Graphics, Point, Shape> CreateShape { get; }
 
-        public DrawActionDefinition(string name, Func<Graphics, Point, IShape> createShape) : base(name, (graphics, endPoint) => graphics.shapes.Add(createShape(graphics, endPoint))) {
+        public DrawActionDefinition(string name, Func<Graphics, Point, Shape> createShape) : base(name, (graphics, endPoint) => graphics.shapes.Add(createShape(graphics, endPoint))) {
             CreateShape = createShape;
         }
     }
@@ -66,7 +69,7 @@
         { ActionType.DrawRegularPolygon, new DrawActionDefinition("Regular polygon", (graphics, endPoint) => new RegularPolygon(graphics.startPoint, endPoint, graphics.regularPolygonSides)) }
     };
 
-    private List<IShape> shapes = new List<IShape>();
+    private List<Shape> shapes = new List<Shape>();
     private ActionType currentActionType = ActionType.DrawRegularPolygon;
     private Point startPoint;
     private Point currentPoint;
@@ -81,19 +84,20 @@
 
     public ActionDefinition CurrentActionDefinition => actionDefinitions[currentActionType];
 
-    public void OnMouseDown(MouseEventArgs args) {
+    public void OnDrawingStarting(MouseEventArgs args) {
         if (args.Button == 0) {
             startPoint = new Point(args.OffsetX, args.OffsetY);
+            currentPoint = new Point(args.OffsetX, args.OffsetY);
         }
     }
 
-    public void OnMouseMove(MouseEventArgs args) {
+    public void OnDrawing(MouseEventArgs args) {
         if (IsDrawing) {
             currentPoint = new Point(args.OffsetX, args.OffsetY);
         }
     }
 
-    public void OnMouseUp(MouseEventArgs args) {
+    public void OnDrawingCompleted(MouseEventArgs args) {
         if (IsDrawing) {
             CurrentActionDefinition.Execute(this, new Point(args.OffsetX, args.OffsetY));
             startPoint = null;
