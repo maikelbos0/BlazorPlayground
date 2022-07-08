@@ -1,6 +1,7 @@
 ﻿namespace BlazorPlayground.Graphics {
     public enum ShapeRenderMode {
         Default,
-        New
+        New,
+        Selected
     }
 }

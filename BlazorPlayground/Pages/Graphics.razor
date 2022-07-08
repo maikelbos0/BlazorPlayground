@@ -13,7 +13,10 @@
 
 <div class="container-fluid mb-3">
     <div class="row">
-        @if (currentActionType == ActionType.DrawLine) {
+        @if (currentActionType == ActionType.Select) {
+            
+        }
+        else if (currentActionType == ActionType.DrawLine) {
 
         }
         else if (currentActionType == ActionType.DrawRegularPolygon) {
@@ -28,7 +31,7 @@
 <div class="container-fluid graphics-main">
     <svg @onmousedown="OnDrawingStarting" @onmousemove="OnDrawing" @onmouseup="OnDrawingCompleted">
         @foreach (var shape in shapes) {
-            <ShapeRenderer @key="shape" Shape="shape" />
+            <ShapeRenderer @key="shape" Shape="shape" OnClick="() => Select(shape)" />
         }
 
         @if (IsDrawing && CurrentActionDefinition is DrawActionDefinition drawActionDefinition) {
@@ -42,6 +45,7 @@
 
 @code {
     private enum ActionType {
+        Select,
         DrawLine,
         DrawRegularPolygon
     }
@@ -65,6 +69,7 @@
     }
 
     private static Dictionary<ActionType, ActionDefinition> actionDefinitions = new Dictionary<ActionType, ActionDefinition>() {
+        { ActionType.Select, new ActionDefinition("Select", (_, _) => { }) },
         { ActionType.DrawLine, new DrawActionDefinition("Line", (graphics, endPoint) => new Line(graphics.startPoint, endPoint)) },
         { ActionType.DrawRegularPolygon, new DrawActionDefinition("Regular polygon", (graphics, endPoint) => new RegularPolygon(graphics.startPoint, endPoint, graphics.regularPolygonSides)) }
     };
@@ -104,4 +109,6 @@
             currentPoint = null;
         }
     }
+
+    public void Select(Shape shape) => shape.RenderMode = ShapeRenderMode.Selected;
 }

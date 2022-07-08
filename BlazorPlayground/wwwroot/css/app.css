@@ -134,3 +134,20 @@ a, .btn-link {
     stroke-dasharray: 5;
     stroke-width: 1;
 }
+
+.graphics-main .shape.shape-selected {
+    stroke: #999999;
+    stroke-dasharray: 5;
+    stroke-width: 1;
+    animation: shape-selected 0.25s infinite linear forwards;
+}
+
+@keyframes shape-selected {
+    from {
+        stroke-dashoffset: 0;
+    }
+
+    to {
+        stroke-dashoffset: 10;
+    }
+}
