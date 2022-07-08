@@ -31,7 +31,7 @@
             <ShapeRenderer @key="shape" Shape="shape" />
         }
 
-        @if (startPoint != null && currentPoint != null && CurrentActionDefinition is DrawActionDefinition drawActionDefinition) {
+        @if (IsDrawing && currentPoint != null && CurrentActionDefinition is DrawActionDefinition drawActionDefinition) {
             <ShapeRenderer @key="startPoint" Shape="drawActionDefinition.CreateShape(this, currentPoint)" RenderMode="ShapeRenderMode.New" />
         }
     </svg>
@@ -82,17 +82,19 @@
     public ActionDefinition CurrentActionDefinition => actionDefinitions[currentActionType];
 
     public void OnMouseDown(MouseEventArgs args) {
-        startPoint = new Point(args.OffsetX, args.OffsetY);
+        if (args.Button == 0) {
+            startPoint = new Point(args.OffsetX, args.OffsetY);
+        }
     }
 
     public void OnMouseMove(MouseEventArgs args) {
-        if (startPoint != null) {
+        if (IsDrawing) {
             currentPoint = new Point(args.OffsetX, args.OffsetY);
         }
     }
 
     public void OnMouseUp(MouseEventArgs args) {
-        if (startPoint != null) {
+        if (IsDrawing) {
             CurrentActionDefinition.Execute(this, new Point(args.OffsetX, args.OffsetY));
             startPoint = null;
             currentPoint = null;
