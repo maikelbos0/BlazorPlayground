@@ -52,24 +52,29 @@
 
     public class ActionDefinition {
         public string Name { get; }
-        public Action<Graphics, Point> Execute { get; }
+        public Action<Graphics, Point> OnExecute { get; }
+        public Action<Graphics> OnSelect { get; }
+        public Action<Graphics> OnDeselect { get; }
 
-        public ActionDefinition(string name, Action<Graphics, Point> Execute) {
+        public ActionDefinition(string name, Action<Graphics, Point> onExecute = null, Action<Graphics> onSelect = null, Action<Graphics> onDeselect = null) {
             Name = name;
-            this.Execute = Execute;
+            OnExecute = onExecute ?? ((_, _) => { });
+            OnSelect = onSelect ?? (_ => { });
+            OnDeselect = onDeselect ?? (_ => { });
         }
     }
 
     public class DrawActionDefinition : ActionDefinition {
         public Func<Graphics, Point, Shape> CreateShape { get; }
 
-        public DrawActionDefinition(string name, Func<Graphics, Point, Shape> createShape) : base(name, (graphics, endPoint) => graphics.shapes.Add(createShape(graphics, endPoint))) {
+        public DrawActionDefinition(string name, Func<Graphics, Point, Shape> createShape, Action<Graphics> onSelect = null, Action<Graphics> onDeselect = null)
+            : base(name, (graphics, endPoint) => graphics.shapes.Add(createShape(graphics, endPoint)), onSelect, onDeselect) {
             CreateShape = createShape;
         }
     }
 
     private static Dictionary<ActionType, ActionDefinition> actionDefinitions = new Dictionary<ActionType, ActionDefinition>() {
-        { ActionType.Select, new ActionDefinition("Select", (_, _) => { }) },
+        { ActionType.Select, new ActionDefinition("Select", onDeselect: graphics => graphics.DeselectAll()) },
         { ActionType.DrawLine, new DrawActionDefinition("Line", (graphics, endPoint) => new Line(graphics.startPoint, endPoint)) },
         { ActionType.DrawRegularPolygon, new DrawActionDefinition("Regular polygon", (graphics, endPoint) => new RegularPolygon(graphics.startPoint, endPoint, graphics.regularPolygonSides)) }
     };
@@ -105,7 +110,7 @@
 
     public void OnMouseUp(MouseEventArgs args) {
         if (IsDrawing) {
-            CurrentActionDefinition.Execute(this, new Point(args.OffsetX, args.OffsetY));
+            CurrentActionDefinition.OnExecute(this, new Point(args.OffsetX, args.OffsetY));
             startPoint = null;
             currentPoint = null;
         }
