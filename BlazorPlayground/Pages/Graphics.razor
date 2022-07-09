@@ -14,7 +14,7 @@
 <div class="container-fluid mb-3">
     <div class="row">
         @if (currentActionType == ActionType.Select) {
-            
+
         }
         else if (currentActionType == ActionType.DrawLine) {
 
@@ -29,9 +29,9 @@
 </div>
 
 <div class="container-fluid graphics-main">
-    <svg @onmousedown="OnDrawingStarting" @onmousemove="OnDrawing" @onmouseup="OnDrawingCompleted">
+    <svg @onmousedown="OnMouseDown" @onmousemove="OnMouseMove" @onmouseup="OnMouseUp" @onclick="OnClick">
         @foreach (var shape in shapes) {
-            <ShapeRenderer @key="shape" Shape="shape" OnClick="() => Select(shape)" />
+            <ShapeRenderer @key="shape" Shape="shape" OnClick="args => OnShapeClick(args, shape)" />
         }
 
         @if (IsDrawing && CurrentActionDefinition is DrawActionDefinition drawActionDefinition) {
@@ -79,6 +79,7 @@
     private Point startPoint;
     private Point currentPoint;
     private int regularPolygonSides = 4;
+    private bool hasSelected = false;
 
     public int RegularPolygonSides {
         get => regularPolygonSides;
@@ -89,20 +90,20 @@
 
     public ActionDefinition CurrentActionDefinition => actionDefinitions[currentActionType];
 
-    public void OnDrawingStarting(MouseEventArgs args) {
+    public void OnMouseDown(MouseEventArgs args) {
         if (args.Button == 0) {
             startPoint = new Point(args.OffsetX, args.OffsetY);
             currentPoint = new Point(args.OffsetX, args.OffsetY);
         }
     }
 
-    public void OnDrawing(MouseEventArgs args) {
+    public void OnMouseMove(MouseEventArgs args) {
         if (IsDrawing) {
             currentPoint = new Point(args.OffsetX, args.OffsetY);
         }
     }
 
-    public void OnDrawingCompleted(MouseEventArgs args) {
+    public void OnMouseUp(MouseEventArgs args) {
         if (IsDrawing) {
             CurrentActionDefinition.Execute(this, new Point(args.OffsetX, args.OffsetY));
             startPoint = null;
@@ -110,5 +111,39 @@
         }
     }
 
-    public void Select(Shape shape) => shape.RenderMode = ShapeRenderMode.Selected;
+    public void OnClick(MouseEventArgs args) {
+        if (currentActionType == ActionType.Select) {
+            if (hasSelected) {
+                hasSelected = false;
+            }
+            else {
+                DeselectAll();
+            }
+        }
+    }
+
+    public void OnShapeClick(MouseEventArgs args, Shape shape) {
+        if (currentActionType == ActionType.Select) {
+            hasSelected = true;
+
+            if (args.CtrlKey) {
+                if (shape.RenderMode == ShapeRenderMode.Default) {
+                    shape.RenderMode = ShapeRenderMode.Selected;
+                }
+                else {
+                    shape.RenderMode = ShapeRenderMode.Default;
+                }
+            }
+            else {
+                DeselectAll();
+                shape.RenderMode = ShapeRenderMode.Selected;
+            }
+        }
+    }
+
+    public void DeselectAll() {
+        foreach (var shape in shapes.Where(s => s.RenderMode == ShapeRenderMode.Selected)) {
+            shape.RenderMode = ShapeRenderMode.Default;
+        }
+    }
 }
