@@ -113,6 +113,10 @@ a, .btn-link {
     padding: 1rem;
 }
 
+.graphics-ribbon {
+    min-height: 90px;
+}
+
 .graphics-main {
     border: 1px solid #dee2e6;
     border-radius: 0.25rem;
