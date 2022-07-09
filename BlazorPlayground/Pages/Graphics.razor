@@ -4,9 +4,9 @@
 <h1>Graphics</h1>
 
 <ul class="nav nav-tabs mb-3">
-    @foreach (var type in Enum.GetValues<ActionType>()) {
+    @foreach (var actionType in Enum.GetValues<ActionType>()) {
         <li class="nav-item">
-            <a class="nav-link @(currentActionType == type ? "active" : "")" @onclick="() => currentActionType = type">@actionDefinitions[type].Name</a>
+            <a class="nav-link @(currentActionType == actionType ? "active" : "")" @onclick="() => SwitchActionType(actionType)">@actionDefinitions[actionType].Name</a>
         </li>
     }
 </ul>
@@ -50,7 +50,7 @@
         DrawRegularPolygon
     }
 
-    public class ActionDefinition {
+    private class ActionDefinition {
         public string Name { get; }
         public Action<Graphics, Point> OnExecute { get; }
         public Action<Graphics> OnSelect { get; }
@@ -64,7 +64,7 @@
         }
     }
 
-    public class DrawActionDefinition : ActionDefinition {
+    private class DrawActionDefinition : ActionDefinition {
         public Func<Graphics, Point, Shape> CreateShape { get; }
 
         public DrawActionDefinition(string name, Func<Graphics, Point, Shape> createShape, Action<Graphics> onSelect = null, Action<Graphics> onDeselect = null)
@@ -86,28 +86,34 @@
     private int regularPolygonSides = 4;
     private bool hasSelected = false;
 
-    public int RegularPolygonSides {
+    private int RegularPolygonSides {
         get => regularPolygonSides;
         set => regularPolygonSides = Math.Max(value, 3);
     }
 
-    public bool IsDrawing => startPoint != null;
+    private bool IsDrawing => startPoint != null;
 
-    public ActionDefinition CurrentActionDefinition => actionDefinitions[currentActionType];
+    private ActionDefinition CurrentActionDefinition => actionDefinitions[currentActionType];
 
-    public void OnMouseDown(MouseEventArgs args) {
+    private void SwitchActionType(ActionType newActionType) {
+        CurrentActionDefinition.OnDeselect(this);
+        currentActionType = newActionType;
+        CurrentActionDefinition.OnSelect(this);
+    }
+
+    private void OnMouseDown(MouseEventArgs args) {
         if (args.Button == 0) {
             startPoint = new Point(args.OffsetX, args.OffsetY);
         }
     }
 
-    public void OnMouseMove(MouseEventArgs args) {
+    private void OnMouseMove(MouseEventArgs args) {
         if (args.Button == 0) {
             currentPoint = new Point(args.OffsetX, args.OffsetY);
         }
     }
 
-    public void OnMouseUp(MouseEventArgs args) {
+    private void OnMouseUp(MouseEventArgs args) {
         if (args.Button == 0) {
             CurrentActionDefinition.OnExecute(this, new Point(args.OffsetX, args.OffsetY));
             startPoint = null;
@@ -115,13 +121,13 @@
         }
     }
 
-    public void OnClick(MouseEventArgs args) {
+    private void OnClick(MouseEventArgs args) {
         if (currentActionType == ActionType.Select) {
             DeselectAllIfRequired();
         }
     }
 
-    public void DeselectAllIfRequired() {
+    private void DeselectAllIfRequired() {
         if (hasSelected) {
             hasSelected = false;
         }
@@ -130,22 +136,22 @@
         }
     }
 
-    public void AddShape(Point endPoint, Func<Graphics, Point, Shape> createShape) {
+    private void AddShape(Point endPoint, Func<Graphics, Point, Shape> createShape) {
         if (HasMetMinimumSizeRequirement(endPoint)) {
             shapes.Add(createShape(this, endPoint));
         }
     }
 
-    public bool HasMetMinimumSizeRequirement(Point endPoint)
+    private bool HasMetMinimumSizeRequirement(Point endPoint)
         => Math.Sqrt(Math.Pow(startPoint.X - endPoint.X, 2) + Math.Pow(startPoint.Y - endPoint.Y, 2)) > 5;
 
-    public void OnShapeClick(MouseEventArgs args, Shape shape) {
+    private void OnShapeClick(MouseEventArgs args, Shape shape) {
         if (currentActionType == ActionType.Select) {
             Select(args, shape);
         }
     }
 
-    public void Select(MouseEventArgs args, Shape shape) {
+    private void Select(MouseEventArgs args, Shape shape) {
         hasSelected = true;
 
         if (args.CtrlKey) {
@@ -162,7 +168,7 @@
         }
     }
 
-    public void DeselectAll() {
+    private void DeselectAll() {
         foreach (var shape in shapes.Where(s => s.RenderMode == ShapeRenderMode.Selected)) {
             shape.RenderMode = ShapeRenderMode.Default;
         }
