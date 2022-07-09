@@ -68,7 +68,7 @@
         public Func<Graphics, Point, Shape> CreateShape { get; }
 
         public DrawActionDefinition(string name, Func<Graphics, Point, Shape> createShape, Action<Graphics> onSelect = null, Action<Graphics> onDeselect = null)
-            : base(name, (graphics, endPoint) => graphics.shapes.Add(createShape(graphics, endPoint)), onSelect, onDeselect) {
+            : base(name, (graphics, endPoint) => graphics.AddShape(endPoint, createShape), onSelect, onDeselect) {
             CreateShape = createShape;
         }
     }
@@ -98,24 +98,18 @@
     public void OnMouseDown(MouseEventArgs args) {
         if (args.Button == 0) {
             startPoint = new Point(args.OffsetX, args.OffsetY);
-            currentPoint = new Point(args.OffsetX, args.OffsetY);
         }
     }
 
     public void OnMouseMove(MouseEventArgs args) {
-        if (IsDrawing) {
+        if (args.Button == 0) {
             currentPoint = new Point(args.OffsetX, args.OffsetY);
         }
     }
 
     public void OnMouseUp(MouseEventArgs args) {
-        if (IsDrawing) {
-            var endPoint = new Point(args.OffsetX, args.OffsetY);
-
-            if (HasMetMinimumSizeRequirement(endPoint)) {
-                CurrentActionDefinition.OnExecute(this, endPoint);
-            }
-
+        if (args.Button == 0) {
+            CurrentActionDefinition.OnExecute(this, new Point(args.OffsetX, args.OffsetY));
             startPoint = null;
             currentPoint = null;
         }
@@ -123,34 +117,48 @@
 
     public void OnClick(MouseEventArgs args) {
         if (currentActionType == ActionType.Select) {
-            if (hasSelected) {
-                hasSelected = false;
-            }
-            else {
-                DeselectAll();
-            }
+            DeselectAllIfRequired();
         }
     }
-    
+
+    public void DeselectAllIfRequired() {
+        if (hasSelected) {
+            hasSelected = false;
+        }
+        else {
+            DeselectAll();
+        }
+    }
+
+    public void AddShape(Point endPoint, Func<Graphics, Point, Shape> createShape) {
+        if (HasMetMinimumSizeRequirement(endPoint)) {
+            shapes.Add(createShape(this, endPoint));
+        }
+    }
+
     public bool HasMetMinimumSizeRequirement(Point endPoint)
         => Math.Sqrt(Math.Pow(startPoint.X - endPoint.X, 2) + Math.Pow(startPoint.Y - endPoint.Y, 2)) > 5;
 
     public void OnShapeClick(MouseEventArgs args, Shape shape) {
         if (currentActionType == ActionType.Select) {
-            hasSelected = true;
+            Select(args, shape);
+        }
+    }
 
-            if (args.CtrlKey) {
-                if (shape.RenderMode == ShapeRenderMode.Default) {
-                    shape.RenderMode = ShapeRenderMode.Selected;
-                }
-                else {
-                    shape.RenderMode = ShapeRenderMode.Default;
-                }
-            }
-            else {
-                DeselectAll();
+    public void Select(MouseEventArgs args, Shape shape) {
+        hasSelected = true;
+
+        if (args.CtrlKey) {
+            if (shape.RenderMode == ShapeRenderMode.Default) {
                 shape.RenderMode = ShapeRenderMode.Selected;
             }
+            else {
+                shape.RenderMode = ShapeRenderMode.Default;
+            }
+        }
+        else {
+            DeselectAll();
+            shape.RenderMode = ShapeRenderMode.Selected;
         }
     }
 
