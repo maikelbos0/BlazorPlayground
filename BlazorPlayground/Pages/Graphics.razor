@@ -110,7 +110,12 @@
 
     public void OnMouseUp(MouseEventArgs args) {
         if (IsDrawing) {
-            CurrentActionDefinition.OnExecute(this, new Point(args.OffsetX, args.OffsetY));
+            var endPoint = new Point(args.OffsetX, args.OffsetY);
+
+            if (HasMetMinimumSizeRequirement(endPoint)) {
+                CurrentActionDefinition.OnExecute(this, endPoint);
+            }
+
             startPoint = null;
             currentPoint = null;
         }
@@ -126,6 +131,9 @@
             }
         }
     }
+    
+    public bool HasMetMinimumSizeRequirement(Point endPoint)
+        => Math.Sqrt(Math.Pow(startPoint.X - endPoint.X, 2) + Math.Pow(startPoint.Y - endPoint.Y, 2)) > 5;
 
     public void OnShapeClick(MouseEventArgs args, Shape shape) {
         if (currentActionType == ActionType.Select) {
