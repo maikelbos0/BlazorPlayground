@@ -13,8 +13,10 @@
 
 <div class="mb-3 graphics-ribbon">
     <div class="btn-toolbar">
-        @if (currentActionType == ActionType.Select) {
-            
+        @if (currentActionType == ActionType.Select) {            
+            <div class="button-group mb-3">
+                <button type="button" class="btn btn-secondary" @onclick="DeleteSelected">Delete</button>
+            </div>
         }
         else if (currentActionType == ActionType.DrawLine) {
 
@@ -169,6 +171,10 @@
             DeselectAll();
             shape.RenderMode = ShapeRenderMode.Selected;
         }
+    }
+
+    private void DeleteSelected() {
+        shapes.RemoveAll(s => s.RenderMode == ShapeRenderMode.Selected);
     }
 
     private void DeselectAll() {
