@@ -22,5 +22,22 @@ namespace BlazorPlayground.Graphics.Tests {
 
             Assert.Equal(50, result, 1);
         }
+
+        [Theory]
+        [InlineData(100, 100, 200, 200, 150, 150, true)]
+        [InlineData(200, 200, 100, 100, 150, 150, true)]
+        [InlineData(100, 200, 200, 100, 150, 150, true)]
+        [InlineData(200, 100, 100, 200, 150, 150, true)]
+        [InlineData(100, 100, 200, 200, 250, 150, false)]
+        [InlineData(100, 100, 200, 200, 50, 150, false)]
+        [InlineData(100, 100, 200, 200, 150, 250, false)]
+        [InlineData(100, 100, 200, 200, 150, 50, false)]
+        public void IsContained(double boundaryX1, double boundaryY1, double boundaryX2, double boundaryY2, double x, double y, bool expectedIsContained) {
+            var boundaryPoint1 = new Point(boundaryX1, boundaryY1);
+            var boundaryPoint2 = new Point(boundaryX2, boundaryY2);
+            var point = new Point(x, y);
+
+            Assert.Equal(expectedIsContained, point.IsContainedBy(boundaryPoint1, boundaryPoint2));
+        }
     }
 }
