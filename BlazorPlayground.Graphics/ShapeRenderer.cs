@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace BlazorPlayground.Graphics {
     public class ShapeRenderer : ComponentBase {
-        private readonly static Dictionary<Type, PropertyInfo[]> shapePointProperties = new Dictionary<Type, PropertyInfo[]>();
+        private readonly static Dictionary<Type, PropertyInfo[]> shapePointProperties = new();
 
         private static PropertyInfo[] GetShapePointProperties(Type shapeType) {
             if (!shapePointProperties.TryGetValue(shapeType, out var properties)) {

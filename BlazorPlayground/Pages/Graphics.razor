@@ -13,7 +13,7 @@
 
 <div class="mb-3 graphics-ribbon">
     <div class="btn-toolbar">
-        @if (currentActionType == ActionType.Select) {            
+        @if (currentActionType == ActionType.Select) {
             <div class="button-group mb-3">
                 <button type="button" class="btn btn-secondary" @onclick="DeleteSelected">Delete</button>
             </div>
@@ -32,17 +32,15 @@
     </div>
 </div>
 
-<div class="container-fluid graphics-main">
-    <svg @onmousedown="OnMouseDown" @onmousemove="OnMouseMove" @onmouseup="OnMouseUp" @onclick="OnClick">
-        @foreach (var shape in shapes) {
-            <ShapeRenderer @key="shape" Shape="shape" OnClick="args => OnShapeClick(args, shape)" />
-        }
+<svg class="graphics-main" @onmousedown="OnMouseDown" @onmousemove="OnMouseMove" @onmouseup="OnMouseUp">
+    @foreach (var shape in shapes) {
+        <ShapeRenderer @key="shape" Shape="shape" OnClick="args => OnShapeClick(args, shape)" />
+    }
 
-        @if (IsDrawing && CurrentActionDefinition is DrawActionDefinition drawActionDefinition) {
-            <ShapeRenderer @key="startPoint" Shape="drawActionDefinition.CreateShape(this, currentPoint)" IsNew="true" />
-        }
-    </svg>
-</div>
+    @if (IsDrawing && CurrentActionDefinition is DrawActionDefinition drawActionDefinition) {
+        <ShapeRenderer @key="startPoint" Shape="drawActionDefinition.CreateShape(this, currentPoint)" IsNew="true" />
+    }
+</svg>
 
 @code {
 
@@ -76,7 +74,7 @@
     }
 
     private static Dictionary<ActionType, ActionDefinition> actionDefinitions = new Dictionary<ActionType, ActionDefinition>() {
-        { ActionType.Select, new ActionDefinition("Select", onDeselect: graphics => graphics.DeselectAll()) },
+        { ActionType.Select, new ActionDefinition("Select", onExecute: (graphics, endPoint) => graphics.Select(endPoint), onDeselect: graphics => graphics.DeselectAll()) },
         { ActionType.DrawLine, new DrawActionDefinition("Line", (graphics, endPoint) => new Line(graphics.startPoint, endPoint)) },
         { ActionType.DrawRegularPolygon, new DrawActionDefinition("Regular polygon", (graphics, endPoint) => new RegularPolygon(graphics.startPoint, endPoint, graphics.regularPolygonSides)) }
     };
@@ -86,16 +84,16 @@
     private Point startPoint;
     private Point currentPoint;
     private int regularPolygonSides = 3;
-    private bool hasSelected = false;
+    private bool hasSelectedSingleShape = false;
+
+    private ActionDefinition CurrentActionDefinition => actionDefinitions[currentActionType];
+
+    private bool IsDrawing => startPoint != null;
 
     private int RegularPolygonSides {
         get => regularPolygonSides;
         set => regularPolygonSides = Math.Max(value, 3);
     }
-
-    private bool IsDrawing => startPoint != null;
-
-    private ActionDefinition CurrentActionDefinition => actionDefinitions[currentActionType];
 
     private void SwitchActionType(ActionType newActionType) {
         CurrentActionDefinition.OnDeselect(this);
@@ -123,21 +121,6 @@
         }
     }
 
-    private void OnClick(MouseEventArgs args) {
-        if (currentActionType == ActionType.Select) {
-            DeselectAllIfRequired();
-        }
-    }
-
-    private void DeselectAllIfRequired() {
-        if (hasSelected) {
-            hasSelected = false;
-        }
-        else {
-            DeselectAll();
-        }
-    }
-
     private void AddShape(Point endPoint, Func<Graphics, Point, Shape> createShape) {
         if (HasMetMinimumSizeRequirement(endPoint)) {
             shapes.Add(createShape(this, endPoint));
@@ -153,16 +136,22 @@
         }
     }
 
-    private void Select(MouseEventArgs args, Shape shape) {
-        hasSelected = true;
-
-        if (args.CtrlKey) {
-            shape.IsSelected = !shape.IsSelected;
+    private void Select(Point endPoint) {
+        if (hasSelectedSingleShape) {
+            hasSelectedSingleShape = false;
         }
         else {
             DeselectAll();
-            shape.IsSelected = true;
+
+            foreach (var shape in shapes.Where(s => s.GetPoints().All(p => p.IsContainedBy(startPoint, endPoint)))) {
+                shape.IsSelected = true;
+            }
         }
+    }
+
+    private void Select(MouseEventArgs args, Shape shape) {
+        hasSelectedSingleShape = true;
+        shape.IsSelected = !shape.IsSelected;
     }
 
     private void DeleteSelected() {

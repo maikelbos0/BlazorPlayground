@@ -119,12 +119,8 @@ a, .btn-link {
 
 .graphics-main {
     border: 1px solid #dee2e6;
-    border-radius: 0.25rem;
     user-select: none;
-}
-
-.graphics-main svg {
-    width: 100%;
+    width: 800px;
     height: 800px;
 }
 
