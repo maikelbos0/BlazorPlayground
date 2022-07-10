@@ -15,5 +15,12 @@ namespace BlazorPlayground.Graphics.Tests {
 
             PointAssert.Equal(new Point(-100, 50), result);
         }
+
+        [Fact]
+        public void Double() {
+            double result = new Point(30, 40);
+
+            Assert.Equal(50, result, 1);
+        }
     }
 }

@@ -145,7 +145,7 @@
     }
 
     private bool HasMetMinimumSizeRequirement(Point endPoint)
-        => Math.Sqrt(Math.Pow(startPoint.X - endPoint.X, 2) + Math.Pow(startPoint.Y - endPoint.Y, 2)) > 5;
+        => startPoint - endPoint > 5;
 
     private void OnShapeClick(MouseEventArgs args, Shape shape) {
         if (currentActionType == ActionType.Select) {
