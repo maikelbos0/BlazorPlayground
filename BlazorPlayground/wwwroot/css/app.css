@@ -130,7 +130,7 @@ a, .btn-link {
 
 .graphics-main .shape {
     stroke: #000000;
-    stroke-width: 2;
+    stroke-width: 1;
     fill: transparent;
 }
 
@@ -145,6 +145,12 @@ a, .btn-link {
     stroke-dasharray: 5;
     stroke-width: 1;
     animation: shape-selected 0.25s infinite linear forwards;
+}
+
+.graphics-main .shape-point {
+    stroke: #000000;
+    stroke-width: 1;
+    fill: transparent;
 }
 
 @keyframes shape-selected {

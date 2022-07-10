@@ -1,9 +1,9 @@
 ﻿namespace BlazorPlayground.Graphics {
     public class RegularPolygon : Shape {
         public override ShapeRenderType RenderType => ShapeRenderType.Polygon;
-        public Point CenterPoint { get; }
-        public Point RadiusPoint { get; }
-        public int Sides { get; }
+        public Point CenterPoint { get; set; }
+        public Point RadiusPoint { get; set; }
+        public int Sides { get; set; }
 
         public RegularPolygon(Point centerPoint, Point radiusPoint, int sides) {
             CenterPoint = centerPoint;
