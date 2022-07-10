@@ -11,17 +11,19 @@
     }
 </ul>
 
-<div class="container-fluid mb-3 graphics-ribbon">
-    <div class="row">
+<div class="mb-3 graphics-ribbon">
+    <div class="btn-toolbar">
         @if (currentActionType == ActionType.Select) {
-
+            
         }
         else if (currentActionType == ActionType.DrawLine) {
 
         }
         else if (currentActionType == ActionType.DrawRegularPolygon) {
-            <div class="mb-3 col-6 col-md-3 col-xl-2">
-                <label for="regularPolygonSides" class="form-label">Sides (minimum 3)</label>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <label for="regularPolygonSides" class="input-group-text">Sides</label>
+                </div>
                 <input type="text" class="form-control" id="regularPolygonSides" @bind-value="RegularPolygonSides" />
             </div>
         }
@@ -44,6 +46,7 @@
 </div>
 
 @code {
+
     private enum ActionType {
         Select,
         DrawLine,
@@ -83,7 +86,7 @@
     private ActionType currentActionType = ActionType.DrawRegularPolygon;
     private Point startPoint;
     private Point currentPoint;
-    private int regularPolygonSides = 4;
+    private int regularPolygonSides = 3;
     private bool hasSelected = false;
 
     private int RegularPolygonSides {
