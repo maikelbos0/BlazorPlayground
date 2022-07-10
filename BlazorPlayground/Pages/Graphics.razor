@@ -39,10 +39,7 @@
         }
 
         @if (IsDrawing && CurrentActionDefinition is DrawActionDefinition drawActionDefinition) {
-            var newShape = drawActionDefinition.CreateShape(this, currentPoint);
-            newShape.RenderMode = ShapeRenderMode.New;
-
-            <ShapeRenderer @key="startPoint" Shape="newShape" />
+            <ShapeRenderer @key="startPoint" Shape="drawActionDefinition.CreateShape(this, currentPoint)" IsNew="true" />
         }
     </svg>
 </div>
@@ -160,26 +157,21 @@
         hasSelected = true;
 
         if (args.CtrlKey) {
-            if (shape.RenderMode == ShapeRenderMode.Default) {
-                shape.RenderMode = ShapeRenderMode.Selected;
-            }
-            else {
-                shape.RenderMode = ShapeRenderMode.Default;
-            }
+            shape.IsSelected = !shape.IsSelected;
         }
         else {
             DeselectAll();
-            shape.RenderMode = ShapeRenderMode.Selected;
+            shape.IsSelected = true;
         }
     }
 
     private void DeleteSelected() {
-        shapes.RemoveAll(s => s.RenderMode == ShapeRenderMode.Selected);
+        shapes.RemoveAll(s => s.IsSelected);
     }
 
     private void DeselectAll() {
-        foreach (var shape in shapes.Where(s => s.RenderMode == ShapeRenderMode.Selected)) {
-            shape.RenderMode = ShapeRenderMode.Default;
+        foreach (var shape in shapes.Where(s => s.IsSelected)) {
+            shape.IsSelected = false;
         }
     }
 }
