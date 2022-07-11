@@ -23,5 +23,10 @@
                 yield return CenterPoint + new Point(radius * Math.Cos(angle), radius * Math.Sin(angle));
             }
         }
+
+        public override IEnumerable<Anchor> GetAnchors() {
+            yield return new Anchor<RegularPolygon>(this, s => s.CenterPoint, (s, p) => s.CenterPoint = p);
+            yield return new Anchor<RegularPolygon>(this, s => s.RadiusPoint, (s, p) => s.RadiusPoint = p);
+        }
     }
 }

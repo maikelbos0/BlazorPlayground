@@ -1,21 +1,9 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.Web;
-using System.Reflection;
 
 namespace BlazorPlayground.Graphics {
     public class ShapeRenderer : ComponentBase {
-        private readonly static Dictionary<Type, PropertyInfo[]> shapePointProperties = new();
-
-        private static PropertyInfo[] GetShapePointProperties(Type shapeType) {
-            if (!shapePointProperties.TryGetValue(shapeType, out var properties)) {
-                properties = shapeType.GetProperties().Where(p => p.PropertyType == typeof(Point) && p.CanWrite && p.CanRead).ToArray();
-
-                shapePointProperties[shapeType] = properties;
-            }
-
-            return properties;
-        }
 
         [Parameter]
         public Shape? Shape { get; set; }
@@ -36,8 +24,8 @@ namespace BlazorPlayground.Graphics {
                 builder.CloseElement();
 
                 if (Shape.IsSelected) {
-                    foreach (var property in GetShapePointProperties(Shape.GetType())) {
-                        var point = property.GetValue(Shape) as Point;
+                    foreach (var anchor in Shape.GetAnchors()) {
+                        var point = anchor.Get();
 
                         if (point != null) {
                             builder.OpenElement(1, "rect");

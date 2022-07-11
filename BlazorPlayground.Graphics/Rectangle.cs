@@ -15,5 +15,10 @@
             yield return EndPoint;
             yield return new Point(EndPoint.X, StartPoint.Y);
         }
+
+        public override IEnumerable<Anchor> GetAnchors() {
+            yield return new Anchor<Rectangle>(this, s => s.StartPoint, (s, p) => s.StartPoint = p);
+            yield return new Anchor<Rectangle>(this, s => s.EndPoint, (s, p) => s.EndPoint = p);
+        }
     }
 }

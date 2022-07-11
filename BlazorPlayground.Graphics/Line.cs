@@ -13,5 +13,10 @@
             yield return StartPoint;
             yield return EndPoint;
         }
+
+        public override IEnumerable<Anchor> GetAnchors() {
+            yield return new Anchor<Line>(this, s => s.StartPoint, (s, p) => s.StartPoint = p);
+            yield return new Anchor<Line>(this, s => s.EndPoint, (s, p) => s.EndPoint = p);
+        }
     }
 }
