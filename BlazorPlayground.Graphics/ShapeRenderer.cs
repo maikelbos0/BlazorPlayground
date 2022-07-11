@@ -21,7 +21,7 @@ namespace BlazorPlayground.Graphics {
         public Shape? Shape { get; set; }
 
         [Parameter]
-        public bool IsNew { get; set; } = false;
+        public bool IsVirtual { get; set; } = false;
 
         [Parameter]
         public EventCallback<MouseEventArgs> OnClick { get; set; }
@@ -31,7 +31,7 @@ namespace BlazorPlayground.Graphics {
                 builder.OpenElement(1, GetElementName(Shape.RenderType));
                 builder.SetKey(Shape);
                 builder.AddAttribute(2, "onclick", OnClick);
-                builder.AddAttribute(3, "class", $"shape {(IsNew ? "shape-new" : "")} {(Shape.IsSelected ? "shape-selected" : "")}");
+                builder.AddAttribute(3, "class", $"shape {(IsVirtual ? "shape-virtual" : "")} {(Shape.IsSelected ? "shape-selected" : "")}");
                 builder.AddAttribute(4, "points", string.Join(" ", Shape.GetPoints().Select(p => FormattableString.Invariant($"{p.X},{p.Y}"))));
                 builder.CloseElement();
 

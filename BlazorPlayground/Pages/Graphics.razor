@@ -22,7 +22,7 @@
 
         }
         else if (currentActionType == ActionType.DrawRectangle) {
-            
+
         }
         else if (currentActionType == ActionType.DrawRegularPolygon) {
             <div class="input-group mb-3">
@@ -40,8 +40,13 @@
         <ShapeRenderer @key="shape" Shape="shape" OnClick="args => OnShapeClick(args, shape)" />
     }
 
-    @if (IsDrawing && CurrentActionDefinition is DrawActionDefinition drawActionDefinition) {
-        <ShapeRenderer @key="startPoint" Shape="drawActionDefinition.CreateShape(this, currentPoint)" IsNew="true" />
+    @if (startPoint != null && currentPoint != null) {
+        var shape = CurrentActionDefinition switch {
+            DrawActionDefinition drawActionDefinition => drawActionDefinition.CreateShape(this, currentPoint),
+            _ => new Rectangle(startPoint, currentPoint)
+        };
+
+        <ShapeRenderer @key="startPoint" Shape="shape" IsVirtual="true" />
     }
 </svg>
 
@@ -92,8 +97,6 @@
     private bool hasSelectedSingleShape = false;
 
     private ActionDefinition CurrentActionDefinition => actionDefinitions[currentActionType];
-
-    private bool IsDrawing => startPoint != null;
 
     private int RegularPolygonSides {
         get => regularPolygonSides;

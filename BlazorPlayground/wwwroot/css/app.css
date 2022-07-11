@@ -130,7 +130,7 @@ a, .btn-link {
     fill: transparent;
 }
 
-.graphics-main .shape.shape-new {
+.graphics-main .shape.shape-virtual {
     stroke: #999999;
     stroke-dasharray: 5;
     stroke-width: 1;
@@ -143,12 +143,6 @@ a, .btn-link {
     animation: shape-selected 0.25s infinite linear forwards;
 }
 
-.graphics-main .shape-point {
-    stroke: #000000;
-    stroke-width: 1;
-    fill: transparent;
-}
-
 @keyframes shape-selected {
     from {
         stroke-dashoffset: 0;
@@ -157,4 +151,10 @@ a, .btn-link {
     to {
         stroke-dashoffset: 10;
     }
+}
+
+.graphics-main .shape-point {
+    stroke: #000000;
+    stroke-width: 1;
+    fill: transparent;
 }
