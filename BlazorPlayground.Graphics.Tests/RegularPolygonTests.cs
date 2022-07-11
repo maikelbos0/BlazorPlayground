@@ -85,25 +85,25 @@ namespace BlazorPlayground.Graphics.Tests {
         }
 
         [Fact]
-        public void GetAnchors_Get() {
+        public void Anchors_Get() {
             var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250), 3);
 
-            var result = polygon.GetAnchors().ToList();
+            var result = polygon.Anchors;
 
             Assert.Equal(2, result.Count);
-            PointAssert.Equal(new Point(100, 150), result[0].Get());
-            PointAssert.Equal(new Point(200, 250), result[1].Get());
+            PointAssert.Equal(new Point(100, 150), result[0].Get(polygon));
+            PointAssert.Equal(new Point(200, 250), result[1].Get(polygon));
         }
 
         [Fact]
-        public void GetAnchors_Set() {
+        public void Anchors_Set() {
             var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250), 3);
 
-            var result = polygon.GetAnchors().ToList();
+            var result = polygon.Anchors;
 
             Assert.Equal(2, result.Count);
-            result[0].Set(new Point(110, 160));
-            result[1].Set(new Point(210, 260));
+            result[0].Set(polygon, new Point(110, 160));
+            result[1].Set(polygon, new Point(210, 260));
             PointAssert.Equal(new Point(110, 160), polygon.CenterPoint);
             PointAssert.Equal(new Point(210, 260), polygon.RadiusPoint);
         }

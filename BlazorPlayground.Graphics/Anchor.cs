@@ -1,22 +1,22 @@
 ﻿namespace BlazorPlayground.Graphics {
     public class Anchor {
-        private readonly Func<Point> get;
-        private readonly Action<Point> set;
+        private readonly Func<Shape, Point> get;
+        private readonly Action<Shape, Point> set;
 
-        protected Anchor(Func<Point> get, Action<Point> set) {
+        protected Anchor(Func<Shape, Point> get, Action<Shape, Point> set) {
             this.get = get;
             this.set = set;
         }
 
         // TODO test below
-        public void Set(Point point) => set(point);
+        public void Set(Shape shape, Point point) => set(shape, point);
 
-        public Point Get() => get();
+        public Point Get(Shape shape) => get(shape);
 
-        public void Move(Point delta) => set(get() + delta);
+        public void Move(Shape shape, Point delta) => set(shape, get(shape) + delta);
     }
 
     public class Anchor<TShape> : Anchor where TShape : Shape {
-        public Anchor(TShape shape, Func<TShape, Point> get, Action<TShape, Point> set) : base(() => get(shape), point => set(shape, point)) { }
+        public Anchor(Func<TShape, Point> get, Action<TShape, Point> set) : base(shape => get((TShape)shape), (shape, point) => set((TShape)shape, point)) { }
     }
 }

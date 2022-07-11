@@ -37,28 +37,37 @@
 
 <svg class="graphics-main" @onmousedown="OnCanvasMouseDown" @onmousemove="OnCanvasMouseMove" @onmouseup="OnCanvasMouseUp">
     @foreach (var shape in shapes) {
-        if (shape == selectedShape && startPoint != null && currentPoint != null && HasMetMinimumDistanceRequirement(currentPoint)) {
-            var changingShape = shape.Clone();
+        if (shape == selectedShape) {
+            if (isObjectClicked && startPoint != null && currentPoint != null) {
+                var changingShape = selectedShape.Clone();
 
-            if (currentAnchor == null) {
-                changingShape.Transform(currentPoint - startPoint);
+                if (currentAnchor == null) {
+                    changingShape.Transform(currentPoint - startPoint);
+                }
+                else {
+                    currentAnchor.Move(changingShape, currentPoint - startPoint);
+                }
+
+                <ShapeRenderer Shape="changingShape" IsVirtual="true" />
+
+                foreach (var anchor in changingShape.Anchors) {
+                    var point = anchor.Get(changingShape);
+
+                    <rect class="shape-anchor" x="@(point.X - 5)" y="@(point.Y - 5)" width="10" height="10" />
+                }
             }
             else {
-                //currentAnchor.Move(currentPoint - startPoint);
-            }
+                <ShapeRenderer @key="selectedShape" Shape="selectedShape" OnMouseDown="args => OnShapeMouseDown(args, shape)" IsSelected="true" />
 
-            <ShapeRenderer Shape="changingShape" IsVirtual="true" />
+                foreach (var anchor in selectedShape.Anchors) {
+                    var point = anchor.Get(selectedShape);
+
+                    <rect class="shape-anchor" x="@(point.X - 5)" y="@(point.Y - 5)" width="10" height="10" @onmousedown="args => OnAnchorMouseDown(args, anchor)" />
+                }
+            }
         }
         else {
-            <ShapeRenderer @key="shape" Shape="shape" OnMouseDown="args => OnShapeMouseDown(args, shape)" IsSelected="shape == selectedShape" />
-        }
-    }
-
-    @if (selectedShape != null) {
-        foreach (var anchor in selectedShape.GetAnchors()) {
-            var point = anchor.Get();
-
-            <rect @key="point" class="shape-anchor" x="@(point.X - 5)" y="@(point.Y - 5)" width="10" height="10" @onmousedown="args => OnAnchorMouseDown(args, anchor)" />
+            <ShapeRenderer @key="shape" Shape="shape" OnMouseDown="args => OnShapeMouseDown(args, shape)" IsSelected="false" />
         }
     }
 
@@ -117,7 +126,7 @@
     private Point currentPoint;
     private int regularPolygonSides = 3;
     private Shape selectedShape;
-    private bool isSelecting = false;
+    private bool isObjectClicked = false;
     private Anchor currentAnchor;
 
     private ActionDefinition CurrentActionDefinition => actionDefinitions[currentActionType];
@@ -150,6 +159,7 @@
             startPoint = null;
             currentPoint = null;
             currentAnchor = null;
+            isObjectClicked = false;
         }
     }
 
@@ -162,6 +172,7 @@
     private void OnAnchorMouseDown(MouseEventArgs args, Anchor anchor) {
         if (args.Button == 0) {
             currentAnchor = anchor;
+            isObjectClicked = true;
         }
     }
 
@@ -183,21 +194,21 @@
 
     private void Select(Shape shape) {
         selectedShape = shape;
-        isSelecting = true;
+        isObjectClicked = true;
     }
 
     private void ProcessSelection(Point endPoint) {
-        if (currentAnchor != null) {
-            currentAnchor.Move(endPoint - startPoint);
+        if (isObjectClicked) {
+            if (currentAnchor != null) {
+                currentAnchor.Move(selectedShape, endPoint - startPoint);
+            }
+            else if (selectedShape != null) {
+                selectedShape.Transform(endPoint - startPoint);
+            }
         }
-        else if (selectedShape != null) {
-            selectedShape.Transform(endPoint - startPoint);
-        }
-        else if (!isSelecting) {
+        else {
             selectedShape = null;
         }
-
-        isSelecting = false;
     }
 
     private void Deselect() {

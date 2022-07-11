@@ -12,8 +12,8 @@ namespace BlazorPlayground {
 
     /*
      * TODO
-     * Resize selected
-     * Move selected
+     * Set canvas size
+     * Add grid
      * Snap to grid
      * Snap to existing point
      * Move back/forward/to back/to front
@@ -23,7 +23,6 @@ namespace BlazorPlayground {
      * Add selection rectangle when drag selecting
      * Add circle
      * Add arc
-     * Set canvas size
      */
 
     public class Program {

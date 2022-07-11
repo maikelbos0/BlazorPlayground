@@ -1,6 +1,12 @@
 ﻿namespace BlazorPlayground.Graphics {
     public class RegularPolygon : Shape {
+        private readonly static Anchor[] anchors = new[] {
+            new Anchor<RegularPolygon>(s => s.CenterPoint, (s, p) => s.CenterPoint = p),
+            new Anchor<RegularPolygon>(s => s.RadiusPoint, (s, p) => s.RadiusPoint = p)
+        };
+
         public override ShapeRenderType RenderType => ShapeRenderType.Polygon;
+        public override IReadOnlyList<Anchor> Anchors { get; } = Array.AsReadOnly(anchors);
         public Point CenterPoint { get; set; }
         public Point RadiusPoint { get; set; }
         public int Sides { get; set; }
@@ -23,12 +29,6 @@
                 yield return CenterPoint + new Point(radius * Math.Cos(angle), radius * Math.Sin(angle));
             }
         }
-
-        public override IEnumerable<Anchor> GetAnchors() {
-            yield return new Anchor<RegularPolygon>(this, s => s.CenterPoint, (s, p) => s.CenterPoint = p);
-            yield return new Anchor<RegularPolygon>(this, s => s.RadiusPoint, (s, p) => s.RadiusPoint = p);
-        }
-
 
         public override Shape Clone() => new RegularPolygon(CenterPoint, RadiusPoint, Sides);
     }
