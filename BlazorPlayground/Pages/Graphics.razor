@@ -21,6 +21,9 @@
         else if (currentActionType == ActionType.DrawLine) {
 
         }
+        else if (currentActionType == ActionType.DrawRectangle) {
+            
+        }
         else if (currentActionType == ActionType.DrawRegularPolygon) {
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
@@ -47,6 +50,7 @@
     private enum ActionType {
         Select,
         DrawLine,
+        DrawRectangle,
         DrawRegularPolygon
     }
 
@@ -76,6 +80,7 @@
     private static Dictionary<ActionType, ActionDefinition> actionDefinitions = new Dictionary<ActionType, ActionDefinition>() {
         { ActionType.Select, new ActionDefinition("Select", onExecute: (graphics, endPoint) => graphics.Select(endPoint), onDeselect: graphics => graphics.DeselectAll()) },
         { ActionType.DrawLine, new DrawActionDefinition("Line", (graphics, endPoint) => new Line(graphics.startPoint, endPoint)) },
+        { ActionType.DrawRectangle, new DrawActionDefinition("Rectangle", (graphics, endPoint) => new Rectangle(graphics.startPoint, endPoint)) },
         { ActionType.DrawRegularPolygon, new DrawActionDefinition("Regular polygon", (graphics, endPoint) => new RegularPolygon(graphics.startPoint, endPoint, graphics.regularPolygonSides)) }
     };
 
