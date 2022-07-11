@@ -20,5 +20,7 @@
             yield return new Anchor<Rectangle>(this, s => s.StartPoint, (s, p) => s.StartPoint = p);
             yield return new Anchor<Rectangle>(this, s => s.EndPoint, (s, p) => s.EndPoint = p);
         }
+
+        public override Shape Clone() => new Rectangle(StartPoint, EndPoint);
     }
 }

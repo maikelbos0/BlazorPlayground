@@ -8,7 +8,9 @@
             this.set = set;
         }
 
+        // TODO test below
         public void Set(Point point) => set(point);
+
         public Point Get() => get();
     }
 

@@ -18,5 +18,7 @@
             yield return new Anchor<Line>(this, s => s.StartPoint, (s, p) => s.StartPoint = p);
             yield return new Anchor<Line>(this, s => s.EndPoint, (s, p) => s.EndPoint = p);
         }
+
+        public override Shape Clone() => new Line(StartPoint, EndPoint);
     }
 }

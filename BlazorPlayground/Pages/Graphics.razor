@@ -37,10 +37,19 @@
 
 <svg class="graphics-main" @onmousedown="OnCanvasMouseDown" @onmousemove="OnCanvasMouseMove" @onmouseup="OnCanvasMouseUp">
     @foreach (var shape in shapes) {
-        <ShapeRenderer @key="shape" Shape="shape" OnMouseDown="args => OnShapeMouseDown(args, shape)" OnMouseUp="args => OnShapeMouseUp(args, shape)" IsSelected="shape == selectedShape" />
+        if (shape == selectedShape && startPoint != null && currentPoint != null && HasMetMinimumDistanceRequirement(currentPoint)) {
+            var movingShape = shape.Clone();
+            
+            movingShape.Transform(currentPoint - startPoint);
+
+            <ShapeRenderer Shape="movingShape" IsVirtual="true" />
+        }
+        else {
+            <ShapeRenderer @key="shape" Shape="shape" OnMouseDown="args => OnShapeMouseDown(args, shape)" IsSelected="shape == selectedShape" />
+        }
     }
 
-    @if (startPoint != null && currentPoint != null && CurrentActionDefinition is DrawActionDefinition drawActionDefinition) {        
+    @if (startPoint != null && currentPoint != null && CurrentActionDefinition is DrawActionDefinition drawActionDefinition) {
         <ShapeRenderer @key="startPoint" Shape="drawActionDefinition.CreateShape(this, currentPoint)" IsVirtual="true" />
     }
 </svg>
@@ -58,21 +67,18 @@
         public string Name { get; }
         public Action<Graphics, Point> OnCanvasMouseUp { get; }
         public Action<Graphics, Shape> OnShapeMouseDown { get; }
-        public Action<Graphics, Shape> OnShapeMouseUp { get; }
-        public Action<Graphics> OnDeselect { get; }
+        public Action<Graphics> OnSwitchFrom { get; }
 
         public ActionDefinition(
             string name,
             Action<Graphics, Point> onCanvasMouseUp = null,
             Action<Graphics, Shape> onShapeMouseDown = null,
-            Action<Graphics, Shape> onShapeMouseUp = null,
-            Action<Graphics> onDeselect = null
+            Action<Graphics> onSwitchFrom = null
         ) {
             Name = name;
             OnCanvasMouseUp = onCanvasMouseUp ?? ((_, _) => { });
             OnShapeMouseDown = onShapeMouseDown ?? ((_, _) => { });
-            OnShapeMouseUp = onShapeMouseUp ?? ((_, _) => { });
-            OnDeselect = onDeselect ?? (_ => { });
+            OnSwitchFrom = onSwitchFrom ?? (_ => { });
         }
     }
 
@@ -86,7 +92,7 @@
     }
 
     private static Dictionary<ActionType, ActionDefinition> actionDefinitions = new Dictionary<ActionType, ActionDefinition>() {
-        { ActionType.Select, new ActionDefinition("Select", onCanvasMouseUp: (graphics, endPoint) => graphics.Deselect(), onShapeMouseUp: (graphics, shape) => graphics.Select(shape), onDeselect: graphics => graphics.Deselect()) },
+        { ActionType.Select, new ActionDefinition("Select", onCanvasMouseUp: (graphics, endPoint) => graphics.ProcessSelection(endPoint), onShapeMouseDown: (graphics, shape) => graphics.Select(shape), onSwitchFrom: graphics => graphics.Deselect()) },
         { ActionType.DrawLine, new DrawActionDefinition("Line", (graphics, endPoint) => new Line(graphics.startPoint, endPoint)) },
         { ActionType.DrawRectangle, new DrawActionDefinition("Rectangle", (graphics, endPoint) => new Rectangle(graphics.startPoint, endPoint)) },
         { ActionType.DrawRegularPolygon, new DrawActionDefinition("Regular polygon", (graphics, endPoint) => new RegularPolygon(graphics.startPoint, endPoint, graphics.regularPolygonSides)) }
@@ -97,7 +103,7 @@
     private Point startPoint;
     private Point currentPoint;
     private int regularPolygonSides = 3;
-    private Shape selectedShape;
+    private Shape selectedShape;    
     private bool isSelecting = false;
 
     private ActionDefinition CurrentActionDefinition => actionDefinitions[currentActionType];
@@ -108,7 +114,7 @@
     }
 
     private void SwitchActionType(ActionType newActionType) {
-        CurrentActionDefinition.OnDeselect(this);
+        CurrentActionDefinition.OnSwitchFrom(this);
         currentActionType = newActionType;
     }
 
@@ -134,13 +140,7 @@
 
     private void OnShapeMouseDown(MouseEventArgs args, Shape shape) {
         if (args.Button == 0) {
-            CurrentActionDefinition.OnShapeMouseUp(this, shape);
-        }
-    }
-
-    private void OnShapeMouseUp(MouseEventArgs args, Shape shape) {
-        if (args.Button == 0) {
-            CurrentActionDefinition.OnShapeMouseUp(this, shape);
+            CurrentActionDefinition.OnShapeMouseDown(this, shape);
         }
     }
 
@@ -165,12 +165,26 @@
         isSelecting = true;
     }
 
-    private void Deselect() {
-        if (isSelecting) {
-            isSelecting = false;
+    private void ProcessSelection(Point endPoint) {
+        if (selectedShape != null && HasMetMinimumDistanceRequirement(endPoint)) {
+            Move(endPoint);
         }
         else {
+            Deselect();
+        }
+
+        isSelecting = false;
+    }
+
+    private void Deselect() {
+        if (!isSelecting) {
             selectedShape = null;
+        }
+    }
+
+    private void Move(Point endPoint) {
+        if (selectedShape != null) {
+            selectedShape.Transform(endPoint - startPoint);
         }
     }
 }
