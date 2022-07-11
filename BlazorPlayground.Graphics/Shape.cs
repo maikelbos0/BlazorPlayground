@@ -9,11 +9,9 @@
         // TODO test below
         public abstract Shape Clone();
 
-        public void Transform(Point delta) => Transform(delta, GetAnchors().ToArray());
-
-        public void Transform(Point delta, params Anchor[] anchors) {
-            foreach (var anchor in anchors) {
-                anchor.Set(anchor.Get() + delta);
+        public void Transform(Point delta) {
+            foreach (var anchor in GetAnchors()) {
+                anchor.Move(delta);
             }
         }
     }

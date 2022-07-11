@@ -12,6 +12,8 @@
         public void Set(Point point) => set(point);
 
         public Point Get() => get();
+
+        public void Move(Point delta) => set(get() + delta);
     }
 
     public class Anchor<TShape> : Anchor where TShape : Shape {

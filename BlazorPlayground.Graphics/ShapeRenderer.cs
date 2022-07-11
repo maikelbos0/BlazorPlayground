@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace BlazorPlayground.Graphics {
     public class ShapeRenderer : ComponentBase {
-
         [Parameter]
         public Shape? Shape { get; set; }
 
@@ -29,23 +28,6 @@ namespace BlazorPlayground.Graphics {
                 builder.AddAttribute(6, "class", $"shape {(IsSelected ? "shape-selected" : IsVirtual ? "shape-virtual" : "")}");
                 builder.AddAttribute(7, "points", string.Join(" ", Shape.GetPoints().Select(p => FormattableString.Invariant($"{p.X},{p.Y}"))));
                 builder.CloseElement();
-
-                if (IsSelected) {
-                    foreach (var anchor in Shape.GetAnchors()) {
-                        var point = anchor.Get();
-
-                        if (point != null) {
-                            builder.OpenElement(1, "rect");
-                            builder.SetKey(point);
-                            builder.AddAttribute(3, "class", "shape-point");
-                            builder.AddAttribute(4, "x", point.X - 5);
-                            builder.AddAttribute(5, "y", point.Y - 5);
-                            builder.AddAttribute(6, "width", 10);
-                            builder.AddAttribute(7, "height", 10);
-                            builder.CloseElement();
-                        }
-                    }
-                }
             }
         }
 

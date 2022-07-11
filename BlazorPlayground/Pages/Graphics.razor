@@ -38,14 +38,27 @@
 <svg class="graphics-main" @onmousedown="OnCanvasMouseDown" @onmousemove="OnCanvasMouseMove" @onmouseup="OnCanvasMouseUp">
     @foreach (var shape in shapes) {
         if (shape == selectedShape && startPoint != null && currentPoint != null && HasMetMinimumDistanceRequirement(currentPoint)) {
-            var movingShape = shape.Clone();
-            
-            movingShape.Transform(currentPoint - startPoint);
+            var changingShape = shape.Clone();
 
-            <ShapeRenderer Shape="movingShape" IsVirtual="true" />
+            if (currentAnchor == null) {
+                changingShape.Transform(currentPoint - startPoint);
+            }
+            else {
+                //currentAnchor.Move(currentPoint - startPoint);
+            }
+
+            <ShapeRenderer Shape="changingShape" IsVirtual="true" />
         }
         else {
             <ShapeRenderer @key="shape" Shape="shape" OnMouseDown="args => OnShapeMouseDown(args, shape)" IsSelected="shape == selectedShape" />
+        }
+    }
+
+    @if (selectedShape != null) {
+        foreach (var anchor in selectedShape.GetAnchors()) {
+            var point = anchor.Get();
+
+            <rect @key="point" class="shape-anchor" x="@(point.X - 5)" y="@(point.Y - 5)" width="10" height="10" @onmousedown="args => OnAnchorMouseDown(args, anchor)" />
         }
     }
 
@@ -103,8 +116,9 @@
     private Point startPoint;
     private Point currentPoint;
     private int regularPolygonSides = 3;
-    private Shape selectedShape;    
+    private Shape selectedShape;
     private bool isSelecting = false;
+    private Anchor currentAnchor;
 
     private ActionDefinition CurrentActionDefinition => actionDefinitions[currentActionType];
 
@@ -135,12 +149,19 @@
             CurrentActionDefinition.OnCanvasMouseUp(this, new Point(args.OffsetX, args.OffsetY));
             startPoint = null;
             currentPoint = null;
+            currentAnchor = null;
         }
     }
 
     private void OnShapeMouseDown(MouseEventArgs args, Shape shape) {
         if (args.Button == 0) {
             CurrentActionDefinition.OnShapeMouseDown(this, shape);
+        }
+    }
+
+    private void OnAnchorMouseDown(MouseEventArgs args, Anchor anchor) {
+        if (args.Button == 0) {
+            currentAnchor = anchor;
         }
     }
 
@@ -166,25 +187,20 @@
     }
 
     private void ProcessSelection(Point endPoint) {
-        if (selectedShape != null && HasMetMinimumDistanceRequirement(endPoint)) {
-            Move(endPoint);
+        if (currentAnchor != null) {
+            currentAnchor.Move(endPoint - startPoint);
         }
-        else {
-            Deselect();
+        else if (selectedShape != null) {
+            selectedShape.Transform(endPoint - startPoint);
+        }
+        else if (!isSelecting) {
+            selectedShape = null;
         }
 
         isSelecting = false;
     }
 
     private void Deselect() {
-        if (!isSelecting) {
-            selectedShape = null;
-        }
-    }
-
-    private void Move(Point endPoint) {
-        if (selectedShape != null) {
-            selectedShape.Transform(endPoint - startPoint);
-        }
+        selectedShape = null;
     }
 }
