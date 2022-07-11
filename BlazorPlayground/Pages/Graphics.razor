@@ -35,18 +35,13 @@
     </div>
 </div>
 
-<svg class="graphics-main" @onmousedown="OnMouseDown" @onmousemove="OnMouseMove" @onmouseup="OnMouseUp">
+<svg class="graphics-main" @onmousedown="OnCanvasMouseDown" @onmousemove="OnCanvasMouseMove" @onmouseup="OnCanvasMouseUp">
     @foreach (var shape in shapes) {
-        <ShapeRenderer @key="shape" Shape="shape" OnClick="args => OnShapeClick(args, shape)" />
+        <ShapeRenderer @key="shape" Shape="shape" OnMouseDown="args => OnShapeMouseDown(args, shape)" OnMouseUp="args => OnShapeMouseUp(args, shape)" IsSelected="shape == selectedShape" />
     }
 
-    @if (startPoint != null && currentPoint != null) {
-        var shape = CurrentActionDefinition switch {
-            DrawActionDefinition drawActionDefinition => drawActionDefinition.CreateShape(this, currentPoint),
-            _ => new Rectangle(startPoint, currentPoint)
-        };
-
-        <ShapeRenderer @key="startPoint" Shape="shape" IsVirtual="true" />
+    @if (startPoint != null && currentPoint != null && CurrentActionDefinition is DrawActionDefinition drawActionDefinition) {        
+        <ShapeRenderer @key="startPoint" Shape="drawActionDefinition.CreateShape(this, currentPoint)" IsVirtual="true" />
     }
 </svg>
 
@@ -61,14 +56,22 @@
 
     private class ActionDefinition {
         public string Name { get; }
-        public Action<Graphics, Point> OnExecute { get; }
-        public Action<Graphics> OnSelect { get; }
+        public Action<Graphics, Point> OnCanvasMouseUp { get; }
+        public Action<Graphics, Shape> OnShapeMouseDown { get; }
+        public Action<Graphics, Shape> OnShapeMouseUp { get; }
         public Action<Graphics> OnDeselect { get; }
 
-        public ActionDefinition(string name, Action<Graphics, Point> onExecute = null, Action<Graphics> onSelect = null, Action<Graphics> onDeselect = null) {
+        public ActionDefinition(
+            string name,
+            Action<Graphics, Point> onCanvasMouseUp = null,
+            Action<Graphics, Shape> onShapeMouseDown = null,
+            Action<Graphics, Shape> onShapeMouseUp = null,
+            Action<Graphics> onDeselect = null
+        ) {
             Name = name;
-            OnExecute = onExecute ?? ((_, _) => { });
-            OnSelect = onSelect ?? (_ => { });
+            OnCanvasMouseUp = onCanvasMouseUp ?? ((_, _) => { });
+            OnShapeMouseDown = onShapeMouseDown ?? ((_, _) => { });
+            OnShapeMouseUp = onShapeMouseUp ?? ((_, _) => { });
             OnDeselect = onDeselect ?? (_ => { });
         }
     }
@@ -76,14 +79,14 @@
     private class DrawActionDefinition : ActionDefinition {
         public Func<Graphics, Point, Shape> CreateShape { get; }
 
-        public DrawActionDefinition(string name, Func<Graphics, Point, Shape> createShape, Action<Graphics> onSelect = null, Action<Graphics> onDeselect = null)
-            : base(name, (graphics, endPoint) => graphics.AddShape(endPoint, createShape), onSelect, onDeselect) {
+        public DrawActionDefinition(string name, Func<Graphics, Point, Shape> createShape)
+            : base(name, (graphics, endPoint) => graphics.AddShape(endPoint, createShape)) {
             CreateShape = createShape;
         }
     }
 
     private static Dictionary<ActionType, ActionDefinition> actionDefinitions = new Dictionary<ActionType, ActionDefinition>() {
-        { ActionType.Select, new ActionDefinition("Select", onExecute: (graphics, endPoint) => graphics.Select(endPoint), onDeselect: graphics => graphics.DeselectAll()) },
+        { ActionType.Select, new ActionDefinition("Select", onCanvasMouseUp: (graphics, endPoint) => graphics.Deselect(), onShapeMouseUp: (graphics, shape) => graphics.Select(shape), onDeselect: graphics => graphics.Deselect()) },
         { ActionType.DrawLine, new DrawActionDefinition("Line", (graphics, endPoint) => new Line(graphics.startPoint, endPoint)) },
         { ActionType.DrawRectangle, new DrawActionDefinition("Rectangle", (graphics, endPoint) => new Rectangle(graphics.startPoint, endPoint)) },
         { ActionType.DrawRegularPolygon, new DrawActionDefinition("Regular polygon", (graphics, endPoint) => new RegularPolygon(graphics.startPoint, endPoint, graphics.regularPolygonSides)) }
@@ -94,7 +97,8 @@
     private Point startPoint;
     private Point currentPoint;
     private int regularPolygonSides = 3;
-    private bool hasSelectedSingleShape = false;
+    private Shape selectedShape;
+    private bool isSelecting = false;
 
     private ActionDefinition CurrentActionDefinition => actionDefinitions[currentActionType];
 
@@ -106,69 +110,67 @@
     private void SwitchActionType(ActionType newActionType) {
         CurrentActionDefinition.OnDeselect(this);
         currentActionType = newActionType;
-        CurrentActionDefinition.OnSelect(this);
     }
 
-    private void OnMouseDown(MouseEventArgs args) {
+    private void OnCanvasMouseDown(MouseEventArgs args) {
         if (args.Button == 0) {
             startPoint = new Point(args.OffsetX, args.OffsetY);
         }
     }
 
-    private void OnMouseMove(MouseEventArgs args) {
+    private void OnCanvasMouseMove(MouseEventArgs args) {
         if (args.Button == 0) {
             currentPoint = new Point(args.OffsetX, args.OffsetY);
         }
     }
 
-    private void OnMouseUp(MouseEventArgs args) {
+    private void OnCanvasMouseUp(MouseEventArgs args) {
         if (args.Button == 0) {
-            CurrentActionDefinition.OnExecute(this, new Point(args.OffsetX, args.OffsetY));
+            CurrentActionDefinition.OnCanvasMouseUp(this, new Point(args.OffsetX, args.OffsetY));
             startPoint = null;
             currentPoint = null;
         }
     }
 
+    private void OnShapeMouseDown(MouseEventArgs args, Shape shape) {
+        if (args.Button == 0) {
+            CurrentActionDefinition.OnShapeMouseUp(this, shape);
+        }
+    }
+
+    private void OnShapeMouseUp(MouseEventArgs args, Shape shape) {
+        if (args.Button == 0) {
+            CurrentActionDefinition.OnShapeMouseUp(this, shape);
+        }
+    }
+
     private void AddShape(Point endPoint, Func<Graphics, Point, Shape> createShape) {
-        if (HasMetMinimumSizeRequirement(endPoint)) {
+        if (HasMetMinimumDistanceRequirement(endPoint)) {
             shapes.Add(createShape(this, endPoint));
         }
     }
 
-    private bool HasMetMinimumSizeRequirement(Point endPoint)
+    private bool HasMetMinimumDistanceRequirement(Point endPoint)
         => startPoint - endPoint > 5;
 
-    private void OnShapeClick(MouseEventArgs args, Shape shape) {
-        if (currentActionType == ActionType.Select) {
-            Select(args, shape);
+    private void DeleteSelected() {
+        if (selectedShape != null) {
+            shapes.Remove(selectedShape);
+            selectedShape = null;
         }
     }
 
-    private void Select(Point endPoint) {
-        if (hasSelectedSingleShape) {
-            hasSelectedSingleShape = false;
+    private void Select(Shape shape) {
+        selectedShape = shape;
+        isSelecting = true;
+    }
+
+    private void Deselect() {
+        if (isSelecting) {
+            isSelecting = false;
         }
         else {
-            DeselectAll();
-
-            foreach (var shape in shapes.Where(s => s.GetPoints().All(p => p.IsContainedBy(startPoint, endPoint)))) {
-                shape.IsSelected = true;
-            }
-        }
-    }
-
-    private void Select(MouseEventArgs args, Shape shape) {
-        hasSelectedSingleShape = true;
-        shape.IsSelected = !shape.IsSelected;
-    }
-
-    private void DeleteSelected() {
-        shapes.RemoveAll(s => s.IsSelected);
-    }
-
-    private void DeselectAll() {
-        foreach (var shape in shapes.Where(s => s.IsSelected)) {
-            shape.IsSelected = false;
+            selectedShape = null;
         }
     }
 }

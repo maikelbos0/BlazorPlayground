@@ -12,18 +12,25 @@ namespace BlazorPlayground.Graphics {
         public bool IsVirtual { get; set; } = false;
 
         [Parameter]
-        public EventCallback<MouseEventArgs> OnClick { get; set; }
+        public bool IsSelected { get; set; } = false;
+
+        [Parameter]
+        public EventCallback<MouseEventArgs> OnMouseDown { get; set; }
+
+        [Parameter]
+        public EventCallback<MouseEventArgs> OnMouseUp { get; set; }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder) {
             if (Shape != null) {
                 builder.OpenElement(1, GetElementName(Shape.RenderType));
                 builder.SetKey(Shape);
-                builder.AddAttribute(2, "onclick", OnClick);
-                builder.AddAttribute(3, "class", $"shape {(IsVirtual ? "shape-virtual" : "")} {(Shape.IsSelected ? "shape-selected" : "")}");
-                builder.AddAttribute(4, "points", string.Join(" ", Shape.GetPoints().Select(p => FormattableString.Invariant($"{p.X},{p.Y}"))));
+                builder.AddAttribute(2, "onmousedown", OnMouseDown);
+                builder.AddAttribute(4, "onmouseup", OnMouseUp);
+                builder.AddAttribute(6, "class", $"shape {(IsSelected ? "shape-selected" : IsVirtual ? "shape-virtual" : "")}");
+                builder.AddAttribute(7, "points", string.Join(" ", Shape.GetPoints().Select(p => FormattableString.Invariant($"{p.X},{p.Y}"))));
                 builder.CloseElement();
 
-                if (Shape.IsSelected) {
+                if (IsSelected) {
                     foreach (var anchor in Shape.GetAnchors()) {
                         var point = anchor.Get();
 
