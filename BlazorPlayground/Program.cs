@@ -12,7 +12,6 @@ namespace BlazorPlayground {
 
     /*
      * TODO
-     * Set canvas size
      * Add grid
      * Snap to grid
      * Snap to existing point

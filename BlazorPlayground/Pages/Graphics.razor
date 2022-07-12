@@ -32,10 +32,25 @@
                 <input type="text" class="form-control" id="regularPolygonSides" @bind-value="RegularPolygonSides" />
             </div>
         }
+        else if (currentActionType == ActionType.CanvasSettings) {
+            <div class="input-group mb-3 me-3">
+                <div class="input-group-prepend">
+                    <label for="canvasWidth" class="input-group-text">Width</label>
+                </div>
+                <input type="text" class="form-control" id="canvasWidth" @bind-value="CanvasWidth" />
+            </div>
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <label for="canvasHeight" class="input-group-text">Height</label>
+                </div>
+                <input type="text" class="form-control" id="canvasHeight" @bind-value="CanvasHeight" />
+            </div>
+        }
     </div>
 </div>
 
-<svg class="graphics-main" @onmousedown="OnCanvasMouseDown" @onmousemove="OnCanvasMouseMove" @onmouseup="OnCanvasMouseUp">
+<svg class="graphics-main" viewBox="0 0 @CanvasWidth @CanvasHeight" style="width: @(CanvasWidth)px; height: @(CanvasHeight)px" @onmousedown="OnCanvasMouseDown" @onmousemove="OnCanvasMouseMove" @onmouseup="OnCanvasMouseUp">
     @foreach (var shape in shapes) {
         if (shape == selectedShape) {
             if (isObjectClicked && startPoint != null && currentPoint != null) {
@@ -82,7 +97,8 @@
         Select,
         DrawLine,
         DrawRectangle,
-        DrawRegularPolygon
+        DrawRegularPolygon,
+        CanvasSettings
     }
 
     private class ActionDefinition {
@@ -117,7 +133,8 @@
         { ActionType.Select, new ActionDefinition("Select", onCanvasMouseUp: (graphics, endPoint) => graphics.ProcessSelection(endPoint), onShapeMouseDown: (graphics, shape) => graphics.Select(shape), onSwitchFrom: graphics => graphics.Deselect()) },
         { ActionType.DrawLine, new DrawActionDefinition("Line", (graphics, endPoint) => new Line(graphics.startPoint, endPoint)) },
         { ActionType.DrawRectangle, new DrawActionDefinition("Rectangle", (graphics, endPoint) => new Rectangle(graphics.startPoint, endPoint)) },
-        { ActionType.DrawRegularPolygon, new DrawActionDefinition("Regular polygon", (graphics, endPoint) => new RegularPolygon(graphics.startPoint, endPoint, graphics.regularPolygonSides)) }
+        { ActionType.DrawRegularPolygon, new DrawActionDefinition("Regular polygon", (graphics, endPoint) => new RegularPolygon(graphics.startPoint, endPoint, graphics.regularPolygonSides)) },
+        { ActionType.CanvasSettings, new ActionDefinition("Canvas settings") }
     };
 
     private List<Shape> shapes = new List<Shape>();
@@ -128,12 +145,24 @@
     private Shape selectedShape;
     private bool isObjectClicked = false;
     private Anchor currentAnchor;
+    private int canvasWidth = 800;
+    private int canvasHeight = 800;
 
     private ActionDefinition CurrentActionDefinition => actionDefinitions[currentActionType];
 
     private int RegularPolygonSides {
         get => regularPolygonSides;
         set => regularPolygonSides = Math.Max(value, 3);
+    }
+
+    private int CanvasWidth {
+        get => canvasWidth;
+        set => canvasWidth = Math.Max(value, 1);
+    }
+
+    private int CanvasHeight {
+        get => canvasHeight;
+        set => canvasHeight = Math.Max(value, 1);
     }
 
     private void SwitchActionType(ActionType newActionType) {
