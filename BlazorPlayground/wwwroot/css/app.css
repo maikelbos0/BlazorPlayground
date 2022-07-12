@@ -158,3 +158,8 @@ a, .btn-link {
     stroke-width: 1;
     fill: transparent;
 }
+
+.graphics-main .grid-line {
+    stroke: #dee2e6;
+    stroke-width: 1;
+}
