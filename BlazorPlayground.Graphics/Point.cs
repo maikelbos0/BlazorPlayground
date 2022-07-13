@@ -11,5 +11,19 @@
 
             return containedX && containedY;
         }
+
+        public Point SnapToGrid(int gridSize) {
+            var remainderX = X % gridSize;
+            var remainderY = Y % gridSize;
+
+            var gridPoints = new[] {
+                new Point(-remainderX, -remainderY),
+                new Point(-remainderX + gridSize, -remainderY),
+                new Point(-remainderX, -remainderY + gridSize),
+                new Point(-remainderX + gridSize, -remainderY + gridSize)
+            };
+
+            return gridPoints.OrderBy(p => p.Distance).First() + this;
+        }
     }
 }

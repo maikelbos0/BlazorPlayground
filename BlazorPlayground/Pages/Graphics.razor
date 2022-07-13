@@ -251,17 +251,7 @@
             return point;
         }
 
-        var remainderX = point.X % gridSize;
-        var remainderY = point.Y % gridSize;
-
-        var gridPoints = new[] {
-            new Point(-remainderX, -remainderY),
-            new Point(-remainderX + gridSize, -remainderY),
-            new Point(-remainderX, -remainderY + gridSize),
-            new Point(-remainderX + gridSize, -remainderY + gridSize)
-        };
-
-        return gridPoints.OrderBy(p => p.Distance).First() + point;
+        return point.SnapToGrid(gridSize);
     }
 
     private void AddShape(ActionCoordinates coordinates, Func<Graphics, ActionCoordinates, Shape> createShape) {

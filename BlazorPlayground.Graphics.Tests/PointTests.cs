@@ -39,5 +39,21 @@ namespace BlazorPlayground.Graphics.Tests {
 
             Assert.Equal(expectedIsContained, point.IsContainedBy(boundaryPoint1, boundaryPoint2));
         }
+
+        [Theory]
+        [InlineData(100, 200, 50, 100, 200)]
+        [InlineData(101, 201, 50, 100, 200)]
+        [InlineData(124.9, 224.9, 50, 100, 200)]
+        [InlineData(101, 199, 50, 100, 200)]
+        [InlineData(124.9, 175.1, 50, 100, 200)]
+        [InlineData(99, 201, 50, 100, 200)]
+        [InlineData(76.1, 224.9, 50, 100, 200)]
+        [InlineData(99, 199, 50, 100, 200)]
+        [InlineData(76.1, 175.1, 50, 100, 200)]
+        public void SnapToGrid(double x, double y, int gridSize, double expectedX, double expectedY) {
+            var point = new Point(x, y);
+
+            PointAssert.Equal(new Point(expectedX, expectedY), point.SnapToGrid(gridSize));
+        }
     }
 }
