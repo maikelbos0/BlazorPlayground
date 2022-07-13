@@ -107,5 +107,16 @@ namespace BlazorPlayground.Graphics.Tests {
             PointAssert.Equal(new Point(110, 160), polygon.CenterPoint);
             PointAssert.Equal(new Point(210, 260), polygon.RadiusPoint);
         }
+
+        [Fact]
+        public void Clone() {
+            var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250), 5);
+
+            var result = polygon.Clone();
+            Assert.NotSame(polygon, result);
+            PointAssert.Equal(new Point(100, 150), polygon.CenterPoint);
+            PointAssert.Equal(new Point(200, 250), polygon.RadiusPoint);
+            Assert.Equal(5, polygon.Sides);
+        }
     }
 }

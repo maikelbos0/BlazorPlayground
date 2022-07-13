@@ -39,5 +39,15 @@ namespace BlazorPlayground.Graphics.Tests {
             PointAssert.Equal(new Point(110, 160), rectangle.StartPoint);
             PointAssert.Equal(new Point(210, 260), rectangle.EndPoint);
         }
+
+        [Fact]
+        public void Clone() {
+            var rectangle = new Rectangle(new Point(100, 150), new Point(200, 250));
+
+            var result = rectangle.Clone();
+            Assert.NotSame(rectangle, result);
+            PointAssert.Equal(new Point(100, 150), rectangle.StartPoint);
+            PointAssert.Equal(new Point(200, 250), rectangle.EndPoint);
+        }
     }
 }
