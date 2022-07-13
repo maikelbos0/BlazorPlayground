@@ -8,7 +8,6 @@
             this.set = set;
         }
 
-        // TODO test below
         public void Set(Shape shape, Point point) => set(shape, point);
 
         public Point Get(Shape shape) => get(shape);
