@@ -18,7 +18,7 @@ namespace BlazorPlayground.Graphics.Tests {
 
         [Fact]
         public void Double() {
-            double result = new Point(30, 40);
+            var result = new Point(30, 40).Distance;
 
             Assert.Equal(50, result, 1);
         }

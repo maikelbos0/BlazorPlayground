@@ -2,7 +2,8 @@
     public record Point(double X, double Y) {
         public static Point operator +(Point p1, Point p2) => new(p1.X + p2.X, p1.Y + p2.Y);
         public static Point operator -(Point p1, Point p2) => new(p1.X - p2.X, p1.Y - p2.Y);
-        public static implicit operator double(Point p) => Math.Sqrt(Math.Pow(p.X, 2) + Math.Pow(p.Y, 2));
+
+        public double Distance => Math.Sqrt(Math.Pow(X, 2) + Math.Pow(Y, 2));
 
         public bool IsContainedBy(Point boundaryPoint1, Point boundaryPoint2) {
             var containedX = (boundaryPoint1.X >= X && boundaryPoint2.X <= X) || (boundaryPoint2.X >= X && boundaryPoint1.X <= X);

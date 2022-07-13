@@ -52,9 +52,15 @@
                     <label for="gridSize" class="input-group-text">Grid size</label>
                 </div>
                 <input type="text" class="form-control" id="gridSize" @bind-value="GridSize" />
+
                 <div class="input-group-text">
-                    <input class="form-check-input mt-0 me-2" type="checkbox" id="showGrid" @bind-value="showGrid">
+                    <input class="form-check-input mt-0 me-2" type="checkbox" id="showGrid" @bind="showGrid">
                     <label class="form-check-label" for="showGrid">Show</label>
+                </div>
+
+                <div class="input-group-text">
+                    <input class="form-check-input mt-0 me-2" type="checkbox" id="snapToGrid" @bind="snapToGrid">
+                    <label class="form-check-label" for="snapToGrid">Snap</label>
                 </div>
             </div>
         }
@@ -74,14 +80,14 @@
 
     @foreach (var shape in shapes) {
         if (shape == selectedShape) {
-            if (isObjectClicked && startPoint != null && currentPoint != null) {
+            if (isObjectClicked && currentPoint != null) {
                 var changingShape = selectedShape.Clone();
 
                 if (currentAnchor == null) {
                     changingShape.Transform(currentPoint - startPoint);
                 }
                 else {
-                    currentAnchor.Move(changingShape, currentPoint - startPoint);
+                    currentAnchor.Set(changingShape, GetSnappedPoint(currentPoint));
                 }
 
                 <ShapeRenderer Shape="changingShape" IsVirtual="true" />
@@ -107,8 +113,8 @@
         }
     }
 
-    @if (startPoint != null && currentPoint != null && CurrentActionDefinition is DrawActionDefinition drawActionDefinition) {
-        <ShapeRenderer @key="startPoint" Shape="drawActionDefinition.CreateShape(this, currentPoint)" IsVirtual="true" />
+    @if (currentPoint != null && CurrentActionDefinition is DrawActionDefinition drawActionDefinition) {
+        <ShapeRenderer Shape="drawActionDefinition.CreateShape(this, CreateCoordinates(currentPoint))" IsVirtual="true" />
     }
 </svg>
 
@@ -122,15 +128,17 @@
         CanvasSettings
     }
 
+    private record ActionCoordinates(Point StartPoint, Point SnappedStartPoint, Point EndPoint, Point SnappedEndPoint);
+
     private class ActionDefinition {
         public string Name { get; }
-        public Action<Graphics, Point> OnCanvasMouseUp { get; }
+        public Action<Graphics, ActionCoordinates> OnCanvasMouseUp { get; }
         public Action<Graphics, Shape> OnShapeMouseDown { get; }
         public Action<Graphics> OnSwitchFrom { get; }
 
         public ActionDefinition(
             string name,
-            Action<Graphics, Point> onCanvasMouseUp = null,
+            Action<Graphics, ActionCoordinates> onCanvasMouseUp = null,
             Action<Graphics, Shape> onShapeMouseDown = null,
             Action<Graphics> onSwitchFrom = null
         ) {
@@ -142,19 +150,19 @@
     }
 
     private class DrawActionDefinition : ActionDefinition {
-        public Func<Graphics, Point, Shape> CreateShape { get; }
+        public Func<Graphics, ActionCoordinates, Shape> CreateShape { get; }
 
-        public DrawActionDefinition(string name, Func<Graphics, Point, Shape> createShape)
-            : base(name, (graphics, endPoint) => graphics.AddShape(endPoint, createShape)) {
+        public DrawActionDefinition(string name, Func<Graphics, ActionCoordinates, Shape> createShape)
+            : base(name, (graphics, coordinates) => graphics.AddShape(coordinates, createShape)) {
             CreateShape = createShape;
         }
     }
 
     private static Dictionary<ActionType, ActionDefinition> actionDefinitions = new Dictionary<ActionType, ActionDefinition>() {
-        { ActionType.Select, new ActionDefinition("Select", onCanvasMouseUp: (graphics, endPoint) => graphics.ProcessSelection(endPoint), onShapeMouseDown: (graphics, shape) => graphics.Select(shape), onSwitchFrom: graphics => graphics.Deselect()) },
-        { ActionType.DrawLine, new DrawActionDefinition("Line", (graphics, endPoint) => new Line(graphics.startPoint, endPoint)) },
-        { ActionType.DrawRectangle, new DrawActionDefinition("Rectangle", (graphics, endPoint) => new Rectangle(graphics.startPoint, endPoint)) },
-        { ActionType.DrawRegularPolygon, new DrawActionDefinition("Regular polygon", (graphics, endPoint) => new RegularPolygon(graphics.startPoint, endPoint, graphics.regularPolygonSides)) },
+        { ActionType.Select, new ActionDefinition("Select", onCanvasMouseUp: (graphics, coordinates) => graphics.ProcessSelection(coordinates), onShapeMouseDown: (graphics, shape) => graphics.Select(shape), onSwitchFrom: graphics => graphics.Deselect()) },
+        { ActionType.DrawLine, new DrawActionDefinition("Line", (graphics, coordinates) => new Line(coordinates.SnappedStartPoint, coordinates.SnappedEndPoint)) },
+        { ActionType.DrawRectangle, new DrawActionDefinition("Rectangle", (graphics, coordinates) => new Rectangle(coordinates.SnappedStartPoint, coordinates.SnappedEndPoint)) },
+        { ActionType.DrawRegularPolygon, new DrawActionDefinition("Regular polygon", (graphics, coordinates) => new RegularPolygon(coordinates.SnappedStartPoint, coordinates.SnappedEndPoint, graphics.regularPolygonSides)) },
         { ActionType.CanvasSettings, new ActionDefinition("Canvas settings") }
     };
 
@@ -168,8 +176,9 @@
     private Anchor currentAnchor;
     private int canvasWidth = 800;
     private int canvasHeight = 800;
+    private int gridSize = 50;
     private bool showGrid = false;
-    private int gridSize = 25;
+    private bool snapToGrid = false;
 
     private ActionDefinition CurrentActionDefinition => actionDefinitions[currentActionType];
 
@@ -205,19 +214,20 @@
     }
 
     private void OnCanvasMouseMove(MouseEventArgs args) {
-        if (args.Button == 0) {
+        if (args.Button == 0 && startPoint != null) {
             currentPoint = new Point(args.OffsetX, args.OffsetY);
         }
     }
 
     private void OnCanvasMouseUp(MouseEventArgs args) {
-        if (args.Button == 0) {
-            CurrentActionDefinition.OnCanvasMouseUp(this, new Point(args.OffsetX, args.OffsetY));
-            startPoint = null;
-            currentPoint = null;
-            currentAnchor = null;
-            isObjectClicked = false;
+        if (args.Button == 0 && startPoint != null) {
+            CurrentActionDefinition.OnCanvasMouseUp(this, CreateCoordinates(new Point(args.OffsetX, args.OffsetY)));
         }
+
+        startPoint = null;
+        currentPoint = null;
+        currentAnchor = null;
+        isObjectClicked = false;
     }
 
     private void OnShapeMouseDown(MouseEventArgs args, Shape shape) {
@@ -233,14 +243,35 @@
         }
     }
 
-    private void AddShape(Point endPoint, Func<Graphics, Point, Shape> createShape) {
-        if (HasMetMinimumDistanceRequirement(endPoint)) {
-            shapes.Add(createShape(this, endPoint));
+    private ActionCoordinates CreateCoordinates(Point endPoint) =>
+        new ActionCoordinates(startPoint, GetSnappedPoint(startPoint), endPoint, GetSnappedPoint(endPoint));
+
+    private Point GetSnappedPoint(Point point) {
+        if (!snapToGrid || point == null) {
+            return point;
+        }
+
+        var remainderX = point.X % gridSize;
+        var remainderY = point.Y % gridSize;
+
+        var gridPoints = new[] {
+            new Point(-remainderX, -remainderY),
+            new Point(-remainderX + gridSize, -remainderY),
+            new Point(-remainderX, -remainderY + gridSize),
+            new Point(-remainderX + gridSize, -remainderY + gridSize)
+        };
+
+        return gridPoints.OrderBy(p => p.Distance).First() + point;
+    }
+
+    private void AddShape(ActionCoordinates coordinates, Func<Graphics, ActionCoordinates, Shape> createShape) {
+        if (HasMetMinimumDistanceRequirement(coordinates)) {
+            shapes.Add(createShape(this, coordinates));
         }
     }
 
-    private bool HasMetMinimumDistanceRequirement(Point endPoint)
-        => startPoint - endPoint > 5;
+    private bool HasMetMinimumDistanceRequirement(ActionCoordinates coordinates)
+        => (coordinates.SnappedStartPoint - coordinates.SnappedEndPoint).Distance > 5;
 
     private void DeleteSelected() {
         if (selectedShape != null) {
@@ -254,13 +285,14 @@
         isObjectClicked = true;
     }
 
-    private void ProcessSelection(Point endPoint) {
+    private void ProcessSelection(ActionCoordinates coordinates) {
         if (isObjectClicked) {
             if (currentAnchor != null) {
-                currentAnchor.Move(selectedShape, endPoint - startPoint);
+                currentAnchor.Set(selectedShape, coordinates.SnappedEndPoint);
             }
             else if (selectedShape != null) {
-                selectedShape.Transform(endPoint - startPoint);
+                // TODO FIX
+                selectedShape.Transform(coordinates.EndPoint - coordinates.StartPoint);
             }
         }
         else {
