@@ -8,7 +8,6 @@ namespace BlazorPlayground {
 
     /*
      * TODO
-     * Snap to grid
      * Snap to existing point
      * Move back/forward/to back/to front
      * Add line color

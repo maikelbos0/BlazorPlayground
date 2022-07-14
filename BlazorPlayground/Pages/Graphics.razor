@@ -6,25 +6,25 @@
 <ul class="nav nav-tabs mb-3">
     @foreach (var actionType in Enum.GetValues<ActionType>()) {
         <li class="nav-item">
-            <a class="nav-link @(currentActionType == actionType ? "active" : "")" @onclick="() => SwitchActionType(actionType)">@actionDefinitions[actionType].Name</a>
+            <a class="nav-link @(SelectedActionType == actionType ? "active" : "")" @onclick="() => SwitchActionType(actionType)">@actionDefinitions[actionType].Name</a>
         </li>
     }
 </ul>
 
 <div class="mb-3 graphics-ribbon">
     <div class="btn-toolbar">
-        @if (currentActionType == ActionType.Select) {
+        @if (SelectedActionType == ActionType.Select) {
             <div class="button-group mb-3">
                 <button type="button" class="btn btn-secondary" @onclick="DeleteSelected">Delete</button>
             </div>
         }
-        else if (currentActionType == ActionType.DrawLine) {
+        else if (SelectedActionType == ActionType.DrawLine) {
 
         }
-        else if (currentActionType == ActionType.DrawRectangle) {
+        else if (SelectedActionType == ActionType.DrawRectangle) {
 
         }
-        else if (currentActionType == ActionType.DrawRegularPolygon) {
+        else if (SelectedActionType == ActionType.DrawRegularPolygon) {
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
                     <label for="regularPolygonSides" class="input-group-text">Sides</label>
@@ -32,7 +32,7 @@
                 <input type="text" class="form-control" id="regularPolygonSides" @bind-value="RegularPolygonSides" />
             </div>
         }
-        else if (currentActionType == ActionType.CanvasSettings) {
+        else if (SelectedActionType == ActionType.CanvasSettings) {
             <div class="input-group mb-3 me-3">
                 <div class="input-group-prepend">
                     <label for="canvasWidth" class="input-group-text">Width</label>
@@ -54,12 +54,12 @@
                 <input type="text" class="form-control" id="gridSize" @bind-value="GridSize" />
 
                 <div class="input-group-text">
-                    <input class="form-check-input mt-0 me-2" type="checkbox" id="showGrid" @bind="showGrid">
+                    <input class="form-check-input mt-0 me-2" type="checkbox" id="showGrid" @bind="ShowGrid">
                     <label class="form-check-label" for="showGrid">Show</label>
                 </div>
 
                 <div class="input-group-text">
-                    <input class="form-check-input mt-0 me-2" type="checkbox" id="snapToGrid" @bind="snapToGrid">
+                    <input class="form-check-input mt-0 me-2" type="checkbox" id="snapToGrid" @bind="SnapToGrid">
                     <label class="form-check-label" for="snapToGrid">Snap</label>
                 </div>
             </div>
@@ -67,27 +67,27 @@
     </div>
 </div>
 
-<svg class="graphics-main" viewBox="0 0 @canvasWidth @canvasHeight" style="width: @(canvasWidth)px; height: @(canvasHeight)px" @onmousedown="OnCanvasMouseDown" @onmousemove="OnCanvasMouseMove" @onmouseup="OnCanvasMouseUp">
-    @if (showGrid) {
-        for (var x = gridSize; x < canvasWidth; x += gridSize) {
-            <line class="grid-line" x1="@x" y1="0" x2="@x" y2="@canvasHeight" />
+<svg class="graphics-main" viewBox="0 0 @CanvasWidth @CanvasHeight" style="width: @(CanvasWidth)px; height: @(CanvasHeight)px" @onmousedown="OnCanvasMouseDown" @onmousemove="OnCanvasMouseMove" @onmouseup="OnCanvasMouseUp">
+    @if (ShowGrid) {
+        for (var x = GridSize; x < CanvasWidth; x += GridSize) {
+            <line class="grid-line" x1="@x" y1="0" x2="@x" y2="@CanvasHeight" />
         }
 
-        for (var y = gridSize; y < canvasHeight; y += gridSize) {
-            <line class="grid-line" x1="0" y1="@y" x2="@canvasWidth" y2="@y" />
+        for (var y = GridSize; y < CanvasHeight; y += GridSize) {
+            <line class="grid-line" x1="0" y1="@y" x2="@CanvasWidth" y2="@y" />
         }
     }
 
-    @foreach (var shape in shapes) {
-        if (shape == selectedShape) {
-            if (isObjectClicked && currentPoint != null) {
-                var changingShape = selectedShape.Clone();
+    @foreach (var shape in Shapes) {
+        if (shape == SelectedShape) {
+            if (IsOperatingOnShape && IsSelected && IsDragging) {
+                var changingShape = SelectedShape.Clone();
 
-                if (currentAnchor != null) {
-                    currentAnchor.Set(changingShape, GetSnappedPoint(currentPoint));
+                if (IsOperatingOnAnchor) {
+                    SelectedAnchor.Set(changingShape, EndPoint);
                 }
                 else {
-                    changingShape.Transform(currentPoint - startPoint, snapToGrid, gridSize);
+                    changingShape.Transform(Delta, SnapToGrid, GridSize);
                 }
 
                 <ShapeRenderer Shape="changingShape" IsVirtual="true" />
@@ -99,10 +99,10 @@
                 }
             }
             else {
-                <ShapeRenderer @key="selectedShape" Shape="selectedShape" OnMouseDown="args => OnShapeMouseDown(args, shape)" IsSelected="true" />
+                <ShapeRenderer @key="SelectedShape" Shape="SelectedShape" OnMouseDown="args => OnShapeMouseDown(args, shape)" IsSelected="true" />
 
-                foreach (var anchor in selectedShape.Anchors) {
-                    var point = anchor.Get(selectedShape);
+                foreach (var anchor in SelectedShape.Anchors) {
+                    var point = anchor.Get(SelectedShape);
 
                     <rect class="shape-anchor" x="@(point.X - 5)" y="@(point.Y - 5)" width="10" height="10" @onmousedown="args => OnAnchorMouseDown(args, anchor)" />
                 }
@@ -113,8 +113,8 @@
         }
     }
 
-    @if (currentPoint != null && CurrentActionDefinition is DrawActionDefinition drawActionDefinition) {
-        <ShapeRenderer Shape="drawActionDefinition.CreateShape(this, CreateCoordinates(currentPoint))" IsVirtual="true" />
+    @if (IsDragging && CurrentActionDefinition is DrawActionDefinition drawActionDefinition) {
+        <ShapeRenderer Shape="drawActionDefinition.CreateShape(this)" IsVirtual="true" />
     }
 </svg>
 
@@ -128,106 +128,117 @@
         CanvasSettings
     }
 
-    private record ActionCoordinates(Point StartPoint, Point SnappedStartPoint, Point EndPoint, Point SnappedEndPoint);
-
     private class ActionDefinition {
         public string Name { get; }
-        public Action<Graphics, ActionCoordinates> OnCanvasMouseUp { get; }
+        public Action<Graphics> OnCanvasMouseUp { get; }
         public Action<Graphics, Shape> OnShapeMouseDown { get; }
         public Action<Graphics> OnSwitchFrom { get; }
 
-        public ActionDefinition(
-            string name,
-            Action<Graphics, ActionCoordinates> onCanvasMouseUp = null,
+        public ActionDefinition(string name,
+            Action<Graphics> onCanvasMouseUp = null,
             Action<Graphics, Shape> onShapeMouseDown = null,
             Action<Graphics> onSwitchFrom = null
         ) {
             Name = name;
-            OnCanvasMouseUp = onCanvasMouseUp ?? ((_, _) => { });
+            OnCanvasMouseUp = onCanvasMouseUp ?? ((_) => { });
             OnShapeMouseDown = onShapeMouseDown ?? ((_, _) => { });
             OnSwitchFrom = onSwitchFrom ?? (_ => { });
         }
     }
 
     private class DrawActionDefinition : ActionDefinition {
-        public Func<Graphics, ActionCoordinates, Shape> CreateShape { get; }
+        public Func<Graphics, Shape> CreateShape { get; }
 
-        public DrawActionDefinition(string name, Func<Graphics, ActionCoordinates, Shape> createShape)
-            : base(name, (graphics, coordinates) => graphics.AddShape(coordinates, createShape)) {
+        public DrawActionDefinition(string name, Func<Graphics, Shape> createShape) : base(name, (graphics) => graphics.AddShape(createShape)) {
             CreateShape = createShape;
         }
     }
 
     private static Dictionary<ActionType, ActionDefinition> actionDefinitions = new Dictionary<ActionType, ActionDefinition>() {
-        { ActionType.Select, new ActionDefinition("Select", onCanvasMouseUp: (graphics, coordinates) => graphics.ProcessSelection(coordinates), onShapeMouseDown: (graphics, shape) => graphics.Select(shape), onSwitchFrom: graphics => graphics.Deselect()) },
-        { ActionType.DrawLine, new DrawActionDefinition("Line", (graphics, coordinates) => new Line(coordinates.SnappedStartPoint, coordinates.SnappedEndPoint)) },
-        { ActionType.DrawRectangle, new DrawActionDefinition("Rectangle", (graphics, coordinates) => new Rectangle(coordinates.SnappedStartPoint, coordinates.SnappedEndPoint)) },
-        { ActionType.DrawRegularPolygon, new DrawActionDefinition("Regular polygon", (graphics, coordinates) => new RegularPolygon(coordinates.SnappedStartPoint, coordinates.SnappedEndPoint, graphics.regularPolygonSides)) },
+        { ActionType.Select, new ActionDefinition("Select", onCanvasMouseUp: (graphics) => graphics.ProcessSelection(), onShapeMouseDown: (graphics, shape) => graphics.Select(shape), onSwitchFrom: graphics => graphics.Deselect()) },
+        { ActionType.DrawLine, new DrawActionDefinition("Line", (graphics) => new Line(graphics.SnappedStartPoint, graphics.SnappedEndPoint)) },
+        { ActionType.DrawRectangle, new DrawActionDefinition("Rectangle", (graphics) => new Rectangle(graphics.SnappedStartPoint, graphics.SnappedEndPoint)) },
+        { ActionType.DrawRegularPolygon, new DrawActionDefinition("Regular polygon", (graphics) => new RegularPolygon(graphics.SnappedStartPoint, graphics.SnappedEndPoint, graphics.RegularPolygonSides)) },
         { ActionType.CanvasSettings, new ActionDefinition("Canvas settings") }
     };
 
-    private List<Shape> shapes = new List<Shape>();
-    private ActionType currentActionType = ActionType.DrawRegularPolygon;
-    private Point startPoint;
-    private Point currentPoint;
+
+    // General
+    private List<Shape> Shapes { get; } = new List<Shape>();
+    private ActionType SelectedActionType { get; set; } = ActionType.DrawRegularPolygon;
+
+    // Coordinates
+    private Point StartPoint { get; set; }
+    private Point SnappedStartPoint => GetSnappedPoint(StartPoint);
+    private Point EndPoint { get; set; }
+    private Point SnappedEndPoint => GetSnappedPoint(EndPoint);
+    private bool IsDragging => StartPoint != null && EndPoint != null;
+    private Point Delta => EndPoint - StartPoint;
+
+    // Selection
+    private bool IsOperatingOnShape { get; set; } = false;
+    private Shape SelectedShape { get; set; }
+    private bool IsSelected => SelectedShape != null;
+    private Anchor SelectedAnchor { get; set; }
+    private bool IsOperatingOnAnchor => SelectedAnchor != null;
+
+    private ActionDefinition CurrentActionDefinition => actionDefinitions[SelectedActionType];
+
+    // Form fields
     private int regularPolygonSides = 3;
-    private Shape selectedShape;
-    private bool isObjectClicked = false;
-    private Anchor currentAnchor;
-    private int canvasWidth = 800;
-    private int canvasHeight = 800;
-    private int gridSize = 50;
-    private bool showGrid = false;
-    private bool snapToGrid = false;
-
-    private ActionDefinition CurrentActionDefinition => actionDefinitions[currentActionType];
-
     private int RegularPolygonSides {
         get => regularPolygonSides;
         set => regularPolygonSides = Math.Max(value, 3);
     }
 
+    private int canvasWidth = 800;
     private int CanvasWidth {
         get => canvasWidth;
         set => canvasWidth = Math.Max(value, 1);
     }
 
+    private int canvasHeight = 800;
     private int CanvasHeight {
         get => canvasHeight;
         set => canvasHeight = Math.Max(value, 1);
     }
 
+    private int gridSize = 50;
     private int GridSize {
         get => gridSize;
         set => gridSize = Math.Max(value, 1);
     }
 
+    private bool ShowGrid { get; set; } = false;
+
+    private bool SnapToGrid { get; set; } = false;
+
     private void SwitchActionType(ActionType newActionType) {
         CurrentActionDefinition.OnSwitchFrom(this);
-        currentActionType = newActionType;
+        SelectedActionType = newActionType;
     }
 
     private void OnCanvasMouseDown(MouseEventArgs args) {
         if (args.Button == 0) {
-            startPoint = new Point(args.OffsetX, args.OffsetY);
+            StartPoint = new Point(args.OffsetX, args.OffsetY);
         }
     }
 
     private void OnCanvasMouseMove(MouseEventArgs args) {
-        if (args.Button == 0 && startPoint != null) {
-            currentPoint = new Point(args.OffsetX, args.OffsetY);
+        if (args.Button == 0 && StartPoint != null) {
+            EndPoint = new Point(args.OffsetX, args.OffsetY);
         }
     }
 
     private void OnCanvasMouseUp(MouseEventArgs args) {
-        if (args.Button == 0 && startPoint != null) {
-            CurrentActionDefinition.OnCanvasMouseUp(this, CreateCoordinates(new Point(args.OffsetX, args.OffsetY)));
+        if (args.Button == 0 && StartPoint != null) {
+            CurrentActionDefinition.OnCanvasMouseUp(this);
         }
 
-        startPoint = null;
-        currentPoint = null;
-        currentAnchor = null;
-        isObjectClicked = false;
+        StartPoint = null;
+        EndPoint = null;
+        SelectedAnchor = null;
+        IsOperatingOnShape = false;
     }
 
     private void OnShapeMouseDown(MouseEventArgs args, Shape shape) {
@@ -238,58 +249,54 @@
 
     private void OnAnchorMouseDown(MouseEventArgs args, Anchor anchor) {
         if (args.Button == 0) {
-            currentAnchor = anchor;
-            isObjectClicked = true;
+            SelectedAnchor = anchor;
+            IsOperatingOnShape = true;
         }
     }
 
-    private ActionCoordinates CreateCoordinates(Point endPoint) =>
-        new ActionCoordinates(startPoint, GetSnappedPoint(startPoint), endPoint, GetSnappedPoint(endPoint));
-
     private Point GetSnappedPoint(Point point) {
-        if (!snapToGrid || point == null) {
+        if (!SnapToGrid || point == null) {
             return point;
         }
 
-        return point.SnapToGrid(gridSize);
+        return point.SnapToGrid(GridSize);
     }
 
-    private void AddShape(ActionCoordinates coordinates, Func<Graphics, ActionCoordinates, Shape> createShape) {
-        if (HasMetMinimumDistanceRequirement(coordinates)) {
-            shapes.Add(createShape(this, coordinates));
+    private void AddShape(Func<Graphics, Shape> createShape) {
+        if (IsDragging) {
+            Shapes.Add(createShape(this));
         }
     }
 
-    private bool HasMetMinimumDistanceRequirement(ActionCoordinates coordinates)
-        => (coordinates.SnappedStartPoint - coordinates.SnappedEndPoint).Distance > 5;
-
     private void DeleteSelected() {
-        if (selectedShape != null) {
-            shapes.Remove(selectedShape);
-            selectedShape = null;
+        if (SelectedShape != null) {
+            Shapes.Remove(SelectedShape);
+            SelectedShape = null;
         }
     }
 
     private void Select(Shape shape) {
-        selectedShape = shape;
-        isObjectClicked = true;
+        SelectedShape = shape;
+        IsOperatingOnShape = true;
     }
 
-    private void ProcessSelection(ActionCoordinates coordinates) {
-        if (isObjectClicked && selectedShape != null && currentPoint != null) {
-            if (currentAnchor != null) {
-                currentAnchor.Set(selectedShape, coordinates.SnappedEndPoint);
-            }
-            else {
-                selectedShape.Transform(currentPoint - startPoint, snapToGrid, gridSize);
+    private void ProcessSelection() {
+        if (IsOperatingOnShape) {
+            if (IsSelected && IsDragging) {
+                if (IsOperatingOnAnchor) {
+                    SelectedAnchor.Set(SelectedShape, SnappedEndPoint);
+                }
+                else {
+                    SelectedShape.Transform(Delta, SnapToGrid, GridSize);
+                }
             }
         }
         else {
-            selectedShape = null;
+            SelectedShape = null;
         }
     }
 
     private void Deselect() {
-        selectedShape = null;
+        SelectedShape = null;
     }
 }
