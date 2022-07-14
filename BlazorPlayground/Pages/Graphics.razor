@@ -83,11 +83,23 @@
             if (isObjectClicked && currentPoint != null) {
                 var changingShape = selectedShape.Clone();
 
-                if (currentAnchor == null) {
-                    changingShape.Transform(currentPoint - startPoint);
+                if (currentAnchor != null) {
+                    currentAnchor.Set(changingShape, GetSnappedPoint(currentPoint));
                 }
                 else {
-                    currentAnchor.Set(changingShape, GetSnappedPoint(currentPoint));
+                    var delta = currentPoint - startPoint;
+
+                    if (snapToGrid) {
+                        var point = changingShape.Anchors
+                            .Select(a => a.Get(changingShape))
+                            .Select(p => new { Original = p, Transformed = p + delta, Anchored = (p + delta).SnapToGrid(GridSize) })
+                            .OrderBy(p => (p.Transformed - p.Anchored).Distance)
+                            .First();
+
+                        delta = point.Anchored - point.Original;
+                    }
+
+                    changingShape.Transform(delta);
                 }
 
                 <ShapeRenderer Shape="changingShape" IsVirtual="true" />
@@ -276,13 +288,24 @@
     }
 
     private void ProcessSelection(ActionCoordinates coordinates) {
-        if (isObjectClicked) {
+        if (isObjectClicked && selectedShape != null && currentPoint != null) {
             if (currentAnchor != null) {
                 currentAnchor.Set(selectedShape, coordinates.SnappedEndPoint);
             }
-            else if (selectedShape != null) {
-                // TODO FIX
-                selectedShape.Transform(coordinates.EndPoint - coordinates.StartPoint);
+            else {
+                var delta = coordinates.EndPoint - coordinates.StartPoint;
+
+                if (snapToGrid) {
+                    var point = selectedShape.Anchors
+                        .Select(a => a.Get(selectedShape))
+                        .Select(p => new { Original = p, Transformed = p + delta, Anchored = (p + delta).SnapToGrid(GridSize) })
+                        .OrderBy(p => (p.Transformed - p.Anchored).Distance)
+                        .First();
+
+                    delta = point.Anchored - point.Original;
+                }
+
+                selectedShape.Transform(delta);
             }
         }
         else {
