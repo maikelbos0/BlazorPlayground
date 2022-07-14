@@ -87,19 +87,7 @@
                     currentAnchor.Set(changingShape, GetSnappedPoint(currentPoint));
                 }
                 else {
-                    var delta = currentPoint - startPoint;
-
-                    if (snapToGrid) {
-                        var point = changingShape.Anchors
-                            .Select(a => a.Get(changingShape))
-                            .Select(p => new { Original = p, Transformed = p + delta, Anchored = (p + delta).SnapToGrid(GridSize) })
-                            .OrderBy(p => (p.Transformed - p.Anchored).Distance)
-                            .First();
-
-                        delta = point.Anchored - point.Original;
-                    }
-
-                    changingShape.Transform(delta);
+                    changingShape.Transform(currentPoint - startPoint, snapToGrid, gridSize);
                 }
 
                 <ShapeRenderer Shape="changingShape" IsVirtual="true" />
@@ -293,19 +281,7 @@
                 currentAnchor.Set(selectedShape, coordinates.SnappedEndPoint);
             }
             else {
-                var delta = coordinates.EndPoint - coordinates.StartPoint;
-
-                if (snapToGrid) {
-                    var point = selectedShape.Anchors
-                        .Select(a => a.Get(selectedShape))
-                        .Select(p => new { Original = p, Transformed = p + delta, Anchored = (p + delta).SnapToGrid(GridSize) })
-                        .OrderBy(p => (p.Transformed - p.Anchored).Distance)
-                        .First();
-
-                    delta = point.Anchored - point.Original;
-                }
-
-                selectedShape.Transform(delta);
+                selectedShape.Transform(currentPoint - startPoint, snapToGrid, gridSize);
             }
         }
         else {
