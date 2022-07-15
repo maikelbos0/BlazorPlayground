@@ -9,11 +9,9 @@ namespace BlazorPlayground {
     /*
      * TODO
      * Snap to existing point
-     * Move back/forward/to back/to front
      * Add line color
      * Add line thickness
      * Add fill color
-     * Add selection rectangle when drag selecting
      * Add circle
      * Add arc
      */

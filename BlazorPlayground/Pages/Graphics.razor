@@ -15,6 +15,10 @@
     <div class="btn-toolbar">
         @if (SelectedActionType == ActionType.Select) {
             <div class="button-group mb-3">
+                <button type="button" class="btn btn-secondary" @onclick="() => MoveSelectedShapeToBackOfList()">Move to back</button>
+                <button type="button" class="btn btn-secondary" @onclick="() => MoveSelectedShapeInList(-1)">Move backward</button>
+                <button type="button" class="btn btn-secondary" @onclick="() => MoveSelectedShapeInList(1)">Move forward</button>
+                <button type="button" class="btn btn-secondary" @onclick="() => MoveSelectedShapeToFrontOfList()">Move to front</button>
                 <button type="button" class="btn btn-secondary" @onclick="DeleteSelected">Delete</button>
             </div>
         }
@@ -162,7 +166,6 @@
         { ActionType.CanvasSettings, new ActionDefinition("Canvas settings") }
     };
 
-
     // General
     private List<Shape> Shapes { get; } = new List<Shape>();
     private ActionType SelectedActionType { get; set; } = ActionType.DrawRegularPolygon;
@@ -299,4 +302,31 @@
     private void Deselect() {
         SelectedShape = null;
     }
+
+    private void MoveSelectedShapeToBackOfList() {
+        if (IsSelected) {
+            Shapes.Remove(SelectedShape);
+            Shapes.Insert(0, SelectedShape);
+        }
+    }
+
+    private void MoveSelectedShapeInList(int indexChange) {
+        if (IsSelected) {
+            var index = Shapes.IndexOf(SelectedShape);
+            var newIndex = index + indexChange;
+
+            if (newIndex > 0 && newIndex < Shapes.Count) {
+                Shapes[index] = Shapes[newIndex];
+                Shapes[newIndex] = SelectedShape;
+            }
+        }
+    }
+
+    private void MoveSelectedShapeToFrontOfList() {
+        if (IsSelected) {
+            Shapes.Remove(SelectedShape);
+            Shapes.Add(SelectedShape);
+        }
+    }
+
 }
