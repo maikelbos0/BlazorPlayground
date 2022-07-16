@@ -5,7 +5,7 @@
             new Anchor<RegularPolygon>(s => s.RadiusPoint, (s, p) => s.RadiusPoint = p)
         };
 
-        public override ShapeRenderType RenderType => ShapeRenderType.Polygon;
+        public override string ElementName => "polygon";
         public override IReadOnlyList<Anchor> Anchors { get; } = Array.AsReadOnly(anchors);
         public Point CenterPoint { get; set; }
         public Point RadiusPoint { get; set; }
@@ -17,7 +17,7 @@
             Sides = sides;
         }
 
-        public override IEnumerable<Point> GetPoints() {
+        public IEnumerable<Point> GetPoints() {
             var vector = RadiusPoint - CenterPoint;
             var radius = Math.Sqrt(Math.Pow(vector.X, 2) + Math.Pow(vector.Y, 2));
             var startingAngle = Math.Atan2(vector.Y, vector.X);
@@ -28,6 +28,10 @@
 
                 yield return CenterPoint + new Point(radius * Math.Cos(angle), radius * Math.Sin(angle));
             }
+        }
+
+        public override IEnumerable<ShapeAttribute> GetAttributes() {
+            yield return new ShapeAttribute("points", string.Join(" ", GetPoints().Select(p => FormattableString.Invariant($"{p.X},{p.Y}"))));
         }
 
         public override Shape Clone() => new RegularPolygon(CenterPoint, RadiusPoint, Sides);

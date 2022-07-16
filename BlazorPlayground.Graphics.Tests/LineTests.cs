@@ -4,14 +4,23 @@ using Xunit;
 namespace BlazorPlayground.Graphics.Tests {
     public class LineTests {
         [Fact]
-        public void GetPoints() {
+        public void TagName() {
             var line = new Line(new Point(100, 150), new Point(200, 250));
 
-            var result = line.GetPoints().ToList();
+            Assert.Equal("line", line.ElementName);
+        }
 
-            Assert.Equal(2, result.Count);
-            PointAssert.Equal(new Point(100, 150), result[0]);
-            PointAssert.Equal(new Point(200, 250), result[1]);
+        [Fact]
+        public void GetAttributes() {
+            var line = new Line(new Point(100, 150), new Point(200, 250));
+
+            var attributes = line.GetAttributes().ToList();
+
+            Assert.Equal(4, attributes.Count);
+            Assert.Equal("100", Assert.Single(attributes, a => a.Name == "x1").Value);
+            Assert.Equal("150", Assert.Single(attributes, a => a.Name == "y1").Value);
+            Assert.Equal("200", Assert.Single(attributes, a => a.Name == "x2").Value);
+            Assert.Equal("250", Assert.Single(attributes, a => a.Name == "y2").Value);
         }
 
         [Fact]

@@ -4,16 +4,23 @@ using Xunit;
 namespace BlazorPlayground.Graphics.Tests {
     public class RectangleTests {
         [Fact]
-        public void GetPoints() {
+        public void TagName() {
             var rectangle = new Rectangle(new Point(100, 150), new Point(200, 250));
 
-            var result = rectangle.GetPoints().ToList();
+            Assert.Equal("rect", rectangle.ElementName);
+        }
 
-            Assert.Equal(4, result.Count);
-            PointAssert.Equal(new Point(100, 150), result[0]);
-            PointAssert.Equal(new Point(100, 250), result[1]);
-            PointAssert.Equal(new Point(200, 250), result[2]);
-            PointAssert.Equal(new Point(200, 150), result[3]);
+        [Fact]
+        public void GetAttributes() {
+            var rectangle = new Rectangle(new Point(180, 210), new Point(100, 150));
+
+            var attributes = rectangle.GetAttributes().ToList();
+
+            Assert.Equal(4, attributes.Count);
+            Assert.Equal("100", Assert.Single(attributes, a => a.Name == "x").Value);
+            Assert.Equal("150", Assert.Single(attributes, a => a.Name == "y").Value);
+            Assert.Equal("80", Assert.Single(attributes, a => a.Name == "width").Value);
+            Assert.Equal("60", Assert.Single(attributes, a => a.Name == "height").Value);
         }
 
         [Fact]

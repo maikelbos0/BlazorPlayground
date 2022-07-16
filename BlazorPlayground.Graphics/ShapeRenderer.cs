@@ -21,21 +21,20 @@ namespace BlazorPlayground.Graphics {
 
         protected override void BuildRenderTree(RenderTreeBuilder builder) {
             if (Shape != null) {
-                builder.OpenElement(1, GetElementName(Shape.RenderType));
+                builder.OpenElement(1, Shape.ElementName);
                 builder.SetKey(Shape);
                 builder.AddAttribute(2, "onmousedown", OnMouseDown);
-                builder.AddAttribute(4, "onmouseup", OnMouseUp);
-                builder.AddAttribute(6, "class", $"shape {(IsSelected ? "shape-selected" : IsVirtual ? "shape-virtual" : "")}");
-                builder.AddAttribute(7, "points", string.Join(" ", Shape.GetPoints().Select(p => FormattableString.Invariant($"{p.X},{p.Y}"))));
+                builder.AddAttribute(3, "onmouseup", OnMouseUp);
+                builder.AddAttribute(4, "class", $"shape {(IsSelected ? "shape-selected" : IsVirtual ? "shape-virtual" : "")}");
+
+                var sequence = 5;
+
+                foreach (var attribute in Shape.GetAttributes()) {
+                    builder.AddAttribute(sequence++, attribute.Name, attribute.Value);
+                }
+
                 builder.CloseElement();
             }
         }
-
-        public string GetElementName(ShapeRenderType renderType)
-            => renderType switch {
-                ShapeRenderType.Polyline => "polyline",
-                ShapeRenderType.Polygon => "polygon",
-                _ => throw new NotImplementedException($"No implementation found for {nameof(ShapeRenderType)} '{renderType}'")
-            };
     }
 }

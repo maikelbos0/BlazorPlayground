@@ -1,9 +1,9 @@
 ﻿namespace BlazorPlayground.Graphics {
     public abstract class Shape {
-        public abstract ShapeRenderType RenderType { get; }
+        public abstract string ElementName { get; }
         public abstract IReadOnlyList<Anchor> Anchors { get; }
 
-        public abstract IEnumerable<Point> GetPoints();
+        public abstract IEnumerable<ShapeAttribute> GetAttributes();
 
         public abstract Shape Clone();
 
