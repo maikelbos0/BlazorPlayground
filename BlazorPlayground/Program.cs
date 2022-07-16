@@ -10,10 +10,10 @@ namespace BlazorPlayground {
      * TODO
      * Snap to existing point
      * Add line color
-     * Add line thickness
      * Add fill color
-     * Add circle
-     * Add arc
+     * Add ellipse
+     * Add quadratic bezier curve
+     * Add cubic bezier curve
      */
 
     public class Program {
