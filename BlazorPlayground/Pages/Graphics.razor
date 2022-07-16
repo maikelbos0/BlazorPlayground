@@ -14,20 +14,16 @@
 <div class="mb-3 graphics-ribbon">
     <div class="btn-toolbar">
         <div class="input-group mb-3 me-3">
-            <div class="input-group-prepend">
-                <label for="strokeWidth" class="input-group-text">Stroke width</label>
-            </div>
+            <label for="strokeWidth" class="input-group-text">Stroke width</label>
             <input type="text" class="form-control" id="strokeWidth" @bind-value="StrokeWidth" />
 
             @if (SelectedActionType == ActionType.Select) {
-                <div class="input-group-append">
-                    <button type="button" class="btn btn-secondary" @onclick="() => ApplyStroke()">Apply</button>
-                </div>
+                <button type="button" class="btn btn-secondary" @onclick="() => ApplyStrokeWidth()">Apply</button>
             }
         </div>
 
         @if (SelectedActionType == ActionType.Select) {
-            <div class="button-group mb-3">
+            <div class="btn-group mb-3">
                 <button type="button" class="btn btn-secondary" @onclick="() => MoveSelectedShapeToBackOfList()">Move to back</button>
                 <button type="button" class="btn btn-secondary" @onclick="() => MoveSelectedShapeInList(-1)">Move backward</button>
                 <button type="button" class="btn btn-secondary" @onclick="() => MoveSelectedShapeInList(1)">Move forward</button>
@@ -35,52 +31,35 @@
                 <button type="button" class="btn btn-secondary" @onclick="DeleteSelected">Delete</button>
             </div>
         }
-        else if (SelectedActionType == ActionType.DrawLine) {
-
-        }
-        else if (SelectedActionType == ActionType.DrawRectangle) {
-
-        }
-        else if (SelectedActionType == ActionType.DrawCircle) {
-
-        }
         else if (SelectedActionType == ActionType.DrawRegularPolygon) {
             <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <label for="regularPolygonSides" class="input-group-text">Sides</label>
-                </div>
+                <label for="regularPolygonSides" class="input-group-text">Sides</label>
                 <input type="text" class="form-control" id="regularPolygonSides" @bind-value="RegularPolygonSides" />
             </div>
         }
         else if (SelectedActionType == ActionType.CanvasSettings) {
             <div class="input-group mb-3 me-3">
-                <div class="input-group-prepend">
-                    <label for="canvasWidth" class="input-group-text">Width</label>
-                </div>
+                <label for="canvasWidth" class="input-group-text">Width</label>
                 <input type="text" class="form-control" id="canvasWidth" @bind-value="CanvasWidth" />
             </div>
 
             <div class="input-group mb-3 me-3">
-                <div class="input-group-prepend">
-                    <label for="canvasHeight" class="input-group-text">Height</label>
-                </div>
+                <label for="canvasHeight" class="input-group-text">Height</label>
                 <input type="text" class="form-control" id="canvasHeight" @bind-value="CanvasHeight" />
             </div>
 
             <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <label for="gridSize" class="input-group-text">Grid size</label>
-                </div>
+                <label for="gridSize" class="input-group-text">Grid size</label>
                 <input type="text" class="form-control" id="gridSize" @bind-value="GridSize" />
 
                 <div class="input-group-text">
-                    <input class="form-check-input mt-0 me-2" type="checkbox" id="showGrid" @bind="ShowGrid">
-                    <label class="form-check-label" for="showGrid">Show</label>
+                    <input class="form-check-input mt-0" type="checkbox" id="showGrid" @bind="ShowGrid">
+                    <label class="form-check-label ps-2" for="showGrid">Show</label>
                 </div>
 
                 <div class="input-group-text">
-                    <input class="form-check-input mt-0 me-2" type="checkbox" id="snapToGrid" @bind="SnapToGrid">
-                    <label class="form-check-label" for="snapToGrid">Snap</label>
+                    <input class="form-check-input mt-0" type="checkbox" id="snapToGrid" @bind="SnapToGrid">
+                    <label class="form-check-label ps-2" for="snapToGrid">Snap</label>
                 </div>
             </div>
         }
@@ -334,7 +313,7 @@
         SelectedShape = null;
     }
 
-    private void ApplyStroke() {
+    private void ApplyStrokeWidth() {
         if (IsSelected) {
             SelectedShape.StrokeWidth = StrokeWidth;
         }
