@@ -4,7 +4,7 @@ using Xunit;
 namespace BlazorPlayground.Graphics.Tests {
     public class LineTests {
         [Fact]
-        public void TagName() {
+        public void ElementName() {
             var line = new Line(new Point(100, 150), new Point(200, 250));
 
             Assert.Equal("line", line.ElementName);

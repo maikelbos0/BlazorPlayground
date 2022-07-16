@@ -16,10 +16,10 @@
         }
 
         public override IEnumerable<ShapeAttribute> GetAttributes() {
-            yield return new ShapeAttribute("x1", StartPoint.X.ToString());
-            yield return new ShapeAttribute("y1", StartPoint.Y.ToString());
-            yield return new ShapeAttribute("x2", EndPoint.X.ToString());
-            yield return new ShapeAttribute("y2", EndPoint.Y.ToString());
+            yield return new ShapeAttribute("x1", StartPoint.X);
+            yield return new ShapeAttribute("y1", StartPoint.Y);
+            yield return new ShapeAttribute("x2", EndPoint.X);
+            yield return new ShapeAttribute("y2", EndPoint.Y);
         }
 
         public override Shape Clone() => new Line(StartPoint, EndPoint);

@@ -4,7 +4,7 @@ using Xunit;
 namespace BlazorPlayground.Graphics.Tests {
     public class RectangleTests {
         [Fact]
-        public void TagName() {
+        public void ElementName() {
             var rectangle = new Rectangle(new Point(100, 150), new Point(200, 250));
 
             Assert.Equal("rect", rectangle.ElementName);
