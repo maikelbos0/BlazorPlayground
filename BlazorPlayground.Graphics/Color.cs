@@ -16,15 +16,43 @@ namespace BlazorPlayground.Graphics {
         private readonly static Parser[] parsers = new[] {
             new Parser(
                 new Regex(@"^#(?<Red>[0-9a-f]{2})(?<Green>[0-9a-f]{2})(?<Blue>[0-9a-f]{2})$", RegexOptions.IgnoreCase | RegexOptions.Compiled),
-                (value, match) => new Color(value, byte.Parse(match.Groups["Red"].Value, NumberStyles.HexNumber), byte.Parse(match.Groups["Green"].Value, NumberStyles.HexNumber), byte.Parse(match.Groups["Blue"].Value, NumberStyles.HexNumber), 1)
+                (value, match) => new Color(
+                    value, 
+                    byte.Parse(match.Groups["Red"].Value, NumberStyles.HexNumber), 
+                    byte.Parse(match.Groups["Green"].Value, NumberStyles.HexNumber),
+                    byte.Parse(match.Groups["Blue"].Value, NumberStyles.HexNumber), 
+                    1
+                )
             ),
             new Parser(
                 new Regex(@"^#(?<Red>[0-9a-f])(?<Green>[0-9a-f])(?<Blue>[0-9a-f])$", RegexOptions.IgnoreCase | RegexOptions.Compiled),
-                (value, match) => new Color(value, (byte)(byte.Parse(match.Groups["Red"].Value, NumberStyles.HexNumber) * 17), (byte)(byte.Parse(match.Groups["Green"].Value, NumberStyles.HexNumber) * 17), (byte)(byte.Parse(match.Groups["Blue"].Value, NumberStyles.HexNumber) * 17), 1)
+                (value, match) => new Color(
+                    value, 
+                    (byte)(byte.Parse(match.Groups["Red"].Value, NumberStyles.HexNumber) * 17), 
+                    (byte)(byte.Parse(match.Groups["Green"].Value, NumberStyles.HexNumber) * 17), 
+                    (byte)(byte.Parse(match.Groups["Blue"].Value, NumberStyles.HexNumber) * 17), 
+                    1
+                )
             ),
             new Parser(
                 new Regex(@"^rgb\s*\(\s*(?<Red>[01]?\d{1,2}|2[0-4]\d|25[0-5])\s*,\s*(?<Green>[01]?\d{1,2}|2[0-4]\d|25[0-5])\s*,\s*(?<Blue>[01]?\d{1,2}|2[0-4]\d|25[0-5])\s*\)$", RegexOptions.IgnoreCase | RegexOptions.Compiled),
-                (value, match) => new Color(value, byte.Parse(match.Groups["Red"].Value), byte.Parse(match.Groups["Green"].Value), byte.Parse(match.Groups["Blue"].Value), 1)
+                (value, match) => new Color(
+                    value, 
+                    byte.Parse(match.Groups["Red"].Value, CultureInfo.InvariantCulture),
+                    byte.Parse(match.Groups["Green"].Value, CultureInfo.InvariantCulture), 
+                    byte.Parse(match.Groups["Blue"].Value, CultureInfo.InvariantCulture),
+                    1
+                )
+            ),
+            new Parser(
+                new Regex(@"^rgba\s*\(\s*(?<Red>[01]?\d{1,2}|2[0-4]\d|25[0-5])\s*,\s*(?<Green>[01]?\d{1,2}|2[0-4]\d|25[0-5])\s*,\s*(?<Blue>[01]?\d{1,2}|2[0-4]\d|25[0-5])\s*,\s*(?<Alpha>0|1(\.0+)?|0?\.\d+)\s*\)", RegexOptions.IgnoreCase | RegexOptions.Compiled),
+                (value, match) => new Color(
+                    value, 
+                    byte.Parse(match.Groups["Red"].Value, CultureInfo.InvariantCulture),
+                    byte.Parse(match.Groups["Green"].Value, CultureInfo.InvariantCulture), 
+                    byte.Parse(match.Groups["Blue"].Value, CultureInfo.InvariantCulture), 
+                    double.Parse(match.Groups["Alpha"].Value, CultureInfo.InvariantCulture)
+                )
             )
         };
 
