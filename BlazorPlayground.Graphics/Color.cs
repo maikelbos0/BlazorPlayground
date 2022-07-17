@@ -17,6 +17,10 @@ namespace BlazorPlayground.Graphics {
             new Parser(
                 new Regex("^#(?<Red>[0-9a-fA-Z]{2})(?<Green>[0-9a-fA-Z]{2})(?<Blue>[0-9a-fA-Z]{2})$"),
                 (value, match) => new Color(value, byte.Parse(match.Groups["Red"].Value, NumberStyles.HexNumber), byte.Parse(match.Groups["Green"].Value, NumberStyles.HexNumber), byte.Parse(match.Groups["Blue"].Value, NumberStyles.HexNumber), 1)
+            ),
+            new Parser(
+                new Regex("^#(?<Red>[0-9a-fA-Z])(?<Green>[0-9a-fA-Z])(?<Blue>[0-9a-fA-Z])$"),
+                (value, match) => new Color(value, (byte)(byte.Parse(match.Groups["Red"].Value, NumberStyles.HexNumber) * 17), (byte)(byte.Parse(match.Groups["Green"].Value, NumberStyles.HexNumber) * 17), (byte)(byte.Parse(match.Groups["Blue"].Value, NumberStyles.HexNumber) * 17), 1)
             )
         };
 
