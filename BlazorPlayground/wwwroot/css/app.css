@@ -124,10 +124,6 @@ a, .btn-link {
     height: 800px;
 }
 
-.graphics-main .shape {
-    fill: transparent;
-}
-
 .graphics-main .shape.shape-virtual {
     stroke-dasharray: 5;
 }
