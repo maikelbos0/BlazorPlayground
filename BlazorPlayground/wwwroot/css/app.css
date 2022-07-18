@@ -125,17 +125,14 @@ a, .btn-link {
 }
 
 .graphics-main .shape {
-    stroke: #000000;
     fill: transparent;
 }
 
 .graphics-main .shape.shape-virtual {
-    stroke: #999999;
     stroke-dasharray: 5;
 }
 
 .graphics-main .shape.shape-selected {
-    stroke: #999999;
     stroke-dasharray: 5;
     animation: shape-selected 0.25s infinite linear forwards;
 }

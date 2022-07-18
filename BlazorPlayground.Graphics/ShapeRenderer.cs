@@ -26,9 +26,10 @@ namespace BlazorPlayground.Graphics {
                 builder.AddAttribute(2, "onmousedown", OnMouseDown);
                 builder.AddAttribute(3, "onmouseup", OnMouseUp);
                 builder.AddAttribute(4, "class", $"shape {(IsSelected ? "shape-selected" : IsVirtual ? "shape-virtual" : "")}");
-                builder.AddAttribute(5, "stroke-width", Shape.StrokeWidth);
+                builder.AddAttribute(5, "stroke", Shape.StrokeColor);
+                builder.AddAttribute(6, "stroke-width", Shape.StrokeWidth);
 
-                var sequence = 6;
+                var sequence = 7;
 
                 foreach (var attribute in Shape.GetAttributes()) {
                     builder.AddAttribute(sequence++, attribute.Name, attribute.Value);

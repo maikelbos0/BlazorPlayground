@@ -1,5 +1,6 @@
 ﻿namespace BlazorPlayground.Graphics {
     public abstract class Shape {
+        public Color StrokeColor { get; set; } = new Color(0, 0, 0, 1);
         public int StrokeWidth { get; set; } = 1;
         public abstract string ElementName { get; }
         public abstract IReadOnlyList<Anchor> Anchors { get; }

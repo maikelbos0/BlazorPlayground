@@ -14,6 +14,15 @@
 <div class="mb-3 graphics-ribbon">
     <div class="btn-toolbar">
         <div class="input-group mb-3 me-3">
+            <label for="strokeColor" class="input-group-text">Stroke color</label>
+            <input type="text" class="form-control" id="strokeColor" style="background-color: @StrokeColorManager.Color; color: @StrokeColorManager.Color.ContrastingColor" @bind-value="StrokeColorManager.ColorValue" />
+
+            @if (SelectedActionType == ActionType.Select) {
+                <button type="button" class="btn btn-secondary" @onclick="() => ApplyStrokeColor()">Apply</button>
+            }
+        </div>
+
+        <div class="input-group mb-3 me-3">
             <label for="strokeWidth" class="input-group-text">Stroke width</label>
             <input type="text" class="form-control" id="strokeWidth" @bind-value="StrokeWidth" />
 
@@ -185,6 +194,8 @@
     private ActionDefinition CurrentActionDefinition => actionDefinitions[SelectedActionType];
 
     // Form fields
+    private ColorManager StrokeColorManager { get; set; } = new ColorManager("#000000");
+
     private int strokeWidth = 1;
     private int StrokeWidth {
         get => strokeWidth;
@@ -277,6 +288,7 @@
     private Shape CreateShape(Func<Graphics, Shape> constructor) {
         var shape = constructor(this);
 
+        shape.StrokeColor = StrokeColorManager.Color;
         shape.StrokeWidth = StrokeWidth;
         return shape;
     }
@@ -313,6 +325,12 @@
         SelectedShape = null;
     }
 
+    private void ApplyStrokeColor() {
+        if (IsSelected) {
+            SelectedShape.StrokeColor = StrokeColorManager.Color;
+        }
+    }
+
     private void ApplyStrokeWidth() {
         if (IsSelected) {
             SelectedShape.StrokeWidth = StrokeWidth;
@@ -344,5 +362,4 @@
             Shapes.Add(SelectedShape);
         }
     }
-
 }
