@@ -9,11 +9,13 @@ namespace BlazorPlayground {
     /*
      * TODO
      * Snap to existing point
-     * Add line cap?
+     * Add stroke linecap?
+     * Add stroke linejoin?
      * Add stroke array?
-     * Add enable/disable fill
      * Add enable/disable stroke
      * Add opacity
+     * Add fill opacity?
+     * Add stroke opacity?
      * Add ellipse
      * Add quadratic bezier curve
      * Add cubic bezier curve

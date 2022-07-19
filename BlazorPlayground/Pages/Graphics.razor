@@ -11,14 +11,28 @@
     }
 </ul>
 
+<p>@FillPaintMode</p>
+
 <div class="mb-3 graphics-ribbon">
     <div class="btn-toolbar">
+
         <div class="input-group mb-3 me-3">
-            <label for="strokeColor" class="input-group-text">Fill color</label>
+            <label for="strokeColor" class="input-group-text">Fill</label>
+
+            <div class="input-group-text">
+                <input class="form-check-input mt-0" type="radio" name="fillColorMode" id="fillColorModeColor" @onclick="() => FillPaintMode = PaintMode.Color" checked="@(FillPaintMode == PaintMode.Color)" />
+                <label class="form-check-label ps-2" for="fillColorModeColor">Color</label>
+            </div>
+
             <input type="text" class="form-control" id="fillColor" style="background-color: @FillColorManager.Color; color: @FillColorManager.Color.ContrastingColor" @bind-value="FillColorManager.ColorValue" />
 
+            <div class="input-group-text">
+                <input class="form-check-input mt-0" type="radio" name="fillColorMode" id="fillColorModeNone" @onclick="() => FillPaintMode = PaintMode.None" checked="@(FillPaintMode == PaintMode.None)" />
+                <label class="form-check-label ps-2" for="fillColorModeNone">None</label>
+            </div>
+
             @if (SelectedActionType == ActionType.Select) {
-                <button type="button" class="btn btn-secondary" @onclick="() => ApplyFillColor()">Apply</button>
+                <button type="button" class="btn btn-secondary" @onclick="() => ApplyFill()">Apply</button>
             }
         </div>
 
@@ -27,7 +41,7 @@
             <input type="text" class="form-control" id="strokeColor" style="background-color: @StrokeColorManager.Color; color: @StrokeColorManager.Color.ContrastingColor" @bind-value="StrokeColorManager.ColorValue" />
 
             @if (SelectedActionType == ActionType.Select) {
-                <button type="button" class="btn btn-secondary" @onclick="() => ApplyStrokeColor()">Apply</button>
+                <button type="button" class="btn btn-secondary" @onclick="() => ApplyStroke()">Apply</button>
             }
         </div>
 
@@ -71,12 +85,12 @@
                 <input type="text" class="form-control" id="gridSize" @bind-value="GridSize" />
 
                 <div class="input-group-text">
-                    <input class="form-check-input mt-0" type="checkbox" id="showGrid" @bind="ShowGrid">
+                    <input class="form-check-input mt-0" type="checkbox" id="showGrid" @bind="ShowGrid" />
                     <label class="form-check-label ps-2" for="showGrid">Show</label>
                 </div>
 
                 <div class="input-group-text">
-                    <input class="form-check-input mt-0" type="checkbox" id="snapToGrid" @bind="SnapToGrid">
+                    <input class="form-check-input mt-0" type="checkbox" id="snapToGrid" @bind="SnapToGrid" />
                     <label class="form-check-label ps-2" for="snapToGrid">Snap</label>
                 </div>
             </div>
@@ -172,6 +186,11 @@
         }
     }
 
+    private enum PaintMode {
+        None,
+        Color
+    }
+
     private static Dictionary<ActionType, ActionDefinition> actionDefinitions = new Dictionary<ActionType, ActionDefinition>() {
         { ActionType.Select, new ActionDefinition("Select", onCanvasMouseUp: (graphics) => graphics.ProcessSelection(), onShapeMouseDown: (graphics, shape) => graphics.Select(shape), onSwitchFrom: graphics => graphics.Deselect()) },
         { ActionType.DrawLine, new DrawActionDefinition("Line", (graphics) => new Line(graphics.SnappedStartPoint, graphics.SnappedEndPoint)) },
@@ -203,7 +222,15 @@
     private ActionDefinition CurrentActionDefinition => actionDefinitions[SelectedActionType];
 
     // Form fields
+    private PaintMode FillPaintMode { get; set; } = PaintMode.None;
+
     private ColorManager FillColorManager { get; set; } = new ColorManager("#FFFFFF");
+
+    private IPaintServer FillPaintServer => FillPaintMode switch {
+        PaintMode.Color => FillColorManager.Color,
+        PaintMode.None => PaintServer.None,
+        _ => throw new NotImplementedException($"No implementation found for {nameof(PaintMode)} '{FillPaintMode}'")
+    };
 
     private ColorManager StrokeColorManager { get; set; } = new ColorManager("#000000");
 
@@ -299,8 +326,8 @@
     private Shape CreateShape(Func<Graphics, Shape> constructor) {
         var shape = constructor(this);
 
-        shape.FillColor = FillColorManager.Color;
-        shape.StrokeColor = StrokeColorManager.Color;
+        shape.Fill = FillPaintServer;
+        shape.Stroke = StrokeColorManager.Color;
         shape.StrokeWidth = StrokeWidth;
         return shape;
     }
@@ -337,15 +364,15 @@
         SelectedShape = null;
     }
 
-    private void ApplyFillColor() {
+    private void ApplyFill() {
         if (IsSelected) {
-            SelectedShape.FillColor = FillColorManager.Color;
+            SelectedShape.Fill = FillPaintServer;
         }
     }
-    
-    private void ApplyStrokeColor() {
+
+    private void ApplyStroke() {
         if (IsSelected) {
-            SelectedShape.StrokeColor = StrokeColorManager.Color;
+            SelectedShape.Stroke = StrokeColorManager.Color;
         }
     }
 
