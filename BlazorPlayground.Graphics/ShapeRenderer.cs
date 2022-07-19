@@ -21,11 +21,10 @@ namespace BlazorPlayground.Graphics {
 
         protected override void BuildRenderTree(RenderTreeBuilder builder) {
             if (Shape != null) {
+                builder.OpenRegion(1);
                 builder.OpenElement(1, Shape.ElementName);
                 builder.SetKey(Shape);
-                builder.AddAttribute(2, "onmousedown", OnMouseDown);
-                builder.AddAttribute(3, "onmouseup", OnMouseUp);
-                builder.AddAttribute(4, "class", $"shape {(IsSelected ? "shape-selected" : IsVirtual ? "shape-virtual" : "")}");
+                builder.AddAttribute(4, "class", IsSelected ? "shape-selected" : IsVirtual ? "shape-virtual" : "");
                 builder.AddAttribute(5, "fill", Shape.Fill);
                 builder.AddAttribute(6, "stroke", Shape.Stroke);
                 builder.AddAttribute(7, "stroke-width", Shape.StrokeWidth);
@@ -37,6 +36,23 @@ namespace BlazorPlayground.Graphics {
                 }
 
                 builder.CloseElement();
+                builder.CloseRegion();
+
+                builder.OpenRegion(2);
+                builder.OpenElement(1, Shape.ElementName);
+                builder.AddAttribute(2, "onmousedown", OnMouseDown);
+                builder.AddAttribute(3, "onmouseup", OnMouseUp);
+                builder.AddAttribute(4, "stroke-width", Math.Max(Shape.StrokeWidth, 10));
+                builder.AddAttribute(5, "class", "shape-selector");
+
+                sequence = 6;
+
+                foreach (var attribute in Shape.GetAttributes()) {
+                    builder.AddAttribute(sequence++, attribute.Name, attribute.Value);
+                }
+
+                builder.CloseElement();
+                builder.CloseRegion();
             }
         }
     }

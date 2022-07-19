@@ -124,11 +124,11 @@ a, .btn-link {
     height: 800px;
 }
 
-.graphics-main .shape.shape-virtual {
+.graphics-main .shape-virtual {
     stroke-dasharray: 5;
 }
 
-.graphics-main .shape.shape-selected {
+.graphics-main .shape-selected {
     stroke-dasharray: 5;
     animation: shape-selected 0.25s infinite linear forwards;
 }
@@ -141,6 +141,12 @@ a, .btn-link {
     to {
         stroke-dashoffset: 10;
     }
+}
+
+.graphics-main .shape-selector {
+    stroke: #000000;
+    fill: #000000;
+    opacity: 0;
 }
 
 .graphics-main .shape-anchor {
