@@ -16,7 +16,7 @@
             RadiusPoint = radiusPoint;
         }
 
-        public override ShapeAttributeCollection GetAttributes() => new ShapeAttributeCollection() {
+        public override ShapeAttributeCollection GetAttributes() => new() {
             { "cx", CenterPoint.X },
             { "cy", CenterPoint.Y },
             { "r", (RadiusPoint - CenterPoint).Distance }

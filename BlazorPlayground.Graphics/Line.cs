@@ -15,7 +15,7 @@
             EndPoint = endPoint;
         }
 
-        public override ShapeAttributeCollection GetAttributes() => new ShapeAttributeCollection() {
+        public override ShapeAttributeCollection GetAttributes() => new() {
             { "x1", StartPoint.X },
             { "y1", StartPoint.Y },
             { "x2", EndPoint.X },

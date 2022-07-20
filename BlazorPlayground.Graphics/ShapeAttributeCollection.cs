@@ -3,7 +3,7 @@ using System.Globalization;
 
 namespace BlazorPlayground.Graphics {
     public class ShapeAttributeCollection : IEnumerable<KeyValuePair<string, object>> {
-        private readonly Dictionary<string, object> attributes = new Dictionary<string, object>();
+        private readonly Dictionary<string, object> attributes = new();
 
         public void Add(string key, double value) => attributes.Add(key, value.ToString(CultureInfo.InvariantCulture));
 

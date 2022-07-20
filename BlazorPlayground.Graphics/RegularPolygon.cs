@@ -30,7 +30,7 @@
             }
         }
 
-        public override ShapeAttributeCollection GetAttributes() => new ShapeAttributeCollection() {
+        public override ShapeAttributeCollection GetAttributes() => new() {
             { "points", string.Join(" ", GetPoints().Select(p => FormattableString.Invariant($"{p.X},{p.Y}"))) }
         };
 

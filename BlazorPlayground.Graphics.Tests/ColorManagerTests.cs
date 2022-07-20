@@ -71,9 +71,9 @@ namespace BlazorPlayground.Graphics.Tests {
 
         [Fact]
         public void ParseWhenSetting() {
-            var colorManager = new ColorManager("rgba(1, 1, 1, 0.5)");
-
-            colorManager.ColorValue = "red";
+            var colorManager = new ColorManager("rgba(1, 1, 1, 0.5)") {
+                ColorValue = "red"
+            };
 
             Assert.Equal("red", colorManager.ColorValue);
             Assert.Equal(255, colorManager.Color.Red);
