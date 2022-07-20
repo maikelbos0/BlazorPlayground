@@ -16,11 +16,11 @@
             RadiusPoint = radiusPoint;
         }
 
-        public override IEnumerable<ShapeAttribute> GetAttributes() {
-            yield return new ShapeAttribute("cx", CenterPoint.X);
-            yield return new ShapeAttribute("cy", CenterPoint.Y);
-            yield return new ShapeAttribute("r", (RadiusPoint - CenterPoint).Distance);
-        }
+        public override ShapeAttributeCollection GetAttributes() => new ShapeAttributeCollection() {
+            { "cx", CenterPoint.X },
+            { "cy", CenterPoint.Y },
+            { "r", (RadiusPoint - CenterPoint).Distance }
+        };
 
         public override Shape Clone() => new Circle(CenterPoint, RadiusPoint);
     }

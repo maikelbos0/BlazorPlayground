@@ -95,10 +95,10 @@ namespace BlazorPlayground.Graphics.Tests {
         public void GetAttributes() {
             var polygon = new RegularPolygon(new Point(100, 100), new Point(50, 50), 4);
 
-            var attributes = polygon.GetAttributes().ToList();
+            var attributes = polygon.GetAttributes();
 
             var attribute = Assert.Single(attributes);
-            Assert.Equal("points", attribute.Name);
+            Assert.Equal("points", attribute.Key);
             Assert.Equal("50,49.99999999999999 150,49.99999999999999 150,150 50,150", attribute.Value);
         }
 

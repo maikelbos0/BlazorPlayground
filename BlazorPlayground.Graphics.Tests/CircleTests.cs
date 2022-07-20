@@ -17,9 +17,9 @@ namespace BlazorPlayground.Graphics.Tests {
             var attributes = circle.GetAttributes().ToList();
 
             Assert.Equal(3, attributes.Count);
-            Assert.Equal("100", Assert.Single(attributes, a => a.Name == "cx").Value);
-            Assert.Equal("150", Assert.Single(attributes, a => a.Name == "cy").Value);
-            Assert.Equal("141.4213562373095", Assert.Single(attributes, a => a.Name == "r").Value);
+            Assert.Equal("100", Assert.Single(attributes, a => a.Key == "cx").Value);
+            Assert.Equal("150", Assert.Single(attributes, a => a.Key == "cy").Value);
+            Assert.Equal("141.4213562373095", Assert.Single(attributes, a => a.Key == "r").Value);
         }
 
         [Fact]

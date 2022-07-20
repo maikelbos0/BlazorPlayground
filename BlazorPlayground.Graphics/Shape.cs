@@ -6,7 +6,7 @@
         public abstract string ElementName { get; }
         public abstract IReadOnlyList<Anchor> Anchors { get; }
 
-        public abstract IEnumerable<ShapeAttribute> GetAttributes();
+        public abstract ShapeAttributeCollection GetAttributes();
 
         public abstract Shape Clone();
 

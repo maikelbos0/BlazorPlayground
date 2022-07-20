@@ -15,12 +15,12 @@
             EndPoint = endPoint;
         }
 
-        public override IEnumerable<ShapeAttribute> GetAttributes() {
-            yield return new ShapeAttribute("x", Math.Min(StartPoint.X, EndPoint.X));
-            yield return new ShapeAttribute("y", Math.Min(StartPoint.Y, EndPoint.Y));
-            yield return new ShapeAttribute("width", Math.Abs(StartPoint.X - EndPoint.X));
-            yield return new ShapeAttribute("height", Math.Abs(StartPoint.Y - EndPoint.Y));
-        }
+        public override ShapeAttributeCollection GetAttributes() => new ShapeAttributeCollection() {
+            { "x", Math.Min(StartPoint.X, EndPoint.X) },
+            { "y", Math.Min(StartPoint.Y, EndPoint.Y) },
+            { "width", Math.Abs(StartPoint.X - EndPoint.X) },
+            { "height", Math.Abs(StartPoint.Y - EndPoint.Y) }
+        };
 
         public override Shape Clone() => new Rectangle(StartPoint, EndPoint);
     }

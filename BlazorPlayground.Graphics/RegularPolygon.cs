@@ -30,9 +30,9 @@
             }
         }
 
-        public override IEnumerable<ShapeAttribute> GetAttributes() {
-            yield return new ShapeAttribute("points", string.Join(" ", GetPoints().Select(p => FormattableString.Invariant($"{p.X},{p.Y}"))));
-        }
+        public override ShapeAttributeCollection GetAttributes() => new ShapeAttributeCollection() {
+            { "points", string.Join(" ", GetPoints().Select(p => FormattableString.Invariant($"{p.X},{p.Y}"))) }
+        };
 
         public override Shape Clone() => new RegularPolygon(CenterPoint, RadiusPoint, Sides);
     }

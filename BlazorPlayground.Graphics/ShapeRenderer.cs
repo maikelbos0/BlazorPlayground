@@ -21,38 +21,26 @@ namespace BlazorPlayground.Graphics {
 
         protected override void BuildRenderTree(RenderTreeBuilder builder) {
             if (Shape != null) {
-                builder.OpenRegion(1);
-                builder.OpenElement(1, Shape.ElementName);
+                builder.OpenElement(1, "g");
                 builder.SetKey(Shape);
-                builder.AddAttribute(4, "class", IsSelected ? "shape-selected" : IsVirtual ? "shape-virtual" : "");
-                builder.AddAttribute(5, "fill", Shape.Fill);
-                builder.AddAttribute(6, "stroke", Shape.Stroke);
-                builder.AddAttribute(7, "stroke-width", Shape.StrokeWidth);
 
-                var sequence = 8;
+                builder.OpenElement(2, Shape.ElementName);
+                builder.AddAttribute(3, "class", IsSelected ? "shape-selected" : IsVirtual ? "shape-virtual" : "");
+                builder.AddAttribute(4, "fill", Shape.Fill);
+                builder.AddAttribute(5, "stroke", Shape.Stroke);
+                builder.AddAttribute(6, "stroke-width", Shape.StrokeWidth);
+                builder.AddMultipleAttributes(7, Shape.GetAttributes());
+                builder.CloseElement();
 
-                foreach (var attribute in Shape.GetAttributes()) {
-                    builder.AddAttribute(sequence++, attribute.Name, attribute.Value);
-                }
+                builder.OpenElement(8, Shape.ElementName);
+                builder.AddAttribute(9, "class", "shape-selector");
+                builder.AddAttribute(10, "onmousedown", OnMouseDown);
+                builder.AddAttribute(11, "onmouseup", OnMouseUp);
+                builder.AddAttribute(12, "stroke-width", Math.Max(Shape.StrokeWidth, 10));
+                builder.AddMultipleAttributes(13, Shape.GetAttributes());
+                builder.CloseElement();
 
                 builder.CloseElement();
-                builder.CloseRegion();
-
-                builder.OpenRegion(2);
-                builder.OpenElement(1, Shape.ElementName);
-                builder.AddAttribute(2, "onmousedown", OnMouseDown);
-                builder.AddAttribute(3, "onmouseup", OnMouseUp);
-                builder.AddAttribute(4, "stroke-width", Math.Max(Shape.StrokeWidth, 10));
-                builder.AddAttribute(5, "class", "shape-selector");
-
-                sequence = 6;
-
-                foreach (var attribute in Shape.GetAttributes()) {
-                    builder.AddAttribute(sequence++, attribute.Name, attribute.Value);
-                }
-
-                builder.CloseElement();
-                builder.CloseRegion();
             }
         }
     }

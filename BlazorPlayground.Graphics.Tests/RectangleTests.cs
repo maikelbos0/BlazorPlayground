@@ -17,10 +17,10 @@ namespace BlazorPlayground.Graphics.Tests {
             var attributes = rectangle.GetAttributes().ToList();
 
             Assert.Equal(4, attributes.Count);
-            Assert.Equal("100", Assert.Single(attributes, a => a.Name == "x").Value);
-            Assert.Equal("150", Assert.Single(attributes, a => a.Name == "y").Value);
-            Assert.Equal("80", Assert.Single(attributes, a => a.Name == "width").Value);
-            Assert.Equal("60", Assert.Single(attributes, a => a.Name == "height").Value);
+            Assert.Equal("100", Assert.Single(attributes, a => a.Key == "x").Value);
+            Assert.Equal("150", Assert.Single(attributes, a => a.Key == "y").Value);
+            Assert.Equal("80", Assert.Single(attributes, a => a.Key == "width").Value);
+            Assert.Equal("60", Assert.Single(attributes, a => a.Key == "height").Value);
         }
 
         [Fact]
