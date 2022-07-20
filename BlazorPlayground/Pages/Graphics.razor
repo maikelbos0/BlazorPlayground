@@ -36,8 +36,19 @@
         </div>
 
         <div class="input-group mb-3 me-3">
-            <label for="strokeColor" class="input-group-text">Stroke color</label>
+            <label for="strokeColor" class="input-group-text">Stroke</label>
+            
+            <div class="input-group-text">
+                <input class="form-check-input mt-0" type="radio" name="strokePaintMode" id="strokePaintModeColor" @onclick="() => StrokePaintMode = PaintMode.Color" checked="@(StrokePaintMode == PaintMode.Color)" />
+                <label class="form-check-label ps-2" for="strokePaintModeColor">Color</label>
+            </div>
+
             <input type="text" class="form-control" id="strokeColor" style="background-color: @StrokeColorManager.Color; color: @StrokeColorManager.Color.ContrastingColor" @bind-value="StrokeColorManager.ColorValue" />
+            
+            <div class="input-group-text">
+                <input class="form-check-input mt-0" type="radio" name="strokePaintMode" id="strokePaintModeNone" @onclick="() => StrokePaintMode = PaintMode.None" checked="@(StrokePaintMode == PaintMode.None)" />
+                <label class="form-check-label ps-2" for="strokePaintModeNone">None</label>
+            </div>
 
             @if (SelectedActionType == ActionType.Select) {
                 <button type="button" class="btn btn-secondary" @onclick="() => ApplyStroke()">Apply</button>
@@ -237,7 +248,15 @@
         _ => throw new NotImplementedException($"No implementation found for {nameof(PaintMode)} '{FillPaintMode}'")
     };
 
+    private PaintMode StrokePaintMode { get; set; } = PaintMode.Color;
+
     private ColorManager StrokeColorManager { get; set; } = new ColorManager("#000000");
+
+    private IPaintServer StrokePaintServer => StrokePaintMode switch {
+        PaintMode.Color => StrokeColorManager.Color,
+        PaintMode.None => PaintServer.None,
+        _ => throw new NotImplementedException($"No implementation found for {nameof(PaintMode)} '{StrokePaintMode}'")
+    };
 
     private int strokeWidth = 1;
     private int StrokeWidth {
@@ -332,7 +351,7 @@
         var shape = constructor(this);
 
         shape.Fill = FillPaintServer;
-        shape.Stroke = StrokeColorManager.Color;
+        shape.Stroke = StrokePaintServer;
         shape.StrokeWidth = StrokeWidth;
         return shape;
     }
@@ -377,7 +396,7 @@
 
     private void ApplyStroke() {
         if (IsSelected) {
-            SelectedShape.Stroke = StrokeColorManager.Color;
+            SelectedShape.Stroke = StrokePaintServer;
         }
     }
 

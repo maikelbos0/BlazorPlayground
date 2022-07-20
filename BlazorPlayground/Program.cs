@@ -12,7 +12,6 @@ namespace BlazorPlayground {
      * Add stroke linecap?
      * Add stroke linejoin?
      * Add stroke array?
-     * Add enable/disable stroke
      * Add opacity
      * Add fill opacity?
      * Add stroke opacity?
