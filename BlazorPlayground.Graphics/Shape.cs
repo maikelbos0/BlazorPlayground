@@ -4,6 +4,7 @@
         public IPaintServer Stroke { get; set; } = new Color(0, 0, 0, 1);
         public int StrokeWidth { get; set; } = 1;
         public Linecap StrokeLinecap { get; set; } = Linecap.Butt;
+        public Linejoin StrokeLinejoin { get; set; } = Linejoin.Miter;
         public abstract string ElementName { get; }
         public abstract IReadOnlyList<Anchor> Anchors { get; }
 

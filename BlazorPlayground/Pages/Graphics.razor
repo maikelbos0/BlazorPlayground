@@ -78,6 +78,20 @@
             }
         </div>
 
+        <div class="input-group mb-3 me-3">
+            <label for="strokeLinejoin" class="input-group-text">Linejoin</label>
+
+            <select class="form-select" id="strokeLinejoin" @bind="StrokeLinejoin">
+                @foreach (var linejoin in Enum.GetValues<Linejoin>()) {
+                    <option value="@linejoin">@linejoin</option>
+                }
+            </select>
+
+            @if (SelectedActionType == ActionType.Select) {
+                <button type="button" class="btn btn-secondary" @onclick="() => ApplyStrokeLinejoin()">Apply</button>
+            }
+        </div>
+
         @if (SelectedActionType == ActionType.Select) {
             <div class="btn-group mb-3 me-3">
                 <button type="button" class="btn btn-secondary" @onclick="() => MoveSelectedShapeInList(1)">Move forward</button>
@@ -272,7 +286,9 @@
         _ => throw new NotImplementedException($"No implementation found for {nameof(PaintMode)} '{StrokePaintMode}'")
     };
 
-    private Linecap StrokeLinecap { get; set; }
+    private Linecap StrokeLinecap { get; set; } = Linecap.Butt;
+
+    private Linejoin StrokeLinejoin { get; set; } = Linejoin.Miter;
 
     private int strokeWidth = 1;
     private int StrokeWidth {
@@ -370,6 +386,7 @@
         shape.Stroke = StrokePaintServer;
         shape.StrokeWidth = StrokeWidth;
         shape.StrokeLinecap = StrokeLinecap;
+        shape.StrokeLinejoin = StrokeLinejoin;
 
         return shape;
     }
@@ -421,6 +438,13 @@
     private void ApplyStrokeLinecap() {
         if (IsSelected) {
             SelectedShape.StrokeLinecap = StrokeLinecap;
+        }
+    }
+
+
+    private void ApplyStrokeLinejoin() {
+        if (IsSelected) {
+            SelectedShape.StrokeLinejoin = StrokeLinejoin;
         }
     }
 

@@ -9,8 +9,6 @@ namespace BlazorPlayground {
     /*
      * TODO
      * Snap to existing point
-     * Add stroke linecap?
-     * Add stroke linejoin?
      * Add stroke array?
      * Add opacity
      * Add fill opacity?

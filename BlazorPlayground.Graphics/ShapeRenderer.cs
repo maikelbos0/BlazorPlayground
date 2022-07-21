@@ -22,23 +22,24 @@ namespace BlazorPlayground.Graphics {
         protected override void BuildRenderTree(RenderTreeBuilder builder) {
             if (Shape != null) {
                 builder.OpenElement(1, "g");
+                builder.AddAttribute(2, "stroke-linecap", Shape.StrokeLinecap.ToString().ToLower());
+                builder.AddAttribute(3, "stroke-linejoin", Shape.StrokeLinejoin.ToString().ToLower());
                 builder.SetKey(Shape);
 
-                builder.OpenElement(2, Shape.ElementName);
-                builder.AddAttribute(3, "class", IsSelected ? "shape-selected" : IsVirtual ? "shape-virtual" : "");
-                builder.AddAttribute(4, "fill", Shape.Fill);
-                builder.AddAttribute(5, "stroke", Shape.Stroke);
-                builder.AddAttribute(6, "stroke-width", Shape.StrokeWidth);
-                builder.AddAttribute(6, "stroke-linecap", Shape.StrokeLinecap.ToString().ToLower());
-                builder.AddMultipleAttributes(7, Shape.GetAttributes());
+                builder.OpenElement(4, Shape.ElementName);
+                builder.AddAttribute(5, "class", IsSelected ? "shape-selected" : IsVirtual ? "shape-virtual" : "");
+                builder.AddAttribute(6, "fill", Shape.Fill);
+                builder.AddAttribute(7, "stroke", Shape.Stroke);
+                builder.AddAttribute(8, "stroke-width", Shape.StrokeWidth);
+                builder.AddMultipleAttributes(9, Shape.GetAttributes());
                 builder.CloseElement();
 
-                builder.OpenElement(8, Shape.ElementName);
-                builder.AddAttribute(9, "class", "shape-selector");
-                builder.AddAttribute(10, "onmousedown", OnMouseDown);
-                builder.AddAttribute(11, "onmouseup", OnMouseUp);
-                builder.AddAttribute(12, "stroke-width", Math.Max(Shape.StrokeWidth, 10));
-                builder.AddMultipleAttributes(13, Shape.GetAttributes());
+                builder.OpenElement(10, Shape.ElementName);
+                builder.AddAttribute(11, "class", "shape-selector");
+                builder.AddAttribute(12, "onmousedown", OnMouseDown);
+                builder.AddAttribute(13, "onmouseup", OnMouseUp);
+                builder.AddAttribute(14, "stroke-width", Math.Max(Shape.StrokeWidth, 12));
+                builder.AddMultipleAttributes(15, Shape.GetAttributes());
                 builder.CloseElement();
 
                 builder.CloseElement();
