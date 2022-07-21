@@ -29,6 +29,7 @@ namespace BlazorPlayground.Graphics {
                 builder.AddAttribute(4, "fill", Shape.Fill);
                 builder.AddAttribute(5, "stroke", Shape.Stroke);
                 builder.AddAttribute(6, "stroke-width", Shape.StrokeWidth);
+                builder.AddAttribute(6, "stroke-linecap", Shape.StrokeLinecap.ToString().ToLower());
                 builder.AddMultipleAttributes(7, Shape.GetAttributes());
                 builder.CloseElement();
 

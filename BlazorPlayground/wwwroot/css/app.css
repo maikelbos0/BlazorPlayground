@@ -125,11 +125,11 @@ a, .btn-link {
 }
 
 .graphics-main .shape-virtual {
-    stroke-dasharray: 5;
+    stroke-dasharray: 8 12;
 }
 
 .graphics-main .shape-selected {
-    stroke-dasharray: 5;
+    stroke-dasharray: 8 12;
     animation: shape-selected 0.25s infinite linear forwards;
 }
 
@@ -139,7 +139,7 @@ a, .btn-link {
     }
 
     to {
-        stroke-dashoffset: 10;
+        stroke-dashoffset: 20;
     }
 }
 

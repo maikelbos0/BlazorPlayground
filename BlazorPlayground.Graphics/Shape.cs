@@ -3,6 +3,7 @@
         public IPaintServer Fill { get; set; } = PaintServer.None;
         public IPaintServer Stroke { get; set; } = new Color(0, 0, 0, 1);
         public int StrokeWidth { get; set; } = 1;
+        public Linecap StrokeLinecap { get; set; } = Linecap.Butt;
         public abstract string ElementName { get; }
         public abstract IReadOnlyList<Anchor> Anchors { get; }
 
