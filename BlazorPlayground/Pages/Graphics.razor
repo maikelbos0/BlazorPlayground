@@ -1,5 +1,6 @@
 ﻿@page "/graphics"
 @using BlazorPlayground.Graphics
+@using System.Globalization
 
 <h1>Graphics</h1>
 
@@ -168,7 +169,7 @@
                 foreach (var anchor in changingShape.Anchors) {
                     var point = anchor.Get(changingShape);
 
-                    <rect class="shape-anchor" x="@(point.X - 5)" y="@(point.Y - 5)" width="10" height="10" />
+                    <rect class="shape-anchor" x="@((point.X - 5).ToString(CultureInfo.InvariantCulture))" y="@((point.Y - 5).ToString(CultureInfo.InvariantCulture))" width="10" height="10" />
                 }
             }
             else {
@@ -177,7 +178,7 @@
                 foreach (var anchor in SelectedShape.Anchors) {
                     var point = anchor.Get(SelectedShape);
 
-                    <rect class="shape-anchor" x="@(point.X - 5)" y="@(point.Y - 5)" width="10" height="10" @onmousedown="args => OnAnchorMouseDown(args, anchor)" />
+                    <rect class="shape-anchor" x="@((point.X - 5).ToString(CultureInfo.InvariantCulture))" y="@((point.Y - 5).ToString(CultureInfo.InvariantCulture))" width="10" height="10" @onmousedown="args => OnAnchorMouseDown(args, anchor)" />
                 }
             }
         }
@@ -200,6 +201,7 @@
         DrawCircle,
         DrawEllipse,
         DrawRegularPolygon,
+        DrawQuadraticBezier,
         CanvasSettings
     }
 
@@ -224,7 +226,7 @@
     private class DrawActionDefinition : ActionDefinition {
         public Func<Graphics, Shape> Constructor { get; }
 
-        public DrawActionDefinition(string name, Func<Graphics, Shape> constructor) : base(name, (graphics) => graphics.AddShape(constructor)) {
+        public DrawActionDefinition(string name, Func<Graphics, Shape> constructor, bool autoSelect = false) : base(name, (graphics) => graphics.AddShape(constructor, autoSelect)) {
             Constructor = constructor;
         }
     }
@@ -241,6 +243,7 @@
         { ActionType.DrawCircle, new DrawActionDefinition("Circle", (graphics) => new Circle(graphics.SnappedStartPoint, graphics.SnappedEndPoint)) },
         { ActionType.DrawEllipse, new DrawActionDefinition("Ellipse", (graphics) => new Ellipse(graphics.SnappedStartPoint, graphics.SnappedEndPoint)) },
         { ActionType.DrawRegularPolygon, new DrawActionDefinition("Regular polygon", (graphics) => new RegularPolygon(graphics.SnappedStartPoint, graphics.SnappedEndPoint, graphics.RegularPolygonSides)) },
+        { ActionType.DrawQuadraticBezier, new DrawActionDefinition("Quadratic bezier", (graphics) => new QuadraticBezier(graphics.SnappedStartPoint, graphics.SnappedEndPoint), true) },
         { ActionType.CanvasSettings, new ActionDefinition("Canvas settings") }
     };
 
@@ -373,9 +376,16 @@
         return point.SnapToGrid(GridSize);
     }
 
-    private void AddShape(Func<Graphics, Shape> constructor) {
+    private void AddShape(Func<Graphics, Shape> constructor, bool autoSelect) {
         if (IsDragging) {
-            Shapes.Add(CreateShape(constructor));
+            var shape = CreateShape(constructor);
+
+            Shapes.Add(shape);
+
+            if (autoSelect) {
+                SwitchActionType(ActionType.Select);
+                SelectedShape = shape;
+            }
         }
     }
 

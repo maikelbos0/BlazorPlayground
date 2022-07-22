@@ -8,13 +8,12 @@ namespace BlazorPlayground {
 
     /*
      * TODO
-     * Snap to existing point
+     * Snap to existing point (how? point != anchor)
      * Add stroke array?
      * Add opacity
      * Add fill opacity?
      * Add stroke opacity?
      * Add arc
-     * Add quadratic bezier curve
      * Add cubic bezier curve
      * Add save/export of svg
      * Add load/import of svg
