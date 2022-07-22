@@ -198,6 +198,7 @@
         DrawLine,
         DrawRectangle,
         DrawCircle,
+        DrawEllipse,
         DrawRegularPolygon,
         CanvasSettings
     }
@@ -238,6 +239,7 @@
         { ActionType.DrawLine, new DrawActionDefinition("Line", (graphics) => new Line(graphics.SnappedStartPoint, graphics.SnappedEndPoint)) },
         { ActionType.DrawRectangle, new DrawActionDefinition("Rectangle", (graphics) => new Rectangle(graphics.SnappedStartPoint, graphics.SnappedEndPoint)) },
         { ActionType.DrawCircle, new DrawActionDefinition("Circle", (graphics) => new Circle(graphics.SnappedStartPoint, graphics.SnappedEndPoint)) },
+        { ActionType.DrawEllipse, new DrawActionDefinition("Ellipse", (graphics) => new Ellipse(graphics.SnappedStartPoint, graphics.SnappedEndPoint)) },
         { ActionType.DrawRegularPolygon, new DrawActionDefinition("Regular polygon", (graphics) => new RegularPolygon(graphics.SnappedStartPoint, graphics.SnappedEndPoint, graphics.RegularPolygonSides)) },
         { ActionType.CanvasSettings, new ActionDefinition("Canvas settings") }
     };

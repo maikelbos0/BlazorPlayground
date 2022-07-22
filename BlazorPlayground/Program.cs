@@ -13,7 +13,6 @@ namespace BlazorPlayground {
      * Add opacity
      * Add fill opacity?
      * Add stroke opacity?
-     * Add ellipse
      * Add arc
      * Add quadratic bezier curve
      * Add cubic bezier curve
