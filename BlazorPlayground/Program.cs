@@ -14,8 +14,11 @@ namespace BlazorPlayground {
      * Add fill opacity?
      * Add stroke opacity?
      * Add ellipse
+     * Add arc
      * Add quadratic bezier curve
      * Add cubic bezier curve
+     * Add save/export of svg
+     * Add load/import of svg
      */
 
     public class Program {

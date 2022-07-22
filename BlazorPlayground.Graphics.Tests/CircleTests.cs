@@ -51,9 +51,12 @@ namespace BlazorPlayground.Graphics.Tests {
             var circle = new Circle(new Point(100, 150), new Point(200, 250));
 
             var result = circle.Clone();
+
+            var resultCircle = Assert.IsType<Circle>(result);
+
             Assert.NotSame(circle, result);
-            PointAssert.Equal(new Point(100, 150), circle.CenterPoint);
-            PointAssert.Equal(new Point(200, 250), circle.RadiusPoint);
+            PointAssert.Equal(new Point(100, 150), resultCircle.CenterPoint);
+            PointAssert.Equal(new Point(200, 250), resultCircle.RadiusPoint);
         }
     }
 }

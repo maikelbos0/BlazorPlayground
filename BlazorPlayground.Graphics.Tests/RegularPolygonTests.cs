@@ -131,10 +131,13 @@ namespace BlazorPlayground.Graphics.Tests {
             var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250), 5);
 
             var result = polygon.Clone();
-            Assert.NotSame(polygon, result);
-            PointAssert.Equal(new Point(100, 150), polygon.CenterPoint);
-            PointAssert.Equal(new Point(200, 250), polygon.RadiusPoint);
-            Assert.Equal(5, polygon.Sides);
+
+            var resultPolygon = Assert.IsType<RegularPolygon>(result);
+
+            Assert.NotSame(polygon, resultPolygon);
+            PointAssert.Equal(new Point(100, 150), resultPolygon.CenterPoint);
+            PointAssert.Equal(new Point(200, 250), resultPolygon.RadiusPoint);
+            Assert.Equal(5, resultPolygon.Sides);
         }
     }
 }

@@ -52,9 +52,12 @@ namespace BlazorPlayground.Graphics.Tests {
             var rectangle = new Rectangle(new Point(100, 150), new Point(200, 250));
 
             var result = rectangle.Clone();
-            Assert.NotSame(rectangle, result);
-            PointAssert.Equal(new Point(100, 150), rectangle.StartPoint);
-            PointAssert.Equal(new Point(200, 250), rectangle.EndPoint);
+
+            var resultRectangle = Assert.IsType<Rectangle>(result);
+
+            Assert.NotSame(rectangle, resultRectangle);
+            PointAssert.Equal(new Point(100, 150), resultRectangle.StartPoint);
+            PointAssert.Equal(new Point(200, 250), resultRectangle.EndPoint);
         }
     }
 }
