@@ -17,6 +17,13 @@ namespace BlazorPlayground.Graphics.Tests {
         }
 
         [Fact]
+        public void Multiply() {
+            var result = new Point(100, 150) * 2.5;
+
+            PointAssert.Equal(new Point(250, 375), result);
+        }
+
+        [Fact]
         public void Divide() {
             var result = new Point(100, 150) / 2.5;
 
