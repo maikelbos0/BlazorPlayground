@@ -202,6 +202,7 @@
         DrawEllipse,
         DrawRegularPolygon,
         DrawQuadraticBezier,
+        DrawCubicBezier,
         CanvasSettings
     }
 
@@ -244,6 +245,7 @@
         { ActionType.DrawEllipse, new DrawActionDefinition("Ellipse", (graphics) => new Ellipse(graphics.SnappedStartPoint, graphics.SnappedEndPoint)) },
         { ActionType.DrawRegularPolygon, new DrawActionDefinition("Regular polygon", (graphics) => new RegularPolygon(graphics.SnappedStartPoint, graphics.SnappedEndPoint, graphics.RegularPolygonSides)) },
         { ActionType.DrawQuadraticBezier, new DrawActionDefinition("Quadratic bezier", (graphics) => new QuadraticBezier(graphics.SnappedStartPoint, graphics.SnappedEndPoint), true) },
+        { ActionType.DrawCubicBezier, new DrawActionDefinition("Cubic bezier", (graphics) => new CubicBezier(graphics.SnappedStartPoint, graphics.SnappedEndPoint), true) },
         { ActionType.CanvasSettings, new ActionDefinition("Canvas settings") }
     };
 
