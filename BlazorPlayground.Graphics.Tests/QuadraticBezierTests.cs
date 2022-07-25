@@ -10,6 +10,13 @@ namespace BlazorPlayground.Graphics.Tests {
         }
 
         [Fact]
+        public void ControlPoint() {
+            var bezier = new QuadraticBezier(new Point(100, 150), new Point(200, 250));
+
+            PointAssert.Equal(new Point(150, 200), bezier.ControlPoint);
+        }
+
+        [Fact]
         public void GetAttributes() {
             var bezier = new QuadraticBezier(new Point(100, 150), new Point(200, 250)) {
                 ControlPoint = new Point(125, 175)
