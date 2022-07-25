@@ -1,4 +1,6 @@
-﻿namespace BlazorPlayground.Graphics {
+﻿using System.Xml.Linq;
+
+namespace BlazorPlayground.Graphics {
     public abstract class Shape {
         public IPaintServer Fill { get; set; } = PaintServer.None;
         public IPaintServer Stroke { get; set; } = new Color(0, 0, 0, 1);
@@ -26,6 +28,21 @@
             foreach (var anchor in Anchors) {
                 anchor.Move(this, delta);
             }
+        }
+
+        public XElement CreateElement() {
+            var element = new XElement(
+                ElementName,
+                new XAttribute("fill", Fill),
+                new XAttribute("stroke", Stroke),
+                new XAttribute("stroke-width", StrokeWidth),
+                new XAttribute("stroke-linecap", StrokeLinecap.ToString().ToLower()),
+                new XAttribute("stroke-linejoin", StrokeLinejoin.ToString().ToLower())
+            );
+
+            element.Add(GetAttributes().Select(a => new XAttribute(a.Key, a.Value)));
+
+            return element;
         }
     }
 }

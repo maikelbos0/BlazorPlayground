@@ -1,6 +1,10 @@
 ﻿@page "/graphics"
 @using BlazorPlayground.Graphics
 @using System.Globalization
+@using System.Xml.Linq
+@using System.Text
+@implements IAsyncDisposable
+@inject IJSRuntime JSRuntime
 
 <h1>Graphics</h1>
 
@@ -14,6 +18,10 @@
 
 <div class="mb-3 graphics-ribbon">
     <div class="btn-toolbar">
+        <div class="btn-group mb-3 me-3">
+            <button type="button" class="btn btn-secondary" @onclick="Save">Save...</button>
+        </div>
+
         <div class="input-group mb-3 me-3">
             <label for="fillColor" class="input-group-text">Fill</label>
 
@@ -141,7 +149,7 @@
     </div>
 </div>
 
-<svg class="graphics-main" viewBox="0 0 @CanvasWidth @CanvasHeight" style="width: @(CanvasWidth)px; height: @(CanvasHeight)px" @onmousedown="OnCanvasMouseDown" @onmousemove="OnCanvasMouseMove" @onmouseup="OnCanvasMouseUp">
+<svg class="graphics-main" viewBox="0 0 @CanvasWidth @CanvasHeight" width="@CanvasWidth" height="@CanvasHeight" @onmousedown="OnCanvasMouseDown" @onmousemove="OnCanvasMouseMove" @onmouseup="OnCanvasMouseUp">
     @if (ShowGrid) {
         for (var x = GridSize; x < CanvasWidth; x += GridSize) {
             <line class="grid-line" x1="@x" y1="0" x2="@x" y2="@CanvasHeight" />
@@ -252,6 +260,7 @@
     // General
     private List<Shape> Shapes { get; } = new List<Shape>();
     private ActionType SelectedActionType { get; set; } = ActionType.DrawRegularPolygon;
+    private IJSObjectReference moduleReference;
 
     // Coordinates
     private Point StartPoint { get; set; }
@@ -328,6 +337,18 @@
     private bool ShowGrid { get; set; } = false;
 
     private bool SnapToGrid { get; set; } = false;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender) {
+        if (firstRender) {
+            moduleReference = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./js/downloadFile.js");
+        }
+    }
+
+    public async ValueTask DisposeAsync() {
+        if (moduleReference is not null) {
+            await moduleReference.DisposeAsync();
+        }
+    }
 
     private void SwitchActionType(ActionType newActionType) {
         CurrentActionDefinition.OnSwitchFrom(this);
@@ -490,5 +511,18 @@
             Shapes.Remove(SelectedShape);
             Shapes.Add(SelectedShape);
         }
+    }
+
+    private async Task Save() {
+        var element = new XElement(
+            "svg",
+            new XAttribute("viewBox", $"0 0 {CanvasWidth} {CanvasHeight}"),
+            new XAttribute("width", CanvasWidth),
+            new XAttribute("height", CanvasHeight)
+        );
+
+        element.Add(Shapes.Select(s => s.CreateElement()));
+
+        await moduleReference.InvokeVoidAsync("downloadFile", $"graphics {DateTime.UtcNow:yyyyMMdd hhmm}.svg", "image/svg+xml", Encoding.UTF8.GetBytes(element.ToString()));
     }
 }
