@@ -159,3 +159,11 @@ a, .btn-link {
     stroke: #dee2e6;
     stroke-width: 1;
 }
+
+.graphics-modal {
+    background-color: rgba(108, 117, 125, 0.5)
+}
+
+.graphics-modal .modal-dialog {
+    margin-top: 20em;
+}

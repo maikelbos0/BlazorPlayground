@@ -3,6 +3,7 @@
 @using System.Globalization
 @using System.Xml.Linq
 @using System.Text
+@using System.IO
 @implements IAsyncDisposable
 @inject IJSRuntime JSRuntime
 
@@ -16,10 +17,36 @@
     }
 </ul>
 
+<div class="modal graphics-modal @(ShowLoadModal ? "d-block" : "")" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Load file</h5>
+                <button type="button" class="btn-close" aria-label="Close" @onclick="() => ToggleLoadModal(false)"></button>
+            </div>
+            <div class="modal-body">
+                <p>Please note that only valid SVG files can be parsed and only shapes written by this graphics module can be edited.</p>
+                
+                <label for="inputFileToLoad" class="form-label">SVG file</label>
+                <InputFile id="inputFileToLoad" class="@(FileLoadHasError ? "form-control is-invalid" : "form-control")" OnChange="OnInputFileToLoadChange" />
+
+                @if (FileLoadHasError) {
+                    <div class="invalid-feedback">@FileLoadError</div>
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" @onclick="Load">Load</button>
+                <button type="button" class="btn btn-secondary" @onclick="() => ToggleLoadModal(false)">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="mb-3 graphics-ribbon">
     <div class="btn-toolbar">
         <div class="btn-group mb-3 me-3">
-            <button type="button" class="btn btn-secondary" @onclick="Save">Save...</button>
+            <button type="button" class="btn btn-secondary" @onclick="Save">Save</button>
+            <button type="button" class="btn btn-secondary" @onclick="() => ToggleLoadModal(true)">Load</button>
         </div>
 
         <div class="input-group mb-3 me-3">
@@ -258,9 +285,14 @@
     };
 
     // General
-    private List<Shape> Shapes { get; } = new List<Shape>();
+    private List<Shape> Shapes { get; set; } = new List<Shape>();
     private ActionType SelectedActionType { get; set; } = ActionType.DrawRegularPolygon;
-    private IJSObjectReference moduleReference;
+    private IJSObjectReference ModuleReference { get; set; }
+    private bool ShowLoadModal { get; set; } = false;
+    private string FileLoadError { get; set; }
+    private bool FileLoadHasError => !string.IsNullOrWhiteSpace(FileLoadError);
+    private IBrowserFile FileToLoad { get; set; }
+    private string FileName { get; set; }
 
     // Coordinates
     private Point StartPoint { get; set; }
@@ -340,13 +372,13 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender) {
         if (firstRender) {
-            moduleReference = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./js/downloadFile.js");
+            ModuleReference = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./js/downloadFile.js");
         }
     }
 
     public async ValueTask DisposeAsync() {
-        if (moduleReference is not null) {
-            await moduleReference.DisposeAsync();
+        if (ModuleReference is not null) {
+            await ModuleReference.DisposeAsync();
         }
     }
 
@@ -523,6 +555,36 @@
 
         element.Add(Shapes.Select(s => s.CreateElement()));
 
-        await moduleReference.InvokeVoidAsync("downloadFile", $"graphics {DateTime.UtcNow:yyyyMMdd hhmm}.svg", "image/svg+xml", Encoding.UTF8.GetBytes(element.ToString()));
+        await ModuleReference.InvokeVoidAsync("downloadFile", FileName ?? $"graphics {DateTime.UtcNow:yyyyMMdd hhmm}.svg", "image/svg+xml", Encoding.UTF8.GetBytes(element.ToString()));
+    }
+
+    private void ToggleLoadModal(bool showLoadModal) {
+        ShowLoadModal = showLoadModal;
+        FileLoadError = null;
+        FileToLoad = null;
+    }
+
+    private void OnInputFileToLoadChange(InputFileChangeEventArgs e) {
+        // TODO clear input as well
+        FileToLoad = e.File;
+    }
+
+    private async Task Load() {
+        if (FileToLoad == null) {
+            FileLoadError = "Please provide a valid SVG file.";
+            return;
+        }
+
+        var data = await new StreamReader(FileToLoad.OpenReadStream()).ReadToEndAsync();
+        var deserializationResult = SvgFileParser.Deserialize(data);
+
+        if (deserializationResult.IsSuccess) {
+            FileName = Path.GetFileName(FileToLoad.Name);
+            Shapes = deserializationResult.Shapes;
+            ToggleLoadModal(false);
+        }
+        else {
+            FileLoadError = deserializationResult.ErrorMessage;
+        }
     }
 }
