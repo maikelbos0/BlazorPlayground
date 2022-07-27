@@ -120,8 +120,6 @@ a, .btn-link {
 .graphics-main {
     border: 1px solid #dee2e6;
     user-select: none;
-    width: 800px;
-    height: 800px;
 }
 
 .graphics-main .shape-virtual {

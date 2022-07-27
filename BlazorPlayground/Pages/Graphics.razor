@@ -150,25 +150,25 @@
         else if (SelectedActionType == ActionType.CanvasSettings) {
             <div class="input-group mb-3 me-3">
                 <label for="canvasWidth" class="input-group-text">Width</label>
-                <input type="text" class="form-control" id="canvasWidth" @bind-value="CanvasWidth" />
+                <input type="text" class="form-control" id="canvasWidth" @bind-value="Canvas.Width" />
             </div>
 
             <div class="input-group mb-3 me-3">
                 <label for="canvasHeight" class="input-group-text">Height</label>
-                <input type="text" class="form-control" id="canvasHeight" @bind-value="CanvasHeight" />
+                <input type="text" class="form-control" id="canvasHeight" @bind-value="Canvas.Height" />
             </div>
 
             <div class="input-group mb-3">
                 <label for="gridSize" class="input-group-text">Grid size</label>
-                <input type="text" class="form-control" id="gridSize" @bind-value="GridSize" />
+                <input type="text" class="form-control" id="gridSize" @bind-value="Canvas.GridSize" />
 
                 <div class="input-group-text">
-                    <input class="form-check-input mt-0" type="checkbox" id="showGrid" @bind="ShowGrid" />
+                    <input class="form-check-input mt-0" type="checkbox" id="showGrid" @bind="Canvas.ShowGrid" />
                     <label class="form-check-label ps-2" for="showGrid">Show</label>
                 </div>
 
                 <div class="input-group-text">
-                    <input class="form-check-input mt-0" type="checkbox" id="snapToGrid" @bind="SnapToGrid" />
+                    <input class="form-check-input mt-0" type="checkbox" id="snapToGrid" @bind="Canvas.SnapToGrid" />
                     <label class="form-check-label ps-2" for="snapToGrid">Snap</label>
                 </div>
             </div>
@@ -176,14 +176,14 @@
     </div>
 </div>
 
-<svg class="graphics-main" viewBox="0 0 @CanvasWidth @CanvasHeight" width="@CanvasWidth" height="@CanvasHeight" @onmousedown="OnCanvasMouseDown" @onmousemove="OnCanvasMouseMove" @onmouseup="OnCanvasMouseUp">
-    @if (ShowGrid) {
-        for (var x = GridSize; x < CanvasWidth; x += GridSize) {
-            <line class="grid-line" x1="@x" y1="0" x2="@x" y2="@CanvasHeight" />
+<svg class="graphics-main" viewBox="0 0 @Canvas.Width @Canvas.Height" width="@Canvas.Width" height="@Canvas.Height" @onmousedown="OnCanvasMouseDown" @onmousemove="OnCanvasMouseMove" @onmouseup="OnCanvasMouseUp">
+    @if (Canvas.ShowGrid) {
+        for (var x = Canvas.GridSize; x < Canvas.Width; x += Canvas.GridSize) {
+            <line class="grid-line" x1="@x" y1="0" x2="@x" y2="@Canvas.Height" />
         }
 
-        for (var y = GridSize; y < CanvasHeight; y += GridSize) {
-            <line class="grid-line" x1="0" y1="@y" x2="@CanvasWidth" y2="@y" />
+        for (var y = Canvas.GridSize; y < Canvas.Height; y += Canvas.GridSize) {
+            <line class="grid-line" x1="0" y1="@y" x2="@Canvas.Width" y2="@y" />
         }
     }
 
@@ -196,7 +196,7 @@
                     SelectedAnchor.Set(changingShape, SnappedEndPoint);
                 }
                 else {
-                    changingShape.Transform(Delta, SnapToGrid, GridSize);
+                    changingShape.Transform(Delta, Canvas.SnapToGrid, Canvas.GridSize);
                 }
 
                 <ShapeRenderer Shape="changingShape" IsVirtual="true" />
@@ -348,27 +348,7 @@
         set => regularPolygonSides = Math.Max(value, 3);
     }
 
-    private int canvasWidth = 800;
-    private int CanvasWidth {
-        get => canvasWidth;
-        set => canvasWidth = Math.Max(value, 1);
-    }
-
-    private int canvasHeight = 800;
-    private int CanvasHeight {
-        get => canvasHeight;
-        set => canvasHeight = Math.Max(value, 1);
-    }
-
-    private int gridSize = 50;
-    private int GridSize {
-        get => gridSize;
-        set => gridSize = Math.Max(value, 1);
-    }
-
-    private bool ShowGrid { get; set; } = false;
-
-    private bool SnapToGrid { get; set; } = false;
+    private Canvas Canvas { get; set; } = new Canvas();
 
     protected override async Task OnAfterRenderAsync(bool firstRender) {
         if (firstRender) {
@@ -424,11 +404,11 @@
     }
 
     private Point GetSnappedPoint(Point point) {
-        if (!SnapToGrid || point == null) {
+        if (!Canvas.SnapToGrid || point == null) {
             return point;
         }
 
-        return point.SnapToGrid(GridSize);
+        return point.SnapToGrid(Canvas.GridSize);
     }
 
     private void AddShape(Func<Graphics, Shape> constructor, bool autoSelect) {
@@ -475,7 +455,7 @@
                     SelectedAnchor.Set(SelectedShape, SnappedEndPoint);
                 }
                 else {
-                    SelectedShape.Transform(Delta, SnapToGrid, GridSize);
+                    SelectedShape.Transform(Delta, Canvas.SnapToGrid, Canvas.GridSize);
                 }
             }
         }
@@ -548,9 +528,9 @@
     private async Task Save() {
         var element = new XElement(
             "svg",
-            new XAttribute("viewBox", $"0 0 {CanvasWidth} {CanvasHeight}"),
-            new XAttribute("width", CanvasWidth),
-            new XAttribute("height", CanvasHeight)
+            new XAttribute("viewBox", $"0 0 {Canvas.Width} {Canvas.Height}"),
+            new XAttribute("width", Canvas.Width),
+            new XAttribute("height", Canvas.Height)
         );
 
         element.Add(Shapes.Select(s => s.CreateElement()));
