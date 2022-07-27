@@ -30,7 +30,7 @@ namespace BlazorPlayground.Graphics {
             }
         }
 
-        public XElement CreateElement() {
+        public virtual XElement CreateElement() {
             var element = new XElement(
                 ElementName,
                 new XAttribute("fill", Fill),
