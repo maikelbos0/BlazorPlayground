@@ -15,7 +15,9 @@ namespace BlazorPlayground.Graphics {
                     shapes.Add(new RawShape(element));
                 }
 
-                return new SvgFileParseResult(shapes);
+                return new SvgFileParseResult(new Canvas() {
+                    Shapes = shapes
+                });
             }
             catch {
                 return new SvgFileParseResult("The provided file is not a valid svg file.");

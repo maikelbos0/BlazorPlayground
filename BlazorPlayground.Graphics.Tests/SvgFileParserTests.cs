@@ -23,8 +23,8 @@ namespace BlazorPlayground.Graphics.Tests {
             var result = SvgFileParser.Parse("<svg><line x1=\"100\" y1=\"150\" x2=\"200\" y2=\"250\" stroke=\"black\" /></svg>");
 
             Assert.True(result.IsSuccess);
-            
-            var shape = Assert.IsType<RawShape>(Assert.Single(result.Shapes));
+
+            var shape = Assert.IsType<RawShape>(Assert.Single(result.Canvas.Shapes));
             var element = shape.CreateElement();
 
             Assert.Equal("line", element.Name);

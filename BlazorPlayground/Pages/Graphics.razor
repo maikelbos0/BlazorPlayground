@@ -559,7 +559,7 @@
 
         if (deserializationResult.IsSuccess) {
             FileName = Path.GetFileName(FileToLoad.Name);
-            Canvas.Shapes = deserializationResult.Shapes;
+            Canvas = deserializationResult.Canvas;
             ToggleLoadModal(false);
         }
         else {

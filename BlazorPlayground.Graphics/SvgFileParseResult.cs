@@ -1,16 +1,17 @@
 ﻿namespace BlazorPlayground.Graphics {
     public record SvgFileParseResult {
-        public List<Shape> Shapes { get; }
+        private readonly Canvas? canvas;
+
+        public Canvas Canvas => canvas ?? throw new InvalidOperationException($"{nameof(Canvas)} is only available when {nameof(IsSuccess)} is true.");
+        public bool IsSuccess => canvas != null;
         public string? ErrorMessage { get; }
-        public bool IsSuccess => string.IsNullOrWhiteSpace(ErrorMessage);
 
         public SvgFileParseResult(string errorMessage) {
-            Shapes = new List<Shape>();
             ErrorMessage = errorMessage;
         }
 
-        public SvgFileParseResult(List<Shape> shapes) {
-            Shapes = shapes;
+        public SvgFileParseResult(Canvas canvas) {
+            this.canvas = canvas;
         }
     }
 }
