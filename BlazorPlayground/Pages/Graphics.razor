@@ -576,7 +576,7 @@
         }
 
         var data = await new StreamReader(FileToLoad.OpenReadStream()).ReadToEndAsync();
-        var deserializationResult = SvgFileParser.Deserialize(data);
+        var deserializationResult = SvgFileParser.Parse(data);
 
         if (deserializationResult.IsSuccess) {
             FileName = Path.GetFileName(FileToLoad.Name);
