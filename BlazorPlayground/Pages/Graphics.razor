@@ -25,7 +25,7 @@
                 <button type="button" class="btn-close" aria-label="Close" @onclick="() => ToggleLoadModal(false)"></button>
             </div>
             <div class="modal-body">
-                <p>Please note that only valid SVG files can be parsed and only shapes written by this graphics module can be edited.</p>
+                <p>Please note that only valid SVG files can be parsed and only Canvas.Shapes written by this graphics module can be edited.</p>
                 
                 <label for="inputFileToLoad" class="form-label">SVG file</label>
                 <InputFile id="inputFileToLoad" class="@(FileLoadHasError ? "form-control is-invalid" : "form-control")" OnChange="OnInputFileToLoadChange" />
@@ -128,13 +128,13 @@
 
         @if (SelectedActionType == ActionType.Select) {
             <div class="btn-group mb-3 me-3">
-                <button type="button" class="btn btn-secondary" @onclick="() => MoveSelectedShapeInList(1)">Move forward</button>
                 <button type="button" class="btn btn-secondary" @onclick="() => MoveSelectedShapeToFrontOfList()">Move to front</button>
+                <button type="button" class="btn btn-secondary" @onclick="() => MoveSelectedShapeInList(1)">Move forward</button>
             </div>
 
             <div class="btn-group mb-3 me-3">
-                <button type="button" class="btn btn-secondary" @onclick="() => MoveSelectedShapeToBackOfList()">Move to back</button>
                 <button type="button" class="btn btn-secondary" @onclick="() => MoveSelectedShapeInList(-1)">Move backward</button>
+                <button type="button" class="btn btn-secondary" @onclick="() => MoveSelectedShapeToBackOfList()">Move to back</button>
             </div>
 
             <div class="btn-group mb-3">
@@ -187,7 +187,7 @@
         }
     }
 
-    @foreach (var shape in Shapes) {
+    @foreach (var shape in Canvas.Shapes) {
         if (shape == SelectedShape) {
             if (IsOperatingOnShape && IsSelected && IsDragging) {
                 var changingShape = SelectedShape.Clone();
@@ -284,8 +284,7 @@
         { ActionType.CanvasSettings, new ActionDefinition("Canvas settings") }
     };
 
-    // General
-    private List<Shape> Shapes { get; set; } = new List<Shape>();
+    // General    
     private ActionType SelectedActionType { get; set; } = ActionType.DrawRegularPolygon;
     private IJSObjectReference ModuleReference { get; set; }
     private bool ShowLoadModal { get; set; } = false;
@@ -415,7 +414,7 @@
         if (IsDragging) {
             var shape = CreateShape(constructor);
 
-            Shapes.Add(shape);
+            Canvas.Shapes.Add(shape);
 
             if (autoSelect) {
                 SwitchActionType(ActionType.Select);
@@ -438,7 +437,7 @@
 
     private void DeleteSelected() {
         if (SelectedShape != null) {
-            Shapes.Remove(SelectedShape);
+            Canvas.Shapes.Remove(SelectedShape);
             SelectedShape = null;
         }
     }
@@ -501,27 +500,27 @@
 
     private void MoveSelectedShapeToBackOfList() {
         if (IsSelected) {
-            Shapes.Remove(SelectedShape);
-            Shapes.Insert(0, SelectedShape);
+            Canvas.Shapes.Remove(SelectedShape);
+            Canvas.Shapes.Insert(0, SelectedShape);
         }
     }
 
     private void MoveSelectedShapeInList(int indexChange) {
         if (IsSelected) {
-            var index = Shapes.IndexOf(SelectedShape);
+            var index = Canvas.Shapes.IndexOf(SelectedShape);
             var newIndex = index + indexChange;
 
-            if (newIndex > 0 && newIndex < Shapes.Count) {
-                Shapes[index] = Shapes[newIndex];
-                Shapes[newIndex] = SelectedShape;
+            if (newIndex > 0 && newIndex < Canvas.Shapes.Count) {
+                Canvas.Shapes[index] = Canvas.Shapes[newIndex];
+                Canvas.Shapes[newIndex] = SelectedShape;
             }
         }
     }
 
     private void MoveSelectedShapeToFrontOfList() {
         if (IsSelected) {
-            Shapes.Remove(SelectedShape);
-            Shapes.Add(SelectedShape);
+            Canvas.Shapes.Remove(SelectedShape);
+            Canvas.Shapes.Add(SelectedShape);
         }
     }
 
@@ -533,7 +532,7 @@
             new XAttribute("height", Canvas.Height)
         );
 
-        element.Add(Shapes.Select(s => s.CreateElement()));
+        element.Add(Canvas.Shapes.Select(s => s.CreateElement()));
 
         await ModuleReference.InvokeVoidAsync("downloadFile", FileName ?? $"graphics {DateTime.UtcNow:yyyyMMdd hhmm}.svg", "image/svg+xml", Encoding.UTF8.GetBytes(element.ToString()));
     }
@@ -560,7 +559,7 @@
 
         if (deserializationResult.IsSuccess) {
             FileName = Path.GetFileName(FileToLoad.Name);
-            Shapes = deserializationResult.Shapes;
+            Canvas.Shapes = deserializationResult.Shapes;
             ToggleLoadModal(false);
         }
         else {

@@ -18,5 +18,6 @@
         }
         public bool ShowGrid { get; set; } = false;
         public bool SnapToGrid { get; set; } = false;
+        public List<Shape> Shapes { get; set; } = new List<Shape>();
     }
 }
