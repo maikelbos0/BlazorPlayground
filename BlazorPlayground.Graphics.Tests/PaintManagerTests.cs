@@ -1,7 +1,7 @@
 ﻿using Xunit;
 
 namespace BlazorPlayground.Graphics.Tests {
-    public class ColorManagerTests {
+    public class PaintManagerTests {
         [Theory]
         [InlineData(" red ", 255, 0, 0, 1)]
         [InlineData("red", 255, 0, 0, 1)]
@@ -49,37 +49,45 @@ namespace BlazorPlayground.Graphics.Tests {
         [InlineData("rgba(0, 0, 300, 0.5)", 0, 0, 0, 1)]
         [InlineData("rgba(1, 1, 1, 1.01)", 0, 0, 0, 1)]
         [InlineData("rgba(1, 1, 1, 2)", 0, 0, 0, 1)]
-        public void Parse(string value, byte expectedRed, byte expectedGreen, byte expectedBlue, double expectedAlpha) {
-            var result = ColorManager.Parse(value);
+        public void ParseColor(string value, byte expectedRed, byte expectedGreen, byte expectedBlue, double expectedAlpha) {
+            var result = PaintManager.ParseColor(value);
 
             Assert.Equal(expectedRed, result.Red);
             Assert.Equal(expectedGreen, result.Green);
             Assert.Equal(expectedBlue, result.Blue);
             Assert.Equal(expectedAlpha, result.Alpha);
         }
-
+        
         [Fact]
-        public void ParseWhenConstructing() {
-            var colorManager = new ColorManager("red");
-
-            Assert.Equal("red", colorManager.ColorValue);
-            Assert.Equal(255, colorManager.Color.Red);
-            Assert.Equal(0, colorManager.Color.Green);
-            Assert.Equal(0, colorManager.Color.Blue);
-            Assert.Equal(1, colorManager.Color.Alpha);
-        }
-
-        [Fact]
-        public void ParseWhenSetting() {
-            var colorManager = new ColorManager("rgba(1, 1, 1, 0.5)") {
+        public void ParseColorWhenSettingColorValue() {
+            var manager = new PaintManager() {
                 ColorValue = "red"
             };
 
-            Assert.Equal("red", colorManager.ColorValue);
-            Assert.Equal(255, colorManager.Color.Red);
-            Assert.Equal(0, colorManager.Color.Green);
-            Assert.Equal(0, colorManager.Color.Blue);
-            Assert.Equal(1, colorManager.Color.Alpha);
+            Assert.Equal("red", manager.ColorValue);
+            Assert.Equal(255, manager.Color.Red);
+            Assert.Equal(0, manager.Color.Green);
+            Assert.Equal(0, manager.Color.Blue);
+            Assert.Equal(1, manager.Color.Alpha);
+        }
+
+        [Fact]
+        public void PaintServerNone() {
+            var manager = new PaintManager() { 
+                Mode = PaintMode.None 
+            };
+
+            Assert.Equal(PaintServer.None, manager.Server);
+        }
+
+        [Fact]
+        public void PaintServerColor() {
+            var manager = new PaintManager() {
+                Mode = PaintMode.Color,
+                ColorValue = "red"
+            };
+
+            Assert.Equal(manager.Color, manager.Server);
         }
     }
 }

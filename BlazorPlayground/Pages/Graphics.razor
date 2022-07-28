@@ -53,14 +53,14 @@
             <label for="fillColor" class="input-group-text">Fill</label>
 
             <div class="input-group-text">
-                <input class="form-check-input mt-0" type="radio" name="fillPaintMode" id="fillPaintModeColor" @onclick="() => FillPaintMode = PaintMode.Color" checked="@(FillPaintMode == PaintMode.Color)" />
+                <input class="form-check-input mt-0" type="radio" name="fillPaintMode" id="fillPaintModeColor" @onclick="() => FillPaintManager.Mode = PaintMode.Color" checked="@(FillPaintManager.Mode == PaintMode.Color)" />
                 <label class="form-check-label ps-2" for="fillPaintModeColor">Color</label>
             </div>
 
-            <input type="text" class="form-control" id="fillColor" style="background-color: @FillColorManager.Color; color: @FillColorManager.Color.ContrastingColor" @bind-value="FillColorManager.ColorValue" />
+            <input type="text" class="form-control" id="fillColor" style="background-color: @FillPaintManager.Color; color: @FillPaintManager.Color.ContrastingColor" @bind-value="FillPaintManager.ColorValue" />
 
             <div class="input-group-text">
-                <input class="form-check-input mt-0" type="radio" name="fillPaintMode" id="fillPaintModeNone" @onclick="() => FillPaintMode = PaintMode.None" checked="@(FillPaintMode == PaintMode.None)" />
+                <input class="form-check-input mt-0" type="radio" name="fillPaintMode" id="fillPaintModeNone" @onclick="() => FillPaintManager.Mode = PaintMode.None" checked="@(FillPaintManager.Mode == PaintMode.None)" />
                 <label class="form-check-label ps-2" for="fillPaintModeNone">None</label>
             </div>
 
@@ -73,14 +73,14 @@
             <label for="strokeColor" class="input-group-text">Stroke</label>
 
             <div class="input-group-text">
-                <input class="form-check-input mt-0" type="radio" name="strokePaintMode" id="strokePaintModeColor" @onclick="() => StrokePaintMode = PaintMode.Color" checked="@(StrokePaintMode == PaintMode.Color)" />
+                <input class="form-check-input mt-0" type="radio" name="strokePaintMode" id="strokePaintModeColor" @onclick="() => StrokePaintManager.Mode = PaintMode.Color" checked="@(StrokePaintManager.Mode == PaintMode.Color)" />
                 <label class="form-check-label ps-2" for="strokePaintModeColor">Color</label>
             </div>
 
-            <input type="text" class="form-control" id="strokeColor" style="background-color: @StrokeColorManager.Color; color: @StrokeColorManager.Color.ContrastingColor" @bind-value="StrokeColorManager.ColorValue" />
+            <input type="text" class="form-control" id="strokeColor" style="background-color: @StrokePaintManager.Color; color: @StrokePaintManager.Color.ContrastingColor" @bind-value="StrokePaintManager.ColorValue" />
 
             <div class="input-group-text">
-                <input class="form-check-input mt-0" type="radio" name="strokePaintMode" id="strokePaintModeNone" @onclick="() => StrokePaintMode = PaintMode.None" checked="@(StrokePaintMode == PaintMode.None)" />
+                <input class="form-check-input mt-0" type="radio" name="strokePaintMode" id="strokePaintModeNone" @onclick="() => StrokePaintManager.Mode = PaintMode.None" checked="@(StrokePaintManager.Mode == PaintMode.None)" />
                 <label class="form-check-label ps-2" for="strokePaintModeNone">None</label>
             </div>
 
@@ -266,12 +266,6 @@
             Constructor = constructor;
         }
     }
-
-    private enum PaintMode {
-        None,
-        Color
-    }
-
     private static Dictionary<ActionType, ActionDefinition> actionDefinitions = new Dictionary<ActionType, ActionDefinition>() {
         { ActionType.Select, new ActionDefinition("Select", onCanvasMouseUp: (graphics) => graphics.ProcessSelection(), onShapeMouseDown: (graphics, shape) => graphics.Select(shape), onSwitchFrom: graphics => graphics.Deselect()) },
         { ActionType.DrawLine, new DrawActionDefinition("Line", (graphics) => new Line(graphics.SnappedStartPoint, graphics.SnappedEndPoint)) },
@@ -311,25 +305,9 @@
     private ActionDefinition CurrentActionDefinition => actionDefinitions[SelectedActionType];
 
     // Form fields
-    private PaintMode FillPaintMode { get; set; } = PaintMode.None;
+    private PaintManager FillPaintManager { get; set; } = new PaintManager() { Mode = PaintMode.None, ColorValue = "#FFFFFF" };
 
-    private ColorManager FillColorManager { get; set; } = new ColorManager("#FFFFFF");
-
-    private IPaintServer FillPaintServer => FillPaintMode switch {
-        PaintMode.Color => FillColorManager.Color,
-        PaintMode.None => PaintServer.None,
-        _ => throw new NotImplementedException($"No implementation found for {nameof(PaintMode)} '{FillPaintMode}'")
-    };
-
-    private PaintMode StrokePaintMode { get; set; } = PaintMode.Color;
-
-    private ColorManager StrokeColorManager { get; set; } = new ColorManager("#000000");
-
-    private IPaintServer StrokePaintServer => StrokePaintMode switch {
-        PaintMode.Color => StrokeColorManager.Color,
-        PaintMode.None => PaintServer.None,
-        _ => throw new NotImplementedException($"No implementation found for {nameof(PaintMode)} '{StrokePaintMode}'")
-    };
+    private PaintManager StrokePaintManager { get; set; } = new PaintManager() { Mode = PaintMode.Color, ColorValue = "#000000" };
 
     private Linecap StrokeLinecap { get; set; } = Linecap.Butt;
 
@@ -426,8 +404,8 @@
     private Shape CreateShape(Func<Graphics, Shape> constructor) {
         var shape = constructor(this);
 
-        shape.Fill = FillPaintServer;
-        shape.Stroke = StrokePaintServer;
+        shape.Fill = FillPaintManager.Server;
+        shape.Stroke = StrokePaintManager.Server;
         shape.StrokeWidth = StrokeWidth;
         shape.StrokeLinecap = StrokeLinecap;
         shape.StrokeLinejoin = StrokeLinejoin;
@@ -469,13 +447,13 @@
 
     private void ApplyFill() {
         if (IsSelected) {
-            SelectedShape.Fill = FillPaintServer;
+            SelectedShape.Fill = FillPaintManager.Server;
         }
     }
 
     private void ApplyStroke() {
         if (IsSelected) {
-            SelectedShape.Stroke = StrokePaintServer;
+            SelectedShape.Stroke = StrokePaintManager.Server;
         }
     }
 

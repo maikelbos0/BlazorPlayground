@@ -2,9 +2,9 @@
 using System.Text.RegularExpressions;
 
 namespace BlazorPlayground.Graphics {
-    public class ColorManager {
-        private class Parser {
-            public Parser(Regex matcher, Func<Match, Color> constructor) {
+    public class PaintManager {
+        private class ColorParser {
+            public ColorParser(Regex matcher, Func<Match, Color> constructor) {
                 Matcher = matcher;
                 Constructor = constructor;
             }
@@ -13,8 +13,8 @@ namespace BlazorPlayground.Graphics {
             public Func<Match, Color> Constructor { get; }
         }
 
-        private readonly static Parser[] parsers = new[] {
-            new Parser(
+        private readonly static ColorParser[] colorParsers = new[] {
+            new ColorParser(
                 new Regex(@"^#(?<Red>[0-9a-f]{2})(?<Green>[0-9a-f]{2})(?<Blue>[0-9a-f]{2})$", RegexOptions.IgnoreCase | RegexOptions.Compiled),
                 match => new Color(
                     byte.Parse(match.Groups["Red"].Value, NumberStyles.HexNumber),
@@ -23,7 +23,7 @@ namespace BlazorPlayground.Graphics {
                     1
                 )
             ),
-            new Parser(
+            new ColorParser(
                 new Regex(@"^#(?<Red>[0-9a-f])(?<Green>[0-9a-f])(?<Blue>[0-9a-f])$", RegexOptions.IgnoreCase | RegexOptions.Compiled),
                 match => new Color(
                     (byte)(byte.Parse(match.Groups["Red"].Value, NumberStyles.HexNumber) * 17),
@@ -32,7 +32,7 @@ namespace BlazorPlayground.Graphics {
                     1
                 )
             ),
-            new Parser(
+            new ColorParser(
                 new Regex(@"^rgb\s*\(\s*(?<Red>[01]?\d{1,2}|2[0-4]\d|25[0-5])\s*,\s*(?<Green>[01]?\d{1,2}|2[0-4]\d|25[0-5])\s*,\s*(?<Blue>[01]?\d{1,2}|2[0-4]\d|25[0-5])\s*\)$", RegexOptions.IgnoreCase | RegexOptions.Compiled),
                 match => new Color(
                     byte.Parse(match.Groups["Red"].Value, CultureInfo.InvariantCulture),
@@ -41,7 +41,7 @@ namespace BlazorPlayground.Graphics {
                     1
                 )
             ),
-            new Parser(
+            new ColorParser(
                 new Regex(@"^rgba\s*\(\s*(?<Red>[01]?\d{1,2}|2[0-4]\d|25[0-5])\s*,\s*(?<Green>[01]?\d{1,2}|2[0-4]\d|25[0-5])\s*,\s*(?<Blue>[01]?\d{1,2}|2[0-4]\d|25[0-5])\s*,\s*(?<Alpha>0|1(\.0+)?|0?\.\d+)\s*\)", RegexOptions.IgnoreCase | RegexOptions.Compiled),
                 match => new Color(
                     byte.Parse(match.Groups["Red"].Value, CultureInfo.InvariantCulture),
@@ -51,26 +51,14 @@ namespace BlazorPlayground.Graphics {
                 )
             )
         };
+        private readonly static Color defaultColor = new(0, 0, 0, 1);
 
-        private string colorValue;
-
-        public string ColorValue {
-            get => colorValue;
-            set {
-                colorValue = value;
-                Color = Parse(colorValue);
+        internal static Color ParseColor(string? colorValue) {
+            if (colorValue == null) {
+                return defaultColor;
             }
-        }
-        public Color Color { get; private set; }
 
-#pragma warning disable CS8618 // Both colorValue and Color will be set by setting ColorValue
-        public ColorManager(string colorValue) {
-            ColorValue = colorValue;
-        }
-#pragma warning restore CS8618
-
-        internal static Color Parse(string colorValue) {
-            foreach (var parser in parsers) {
+            foreach (var parser in colorParsers) {
                 var match = parser.Matcher.Match(colorValue.Trim());
 
                 if (match.Success) {
@@ -82,5 +70,22 @@ namespace BlazorPlayground.Graphics {
 
             return new Color(color.R, color.G, color.B, 1);
         }
+
+        private string? colorValue;
+
+        public PaintMode Mode { get; set; } = PaintMode.None;
+        public string? ColorValue {
+            get => colorValue;
+            set {
+                colorValue = value;
+                Color = ParseColor(colorValue);
+            }
+        }
+        public Color Color { get; private set; } = defaultColor;
+        public IPaintServer Server => Mode switch {
+            PaintMode.Color => Color,
+            PaintMode.None => PaintServer.None,
+            _ => throw new NotImplementedException($"No implementation found for {nameof(PaintMode)} '{Mode}'")
+        };
     }
 }
