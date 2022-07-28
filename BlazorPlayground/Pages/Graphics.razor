@@ -26,7 +26,7 @@
             </div>
             <div class="modal-body">
                 <p>Please note that only valid SVG files can be parsed and only Canvas.Shapes written by this graphics module can be edited.</p>
-                
+
                 <label for="inputFileToLoad" class="form-label">SVG file</label>
                 <InputFile id="inputFileToLoad" class="@(FileLoadHasError ? "form-control is-invalid" : "form-control")" OnChange="OnInputFileToLoadChange" />
 
@@ -189,14 +189,14 @@
 
     @foreach (var shape in Canvas.Shapes) {
         if (shape == SelectedShape) {
-            if (IsOperatingOnShape && IsSelected && IsDragging) {
+            if (IsOperatingOnShape && IsSelected && Canvas.IsDragging) {
                 var changingShape = SelectedShape.Clone();
 
                 if (IsOperatingOnAnchor) {
-                    SelectedAnchor.Set(changingShape, SnappedEndPoint);
+                    SelectedAnchor.Set(changingShape, Canvas.SnappedEndPoint);
                 }
                 else {
-                    changingShape.Transform(Delta, Canvas.SnapToGrid, Canvas.GridSize);
+                    changingShape.Transform(Canvas.Delta, Canvas.SnapToGrid, Canvas.GridSize);
                 }
 
                 <ShapeRenderer Shape="changingShape" IsVirtual="true" />
@@ -222,7 +222,7 @@
         }
     }
 
-    @if (IsDragging && CurrentActionDefinition is DrawActionDefinition drawActionDefinition) {
+    @if (Canvas.IsDragging && CurrentActionDefinition is DrawActionDefinition drawActionDefinition) {
         <ShapeRenderer Shape="CreateShape(drawActionDefinition.Constructor)" IsVirtual="true" />
     }
 </svg>
@@ -268,17 +268,17 @@
     }
     private static Dictionary<ActionType, ActionDefinition> actionDefinitions = new Dictionary<ActionType, ActionDefinition>() {
         { ActionType.Select, new ActionDefinition("Select", onCanvasMouseUp: (graphics) => graphics.ProcessSelection(), onShapeMouseDown: (graphics, shape) => graphics.Select(shape), onSwitchFrom: graphics => graphics.Deselect()) },
-        { ActionType.DrawLine, new DrawActionDefinition("Line", (graphics) => new Line(graphics.SnappedStartPoint, graphics.SnappedEndPoint)) },
-        { ActionType.DrawRectangle, new DrawActionDefinition("Rectangle", (graphics) => new Rectangle(graphics.SnappedStartPoint, graphics.SnappedEndPoint)) },
-        { ActionType.DrawCircle, new DrawActionDefinition("Circle", (graphics) => new Circle(graphics.SnappedStartPoint, graphics.SnappedEndPoint)) },
-        { ActionType.DrawEllipse, new DrawActionDefinition("Ellipse", (graphics) => new Ellipse(graphics.SnappedStartPoint, graphics.SnappedEndPoint)) },
-        { ActionType.DrawRegularPolygon, new DrawActionDefinition("Regular polygon", (graphics) => new RegularPolygon(graphics.SnappedStartPoint, graphics.SnappedEndPoint, graphics.RegularPolygonSides)) },
-        { ActionType.DrawQuadraticBezier, new DrawActionDefinition("Quadratic bezier", (graphics) => new QuadraticBezier(graphics.SnappedStartPoint, graphics.SnappedEndPoint), true) },
-        { ActionType.DrawCubicBezier, new DrawActionDefinition("Cubic bezier", (graphics) => new CubicBezier(graphics.SnappedStartPoint, graphics.SnappedEndPoint), true) },
+        { ActionType.DrawLine, new DrawActionDefinition("Line", (graphics) => new Line(graphics.Canvas.SnappedStartPoint, graphics.Canvas.SnappedEndPoint)) },
+        { ActionType.DrawRectangle, new DrawActionDefinition("Rectangle", (graphics) => new Rectangle(graphics.Canvas.SnappedStartPoint, graphics.Canvas.SnappedEndPoint)) },
+        { ActionType.DrawCircle, new DrawActionDefinition("Circle", (graphics) => new Circle(graphics.Canvas.SnappedStartPoint, graphics.Canvas.SnappedEndPoint)) },
+        { ActionType.DrawEllipse, new DrawActionDefinition("Ellipse", (graphics) => new Ellipse(graphics.Canvas.SnappedStartPoint, graphics.Canvas.SnappedEndPoint)) },
+        { ActionType.DrawRegularPolygon, new DrawActionDefinition("Regular polygon", (graphics) => new RegularPolygon(graphics.Canvas.SnappedStartPoint, graphics.Canvas.SnappedEndPoint, graphics.RegularPolygonSides)) },
+        { ActionType.DrawQuadraticBezier, new DrawActionDefinition("Quadratic bezier", (graphics) => new QuadraticBezier(graphics.Canvas.SnappedStartPoint, graphics.Canvas.SnappedEndPoint), true) },
+        { ActionType.DrawCubicBezier, new DrawActionDefinition("Cubic bezier", (graphics) => new CubicBezier(graphics.Canvas.SnappedStartPoint, graphics.Canvas.SnappedEndPoint), true) },
         { ActionType.CanvasSettings, new ActionDefinition("Canvas settings") }
     };
 
-    // General    
+    // General
     private ActionType SelectedActionType { get; set; } = ActionType.DrawRegularPolygon;
     private IJSObjectReference ModuleReference { get; set; }
     private bool ShowLoadModal { get; set; } = false;
@@ -286,14 +286,6 @@
     private bool FileLoadHasError => !string.IsNullOrWhiteSpace(FileLoadError);
     private IBrowserFile FileToLoad { get; set; }
     private string FileName { get; set; }
-
-    // Coordinates
-    private Point StartPoint { get; set; }
-    private Point SnappedStartPoint => GetSnappedPoint(StartPoint);
-    private Point EndPoint { get; set; }
-    private Point SnappedEndPoint => GetSnappedPoint(EndPoint);
-    private bool IsDragging => StartPoint != null && EndPoint != null;
-    private Point Delta => EndPoint - StartPoint;
 
     // Selection
     private bool IsOperatingOnShape { get; set; } = false;
@@ -346,23 +338,23 @@
 
     private void OnCanvasMouseDown(MouseEventArgs args) {
         if (args.Button == 0) {
-            StartPoint = new Point(args.OffsetX, args.OffsetY);
+            Canvas.StartPoint = new Point(args.OffsetX, args.OffsetY);
         }
     }
 
     private void OnCanvasMouseMove(MouseEventArgs args) {
-        if (args.Button == 0 && StartPoint != null) {
-            EndPoint = new Point(args.OffsetX, args.OffsetY);
+        if (args.Button == 0 && Canvas.StartPoint != null) {
+            Canvas.EndPoint = new Point(args.OffsetX, args.OffsetY);
         }
     }
 
     private void OnCanvasMouseUp(MouseEventArgs args) {
-        if (args.Button == 0 && StartPoint != null) {
+        if (args.Button == 0 && Canvas.StartPoint != null) {
             CurrentActionDefinition.OnCanvasMouseUp(this);
         }
 
-        StartPoint = null;
-        EndPoint = null;
+        Canvas.StartPoint = null;
+        Canvas.EndPoint = null;
         SelectedAnchor = null;
         IsOperatingOnShape = false;
     }
@@ -380,16 +372,8 @@
         }
     }
 
-    private Point GetSnappedPoint(Point point) {
-        if (!Canvas.SnapToGrid || point == null) {
-            return point;
-        }
-
-        return point.SnapToGrid(Canvas.GridSize);
-    }
-
     private void AddShape(Func<Graphics, Shape> constructor, bool autoSelect) {
-        if (IsDragging) {
+        if (Canvas.IsDragging) {
             var shape = CreateShape(constructor);
 
             Canvas.Shapes.Add(shape);
@@ -426,13 +410,14 @@
     }
 
     private void ProcessSelection() {
+        // TODO is it possible to stop event bubble? If so, this could be handled on anchor mouse up / mouse shape up
         if (IsOperatingOnShape) {
-            if (IsSelected && IsDragging) {
+            if (IsSelected && Canvas.IsDragging) {
                 if (IsOperatingOnAnchor) {
-                    SelectedAnchor.Set(SelectedShape, SnappedEndPoint);
+                    SelectedAnchor.Set(SelectedShape, Canvas.SnappedEndPoint);
                 }
                 else {
-                    SelectedShape.Transform(Delta, Canvas.SnapToGrid, Canvas.GridSize);
+                    SelectedShape.Transform(Canvas.Delta, Canvas.SnapToGrid, Canvas.GridSize);
                 }
             }
         }
