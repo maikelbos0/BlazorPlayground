@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using System.Linq;
+using Xunit;
 
 namespace BlazorPlayground.Graphics.Tests {
     public class CanvasTests {
@@ -142,6 +143,29 @@ namespace BlazorPlayground.Graphics.Tests {
             var canvas = new Canvas();
 
             Assert.Null(canvas.Delta);
+        }
+
+        [Fact]
+        public void ExportSvg() {
+            var canvas = new Canvas() {
+                Width = 600,
+                Height = 400,
+                Shapes = {
+                    new Line(new Point(100, 150), new Point(200, 250)),
+                    new Circle(new Point(30, 50), new Point(30, 70))
+                }
+            };
+
+            var result = canvas.ExportSvg();
+            var shapes = result.Elements().ToList();
+
+            Assert.Equal("svg", result.Name);
+            Assert.Equal("600", result.Attribute("width")?.Value);
+            Assert.Equal("400", result.Attribute("height")?.Value);
+            Assert.Equal("0 0 600 400", result.Attribute("viewBox")?.Value);
+            Assert.Equal(2, shapes.Count);
+            Assert.Single(shapes, s => s.Name == "line");
+            Assert.Single(shapes, s => s.Name == "circle");
         }
     }
 }

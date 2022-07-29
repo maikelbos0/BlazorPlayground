@@ -488,14 +488,7 @@
     }
 
     private async Task Save() {
-        var element = new XElement(
-            "svg",
-            new XAttribute("viewBox", $"0 0 {Canvas.Width} {Canvas.Height}"),
-            new XAttribute("width", Canvas.Width),
-            new XAttribute("height", Canvas.Height)
-        );
-
-        element.Add(Canvas.Shapes.Select(s => s.CreateElement()));
+        var element = Canvas.ExportSvg();
 
         await ModuleReference.InvokeVoidAsync("downloadFile", FileName ?? $"graphics {DateTime.UtcNow:yyyyMMdd hhmm}.svg", "image/svg+xml", Encoding.UTF8.GetBytes(element.ToString()));
     }

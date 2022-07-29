@@ -1,4 +1,6 @@
-﻿namespace BlazorPlayground.Graphics {
+﻿using System.Xml.Linq;
+
+namespace BlazorPlayground.Graphics {
     public class Canvas {
         private int width = 800;
         private int height = 800;
@@ -33,5 +35,13 @@
 
             return point.SnapToGrid(GridSize);
         }
+
+        public XElement ExportSvg() => new XElement(
+            "svg",
+            new XAttribute("viewBox", $"0 0 {Width} {Height}"),
+            new XAttribute("width", Width),
+            new XAttribute("height", Height),
+            Shapes.Select(s => s.CreateElement())
+        );
     }
 }
