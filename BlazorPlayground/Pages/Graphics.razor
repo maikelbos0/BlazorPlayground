@@ -9,14 +9,6 @@
 
 <h1>Graphics</h1>
 
-<ul class="nav nav-tabs mb-3">
-    @foreach (var actionType in Enum.GetValues<ActionType>()) {
-        <li class="nav-item">
-            <a class="nav-link @(SelectedActionType == actionType ? "active" : "")" @onclick="() => SwitchActionType(actionType)">@actionDefinitions[actionType].Name</a>
-        </li>
-    }
-</ul>
-
 <div class="modal graphics-modal @(ShowLoadModal ? "d-block" : "")" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -42,12 +34,27 @@
     </div>
 </div>
 
+<ul class="nav nav-tabs mb-3">
+    <li class="nav-item">
+        <a class="nav-link @(IsDrawing ? "" : "active")" @onclick="() => SetMode(false)">Select</a>
+    </li>
+
+    @foreach (var definition in ShapeDefinition.Values) {
+        <li class="nav-item">
+            @*TODO don't set definition inline like this*@
+            <a class="nav-link @(IsDrawing && Canvas.CurrentShapeDefinition == definition ? "active" : "")" @onclick="() => { SetMode(true); Canvas.CurrentShapeDefinition = definition; }">@definition.Name</a>
+        </li>
+    }
+</ul>
+
 <div class="mb-3 graphics-ribbon">
     <div class="btn-toolbar">
         <div class="btn-group mb-3 me-3">
             <button type="button" class="btn btn-secondary" @onclick="Save">Save</button>
             <button type="button" class="btn btn-secondary" @onclick="() => ToggleLoadModal(true)">Load</button>
         </div>
+
+        @*TODO hide settings that are not applicable*@
 
         <div class="input-group mb-3 me-3">
             <label for="fillColor" class="input-group-text">Fill</label>
@@ -64,7 +71,7 @@
                 <label class="form-check-label ps-2" for="fillPaintModeNone">None</label>
             </div>
 
-            @if (SelectedActionType == ActionType.Select) {
+            @if (!IsDrawing) {
                 <button type="button" class="btn btn-secondary" @onclick="() => ApplyFill()">Apply</button>
             }
         </div>
@@ -84,7 +91,7 @@
                 <label class="form-check-label ps-2" for="strokePaintModeNone">None</label>
             </div>
 
-            @if (SelectedActionType == ActionType.Select) {
+            @if (!IsDrawing) {
                 <button type="button" class="btn btn-secondary" @onclick="() => ApplyStroke()">Apply</button>
             }
         </div>
@@ -93,7 +100,7 @@
             <label for="strokeWidth" class="input-group-text">Stroke width</label>
             <input type="text" class="form-control" id="strokeWidth" @bind-value="Canvas.DrawSettings.StrokeWidth" />
 
-            @if (SelectedActionType == ActionType.Select) {
+            @if (!IsDrawing) {
                 <button type="button" class="btn btn-secondary" @onclick="() => ApplyStrokeWidth()">Apply</button>
             }
         </div>
@@ -107,7 +114,7 @@
                 }
             </select>
 
-            @if (SelectedActionType == ActionType.Select) {
+            @if (!IsDrawing) {
                 <button type="button" class="btn btn-secondary" @onclick="() => ApplyStrokeLinecap()">Apply</button>
             }
         </div>
@@ -121,12 +128,12 @@
                 }
             </select>
 
-            @if (SelectedActionType == ActionType.Select) {
+            @if (!IsDrawing) {
                 <button type="button" class="btn btn-secondary" @onclick="() => ApplyStrokeLinejoin()">Apply</button>
             }
         </div>
 
-        @if (SelectedActionType == ActionType.Select) {
+        @if (!IsDrawing) {
             <div class="btn-group mb-3 me-3">
                 <button type="button" class="btn btn-secondary" @onclick="() => MoveSelectedShapeToFrontOfList()">Move to front</button>
                 <button type="button" class="btn btn-secondary" @onclick="() => MoveSelectedShapeInList(1)">Move forward</button>
@@ -141,38 +148,38 @@
                 <button type="button" class="btn btn-secondary" @onclick="DeleteSelected">Delete</button>
             </div>
         }
-        else if (SelectedActionType == ActionType.DrawRegularPolygon) {
+        else {
+            @*TODO hide if not applicable*@
             <div class="input-group mb-3">
                 <label for="regularPolygonSides" class="input-group-text">Sides</label>
                 <input type="text" class="form-control" id="regularPolygonSides" @bind-value="Canvas.DrawSettings.Sides" />
             </div>
         }
-        else if (SelectedActionType == ActionType.CanvasSettings) {
-            <div class="input-group mb-3 me-3">
-                <label for="canvasWidth" class="input-group-text">Width</label>
-                <input type="text" class="form-control" id="canvasWidth" @bind-value="Canvas.Width" />
+
+        <div class="input-group mb-3 me-3">
+            <label for="canvasWidth" class="input-group-text">Width</label>
+            <input type="text" class="form-control" id="canvasWidth" @bind-value="Canvas.Width" />
+        </div>
+
+        <div class="input-group mb-3 me-3">
+            <label for="canvasHeight" class="input-group-text">Height</label>
+            <input type="text" class="form-control" id="canvasHeight" @bind-value="Canvas.Height" />
+        </div>
+
+        <div class="input-group mb-3">
+            <label for="gridSize" class="input-group-text">Grid size</label>
+            <input type="text" class="form-control" id="gridSize" @bind-value="Canvas.GridSize" />
+
+            <div class="input-group-text">
+                <input class="form-check-input mt-0" type="checkbox" id="showGrid" @bind="Canvas.ShowGrid" />
+                <label class="form-check-label ps-2" for="showGrid">Show</label>
             </div>
 
-            <div class="input-group mb-3 me-3">
-                <label for="canvasHeight" class="input-group-text">Height</label>
-                <input type="text" class="form-control" id="canvasHeight" @bind-value="Canvas.Height" />
+            <div class="input-group-text">
+                <input class="form-check-input mt-0" type="checkbox" id="snapToGrid" @bind="Canvas.SnapToGrid" />
+                <label class="form-check-label ps-2" for="snapToGrid">Snap</label>
             </div>
-
-            <div class="input-group mb-3">
-                <label for="gridSize" class="input-group-text">Grid size</label>
-                <input type="text" class="form-control" id="gridSize" @bind-value="Canvas.GridSize" />
-
-                <div class="input-group-text">
-                    <input class="form-check-input mt-0" type="checkbox" id="showGrid" @bind="Canvas.ShowGrid" />
-                    <label class="form-check-label ps-2" for="showGrid">Show</label>
-                </div>
-
-                <div class="input-group-text">
-                    <input class="form-check-input mt-0" type="checkbox" id="snapToGrid" @bind="Canvas.SnapToGrid" />
-                    <label class="form-check-label ps-2" for="snapToGrid">Snap</label>
-                </div>
-            </div>
-        }
+        </div>
     </div>
 </div>
 
@@ -222,64 +229,14 @@
         }
     }
 
-    @if (Canvas.IsDragging && CurrentActionDefinition is DrawActionDefinition drawActionDefinition) {
-        <ShapeRenderer Shape="CreateShape(drawActionDefinition.Constructor)" IsVirtual="true" />
+    @if (Canvas.IsDragging && IsDrawing) {
+        <ShapeRenderer Shape="Canvas.CreateShape()" IsVirtual="true" />
     }
 </svg>
 
 @code {
-
-    private enum ActionType {
-        Select,
-        DrawLine,
-        DrawRectangle,
-        DrawCircle,
-        DrawEllipse,
-        DrawRegularPolygon,
-        DrawQuadraticBezier,
-        DrawCubicBezier,
-        CanvasSettings
-    }
-
-    private class ActionDefinition {
-        public string Name { get; }
-        public Action<Graphics> OnCanvasMouseUp { get; }
-        public Action<Graphics, Shape> OnShapeMouseDown { get; }
-        public Action<Graphics> OnSwitchFrom { get; }
-
-        public ActionDefinition(string name,
-            Action<Graphics> onCanvasMouseUp = null,
-            Action<Graphics, Shape> onShapeMouseDown = null,
-            Action<Graphics> onSwitchFrom = null
-        ) {
-            Name = name;
-            OnCanvasMouseUp = onCanvasMouseUp ?? ((_) => { });
-            OnShapeMouseDown = onShapeMouseDown ?? ((_, _) => { });
-            OnSwitchFrom = onSwitchFrom ?? (_ => { });
-        }
-    }
-
-    private class DrawActionDefinition : ActionDefinition {
-        public Func<Graphics, Shape> Constructor { get; }
-
-        public DrawActionDefinition(string name, Func<Graphics, Shape> constructor, bool autoSelect = false) : base(name, (graphics) => graphics.AddShape(constructor, autoSelect)) {
-            Constructor = constructor;
-        }
-    }
-    private static Dictionary<ActionType, ActionDefinition> actionDefinitions = new Dictionary<ActionType, ActionDefinition>() {
-        { ActionType.Select, new ActionDefinition("Select", onCanvasMouseUp: (graphics) => graphics.ProcessSelection(), onShapeMouseDown: (graphics, shape) => graphics.Select(shape), onSwitchFrom: graphics => graphics.Deselect()) },
-        { ActionType.DrawLine, new DrawActionDefinition("Line", (graphics) => new Line(graphics.Canvas.SnappedStartPoint, graphics.Canvas.SnappedEndPoint)) },
-        { ActionType.DrawRectangle, new DrawActionDefinition("Rectangle", (graphics) => new Rectangle(graphics.Canvas.SnappedStartPoint, graphics.Canvas.SnappedEndPoint)) },
-        { ActionType.DrawCircle, new DrawActionDefinition("Circle", (graphics) => new Circle(graphics.Canvas.SnappedStartPoint, graphics.Canvas.SnappedEndPoint)) },
-        { ActionType.DrawEllipse, new DrawActionDefinition("Ellipse", (graphics) => new Ellipse(graphics.Canvas.SnappedStartPoint, graphics.Canvas.SnappedEndPoint)) },
-        { ActionType.DrawRegularPolygon, new DrawActionDefinition("Regular polygon", (graphics) => new RegularPolygon(graphics.Canvas.SnappedStartPoint, graphics.Canvas.SnappedEndPoint, graphics.Canvas.DrawSettings.Sides)) },
-        { ActionType.DrawQuadraticBezier, new DrawActionDefinition("Quadratic bezier", (graphics) => new QuadraticBezier(graphics.Canvas.SnappedStartPoint, graphics.Canvas.SnappedEndPoint), true) },
-        { ActionType.DrawCubicBezier, new DrawActionDefinition("Cubic bezier", (graphics) => new CubicBezier(graphics.Canvas.SnappedStartPoint, graphics.Canvas.SnappedEndPoint), true) },
-        { ActionType.CanvasSettings, new ActionDefinition("Canvas settings") }
-    };
-
     // General
-    private ActionType SelectedActionType { get; set; } = ActionType.DrawRegularPolygon;
+    private bool IsDrawing { get; set; } = true;
     private IJSObjectReference ModuleReference { get; set; }
     private bool ShowLoadModal { get; set; } = false;
     private string FileLoadError { get; set; }
@@ -291,8 +248,6 @@
     private bool IsOperatingOnShape { get; set; } = false;
     private Anchor SelectedAnchor { get; set; }
     private bool IsOperatingOnAnchor => SelectedAnchor != null;
-
-    private ActionDefinition CurrentActionDefinition => actionDefinitions[SelectedActionType];
 
     // Form fields
     private Canvas Canvas { get; set; } = new Canvas();
@@ -309,11 +264,6 @@
         }
     }
 
-    private void SwitchActionType(ActionType newActionType) {
-        CurrentActionDefinition.OnSwitchFrom(this);
-        SelectedActionType = newActionType;
-    }
-
     private void OnCanvasMouseDown(MouseEventArgs args) {
         if (args.Button == 0) {
             Canvas.StartPoint = new Point(args.OffsetX, args.OffsetY);
@@ -327,8 +277,15 @@
     }
 
     private void OnCanvasMouseUp(MouseEventArgs args) {
-        if (args.Button == 0 && Canvas.StartPoint != null) {
-            CurrentActionDefinition.OnCanvasMouseUp(this);
+        // TODO make this make sense
+        if (args.Button == 0) {
+            if (IsDrawing && Canvas.IsDragging) {
+
+                SetMode(!Canvas.AddShape());
+            }
+            else {
+                ProcessSelection();
+            }
         }
 
         Canvas.StartPoint = null;
@@ -338,8 +295,8 @@
     }
 
     private void OnShapeMouseDown(MouseEventArgs args, Shape shape) {
-        if (args.Button == 0) {
-            CurrentActionDefinition.OnShapeMouseDown(this, shape);
+        if (!IsDrawing && args.Button == 0) {
+            Select(shape);
         }
     }
 
@@ -350,29 +307,12 @@
         }
     }
 
-    private void AddShape(Func<Graphics, Shape> constructor, bool autoSelect) {
-        if (Canvas.IsDragging) {
-            var shape = CreateShape(constructor);
+    private void SetMode(bool isDrawing) {
+        IsDrawing = isDrawing;
 
-            Canvas.Shapes.Add(shape);
-
-            if (autoSelect) {
-                SwitchActionType(ActionType.Select);
-                Canvas.SelectedShape = shape;
-            }
+        if (isDrawing) {
+            Canvas.SelectedShape = null;
         }
-    }
-
-    private Shape CreateShape(Func<Graphics, Shape> constructor) {
-        var shape = constructor(this);
-
-        shape.Fill = Canvas.DrawSettings.FillPaintManager.Server;
-        shape.Stroke = Canvas.DrawSettings.StrokePaintManager.Server;
-        shape.StrokeWidth = Canvas.DrawSettings.StrokeWidth;
-        shape.StrokeLinecap = Canvas.DrawSettings.StrokeLinecap;
-        shape.StrokeLinejoin = Canvas.DrawSettings.StrokeLinejoin;
-
-        return shape;
     }
 
     private void DeleteSelected() {
@@ -402,10 +342,6 @@
         else {
             Canvas.SelectedShape = null;
         }
-    }
-
-    private void Deselect() {
-        Canvas.SelectedShape = null;
     }
 
     private void ApplyFill() {
