@@ -3,7 +3,7 @@
 namespace BlazorPlayground.Graphics.Tests {
     public class DrawSettingsTests {
         [Fact]
-        public void MinimumStrokeWidth() {
+        public void StrokeWidth_Minimum() {
             var settings = new DrawSettings() {
                 StrokeWidth = 0
             };
@@ -12,7 +12,7 @@ namespace BlazorPlayground.Graphics.Tests {
         }
 
         [Fact]
-        public void MinimumSides() {
+        public void Sides_Minimum() {
             var settings = new DrawSettings() {
                 Sides = 2
             };

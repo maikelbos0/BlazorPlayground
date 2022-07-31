@@ -4,7 +4,7 @@ using Xunit;
 namespace BlazorPlayground.Graphics.Tests {
     public class CanvasTests {
         [Fact]
-        public void MinimumWidth() {
+        public void Width_Minimum() {
             var canvas = new Canvas() {
                 Width = 0
             };
@@ -13,7 +13,7 @@ namespace BlazorPlayground.Graphics.Tests {
         }
 
         [Fact]
-        public void MinimumHeight() {
+        public void Height_Minimum() {
             var canvas = new Canvas() {
                 Height = 0
             };
@@ -22,7 +22,7 @@ namespace BlazorPlayground.Graphics.Tests {
         }
 
         [Fact]
-        public void MinimumGridSize() {
+        public void GridSize_Minimum() {
             var canvas = new Canvas() {
                 GridSize = 0
             };
@@ -46,7 +46,7 @@ namespace BlazorPlayground.Graphics.Tests {
         }
 
         [Fact]
-        public void NullSnappedStartPoint() {
+        public void SnappedStartPoint_Null() {
             var canvas = new Canvas();
 
             Assert.Null(canvas.SnappedStartPoint);
@@ -68,7 +68,7 @@ namespace BlazorPlayground.Graphics.Tests {
         }
 
         [Fact]
-        public void NullSnappedEndPoint() {
+        public void SnappedEndPoint_Null() {
             var canvas = new Canvas();
 
             Assert.Null(canvas.SnappedEndPoint);
@@ -85,7 +85,7 @@ namespace BlazorPlayground.Graphics.Tests {
         }
 
         [Fact]
-        public void IsDraggingForNullStartPoint() {
+        public void IsDragging_Null_StartPoint() {
             var canvas = new Canvas() {
                 EndPoint = new Point(50, 50)
             };
@@ -94,7 +94,7 @@ namespace BlazorPlayground.Graphics.Tests {
         }
 
         [Fact]
-        public void IsDraggingForNullEndPoint() {
+        public void IsDragging_Null_EndPoint() {
             var canvas = new Canvas() {
                 StartPoint = new Point(25, 25)
             };
@@ -103,7 +103,7 @@ namespace BlazorPlayground.Graphics.Tests {
         }
 
         [Fact]
-        public void IsDraggingForNullStartPointEndPoint() {
+        public void IsDragging_Null_StartPoint_And_EndPoint() {
             var canvas = new Canvas();
 
             Assert.False(canvas.IsDragging);
@@ -121,7 +121,7 @@ namespace BlazorPlayground.Graphics.Tests {
         }
 
         [Fact]
-        public void DeltaForNullStartPoint() {
+        public void Delta_Null_StartPoint() {
             var canvas = new Canvas() {
                 EndPoint = new Point(50, 50)
             };
@@ -130,7 +130,7 @@ namespace BlazorPlayground.Graphics.Tests {
         }
 
         [Fact]
-        public void DeltaForNullEndPoint() {
+        public void Delta_Null_EndPoint() {
             var canvas = new Canvas() {
                 StartPoint = new Point(25, 25)
             };
@@ -139,7 +139,7 @@ namespace BlazorPlayground.Graphics.Tests {
         }
 
         [Fact]
-        public void DeltaForNullStartPointEndPoint() {
+        public void Delta_Null_StartPoint_And_EndPoint() {
             var canvas = new Canvas();
 
             Assert.Null(canvas.Delta);
