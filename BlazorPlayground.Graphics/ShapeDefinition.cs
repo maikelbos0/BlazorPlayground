@@ -2,7 +2,7 @@
 
 namespace BlazorPlayground.Graphics {
     public class ShapeDefinition {
-        public delegate Shape Construct(Point startPoint, Point endPoint, DrawSettings settings);
+        public delegate Shape Constructor(Point startPoint, Point endPoint, DrawSettings settings);
 
         public static IEnumerable<ShapeDefinition> Values = new ReadOnlyCollection<ShapeDefinition>(new List<ShapeDefinition>() {
             new("Line", (startPoint, endPoint, settings) => new Line(startPoint, endPoint), useStrokeLinecap: true),
@@ -15,16 +15,16 @@ namespace BlazorPlayground.Graphics {
         });
 
         public string Name { get; }
-        public Construct Constructor { get; }
+        public Constructor Construct { get; }
         public bool UseFill { get; }
         public bool UseStrokeLinecap { get; }
         public bool UseStrokeLinejoin { get; }
         public bool UseSides { get; }
         public bool AutoSelect { get; }
 
-        private ShapeDefinition(string name, Construct constructor, bool useFill = false, bool useStrokeLinecap = false, bool useStrokeLinejoin = false, bool useSides = false, bool autoSelect = false) {
+        private ShapeDefinition(string name, Constructor construct, bool useFill = false, bool useStrokeLinecap = false, bool useStrokeLinejoin = false, bool useSides = false, bool autoSelect = false) {
             Name = name;
-            Constructor = constructor;
+            Construct = construct;
             UseFill = useFill;
             UseStrokeLinecap = useStrokeLinecap;
             UseStrokeLinejoin = useStrokeLinejoin;

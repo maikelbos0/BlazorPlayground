@@ -12,7 +12,7 @@ namespace BlazorPlayground.Graphics.Tests {
             Assert.False(definition.UseSides);
             Assert.False(definition.AutoSelect);
 
-            var shape = Assert.IsType<Line>(definition.Constructor(new Point(100, 200), new Point(150, 250), new DrawSettings()));
+            var shape = Assert.IsType<Line>(definition.Construct(new Point(100, 200), new Point(150, 250), new DrawSettings()));
 
             PointAssert.Equal(new Point(100, 200), shape.StartPoint);
             PointAssert.Equal(new Point(150, 250), shape.EndPoint);
@@ -28,7 +28,7 @@ namespace BlazorPlayground.Graphics.Tests {
             Assert.False(definition.UseSides);
             Assert.False(definition.AutoSelect);
 
-            var shape = Assert.IsType<Rectangle>(definition.Constructor(new Point(100, 200), new Point(150, 250), new DrawSettings()));
+            var shape = Assert.IsType<Rectangle>(definition.Construct(new Point(100, 200), new Point(150, 250), new DrawSettings()));
 
             PointAssert.Equal(new Point(100, 200), shape.StartPoint);
             PointAssert.Equal(new Point(150, 250), shape.EndPoint);
@@ -44,7 +44,7 @@ namespace BlazorPlayground.Graphics.Tests {
             Assert.False(definition.UseSides);
             Assert.False(definition.AutoSelect);
 
-            var shape = Assert.IsType<Circle>(definition.Constructor(new Point(100, 200), new Point(150, 250), new DrawSettings()));
+            var shape = Assert.IsType<Circle>(definition.Construct(new Point(100, 200), new Point(150, 250), new DrawSettings()));
 
             PointAssert.Equal(new Point(100, 200), shape.CenterPoint);
             PointAssert.Equal(new Point(150, 250), shape.RadiusPoint);
@@ -60,7 +60,7 @@ namespace BlazorPlayground.Graphics.Tests {
             Assert.False(definition.UseSides);
             Assert.False(definition.AutoSelect);
 
-            var shape = Assert.IsType<Ellipse>(definition.Constructor(new Point(100, 200), new Point(150, 250), new DrawSettings()));
+            var shape = Assert.IsType<Ellipse>(definition.Construct(new Point(100, 200), new Point(150, 250), new DrawSettings()));
 
             PointAssert.Equal(new Point(100, 200), shape.CenterPoint);
             PointAssert.Equal(new Point(150, 250), shape.RadiusPoint);
@@ -76,7 +76,7 @@ namespace BlazorPlayground.Graphics.Tests {
             Assert.True(definition.UseSides);
             Assert.False(definition.AutoSelect);
 
-            var shape = Assert.IsType<RegularPolygon>(definition.Constructor(new Point(100, 200), new Point(150, 250), new DrawSettings()));
+            var shape = Assert.IsType<RegularPolygon>(definition.Construct(new Point(100, 200), new Point(150, 250), new DrawSettings()));
 
             PointAssert.Equal(new Point(100, 200), shape.CenterPoint);
             PointAssert.Equal(new Point(150, 250), shape.RadiusPoint);
@@ -92,7 +92,7 @@ namespace BlazorPlayground.Graphics.Tests {
             Assert.False(definition.UseSides);
             Assert.True(definition.AutoSelect);
 
-            var shape = Assert.IsType<QuadraticBezier>(definition.Constructor(new Point(100, 200), new Point(150, 250), new DrawSettings()));
+            var shape = Assert.IsType<QuadraticBezier>(definition.Construct(new Point(100, 200), new Point(150, 250), new DrawSettings()));
 
             PointAssert.Equal(new Point(100, 200), shape.StartPoint);
             PointAssert.Equal(new Point(150, 250), shape.EndPoint);
@@ -108,7 +108,7 @@ namespace BlazorPlayground.Graphics.Tests {
             Assert.False(definition.UseSides);
             Assert.True(definition.AutoSelect);
 
-            var shape = Assert.IsType<CubicBezier>(definition.Constructor(new Point(100, 200), new Point(150, 250), new DrawSettings()));
+            var shape = Assert.IsType<CubicBezier>(definition.Construct(new Point(100, 200), new Point(150, 250), new DrawSettings()));
 
             PointAssert.Equal(new Point(100, 200), shape.StartPoint);
             PointAssert.Equal(new Point(150, 250), shape.EndPoint);
