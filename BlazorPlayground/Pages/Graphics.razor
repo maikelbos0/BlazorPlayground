@@ -53,14 +53,14 @@
             <label for="fillColor" class="input-group-text">Fill</label>
 
             <div class="input-group-text">
-                <input class="form-check-input mt-0" type="radio" name="fillPaintMode" id="fillPaintModeColor" @onclick="() => FillPaintManager.Mode = PaintMode.Color" checked="@(FillPaintManager.Mode == PaintMode.Color)" />
+                <input class="form-check-input mt-0" type="radio" name="fillPaintMode" id="fillPaintModeColor" @onclick="() => DrawSettings.FillPaintManager.Mode = PaintMode.Color" checked="@(DrawSettings.FillPaintManager.Mode == PaintMode.Color)" />
                 <label class="form-check-label ps-2" for="fillPaintModeColor">Color</label>
             </div>
 
-            <input type="text" class="form-control" id="fillColor" style="background-color: @FillPaintManager.Color; color: @FillPaintManager.Color.ContrastingColor" @bind-value="FillPaintManager.ColorValue" />
+            <input type="text" class="form-control" id="fillColor" style="background-color: @DrawSettings.FillPaintManager.Color; color: @DrawSettings.FillPaintManager.Color.ContrastingColor" @bind-value="DrawSettings.FillPaintManager.ColorValue" />
 
             <div class="input-group-text">
-                <input class="form-check-input mt-0" type="radio" name="fillPaintMode" id="fillPaintModeNone" @onclick="() => FillPaintManager.Mode = PaintMode.None" checked="@(FillPaintManager.Mode == PaintMode.None)" />
+                <input class="form-check-input mt-0" type="radio" name="fillPaintMode" id="fillPaintModeNone" @onclick="() => DrawSettings.FillPaintManager.Mode = PaintMode.None" checked="@(DrawSettings.FillPaintManager.Mode == PaintMode.None)" />
                 <label class="form-check-label ps-2" for="fillPaintModeNone">None</label>
             </div>
 
@@ -73,14 +73,14 @@
             <label for="strokeColor" class="input-group-text">Stroke</label>
 
             <div class="input-group-text">
-                <input class="form-check-input mt-0" type="radio" name="strokePaintMode" id="strokePaintModeColor" @onclick="() => StrokePaintManager.Mode = PaintMode.Color" checked="@(StrokePaintManager.Mode == PaintMode.Color)" />
+                <input class="form-check-input mt-0" type="radio" name="strokePaintMode" id="strokePaintModeColor" @onclick="() => DrawSettings.StrokePaintManager.Mode = PaintMode.Color" checked="@(DrawSettings.StrokePaintManager.Mode == PaintMode.Color)" />
                 <label class="form-check-label ps-2" for="strokePaintModeColor">Color</label>
             </div>
 
-            <input type="text" class="form-control" id="strokeColor" style="background-color: @StrokePaintManager.Color; color: @StrokePaintManager.Color.ContrastingColor" @bind-value="StrokePaintManager.ColorValue" />
+            <input type="text" class="form-control" id="strokeColor" style="background-color: @DrawSettings.StrokePaintManager.Color; color: @DrawSettings.StrokePaintManager.Color.ContrastingColor" @bind-value="DrawSettings.StrokePaintManager.ColorValue" />
 
             <div class="input-group-text">
-                <input class="form-check-input mt-0" type="radio" name="strokePaintMode" id="strokePaintModeNone" @onclick="() => StrokePaintManager.Mode = PaintMode.None" checked="@(StrokePaintManager.Mode == PaintMode.None)" />
+                <input class="form-check-input mt-0" type="radio" name="strokePaintMode" id="strokePaintModeNone" @onclick="() => DrawSettings.StrokePaintManager.Mode = PaintMode.None" checked="@(DrawSettings.StrokePaintManager.Mode == PaintMode.None)" />
                 <label class="form-check-label ps-2" for="strokePaintModeNone">None</label>
             </div>
 
@@ -91,7 +91,7 @@
 
         <div class="input-group mb-3 me-3">
             <label for="strokeWidth" class="input-group-text">Stroke width</label>
-            <input type="text" class="form-control" id="strokeWidth" @bind-value="StrokeWidth" />
+            <input type="text" class="form-control" id="strokeWidth" @bind-value="DrawSettings.StrokeWidth" />
 
             @if (SelectedActionType == ActionType.Select) {
                 <button type="button" class="btn btn-secondary" @onclick="() => ApplyStrokeWidth()">Apply</button>
@@ -101,7 +101,7 @@
         <div class="input-group mb-3 me-3">
             <label for="strokeLinecap" class="input-group-text">Linecap</label>
 
-            <select class="form-select" id="strokeLinecap" @bind="StrokeLinecap">
+            <select class="form-select" id="strokeLinecap" @bind="DrawSettings.StrokeLinecap">
                 @foreach (var linecap in Enum.GetValues<Linecap>()) {
                     <option value="@linecap">@linecap</option>
                 }
@@ -115,7 +115,7 @@
         <div class="input-group mb-3 me-3">
             <label for="strokeLinejoin" class="input-group-text">Linejoin</label>
 
-            <select class="form-select" id="strokeLinejoin" @bind="StrokeLinejoin">
+            <select class="form-select" id="strokeLinejoin" @bind="DrawSettings.StrokeLinejoin">
                 @foreach (var linejoin in Enum.GetValues<Linejoin>()) {
                     <option value="@linejoin">@linejoin</option>
                 }
@@ -144,7 +144,7 @@
         else if (SelectedActionType == ActionType.DrawRegularPolygon) {
             <div class="input-group mb-3">
                 <label for="regularPolygonSides" class="input-group-text">Sides</label>
-                <input type="text" class="form-control" id="regularPolygonSides" @bind-value="RegularPolygonSides" />
+                <input type="text" class="form-control" id="regularPolygonSides" @bind-value="DrawSettings.Sides" />
             </div>
         }
         else if (SelectedActionType == ActionType.CanvasSettings) {
@@ -272,7 +272,7 @@
         { ActionType.DrawRectangle, new DrawActionDefinition("Rectangle", (graphics) => new Rectangle(graphics.Canvas.SnappedStartPoint, graphics.Canvas.SnappedEndPoint)) },
         { ActionType.DrawCircle, new DrawActionDefinition("Circle", (graphics) => new Circle(graphics.Canvas.SnappedStartPoint, graphics.Canvas.SnappedEndPoint)) },
         { ActionType.DrawEllipse, new DrawActionDefinition("Ellipse", (graphics) => new Ellipse(graphics.Canvas.SnappedStartPoint, graphics.Canvas.SnappedEndPoint)) },
-        { ActionType.DrawRegularPolygon, new DrawActionDefinition("Regular polygon", (graphics) => new RegularPolygon(graphics.Canvas.SnappedStartPoint, graphics.Canvas.SnappedEndPoint, graphics.RegularPolygonSides)) },
+        { ActionType.DrawRegularPolygon, new DrawActionDefinition("Regular polygon", (graphics) => new RegularPolygon(graphics.Canvas.SnappedStartPoint, graphics.Canvas.SnappedEndPoint, graphics.DrawSettings.Sides)) },
         { ActionType.DrawQuadraticBezier, new DrawActionDefinition("Quadratic bezier", (graphics) => new QuadraticBezier(graphics.Canvas.SnappedStartPoint, graphics.Canvas.SnappedEndPoint), true) },
         { ActionType.DrawCubicBezier, new DrawActionDefinition("Cubic bezier", (graphics) => new CubicBezier(graphics.Canvas.SnappedStartPoint, graphics.Canvas.SnappedEndPoint), true) },
         { ActionType.CanvasSettings, new ActionDefinition("Canvas settings") }
@@ -297,25 +297,7 @@
     private ActionDefinition CurrentActionDefinition => actionDefinitions[SelectedActionType];
 
     // Form fields
-    private PaintManager FillPaintManager { get; set; } = new PaintManager() { Mode = PaintMode.None, ColorValue = "#FFFFFF" };
-
-    private PaintManager StrokePaintManager { get; set; } = new PaintManager() { Mode = PaintMode.Color, ColorValue = "#000000" };
-
-    private Linecap StrokeLinecap { get; set; } = Linecap.Butt;
-
-    private Linejoin StrokeLinejoin { get; set; } = Linejoin.Miter;
-
-    private int strokeWidth = 1;
-    private int StrokeWidth {
-        get => strokeWidth;
-        set => strokeWidth = Math.Max(value, 1);
-    }
-
-    private int regularPolygonSides = 3;
-    private int RegularPolygonSides {
-        get => regularPolygonSides;
-        set => regularPolygonSides = Math.Max(value, 3);
-    }
+    private DrawSettings DrawSettings { get; set; } = new DrawSettings();
 
     private Canvas Canvas { get; set; } = new Canvas();
 
@@ -388,11 +370,11 @@
     private Shape CreateShape(Func<Graphics, Shape> constructor) {
         var shape = constructor(this);
 
-        shape.Fill = FillPaintManager.Server;
-        shape.Stroke = StrokePaintManager.Server;
-        shape.StrokeWidth = StrokeWidth;
-        shape.StrokeLinecap = StrokeLinecap;
-        shape.StrokeLinejoin = StrokeLinejoin;
+        shape.Fill = DrawSettings.FillPaintManager.Server;
+        shape.Stroke = DrawSettings.StrokePaintManager.Server;
+        shape.StrokeWidth = DrawSettings.StrokeWidth;
+        shape.StrokeLinecap = DrawSettings.StrokeLinecap;
+        shape.StrokeLinejoin = DrawSettings.StrokeLinejoin;
 
         return shape;
     }
@@ -432,32 +414,32 @@
 
     private void ApplyFill() {
         if (IsSelected) {
-            SelectedShape.Fill = FillPaintManager.Server;
+            SelectedShape.Fill = DrawSettings.FillPaintManager.Server;
         }
     }
 
     private void ApplyStroke() {
         if (IsSelected) {
-            SelectedShape.Stroke = StrokePaintManager.Server;
+            SelectedShape.Stroke = DrawSettings.StrokePaintManager.Server;
         }
     }
 
     private void ApplyStrokeLinecap() {
         if (IsSelected) {
-            SelectedShape.StrokeLinecap = StrokeLinecap;
+            SelectedShape.StrokeLinecap = DrawSettings.StrokeLinecap;
         }
     }
 
 
     private void ApplyStrokeLinejoin() {
         if (IsSelected) {
-            SelectedShape.StrokeLinejoin = StrokeLinejoin;
+            SelectedShape.StrokeLinejoin = DrawSettings.StrokeLinejoin;
         }
     }
 
     private void ApplyStrokeWidth() {
         if (IsSelected) {
-            SelectedShape.StrokeWidth = StrokeWidth;
+            SelectedShape.StrokeWidth = DrawSettings.StrokeWidth;
         }
     }
 
