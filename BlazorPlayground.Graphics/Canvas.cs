@@ -27,6 +27,7 @@ namespace BlazorPlayground.Graphics {
         public Point? SnappedEndPoint => Snap(EndPoint);
         public bool IsDragging => StartPoint != null && EndPoint != null;
         public Point? Delta => StartPoint != null && EndPoint != null ? EndPoint - StartPoint : null;
+        public DrawSettings DrawSettings { get; } = new DrawSettings();
 
         private Point? Snap(Point? point) {
             if (!SnapToGrid || point == null) {
