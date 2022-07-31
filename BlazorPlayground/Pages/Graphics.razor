@@ -188,9 +188,9 @@
     }
 
     @foreach (var shape in Canvas.Shapes) {
-        if (shape == SelectedShape) {
-            if (IsOperatingOnShape && IsSelected && Canvas.IsDragging) {
-                var changingShape = SelectedShape.Clone();
+        if (shape == Canvas.SelectedShape) {
+            if (IsOperatingOnShape && Canvas.IsDragging) {
+                var changingShape = shape.Clone();
 
                 if (IsOperatingOnAnchor) {
                     SelectedAnchor.Set(changingShape, Canvas.SnappedEndPoint);
@@ -208,10 +208,10 @@
                 }
             }
             else {
-                <ShapeRenderer @key="SelectedShape" Shape="SelectedShape" OnMouseDown="args => OnShapeMouseDown(args, shape)" IsSelected="true" />
+                <ShapeRenderer @key="shape" Shape="shape" OnMouseDown="args => OnShapeMouseDown(args, shape)" IsSelected="true" />
 
-                foreach (var anchor in SelectedShape.Anchors) {
-                    var point = anchor.Get(SelectedShape);
+                foreach (var anchor in shape.Anchors) {
+                    var point = anchor.Get(shape);
 
                     <rect class="shape-anchor" x="@((point.X - 5).ToString(CultureInfo.InvariantCulture))" y="@((point.Y - 5).ToString(CultureInfo.InvariantCulture))" width="10" height="10" @onmousedown="args => OnAnchorMouseDown(args, anchor)" />
                 }
@@ -289,8 +289,6 @@
 
     // Selection
     private bool IsOperatingOnShape { get; set; } = false;
-    private Shape SelectedShape { get; set; }
-    private bool IsSelected => SelectedShape != null;
     private Anchor SelectedAnchor { get; set; }
     private bool IsOperatingOnAnchor => SelectedAnchor != null;
 
@@ -360,7 +358,7 @@
 
             if (autoSelect) {
                 SwitchActionType(ActionType.Select);
-                SelectedShape = shape;
+                Canvas.SelectedShape = shape;
             }
         }
     }
@@ -378,92 +376,91 @@
     }
 
     private void DeleteSelected() {
-        if (SelectedShape != null) {
-            Canvas.Shapes.Remove(SelectedShape);
-            SelectedShape = null;
+        if (Canvas.SelectedShape != null) {
+            Canvas.Shapes.Remove(Canvas.SelectedShape);
+            Canvas.SelectedShape = null;
         }
     }
 
     private void Select(Shape shape) {
-        SelectedShape = shape;
+        Canvas.SelectedShape = shape;
         IsOperatingOnShape = true;
     }
 
     private void ProcessSelection() {
         // TODO is it possible to stop event bubble? If so, this could be handled on anchor mouse up / mouse shape up
         if (IsOperatingOnShape) {
-            if (IsSelected && Canvas.IsDragging) {
+            if (Canvas.SelectedShape != null && Canvas.IsDragging) {
                 if (IsOperatingOnAnchor) {
-                    SelectedAnchor.Set(SelectedShape, Canvas.SnappedEndPoint);
+                    SelectedAnchor.Set(Canvas.SelectedShape, Canvas.SnappedEndPoint);
                 }
                 else {
-                    SelectedShape.Transform(Canvas.Delta, Canvas.SnapToGrid, Canvas.GridSize);
+                    Canvas.SelectedShape.Transform(Canvas.Delta, Canvas.SnapToGrid, Canvas.GridSize);
                 }
             }
         }
         else {
-            SelectedShape = null;
+            Canvas.SelectedShape = null;
         }
     }
 
     private void Deselect() {
-        SelectedShape = null;
+        Canvas.SelectedShape = null;
     }
 
     private void ApplyFill() {
-        if (IsSelected) {
-            SelectedShape.Fill = Canvas.DrawSettings.FillPaintManager.Server;
+        if (Canvas.SelectedShape != null) {
+            Canvas.SelectedShape.Fill = Canvas.DrawSettings.FillPaintManager.Server;
         }
     }
 
     private void ApplyStroke() {
-        if (IsSelected) {
-            SelectedShape.Stroke = Canvas.DrawSettings.StrokePaintManager.Server;
+        if (Canvas.SelectedShape != null) {
+            Canvas.SelectedShape.Stroke = Canvas.DrawSettings.StrokePaintManager.Server;
         }
     }
 
     private void ApplyStrokeLinecap() {
-        if (IsSelected) {
-            SelectedShape.StrokeLinecap = Canvas.DrawSettings.StrokeLinecap;
+        if (Canvas.SelectedShape != null) {
+            Canvas.SelectedShape.StrokeLinecap = Canvas.DrawSettings.StrokeLinecap;
         }
     }
 
-
     private void ApplyStrokeLinejoin() {
-        if (IsSelected) {
-            SelectedShape.StrokeLinejoin = Canvas.DrawSettings.StrokeLinejoin;
+        if (Canvas.SelectedShape != null) {
+            Canvas.SelectedShape.StrokeLinejoin = Canvas.DrawSettings.StrokeLinejoin;
         }
     }
 
     private void ApplyStrokeWidth() {
-        if (IsSelected) {
-            SelectedShape.StrokeWidth = Canvas.DrawSettings.StrokeWidth;
+        if (Canvas.SelectedShape != null) {
+            Canvas.SelectedShape.StrokeWidth = Canvas.DrawSettings.StrokeWidth;
         }
     }
 
     private void MoveSelectedShapeToBackOfList() {
-        if (IsSelected) {
-            Canvas.Shapes.Remove(SelectedShape);
-            Canvas.Shapes.Insert(0, SelectedShape);
+        if (Canvas.SelectedShape != null) {
+            Canvas.Shapes.Remove(Canvas.SelectedShape);
+            Canvas.Shapes.Insert(0, Canvas.SelectedShape);
         }
     }
 
     private void MoveSelectedShapeInList(int indexChange) {
-        if (IsSelected) {
-            var index = Canvas.Shapes.IndexOf(SelectedShape);
+        if (Canvas.SelectedShape != null) {
+            var index = Canvas.Shapes.IndexOf(Canvas.SelectedShape);
             var newIndex = index + indexChange;
 
             if (newIndex > 0 && newIndex < Canvas.Shapes.Count) {
                 Canvas.Shapes[index] = Canvas.Shapes[newIndex];
-                Canvas.Shapes[newIndex] = SelectedShape;
+                Canvas.Shapes[newIndex] = Canvas.SelectedShape;
             }
         }
     }
 
     private void MoveSelectedShapeToFrontOfList() {
-        if (IsSelected) {
-            Canvas.Shapes.Remove(SelectedShape);
-            Canvas.Shapes.Add(SelectedShape);
+        if (Canvas.SelectedShape != null) {
+            Canvas.Shapes.Remove(Canvas.SelectedShape);
+            Canvas.Shapes.Add(Canvas.SelectedShape);
         }
     }
 

@@ -28,6 +28,7 @@ namespace BlazorPlayground.Graphics {
         public bool IsDragging => StartPoint != null && EndPoint != null;
         public Point? Delta => StartPoint != null && EndPoint != null ? EndPoint - StartPoint : null;
         public DrawSettings DrawSettings { get; } = new DrawSettings();
+        public Shape? SelectedShape { get; set; }
 
         private Point? Snap(Point? point) {
             if (!SnapToGrid || point == null) {
@@ -37,7 +38,7 @@ namespace BlazorPlayground.Graphics {
             return point.SnapToGrid(GridSize);
         }
 
-        public XElement ExportSvg() => new XElement(
+        public XElement ExportSvg() => new(
             "svg",
             new XAttribute("viewBox", $"0 0 {Width} {Height}"),
             new XAttribute("width", Width),
