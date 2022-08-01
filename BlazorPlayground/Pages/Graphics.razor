@@ -198,8 +198,8 @@
             if (Canvas.IsDragging) {
                 var changingShape = shape.Clone();
 
-                if (IsOperatingOnAnchor) {
-                    SelectedAnchor.Set(changingShape, Canvas.SnappedEndPoint);
+                if (Canvas.SelectedAnchor != null) {
+                    Canvas.SelectedAnchor.Set(changingShape, Canvas.SnappedEndPoint);
                 }
                 else {
                     changingShape.Transform(Canvas.Delta, Canvas.SnapToGrid, Canvas.GridSize);
@@ -234,19 +234,12 @@
 </svg>
 
 @code {
-    // General
     private IJSObjectReference ModuleReference { get; set; }
     private bool ShowLoadModal { get; set; } = false;
     private string FileLoadError { get; set; }
     private bool FileLoadHasError => !string.IsNullOrWhiteSpace(FileLoadError);
     private IBrowserFile FileToLoad { get; set; }
     private string FileName { get; set; }
-
-    // Selection
-    private Anchor SelectedAnchor { get; set; }
-    private bool IsOperatingOnAnchor => SelectedAnchor != null;
-
-    // Form fields
     private Canvas Canvas { get; set; } = new Canvas();
 
     protected override async Task OnAfterRenderAsync(bool firstRender) {
@@ -286,7 +279,7 @@
 
         Canvas.StartPoint = null;
         Canvas.EndPoint = null;
-        SelectedAnchor = null;
+        Canvas.SelectedAnchor = null;
     }
 
     private void OnShapeMouseDown(MouseEventArgs args, Shape shape) {
@@ -297,7 +290,7 @@
 
     private void OnAnchorMouseDown(MouseEventArgs args, Anchor anchor) {
         if (args.Button == 0) {
-            SelectedAnchor = anchor;
+            Canvas.SelectedAnchor = anchor;
         }
     }
 
@@ -308,7 +301,7 @@
 
         Canvas.StartPoint = null;
         Canvas.EndPoint = null;
-        SelectedAnchor = null;
+        Canvas.SelectedAnchor = null;
     }
 
     private void OnAnchorMouseUp(MouseEventArgs args, Anchor anchor) {
@@ -318,7 +311,7 @@
         
         Canvas.StartPoint = null;
         Canvas.EndPoint = null;
-        SelectedAnchor = null;
+        Canvas.SelectedAnchor = null;
     }
 
     private void DeleteSelected() {

@@ -31,6 +31,7 @@ namespace BlazorPlayground.Graphics {
         public bool IsDrawing { get; private set; } = true;
         public ShapeDefinition CurrentShapeDefinition { get; private set; } = ShapeDefinition.Values.First();
         public Shape? SelectedShape { get; set; }
+        public Anchor? SelectedAnchor { get; set; }
 
         private Point? Snap(Point? point) {
             if (!SnapToGrid || point == null) {
