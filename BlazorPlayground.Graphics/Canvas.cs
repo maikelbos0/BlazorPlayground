@@ -28,7 +28,8 @@ namespace BlazorPlayground.Graphics {
         public bool IsDragging => StartPoint != null && EndPoint != null; // TODO consider removing this if code analysis can't figure out this causes start- and endpoint to be not null
         public Point? Delta => StartPoint != null && EndPoint != null ? EndPoint - StartPoint : null;
         public DrawSettings DrawSettings { get; } = new DrawSettings();
-        public ShapeDefinition CurrentShapeDefinition { get; set; } = ShapeDefinition.Values.First();
+        public bool IsDrawing { get; private set; } = true;
+        public ShapeDefinition CurrentShapeDefinition { get; private set; } = ShapeDefinition.Values.First();
         public Shape? SelectedShape { get; set; }
 
         private Point? Snap(Point? point) {
@@ -39,8 +40,17 @@ namespace BlazorPlayground.Graphics {
             return point.SnapToGrid(GridSize);
         }
 
-        // TODO switch to/from draw mode in canvas instead of returning it here
-        public bool AddShape() {
+        public void StartDrawing(ShapeDefinition shapeDefinition) {
+            SelectedShape = null;
+            IsDrawing = true;
+            CurrentShapeDefinition = shapeDefinition;
+        }
+
+        public void StopDrawing() {
+            IsDrawing = false;
+        }
+
+        public void AddShape() {
             var shape = CreateShape();
 
             if (shape != null) {
@@ -48,11 +58,9 @@ namespace BlazorPlayground.Graphics {
 
                 if (CurrentShapeDefinition.AutoSelect) {
                     SelectedShape = shape;
-                    return true;
+                    StopDrawing();
                 }
             }
-
-            return false;
         }
 
         public Shape? CreateShape() {

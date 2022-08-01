@@ -36,13 +36,12 @@
 
 <ul class="nav nav-tabs mb-3">
     <li class="nav-item">
-        <a class="nav-link @(IsDrawing ? "" : "active")" @onclick="() => SetMode(false)">Select</a>
+        <a class="nav-link @(Canvas.IsDrawing ? "" : "active")" @onclick="() => Canvas.StopDrawing()">Select</a>
     </li>
 
     @foreach (var definition in ShapeDefinition.Values) {
         <li class="nav-item">
-            @*TODO don't set definition inline like this*@
-            <a class="nav-link @(IsDrawing && Canvas.CurrentShapeDefinition == definition ? "active" : "")" @onclick="() => { SetMode(true); Canvas.CurrentShapeDefinition = definition; }">@definition.Name</a>
+            <a class="nav-link @(Canvas.IsDrawing && Canvas.CurrentShapeDefinition == definition ? "active" : "")" @onclick="() => Canvas.StartDrawing(definition)">@definition.Name</a>
         </li>
     }
 </ul>
@@ -71,7 +70,7 @@
                 <label class="form-check-label ps-2" for="fillPaintModeNone">None</label>
             </div>
 
-            @if (!IsDrawing) {
+            @if (!Canvas.IsDrawing) {
                 <button type="button" class="btn btn-secondary" @onclick="() => ApplyFill()">Apply</button>
             }
         </div>
@@ -91,7 +90,7 @@
                 <label class="form-check-label ps-2" for="strokePaintModeNone">None</label>
             </div>
 
-            @if (!IsDrawing) {
+            @if (!Canvas.IsDrawing) {
                 <button type="button" class="btn btn-secondary" @onclick="() => ApplyStroke()">Apply</button>
             }
         </div>
@@ -100,7 +99,7 @@
             <label for="strokeWidth" class="input-group-text">Stroke width</label>
             <input type="text" class="form-control" id="strokeWidth" @bind-value="Canvas.DrawSettings.StrokeWidth" />
 
-            @if (!IsDrawing) {
+            @if (!Canvas.IsDrawing) {
                 <button type="button" class="btn btn-secondary" @onclick="() => ApplyStrokeWidth()">Apply</button>
             }
         </div>
@@ -114,7 +113,7 @@
                 }
             </select>
 
-            @if (!IsDrawing) {
+            @if (!Canvas.IsDrawing) {
                 <button type="button" class="btn btn-secondary" @onclick="() => ApplyStrokeLinecap()">Apply</button>
             }
         </div>
@@ -128,12 +127,12 @@
                 }
             </select>
 
-            @if (!IsDrawing) {
+            @if (!Canvas.IsDrawing) {
                 <button type="button" class="btn btn-secondary" @onclick="() => ApplyStrokeLinejoin()">Apply</button>
             }
         </div>
 
-        @if (!IsDrawing) {
+        @if (!Canvas.IsDrawing) {
             <div class="btn-group mb-3 me-3">
                 <button type="button" class="btn btn-secondary" @onclick="() => MoveSelectedShapeToFrontOfList()">Move to front</button>
                 <button type="button" class="btn btn-secondary" @onclick="() => MoveSelectedShapeInList(1)">Move forward</button>
@@ -229,14 +228,13 @@
         }
     }
 
-    @if (Canvas.IsDragging && IsDrawing) {
+    @if (Canvas.IsDragging && Canvas.IsDrawing) {
         <ShapeRenderer Shape="Canvas.CreateShape()" IsVirtual="true" />
     }
 </svg>
 
 @code {
     // General
-    private bool IsDrawing { get; set; } = true;
     private IJSObjectReference ModuleReference { get; set; }
     private bool ShowLoadModal { get; set; } = false;
     private string FileLoadError { get; set; }
@@ -279,9 +277,8 @@
     private void OnCanvasMouseUp(MouseEventArgs args) {
         // TODO make this make sense
         if (args.Button == 0) {
-            if (IsDrawing && Canvas.IsDragging) {
-
-                SetMode(!Canvas.AddShape());
+            if (Canvas.IsDrawing && Canvas.IsDragging) {
+                Canvas.AddShape();
             }
             else {
                 ProcessSelection();
@@ -295,7 +292,7 @@
     }
 
     private void OnShapeMouseDown(MouseEventArgs args, Shape shape) {
-        if (!IsDrawing && args.Button == 0) {
+        if (!Canvas.IsDrawing && args.Button == 0) {
             Select(shape);
         }
     }
@@ -307,14 +304,6 @@
         }
     }
 
-    private void SetMode(bool isDrawing) {
-        IsDrawing = isDrawing;
-
-        if (isDrawing) {
-            Canvas.SelectedShape = null;
-        }
-    }
-
     private void DeleteSelected() {
         if (Canvas.SelectedShape != null) {
             Canvas.Shapes.Remove(Canvas.SelectedShape);
@@ -323,6 +312,7 @@
     }
 
     private void Select(Shape shape) {
+        // TODO set correct definition after selecting
         Canvas.SelectedShape = shape;
         IsOperatingOnShape = true;
     }

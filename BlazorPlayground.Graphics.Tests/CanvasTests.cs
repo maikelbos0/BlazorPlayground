@@ -146,6 +146,66 @@ namespace BlazorPlayground.Graphics.Tests {
         }
 
         [Fact]
+        public void StartDrawing() {
+            var definition = ShapeDefinition.Values.Single(d => d.Name == "Quadratic bezier");
+            var canvas = new Canvas() {
+                SelectedShape = new Line(new Point(100, 200), new Point(150, 250))
+            };
+
+            canvas.StartDrawing(definition);
+
+            Assert.True(canvas.IsDrawing);
+            Assert.Equal(definition, canvas.CurrentShapeDefinition);
+            Assert.Null(canvas.SelectedShape);
+        }
+
+        [Fact]
+        public void StopDrawing() {
+            var definition = ShapeDefinition.Values.Single(d => d.Name == "Quadratic bezier");
+            var canvas = new Canvas();
+
+            canvas.StartDrawing(definition);
+            canvas.SelectedShape = new Line(new Point(100, 200), new Point(150, 250));
+
+            canvas.StopDrawing();
+
+            Assert.False(canvas.IsDrawing);
+            Assert.Equal(definition, canvas.CurrentShapeDefinition);
+            Assert.NotNull(canvas.SelectedShape);
+        }
+
+        [Fact]
+        public void AddShape_Without_AutoSelect() {
+            var canvas = new Canvas() {
+                StartPoint = new Point(100, 200),
+                EndPoint = new Point(150, 250)
+            };
+
+            canvas.StartDrawing(ShapeDefinition.Values.Single(d => d.Name == "Line"));
+
+            canvas.AddShape();
+
+            Assert.Single(canvas.Shapes);
+            Assert.Null(canvas.SelectedShape);
+            Assert.True(canvas.IsDrawing);
+        }
+
+        [Fact]
+        public void AddShape_With_AutoSelect() {
+            var canvas = new Canvas() {
+                StartPoint = new Point(100, 200),
+                EndPoint = new Point(150, 250)
+            };
+
+            canvas.StartDrawing(ShapeDefinition.Values.Single(d => d.Name == "Quadratic bezier"));
+
+            canvas.AddShape();
+
+            Assert.Equal(Assert.Single(canvas.Shapes), canvas.SelectedShape);
+            Assert.False(canvas.IsDrawing);
+        }
+
+        [Fact]
         public void CreateShape_Null_StartPoint() {
             var canvas = new Canvas() {
                 EndPoint = new Point(150, 250)
