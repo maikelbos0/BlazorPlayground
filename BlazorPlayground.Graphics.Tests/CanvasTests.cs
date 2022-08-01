@@ -146,6 +146,49 @@ namespace BlazorPlayground.Graphics.Tests {
         }
 
         [Fact]
+        public void CreateShape_Null_StartPoint() {
+            var canvas = new Canvas() {
+                EndPoint = new Point(150, 250)
+            };
+
+            Assert.Null(canvas.CreateShape());
+        }
+
+        [Fact]
+        public void CreateShape_Null_EndPoint() {
+            var canvas = new Canvas() {
+                StartPoint = new Point(150, 250)
+            };
+
+            Assert.Null(canvas.CreateShape());
+        }
+
+        [Fact]
+        public void CreateShape() {
+            var canvas = new Canvas() {
+                StartPoint = new Point(150, 250),
+                EndPoint = new Point(150, 250)
+            };
+
+            canvas.DrawSettings.FillPaintManager.Mode = PaintMode.Color;
+            canvas.DrawSettings.FillPaintManager.ColorValue = "yellow";
+            canvas.DrawSettings.StrokeLinecap = Linecap.Round;
+            canvas.DrawSettings.StrokeLinejoin = Linejoin.Round;
+            canvas.DrawSettings.StrokePaintManager.Mode = PaintMode.Color;
+            canvas.DrawSettings.StrokePaintManager.ColorValue = "red";
+            canvas.DrawSettings.StrokeWidth = 5;
+
+            var shape = canvas.CreateShape();
+
+            Assert.NotNull(shape);
+            PaintServerAssert.Equal(new Color(255, 255, 0, 1), shape!.Fill);
+            Assert.Equal(Linecap.Round, shape.StrokeLinecap);
+            Assert.Equal(Linejoin.Round, shape.StrokeLinejoin);
+            PaintServerAssert.Equal(new Color(255, 0, 0, 1), shape.Stroke);
+            Assert.Equal(5, shape.StrokeWidth);
+        }
+
+        [Fact]
         public void ExportSvg() {
             var canvas = new Canvas() {
                 Width = 600,

@@ -52,10 +52,7 @@ namespace BlazorPlayground.Graphics.Tests {
         public void ParseColor(string value, byte expectedRed, byte expectedGreen, byte expectedBlue, double expectedAlpha) {
             var result = PaintManager.ParseColor(value);
 
-            Assert.Equal(expectedRed, result.Red);
-            Assert.Equal(expectedGreen, result.Green);
-            Assert.Equal(expectedBlue, result.Blue);
-            Assert.Equal(expectedAlpha, result.Alpha);
+            Assert.Equal(new Color(expectedRed, expectedGreen, expectedBlue, expectedAlpha), result);
         }
         
         [Fact]
@@ -65,10 +62,7 @@ namespace BlazorPlayground.Graphics.Tests {
             };
 
             Assert.Equal("red", manager.ColorValue);
-            Assert.Equal(255, manager.Color.Red);
-            Assert.Equal(0, manager.Color.Green);
-            Assert.Equal(0, manager.Color.Blue);
-            Assert.Equal(1, manager.Color.Alpha);
+            PaintServerAssert.Equal(new Color(255, 0, 0, 1), manager.Color);
         }
 
         [Fact]
