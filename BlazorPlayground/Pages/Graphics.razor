@@ -195,7 +195,7 @@
 
     @foreach (var shape in Canvas.Shapes) {
         if (shape == Canvas.SelectedShape) {
-            if (IsOperatingOnShape && Canvas.IsDragging) {
+            if (Canvas.IsDragging) {
                 var changingShape = shape.Clone();
 
                 if (IsOperatingOnAnchor) {
@@ -205,16 +205,16 @@
                     changingShape.Transform(Canvas.Delta, Canvas.SnapToGrid, Canvas.GridSize);
                 }
 
-                <ShapeRenderer Shape="changingShape" IsVirtual="true" />
+                <ShapeRenderer Shape="changingShape" IsVirtual="true" OnMouseUp="args => OnShapeMouseUp(args, shape)" />
 
                 foreach (var anchor in changingShape.Anchors) {
                     var point = anchor.Get(changingShape);
 
-                    <rect class="shape-anchor" x="@((point.X - 5).ToString(CultureInfo.InvariantCulture))" y="@((point.Y - 5).ToString(CultureInfo.InvariantCulture))" width="10" height="10" />
+                    <rect class="shape-anchor" x="@((point.X - 5).ToString(CultureInfo.InvariantCulture))" y="@((point.Y - 5).ToString(CultureInfo.InvariantCulture))" width="10" height="10" @onmouseup="args => OnAnchorMouseUp(args, anchor)" @onmouseup:stopPropagation="true" />
                 }
             }
             else {
-                <ShapeRenderer @key="shape" Shape="shape" OnMouseDown="args => OnShapeMouseDown(args, shape)" IsSelected="true" />
+                <ShapeRenderer @key="shape" Shape="shape" OnMouseDown="args => OnShapeMouseDown(args, shape)" IsSelected="true" OnMouseUp="args => OnShapeMouseUp(args, shape)" />
 
                 foreach (var anchor in shape.Anchors) {
                     var point = anchor.Get(shape);
@@ -243,7 +243,6 @@
     private string FileName { get; set; }
 
     // Selection
-    private bool IsOperatingOnShape { get; set; } = false;
     private Anchor SelectedAnchor { get; set; }
     private bool IsOperatingOnAnchor => SelectedAnchor != null;
 
@@ -281,14 +280,13 @@
                 Canvas.AddShape();
             }
             else {
-                ProcessSelection();
+                Canvas.SelectedShape = null;
             }
         }
 
         Canvas.StartPoint = null;
         Canvas.EndPoint = null;
         SelectedAnchor = null;
-        IsOperatingOnShape = false;
     }
 
     private void OnShapeMouseDown(MouseEventArgs args, Shape shape) {
@@ -300,8 +298,27 @@
     private void OnAnchorMouseDown(MouseEventArgs args, Anchor anchor) {
         if (args.Button == 0) {
             SelectedAnchor = anchor;
-            IsOperatingOnShape = true;
         }
+    }
+
+    private void OnShapeMouseUp(MouseEventArgs args, Shape shape) {
+        if (args.Button == 0 && Canvas.IsDragging) {
+            shape.Transform(Canvas.Delta, Canvas.SnapToGrid, Canvas.GridSize);
+        }
+
+        Canvas.StartPoint = null;
+        Canvas.EndPoint = null;
+        SelectedAnchor = null;
+    }
+
+    private void OnAnchorMouseUp(MouseEventArgs args, Anchor anchor) {
+        if (args.Button == 0 && Canvas.IsDragging) {
+            anchor.Set(Canvas.SelectedShape, Canvas.SnappedEndPoint);
+        }
+        
+        Canvas.StartPoint = null;
+        Canvas.EndPoint = null;
+        SelectedAnchor = null;
     }
 
     private void DeleteSelected() {
@@ -314,24 +331,6 @@
     private void Select(Shape shape) {
         // TODO set correct definition after selecting
         Canvas.SelectedShape = shape;
-        IsOperatingOnShape = true;
-    }
-
-    private void ProcessSelection() {
-        // TODO is it possible to stop event bubble? If so, this could be handled on anchor mouse up / mouse shape up
-        if (IsOperatingOnShape) {
-            if (Canvas.SelectedShape != null && Canvas.IsDragging) {
-                if (IsOperatingOnAnchor) {
-                    SelectedAnchor.Set(Canvas.SelectedShape, Canvas.SnappedEndPoint);
-                }
-                else {
-                    Canvas.SelectedShape.Transform(Canvas.Delta, Canvas.SnapToGrid, Canvas.GridSize);
-                }
-            }
-        }
-        else {
-            Canvas.SelectedShape = null;
-        }
     }
 
     private void ApplyFill() {

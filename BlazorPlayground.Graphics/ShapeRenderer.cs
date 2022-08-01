@@ -16,6 +16,9 @@ namespace BlazorPlayground.Graphics {
         [Parameter]
         public EventCallback<MouseEventArgs> OnMouseDown { get; set; }
 
+        [Parameter]
+        public EventCallback<MouseEventArgs> OnMouseUp { get; set; }
+
         protected override void BuildRenderTree(RenderTreeBuilder builder) {
             if (Shape != null) {
                 if (Shape is IRenderable renderableShape) {
@@ -39,8 +42,10 @@ namespace BlazorPlayground.Graphics {
                     builder.OpenElement(10, Shape.ElementName);
                     builder.AddAttribute(11, "class", "shape-selector");
                     builder.AddAttribute(12, "onmousedown", OnMouseDown);
-                    builder.AddAttribute(13, "stroke-width", Math.Max(Shape.StrokeWidth, 12));
-                    builder.AddMultipleAttributes(15, Shape.GetAttributes());
+                    builder.AddAttribute(13, "onmouseup", OnMouseUp);
+                    builder.AddEventStopPropagationAttribute(14, "onmouseup", OnMouseUp.HasDelegate);
+                    builder.AddAttribute(15, "stroke-width", Math.Max(Shape.StrokeWidth, 12));
+                    builder.AddMultipleAttributes(16, Shape.GetAttributes());
                     builder.CloseElement();
 
                     builder.CloseElement();
