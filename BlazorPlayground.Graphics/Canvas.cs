@@ -80,6 +80,43 @@ namespace BlazorPlayground.Graphics {
             return shape;
         }
 
+        public Shape CreateVirtualSelectedShape() {
+            if (SelectedShape == null) {
+                throw new InvalidOperationException($"{nameof(CreateVirtualSelectedShape)} can only be called when {nameof(SelectedShape)} has a value.");
+            }
+
+            if (Delta == null || SnappedEndPoint == null) {
+                throw new InvalidOperationException($"{nameof(CreateVirtualSelectedShape)} can only be called when {nameof(IsExecutingAction)} is true.");
+            }
+
+            var virtualShape = SelectedShape.Clone();
+
+            if (SelectedAnchor == null) {
+                virtualShape.Transform(Delta, SnapToGrid, GridSize);
+            }
+            else {
+                SelectedAnchor.Set(virtualShape, SnappedEndPoint);
+            }
+
+            return virtualShape;
+        }
+
+        public void TransformSelectedShape() {
+            if (SelectedShape != null && Delta != null) {
+                SelectedShape.Transform(Delta, SnapToGrid, GridSize);
+            }
+
+            ClearActionExecution();
+        }
+
+        public void TransformSelectedShapeAnchor() {
+            if (SelectedShape != null && SelectedAnchor != null && SnappedEndPoint != null) {
+                SelectedAnchor.Set(SelectedShape, SnappedEndPoint);
+            }
+
+            ClearActionExecution();
+        }
+        
         public void ClearActionExecution() {
             StartPoint = null;
             EndPoint = null;

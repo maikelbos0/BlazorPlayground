@@ -196,19 +196,12 @@
     @foreach (var shape in Canvas.Shapes) {
         if (shape == Canvas.SelectedShape) {
             if (Canvas.IsExecutingAction) {
-                var changingShape = shape.Clone();
+                var virtualShape = Canvas.CreateVirtualSelectedShape();
 
-                if (Canvas.SelectedAnchor != null) {
-                    Canvas.SelectedAnchor.Set(changingShape, Canvas.SnappedEndPoint);
-                }
-                else {
-                    changingShape.Transform(Canvas.Delta, Canvas.SnapToGrid, Canvas.GridSize);
-                }
+                <ShapeRenderer Shape="virtualShape" IsVirtual="true" OnMouseUp="args => OnShapeMouseUp(args, shape)" />
 
-                <ShapeRenderer Shape="changingShape" IsVirtual="true" OnMouseUp="args => OnShapeMouseUp(args, shape)" />
-
-                foreach (var anchor in changingShape.Anchors) {
-                    var point = anchor.Get(changingShape);
+                foreach (var anchor in virtualShape.Anchors) {
+                    var point = anchor.Get(virtualShape);
 
                     <rect class="shape-anchor" x="@((point.X - 5).ToString(CultureInfo.InvariantCulture))" y="@((point.Y - 5).ToString(CultureInfo.InvariantCulture))" width="10" height="10" @onmouseup="args => OnAnchorMouseUp(args, anchor)" @onmouseup:stopPropagation="true" />
                 }
@@ -289,12 +282,7 @@
 
     private void OnShapeMouseUp(MouseEventArgs args, Shape shape) {
         if (args.Button == 0) {
-            // TODO move shape and anchor transformation to canvas
-            if (Canvas.IsExecutingAction) {
-                shape.Transform(Canvas.Delta, Canvas.SnapToGrid, Canvas.GridSize);
-            }
-
-            Canvas.ClearActionExecution();
+            Canvas.TransformSelectedShape();
         }
     }
 
@@ -306,11 +294,7 @@
 
     private void OnAnchorMouseUp(MouseEventArgs args, Anchor anchor) {
         if (args.Button == 0) {
-            if (Canvas.IsExecutingAction) {
-                anchor.Set(Canvas.SelectedShape, Canvas.SnappedEndPoint);
-            }
-
-            Canvas.ClearActionExecution();
+            Canvas.TransformSelectedShapeAnchor();
         }
     }
 

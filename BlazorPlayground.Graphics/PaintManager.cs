@@ -85,7 +85,7 @@ namespace BlazorPlayground.Graphics {
         public IPaintServer Server => Mode switch {
             PaintMode.Color => Color,
             PaintMode.None => PaintServer.None,
-            _ => throw new NotImplementedException($"No implementation found for {nameof(PaintMode)} '{Mode}'")
+            _ => throw new NotImplementedException($"No implementation found for {nameof(PaintMode)} '{Mode}'.")
         };
     }
 }

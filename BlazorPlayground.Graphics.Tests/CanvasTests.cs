@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Xunit;
 
 namespace BlazorPlayground.Graphics.Tests {
@@ -246,6 +247,202 @@ namespace BlazorPlayground.Graphics.Tests {
             Assert.Equal(Linejoin.Round, shape.StrokeLinejoin);
             PaintServerAssert.Equal(new Color(255, 0, 0, 1), shape.Stroke);
             Assert.Equal(5, shape.StrokeWidth);
+        }
+        
+        [Fact]
+        public void CreateVirtualSelectedShape_Shape() {
+            var shape = new Line(new Point(100, 100), new Point(200, 200));
+            var canvas = new Canvas() {
+                StartPoint = new Point(150, 150),
+                EndPoint = new Point(177, 202),
+                SnapToGrid = true,
+                GridSize = 25,
+                SelectedShape = shape
+            };
+
+            var virtualShape = Assert.IsType<Line>(canvas.CreateVirtualSelectedShape());
+
+            Assert.NotSame(shape, virtualShape);
+            Assert.Equal(new Point(100, 100), shape.StartPoint);
+            Assert.Equal(new Point(200, 200), shape.EndPoint);
+            Assert.Equal(new Point(125, 150), virtualShape.StartPoint);
+            Assert.Equal(new Point(225, 250), virtualShape.EndPoint);
+        }
+        
+        [Fact]
+        public void CreateVirtualSelectedShape_Anchor() {
+            var shape = new Line(new Point(100, 100), new Point(200, 200));
+            var canvas = new Canvas() {
+                StartPoint = new Point(150, 150),
+                EndPoint = new Point(177, 202),
+                SnapToGrid = true,
+                GridSize = 25,
+                SelectedShape = shape,
+                SelectedAnchor = shape.Anchors[0]
+            };
+
+            var virtualShape = Assert.IsType<Line>(canvas.CreateVirtualSelectedShape());
+
+            Assert.NotSame(shape, virtualShape);
+            Assert.Equal(new Point(100, 100), shape.StartPoint);
+            Assert.Equal(new Point(200, 200), shape.EndPoint);
+            Assert.Equal(new Point(175, 200), virtualShape.StartPoint);
+            Assert.Equal(new Point(200, 200), virtualShape.EndPoint);
+        }
+        
+        [Fact]
+        public void CreateVirtualSelectedShape_Throws_For_Null_SelectedShape() {
+            var canvas = new Canvas() {
+                StartPoint = new Point(150, 150),
+                EndPoint = new Point(177, 202)
+            };
+
+            Assert.Throws<InvalidOperationException>(() => canvas.CreateVirtualSelectedShape());
+        }
+        
+        [Fact]
+        public void CreateVirtualSelectedShape_Throws_For_Null_StartPoint() {
+            var canvas = new Canvas() {
+                EndPoint = new Point(177, 202),
+                SelectedShape = new Line(new Point(100, 100), new Point(200, 200))
+            };
+
+            Assert.Throws<InvalidOperationException>(() => canvas.CreateVirtualSelectedShape());
+        }
+        
+        [Fact]
+        public void CreateVirtualSelectedShape_Throws_For_Null_EndPoint() {
+            var canvas = new Canvas() {
+                StartPoint = new Point(150, 150),
+                SelectedShape = new Line(new Point(100, 100), new Point(200, 200))
+            };
+
+            Assert.Throws<InvalidOperationException>(() => canvas.CreateVirtualSelectedShape());
+        }
+
+        [Fact]
+        public void TransformSelectedShape() {
+            var shape = new Line(new Point(100, 100), new Point(200, 200));
+            var canvas = new Canvas() {
+                StartPoint = new Point(150, 150),
+                EndPoint = new Point(177, 202),
+                SnapToGrid = true,
+                GridSize = 25,
+                SelectedShape = shape
+            };
+
+            canvas.TransformSelectedShape();
+
+            PointAssert.Equal(new Point(125, 150), shape.StartPoint);
+            PointAssert.Equal(new Point(225, 250), shape.EndPoint);
+        }
+
+        [Fact]
+        public void TransformSelectedShape_Null_SelectedShape() {
+            var canvas = new Canvas() {
+                StartPoint = new Point(150, 177),
+                EndPoint = new Point(150, 202)
+            };
+
+            canvas.TransformSelectedShape();
+        }
+
+        [Fact]
+        public void TransformSelectedShape_Null_Delta() {
+            var shape = new Line(new Point(100, 100), new Point(200, 200));
+            var canvas = new Canvas() {
+                SelectedShape = shape
+            };
+
+            canvas.TransformSelectedShape();
+
+            PointAssert.Equal(new Point(100, 100), shape.StartPoint);
+            PointAssert.Equal(new Point(200, 200), shape.EndPoint);
+        }
+
+        [Fact]
+        public void TransformSelectedShape_Clears() {
+            var shape = new Line(new Point(100, 100), new Point(200, 200));
+            var canvas = new Canvas() {
+                StartPoint = new Point(150, 177),
+                EndPoint = new Point(150, 202),
+                SelectedShape = shape,
+                SelectedAnchor = shape.Anchors[0]
+            };
+
+            canvas.TransformSelectedShape();
+
+            Assert.Null(canvas.StartPoint);
+            Assert.Null(canvas.EndPoint);
+            Assert.Null(canvas.SelectedAnchor);
+        }
+
+        [Fact]
+        public void TransformSelectedShapeAnchor() {
+            var shape = new Line(new Point(100, 100), new Point(200, 200));
+            var canvas = new Canvas() {
+                EndPoint = new Point(127, 152),
+                SnapToGrid = true,
+                GridSize = 25,
+                SelectedShape = shape,
+                SelectedAnchor = shape.Anchors[0]
+            };
+
+            canvas.TransformSelectedShapeAnchor();
+
+            PointAssert.Equal(new Point(125, 150), shape.StartPoint);
+            PointAssert.Equal(new Point(200, 200), shape.EndPoint);
+        }
+
+        [Fact]
+        public void TransformSelectedShapeAnchor_Null_SelectedShape() {
+            var canvas = new Canvas() {
+                EndPoint = new Point(177, 202)
+            };
+
+            canvas.TransformSelectedShapeAnchor();
+        }
+
+        [Fact]
+        public void TransformSelectedShapeAnchor_Null_SelectedAnchor() {
+            var shape = new Line(new Point(100, 100), new Point(200, 200));
+            var canvas = new Canvas() {
+                EndPoint = new Point(177, 202)
+            };
+
+            canvas.TransformSelectedShapeAnchor();
+
+            PointAssert.Equal(new Point(100, 100), shape.StartPoint);
+            PointAssert.Equal(new Point(200, 200), shape.EndPoint);
+        }
+
+        [Fact]
+        public void TransformSelectedShapeAnchor_Null_EndPoint() {
+            var shape = new Line(new Point(100, 100), new Point(200, 200));
+            var canvas = new Canvas() {
+                SelectedAnchor = shape.Anchors[0]
+            };
+
+            canvas.TransformSelectedShapeAnchor();
+
+            PointAssert.Equal(new Point(100, 100), shape.StartPoint);
+            PointAssert.Equal(new Point(200, 200), shape.EndPoint);
+        }
+
+        [Fact]
+        public void TransformSelectedShapeAnchor_Clears() {
+            var shape = new Line(new Point(100, 100), new Point(200, 200));
+            var canvas = new Canvas() {
+                EndPoint = new Point(127, 152),
+                SelectedShape = shape,
+                SelectedAnchor = shape.Anchors[0]
+            };
+
+            canvas.TransformSelectedShapeAnchor();
+
+            Assert.Null(canvas.StartPoint);
+            Assert.Null(canvas.EndPoint);
+            Assert.Null(canvas.SelectedAnchor);
         }
 
         [Fact]
