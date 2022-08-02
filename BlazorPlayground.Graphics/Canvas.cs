@@ -25,7 +25,7 @@ namespace BlazorPlayground.Graphics {
         public Point? SnappedStartPoint => Snap(StartPoint);
         public Point? EndPoint { get; set; }
         public Point? SnappedEndPoint => Snap(EndPoint);
-        public bool IsDragging => StartPoint != null && EndPoint != null; // TODO consider removing this if code analysis can't figure out this causes start- and endpoint to be not null
+        public bool IsExecutingAction => StartPoint != null && EndPoint != null;
         public Point? Delta => StartPoint != null && EndPoint != null ? EndPoint - StartPoint : null;
         public DrawSettings DrawSettings { get; } = new DrawSettings();
         public bool IsDrawing { get; private set; } = true;
@@ -78,6 +78,12 @@ namespace BlazorPlayground.Graphics {
             shape.StrokeLinejoin = DrawSettings.StrokeLinejoin;
 
             return shape;
+        }
+
+        public void ClearActionExecution() {
+            StartPoint = null;
+            EndPoint = null;
+            SelectedAnchor = null;
         }
 
         public XElement ExportSvg() => new(

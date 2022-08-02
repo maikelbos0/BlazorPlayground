@@ -75,38 +75,38 @@ namespace BlazorPlayground.Graphics.Tests {
         }
 
         [Fact]
-        public void IsDragging() {
+        public void IsExecutingAction() {
             var canvas = new Canvas() {
                 StartPoint = new Point(25, 25),
                 EndPoint = new Point(50, 50)
             };
 
-            Assert.True(canvas.IsDragging);
+            Assert.True(canvas.IsExecutingAction);
         }
 
         [Fact]
-        public void IsDragging_Null_StartPoint() {
+        public void IsExecutingAction_Null_StartPoint() {
             var canvas = new Canvas() {
                 EndPoint = new Point(50, 50)
             };
 
-            Assert.False(canvas.IsDragging);
+            Assert.False(canvas.IsExecutingAction);
         }
 
         [Fact]
-        public void IsDragging_Null_EndPoint() {
+        public void IsExecutingAction_Null_EndPoint() {
             var canvas = new Canvas() {
                 StartPoint = new Point(25, 25)
             };
 
-            Assert.False(canvas.IsDragging);
+            Assert.False(canvas.IsExecutingAction);
         }
 
         [Fact]
-        public void IsDragging_Null_StartPoint_And_EndPoint() {
+        public void IsExecutingAction_Null_StartPoint_And_EndPoint() {
             var canvas = new Canvas();
 
-            Assert.False(canvas.IsDragging);
+            Assert.False(canvas.IsExecutingAction);
         }
 
         [Fact]

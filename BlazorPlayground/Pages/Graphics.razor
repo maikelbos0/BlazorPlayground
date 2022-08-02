@@ -143,13 +143,13 @@
                 <button type="button" class="btn btn-secondary" @onclick="() => MoveSelectedShapeToBackOfList()">Move to back</button>
             </div>
 
-            <div class="btn-group mb-3">
+            <div class="btn-group mb-3 me-3">
                 <button type="button" class="btn btn-secondary" @onclick="DeleteSelected">Delete</button>
             </div>
         }
         else {
             @*TODO hide if not applicable*@
-            <div class="input-group mb-3">
+            <div class="input-group mb-3 me-3">
                 <label for="regularPolygonSides" class="input-group-text">Sides</label>
                 <input type="text" class="form-control" id="regularPolygonSides" @bind-value="Canvas.DrawSettings.Sides" />
             </div>
@@ -195,7 +195,7 @@
 
     @foreach (var shape in Canvas.Shapes) {
         if (shape == Canvas.SelectedShape) {
-            if (Canvas.IsDragging) {
+            if (Canvas.IsExecutingAction) {
                 var changingShape = shape.Clone();
 
                 if (Canvas.SelectedAnchor != null) {
@@ -228,7 +228,7 @@
         }
     }
 
-    @if (Canvas.IsDragging && Canvas.IsDrawing) {
+    @if (Canvas.IsDrawing && Canvas.IsExecutingAction) {
         <ShapeRenderer Shape="Canvas.CreateShape()" IsVirtual="true" />
     }
 </svg>
@@ -269,22 +269,32 @@
     private void OnCanvasMouseUp(MouseEventArgs args) {
         // TODO make this make sense
         if (args.Button == 0) {
-            if (Canvas.IsDrawing && Canvas.IsDragging) {
+            if (Canvas.IsDrawing && Canvas.IsExecutingAction) {
                 Canvas.AddShape();
             }
             else {
                 Canvas.SelectedShape = null;
             }
-        }
 
-        Canvas.StartPoint = null;
-        Canvas.EndPoint = null;
-        Canvas.SelectedAnchor = null;
+            Canvas.ClearActionExecution();
+        }
     }
 
     private void OnShapeMouseDown(MouseEventArgs args, Shape shape) {
         if (!Canvas.IsDrawing && args.Button == 0) {
-            Select(shape);
+            // TODO set correct definition after selecting
+            Canvas.SelectedShape = shape;
+        }
+    }
+
+    private void OnShapeMouseUp(MouseEventArgs args, Shape shape) {
+        if (args.Button == 0) {
+            // TODO move shape and anchor transformation to canvas
+            if (Canvas.IsExecutingAction) {
+                shape.Transform(Canvas.Delta, Canvas.SnapToGrid, Canvas.GridSize);
+            }
+
+            Canvas.ClearActionExecution();
         }
     }
 
@@ -294,24 +304,14 @@
         }
     }
 
-    private void OnShapeMouseUp(MouseEventArgs args, Shape shape) {
-        if (args.Button == 0 && Canvas.IsDragging) {
-            shape.Transform(Canvas.Delta, Canvas.SnapToGrid, Canvas.GridSize);
-        }
-
-        Canvas.StartPoint = null;
-        Canvas.EndPoint = null;
-        Canvas.SelectedAnchor = null;
-    }
-
     private void OnAnchorMouseUp(MouseEventArgs args, Anchor anchor) {
-        if (args.Button == 0 && Canvas.IsDragging) {
-            anchor.Set(Canvas.SelectedShape, Canvas.SnappedEndPoint);
+        if (args.Button == 0) {
+            if (Canvas.IsExecutingAction) {
+                anchor.Set(Canvas.SelectedShape, Canvas.SnappedEndPoint);
+            }
+
+            Canvas.ClearActionExecution();
         }
-        
-        Canvas.StartPoint = null;
-        Canvas.EndPoint = null;
-        Canvas.SelectedAnchor = null;
     }
 
     private void DeleteSelected() {
@@ -319,11 +319,6 @@
             Canvas.Shapes.Remove(Canvas.SelectedShape);
             Canvas.SelectedShape = null;
         }
-    }
-
-    private void Select(Shape shape) {
-        // TODO set correct definition after selecting
-        Canvas.SelectedShape = shape;
     }
 
     private void ApplyFill() {
