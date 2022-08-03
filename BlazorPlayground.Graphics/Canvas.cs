@@ -117,6 +117,13 @@ namespace BlazorPlayground.Graphics {
             ClearActionExecution();
         }
         
+        public void DeleteSelectedShape() {
+            if (SelectedShape != null) {
+                Shapes.Remove(SelectedShape);
+                SelectedShape = null;
+            }
+        }
+
         public void ClearActionExecution() {
             StartPoint = null;
             EndPoint = null;

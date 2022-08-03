@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
@@ -443,6 +444,24 @@ namespace BlazorPlayground.Graphics.Tests {
             Assert.Null(canvas.StartPoint);
             Assert.Null(canvas.EndPoint);
             Assert.Null(canvas.SelectedAnchor);
+        }
+
+        [Fact]
+        public void DeleteSelectedShape() {
+            var selectedShape = new Line(new Point(100, 100), new Point(200, 200));
+            var shape = new Line(new Point(200, 200), new Point(100, 200));
+            var canvas = new Canvas() {
+                Shapes = new List<Shape>() { 
+                    selectedShape,
+                    shape
+                },
+                SelectedShape = selectedShape
+            };
+
+            canvas.DeleteSelectedShape();
+
+            Assert.Null(canvas.SelectedShape);
+            Assert.Equal(shape, Assert.Single(canvas.Shapes));
         }
 
         [Fact]
