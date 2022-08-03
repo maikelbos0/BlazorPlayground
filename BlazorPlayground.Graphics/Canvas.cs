@@ -69,13 +69,14 @@ namespace BlazorPlayground.Graphics {
                 return null;
             }
 
-            var shape = CurrentShapeDefinition.Construct(SnappedStartPoint, SnappedEndPoint, DrawSettings);
+            var shape = CurrentShapeDefinition.Construct(SnappedStartPoint, SnappedEndPoint);
 
             shape.Fill = DrawSettings.FillPaintManager.Server;
             shape.Stroke = DrawSettings.StrokePaintManager.Server;
             shape.StrokeWidth = DrawSettings.StrokeWidth;
             shape.StrokeLinecap = DrawSettings.StrokeLinecap;
             shape.StrokeLinejoin = DrawSettings.StrokeLinejoin;
+            shape.Sides = DrawSettings.Sides;
 
             return shape;
         }

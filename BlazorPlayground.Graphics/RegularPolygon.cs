@@ -9,12 +9,10 @@
         public override IReadOnlyList<Anchor> Anchors { get; } = Array.AsReadOnly(anchors);
         public Point CenterPoint { get; set; }
         public Point RadiusPoint { get; set; }
-        public int Sides { get; set; }
 
-        public RegularPolygon(Point centerPoint, Point radiusPoint, int sides) {
+        public RegularPolygon(Point centerPoint, Point radiusPoint) {
             CenterPoint = centerPoint;
             RadiusPoint = radiusPoint;
-            Sides = sides;
         }
 
         public IEnumerable<Point> GetPoints() {
@@ -34,6 +32,6 @@
             { "points", string.Join(" ", GetPoints().Select(p => FormattableString.Invariant($"{p.X},{p.Y}"))) }
         };
 
-        public override Shape Clone() => new RegularPolygon(CenterPoint, RadiusPoint, Sides);
+        public override Shape Clone() => new RegularPolygon(CenterPoint, RadiusPoint);
     }
 }

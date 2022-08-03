@@ -5,14 +5,16 @@ namespace BlazorPlayground.Graphics.Tests {
     public class RegularPolygonTests {
         [Fact]
         public void ElementName() {
-            var polygon = new RegularPolygon(new Point(100, 100), new Point(50, 50), 4);
+            var polygon = new RegularPolygon(new Point(100, 100), new Point(50, 50));
 
             Assert.Equal("polygon", polygon.ElementName);
         }
 
         [Fact]
         public void GetPoints_Square_0_Degrees() {
-            var square = new RegularPolygon(new Point(100, 100), new Point(50, 50), 4);
+            var square = new RegularPolygon(new Point(100, 100), new Point(50, 50)) {
+                Sides = 4
+            };
 
             var result = square.GetPoints().ToList();
 
@@ -25,7 +27,9 @@ namespace BlazorPlayground.Graphics.Tests {
 
         [Fact]
         public void GetPoints_Square_45_Degrees() {
-            var square = new RegularPolygon(new Point(100, 100), new Point(50, 100), 4);
+            var square = new RegularPolygon(new Point(100, 100), new Point(50, 100)) {
+                Sides = 4
+            };
 
             var result = square.GetPoints().ToList();
 
@@ -38,7 +42,9 @@ namespace BlazorPlayground.Graphics.Tests {
 
         [Fact]
         public void GetPoints_Square_22_Degrees() {
-            var square = new RegularPolygon(new Point(100, 100), new Point(50, 120), 4);
+            var square = new RegularPolygon(new Point(100, 100), new Point(50, 120)) {
+                Sides = 4
+            };
 
             var result = square.GetPoints().ToList();
 
@@ -51,7 +57,9 @@ namespace BlazorPlayground.Graphics.Tests {
 
         [Fact]
         public void GetPoints_Square_112_Degrees() {
-            var square = new RegularPolygon(new Point(100, 100), new Point(150, 120), 4);
+            var square = new RegularPolygon(new Point(100, 100), new Point(150, 120)) {
+                Sides = 4
+            };
 
             var result = square.GetPoints().ToList();
 
@@ -64,7 +72,9 @@ namespace BlazorPlayground.Graphics.Tests {
 
         [Fact]
         public void GetPoints_Triangle() {
-            var triangle = new RegularPolygon(new Point(100, 100), new Point(100, 50), 3);
+            var triangle = new RegularPolygon(new Point(100, 100), new Point(100, 50)) {
+                Sides = 3
+            };
 
             var result = triangle.GetPoints().ToList();
 
@@ -77,7 +87,9 @@ namespace BlazorPlayground.Graphics.Tests {
 
         [Fact]
         public void GetPoints_Hexagon() {
-            var hexagon = new RegularPolygon(new Point(100, 100), new Point(100, 50), 6);
+            var hexagon = new RegularPolygon(new Point(100, 100), new Point(100, 50)) {
+                Sides = 6
+            };
 
             var result = hexagon.GetPoints().ToList();
 
@@ -93,7 +105,9 @@ namespace BlazorPlayground.Graphics.Tests {
 
         [Fact]
         public void GetAttributes() {
-            var polygon = new RegularPolygon(new Point(100, 100), new Point(50, 50), 4);
+            var polygon = new RegularPolygon(new Point(100, 100), new Point(50, 50)) {
+                Sides = 4
+            };
 
             var attributes = polygon.GetAttributes();
 
@@ -104,7 +118,7 @@ namespace BlazorPlayground.Graphics.Tests {
 
         [Fact]
         public void Anchors_Get() {
-            var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250), 3);
+            var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250));
 
             var result = polygon.Anchors;
 
@@ -115,7 +129,7 @@ namespace BlazorPlayground.Graphics.Tests {
 
         [Fact]
         public void Anchors_Set() {
-            var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250), 3);
+            var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250));
 
             var result = polygon.Anchors;
 
@@ -128,7 +142,9 @@ namespace BlazorPlayground.Graphics.Tests {
 
         [Fact]
         public void Clone() {
-            var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250), 5);
+            var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250)) {
+                Sides = 5
+            };
 
             var result = polygon.Clone();
 
