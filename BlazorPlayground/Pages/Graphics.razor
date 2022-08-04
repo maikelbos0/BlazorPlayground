@@ -131,6 +131,15 @@
                 <button type="button" class="btn btn-secondary" @onclick="() => ApplyStrokeLinejoin()">Apply</button>
             }
         </div>
+        
+        <div class="input-group mb-3 me-3">
+            <label for="sides" class="input-group-text">Sides</label>
+            <input type="text" class="form-control" id="sides" @bind-value="Canvas.DrawSettings.Sides" />
+            
+            @if (!Canvas.IsDrawing) {
+                <button type="button" class="btn btn-secondary" @onclick="() => ApplySides()">Apply</button>
+            }
+        </div>
 
         @if (!Canvas.IsDrawing) {
             <div class="btn-group mb-3 me-3">
@@ -145,13 +154,6 @@
 
             <div class="btn-group mb-3 me-3">
                 <button type="button" class="btn btn-secondary" @onclick="() => Canvas.DeleteSelectedShape()">Delete</button>
-            </div>
-        }
-        else {
-            @*TODO hide if not applicable*@
-            <div class="input-group mb-3 me-3">
-                <label for="regularPolygonSides" class="input-group-text">Sides</label>
-                <input type="text" class="form-control" id="regularPolygonSides" @bind-value="Canvas.DrawSettings.Sides" />
             </div>
         }
 
@@ -324,6 +326,12 @@
     private void ApplyStrokeWidth() {
         if (Canvas.SelectedShape != null) {
             Canvas.SelectedShape.StrokeWidth = Canvas.DrawSettings.StrokeWidth;
+        }
+    }
+
+    private void ApplySides() {
+        if (Canvas.SelectedShape != null) {
+            Canvas.SelectedShape.Sides = Canvas.DrawSettings.Sides;
         }
     }
 
