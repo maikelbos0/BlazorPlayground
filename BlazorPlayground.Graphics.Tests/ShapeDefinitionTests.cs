@@ -1,7 +1,22 @@
-﻿using Xunit;
+﻿using System;
+using Xunit;
 
 namespace BlazorPlayground.Graphics.Tests {
     public class ShapeDefinitionTests {
+        [Theory]
+        [InlineData(typeof(Line), "Line")]
+        [InlineData(typeof(Rectangle), "Rectangle")]
+        [InlineData(typeof(Circle), "Circle")]
+        [InlineData(typeof(Ellipse), "Ellipse")]
+        [InlineData(typeof(RegularPolygon), "Regular polygon")]
+        [InlineData(typeof(QuadraticBezier), "Quadratic bezier")]
+        [InlineData(typeof(CubicBezier), "Cubic bezier")]
+        public void Get(Type type, string expectedName) {
+            var definition = ShapeDefinition.Get(type);
+
+            Assert.Equal(expectedName, definition.Name);
+        }
+
         [Fact]
         public void Line() {
             var definition = Assert.Single(ShapeDefinition.Values, d => d.Name == "Line");
