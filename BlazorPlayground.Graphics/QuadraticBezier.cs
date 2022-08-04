@@ -22,7 +22,7 @@
             { "d", FormattableString.Invariant($"M {StartPoint.X} {StartPoint.Y} Q {ControlPoint.X} {ControlPoint.Y}, {EndPoint.X} {EndPoint.Y}") }
         };
 
-        public override Shape Clone() => new QuadraticBezier(StartPoint, EndPoint) {
+        protected override Shape CreateClone() => new QuadraticBezier(StartPoint, EndPoint) {
             ControlPoint = ControlPoint
         };
     }

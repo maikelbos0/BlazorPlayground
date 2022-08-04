@@ -28,7 +28,7 @@
             { "d", FormattableString.Invariant($"M {StartPoint.X} {StartPoint.Y} C {ControlPoint1.X} {ControlPoint1.Y}, {ControlPoint2.X} {ControlPoint2.Y}, {EndPoint.X} {EndPoint.Y}") }
         };
 
-        public override Shape Clone() => new CubicBezier(StartPoint, EndPoint) {
+        protected override Shape CreateClone() => new CubicBezier(StartPoint, EndPoint) {
             ControlPoint1 = ControlPoint1,
             ControlPoint2 = ControlPoint2
         };

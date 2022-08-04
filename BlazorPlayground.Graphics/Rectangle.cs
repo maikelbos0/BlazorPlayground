@@ -22,6 +22,6 @@
             { "height", Math.Abs(StartPoint.Y - EndPoint.Y) }
         };
 
-        public override Shape Clone() => new Rectangle(StartPoint, EndPoint);
+        protected override Shape CreateClone() => new Rectangle(StartPoint, EndPoint);
     }
 }

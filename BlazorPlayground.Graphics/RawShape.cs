@@ -15,12 +15,12 @@ namespace BlazorPlayground.Graphics {
 
         public override IReadOnlyList<Anchor> Anchors => new ReadOnlyCollection<Anchor>(Array.Empty<Anchor>());
 
-        public override Shape Clone() => new RawShape(new XElement(element));
+        protected override Shape CreateClone() => new RawShape(new XElement(element));
 
         // TODO refactor this; GetAttributes is not a property of a renderable shape at all
-        public override ShapeAttributeCollection GetAttributes() => new ShapeAttributeCollection();
+        public override ShapeAttributeCollection GetAttributes() => new();
 
-        public override XElement CreateElement() => new XElement(element);
+        public override XElement CreateElement() => new(element);
 
         public void BuildRenderTree(RenderTreeBuilder builder) {
             builder.AddContent(1, new MarkupString(element.ToString()));

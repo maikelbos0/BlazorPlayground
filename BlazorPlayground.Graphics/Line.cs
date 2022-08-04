@@ -22,6 +22,6 @@
             { "y2", EndPoint.Y }
         };
 
-        public override Shape Clone() => new Line(StartPoint, EndPoint);
+        protected override Shape CreateClone() => new Line(StartPoint, EndPoint);
     }
 }

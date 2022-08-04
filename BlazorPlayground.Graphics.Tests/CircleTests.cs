@@ -27,7 +27,7 @@ namespace BlazorPlayground.Graphics.Tests {
             var circle = new Circle(new Point(100, 150), new Point(200, 250));
 
             var result = circle.Anchors;
-            
+
             Assert.Equal(2, result.Count);
             PointAssert.Equal(new Point(100, 150), result[0].Get(circle));
             PointAssert.Equal(new Point(200, 250), result[1].Get(circle));

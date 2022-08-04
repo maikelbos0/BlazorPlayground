@@ -32,6 +32,6 @@
             { "points", string.Join(" ", GetPoints().Select(p => FormattableString.Invariant($"{p.X},{p.Y}"))) }
         };
 
-        public override Shape Clone() => new RegularPolygon(CenterPoint, RadiusPoint);
+        protected override Shape CreateClone() => new RegularPolygon(CenterPoint, RadiusPoint);
     }
 }

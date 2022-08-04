@@ -22,6 +22,6 @@
             { "r", (RadiusPoint - CenterPoint).Distance }
         };
 
-        public override Shape Clone() => new Circle(CenterPoint, RadiusPoint);
+        protected override Shape CreateClone() => new Circle(CenterPoint, RadiusPoint);
     }
 }

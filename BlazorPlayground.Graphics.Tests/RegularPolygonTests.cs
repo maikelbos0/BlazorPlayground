@@ -142,9 +142,7 @@ namespace BlazorPlayground.Graphics.Tests {
 
         [Fact]
         public void Clone() {
-            var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250)) {
-                Sides = 5
-            };
+            var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250));
 
             var result = polygon.Clone();
 
@@ -153,7 +151,6 @@ namespace BlazorPlayground.Graphics.Tests {
             Assert.NotSame(polygon, resultPolygon);
             PointAssert.Equal(new Point(100, 150), resultPolygon.CenterPoint);
             PointAssert.Equal(new Point(200, 250), resultPolygon.RadiusPoint);
-            Assert.Equal(5, resultPolygon.Sides);
         }
     }
 }

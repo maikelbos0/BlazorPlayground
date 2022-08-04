@@ -23,6 +23,6 @@
             { "ry", Math.Abs(RadiusPoint.Y - CenterPoint.Y) }
         };
 
-        public override Shape Clone() => new Ellipse(CenterPoint, RadiusPoint);
+        protected override Shape CreateClone() => new Ellipse(CenterPoint, RadiusPoint);
     }
 }

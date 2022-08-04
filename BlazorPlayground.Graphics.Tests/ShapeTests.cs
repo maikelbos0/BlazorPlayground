@@ -49,5 +49,27 @@ namespace BlazorPlayground.Graphics.Tests {
             Assert.Equal("round", result.Attribute("stroke-linecap")?.Value);
             Assert.Equal("arcs", result.Attribute("stroke-linejoin")?.Value);
         }
+
+        [Fact]
+        public void Clone() {
+            var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250)) {
+                Fill = new Color(255, 0, 255, 1),
+                Stroke = new Color(0, 255, 0, 1),
+                Sides = 5,
+                StrokeLinecap = Linecap.Round,
+                StrokeLinejoin = Linejoin.Round,
+                StrokeWidth = 10
+            };
+
+            var result = polygon.Clone();
+
+            Assert.NotSame(polygon, result);
+            PaintServerAssert.Equal(new Color(255, 0, 255, 1), result.Fill);
+            PaintServerAssert.Equal(new Color(0, 255, 0, 1), result.Stroke);
+            Assert.Equal(5, result.Sides);
+            Assert.Equal(Linecap.Round, result.StrokeLinecap);
+            Assert.Equal(Linejoin.Round, result.StrokeLinejoin);
+            Assert.Equal(10, result.StrokeWidth);
+        }
     }
 }

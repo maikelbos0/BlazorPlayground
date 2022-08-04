@@ -13,7 +13,7 @@ namespace BlazorPlayground.Graphics {
 
         public abstract ShapeAttributeCollection GetAttributes();
 
-        public abstract Shape Clone();
+        protected abstract Shape CreateClone();
 
         public void Transform(Point delta, bool snapToGrid, int gridSize) {
             if (snapToGrid) {
@@ -44,6 +44,19 @@ namespace BlazorPlayground.Graphics {
             element.Add(GetAttributes().Select(a => new XAttribute(a.Key, a.Value)));
 
             return element;
+        }
+
+        public Shape Clone() {
+            var clone = CreateClone();
+
+            clone.Fill = Fill;
+            clone.Stroke = Stroke;
+            clone.StrokeWidth = StrokeWidth;
+            clone.StrokeLinecap = StrokeLinecap;
+            clone.StrokeLinejoin = StrokeLinejoin;
+            clone.Sides = Sides;
+
+            return clone;
         }
     }
 }
