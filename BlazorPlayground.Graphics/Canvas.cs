@@ -5,6 +5,7 @@ namespace BlazorPlayground.Graphics {
         private int width = 800;
         private int height = 800;
         private int gridSize = 50;
+        private ShapeDefinition currentShapeDefinition = ShapeDefinition.Values.First();
 
         public int Width {
             get => width;
@@ -29,7 +30,10 @@ namespace BlazorPlayground.Graphics {
         public Point? Delta => StartPoint != null && EndPoint != null ? EndPoint - StartPoint : null;
         public DrawSettings DrawSettings { get; } = new DrawSettings();
         public bool IsDrawing { get; private set; } = true;
-        public ShapeDefinition CurrentShapeDefinition { get; private set; } = ShapeDefinition.Values.First();
+        public ShapeDefinition CurrentShapeDefinition {
+            get => SelectedShape == null ? currentShapeDefinition : ShapeDefinition.Get(SelectedShape.GetType());
+            set => currentShapeDefinition = value;
+        } 
         public Shape? SelectedShape { get; set; }
         public Anchor? SelectedAnchor { get; set; }
 
@@ -117,7 +121,7 @@ namespace BlazorPlayground.Graphics {
 
             ClearActionExecution();
         }
-        
+
         public void DeleteSelectedShape() {
             if (SelectedShape != null) {
                 Shapes.Remove(SelectedShape);

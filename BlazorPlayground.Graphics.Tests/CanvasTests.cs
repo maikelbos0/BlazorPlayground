@@ -32,6 +32,15 @@ namespace BlazorPlayground.Graphics.Tests {
             Assert.Equal(1, canvas.GridSize);
         }
 
+        [Fact]
+        public void CurrentShapeDefinition_SelectedShape() {
+            var canvas = new Canvas() {
+                SelectedShape = new Rectangle(new Point(100, 150), new Point(200, 250))
+            };
+
+            Assert.Equal(ShapeDefinition.Get(typeof(Rectangle)), canvas.CurrentShapeDefinition);
+        }
+
         [Theory]
         [InlineData(10, false, 12, 23)]
         [InlineData(10, true, 10, 20)]
@@ -167,13 +176,10 @@ namespace BlazorPlayground.Graphics.Tests {
             var canvas = new Canvas();
 
             canvas.StartDrawing(definition);
-            canvas.SelectedShape = new Line(new Point(100, 200), new Point(150, 250));
-
             canvas.StopDrawing();
 
             Assert.False(canvas.IsDrawing);
             Assert.Equal(definition, canvas.CurrentShapeDefinition);
-            Assert.NotNull(canvas.SelectedShape);
         }
 
         [Fact]
