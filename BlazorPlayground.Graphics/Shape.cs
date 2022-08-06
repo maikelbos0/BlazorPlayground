@@ -32,19 +32,27 @@ namespace BlazorPlayground.Graphics {
             }
         }
 
-        public virtual XElement CreateElement() {
-            var element = new XElement(
-                ElementName,
-                new XAttribute("fill", Fill),
-                new XAttribute("stroke", Stroke),
-                new XAttribute("stroke-width", StrokeWidth),
-                new XAttribute("stroke-linecap", StrokeLinecap.ToString().ToLower()),
-                new XAttribute("stroke-linejoin", StrokeLinejoin.ToString().ToLower())
-            );
+        public virtual XElement CreateElement() => new(ElementName, CreateElementAttributes());
 
-            element.Add(GetAttributes().Select(a => new XAttribute(a.Key, a.Value)));
+        private IEnumerable<XAttribute> CreateElementAttributes() {
+            if (Definition.UseFill) {
+                yield return new XAttribute("fill", Fill);
+            }
 
-            return element;
+            yield return new XAttribute("stroke", Stroke);
+            yield return new XAttribute("stroke-width", StrokeWidth);
+
+            if (Definition.UseStrokeLinecap) {
+                yield return new XAttribute("stroke-linecap", StrokeLinecap.ToString().ToLower());
+            }
+
+            if (Definition.UseStrokeLinejoin) {
+                yield return new XAttribute("stroke-linejoin", StrokeLinejoin.ToString().ToLower());
+            }
+
+            foreach (var attribute in GetAttributes()) {
+                yield return new XAttribute(attribute.Key, attribute.Value);
+            }
         }
 
         public Shape Clone() {
