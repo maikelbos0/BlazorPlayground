@@ -32,9 +32,9 @@ namespace BlazorPlayground.Graphics {
             }
         }
 
-        public virtual XElement CreateElement() => new(ElementName, CreateElementAttributes());
+        public virtual XElement CreateSvgElement() => new(ElementName, CreateSvgAttributes());
 
-        private IEnumerable<XAttribute> CreateElementAttributes() {
+        private IEnumerable<XAttribute> CreateSvgAttributes() {
             if (Definition.UseFill) {
                 yield return new XAttribute("fill", Fill);
             }

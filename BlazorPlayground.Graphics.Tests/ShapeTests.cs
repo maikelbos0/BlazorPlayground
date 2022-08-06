@@ -34,7 +34,7 @@ namespace BlazorPlayground.Graphics.Tests {
         }
 
         [Fact]
-        public void CreateElement_Line() {
+        public void CreateSvgElement_Line() {
             var shape = new Line(new Point(100, 200), new Point(150, 250)) {
                 Fill = new Color(255, 255, 0, 1),
                 Stroke = new Color(128, 0, 0, 1),
@@ -43,7 +43,7 @@ namespace BlazorPlayground.Graphics.Tests {
                 StrokeLinejoin = Linejoin.Arcs
             };
 
-            var result = shape.CreateElement();
+            var result = shape.CreateSvgElement();
 
             Assert.Equal(shape.ElementName, result.Name);
             Assert.Equal("100", result.Attribute("x1")?.Value);
@@ -56,7 +56,7 @@ namespace BlazorPlayground.Graphics.Tests {
         }
 
         [Fact]
-        public void CreateElement_Rectangle() {
+        public void CreateSvgElement_Rectangle() {
             var shape = new Rectangle(new Point(100, 200), new Point(150, 250)) {
                 Fill = new Color(255, 255, 0, 1),
                 Stroke = new Color(128, 0, 0, 1),
@@ -64,7 +64,7 @@ namespace BlazorPlayground.Graphics.Tests {
                 StrokeLinejoin = Linejoin.Arcs
             };
 
-            var result = shape.CreateElement();
+            var result = shape.CreateSvgElement();
 
             Assert.Equal(shape.ElementName, result.Name);
             Assert.Equal("100", result.Attribute("x")?.Value);

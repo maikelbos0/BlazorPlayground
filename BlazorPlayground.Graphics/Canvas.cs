@@ -140,7 +140,7 @@ namespace BlazorPlayground.Graphics {
             new XAttribute("viewBox", $"0 0 {Width} {Height}"),
             new XAttribute("width", Width),
             new XAttribute("height", Height),
-            Shapes.Select(s => s.CreateElement())
+            Shapes.Select(s => s.CreateSvgElement())
         );
     }
 }

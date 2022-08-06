@@ -20,7 +20,7 @@ namespace BlazorPlayground.Graphics {
         // TODO refactor this; GetAttributes is not a property of a renderable shape at all
         public override ShapeAttributeCollection GetAttributes() => new();
 
-        public override XElement CreateElement() => new(element);
+        public override XElement CreateSvgElement() => new(element);
 
         public void BuildRenderTree(RenderTreeBuilder builder) {
             builder.AddContent(1, new MarkupString(element.ToString()));

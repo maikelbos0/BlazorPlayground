@@ -25,7 +25,7 @@ namespace BlazorPlayground.Graphics.Tests {
             Assert.True(result.IsSuccess);
 
             var shape = Assert.IsType<RawShape>(Assert.Single(result.Canvas.Shapes));
-            var element = shape.CreateElement();
+            var element = shape.CreateSvgElement();
 
             Assert.Equal("line", element.Name);
             Assert.Equal("100", element.Attribute("x1")?.Value);
