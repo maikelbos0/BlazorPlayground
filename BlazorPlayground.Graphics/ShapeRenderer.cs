@@ -27,13 +27,24 @@ namespace BlazorPlayground.Graphics {
                 else {
                     // TODO refactor this; does a renderer still need to exist?
                     builder.OpenElement(1, "g");
-                    builder.AddAttribute(2, "stroke-linecap", Shape.StrokeLinecap.ToString().ToLower());
-                    builder.AddAttribute(3, "stroke-linejoin", Shape.StrokeLinejoin.ToString().ToLower());
+
+                    if (Shape.Definition.UseStrokeLinecap) {
+                        builder.AddAttribute(2, "stroke-linecap", Shape.StrokeLinecap.ToString().ToLower());
+                    }
+
+                    if (Shape.Definition.UseStrokeLinejoin) {
+                        builder.AddAttribute(3, "stroke-linejoin", Shape.StrokeLinejoin.ToString().ToLower());
+                    }
+
                     builder.SetKey(Shape);
 
                     builder.OpenElement(4, Shape.ElementName);
                     builder.AddAttribute(5, "class", IsSelected ? "shape-selected" : IsVirtual ? "shape-virtual" : "");
-                    builder.AddAttribute(6, "fill", Shape.Fill);
+                    
+                    if (Shape.Definition.UseFill) {
+                        builder.AddAttribute(6, "fill", Shape.Fill);
+                    }
+
                     builder.AddAttribute(7, "stroke", Shape.Stroke);
                     builder.AddAttribute(8, "stroke-width", Shape.StrokeWidth);
                     builder.AddMultipleAttributes(9, Shape.GetAttributes());
