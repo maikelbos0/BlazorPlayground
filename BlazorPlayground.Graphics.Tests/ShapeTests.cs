@@ -3,6 +3,13 @@
 namespace BlazorPlayground.Graphics.Tests {
     public class ShapeTests {
         [Fact]
+        public void Definition() {
+            var shape = new Line(new Point(100, 150), new Point(200, 250));
+
+            Assert.Equal(ShapeDefinition.Get(typeof(Line)), shape.Definition);
+        }
+
+        [Fact]
         public void Transform() {
             var shape = new Line(new Point(100, 150), new Point(200, 250));
 

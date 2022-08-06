@@ -14,6 +14,8 @@
 
         public static IEnumerable<ShapeDefinition> Values => definitions.Values;
 
+        public static ShapeDefinition Get(Shape shape) => Get(shape.GetType());
+
         public static ShapeDefinition Get(Type type) => definitions[type];
 
         public string Name { get; }

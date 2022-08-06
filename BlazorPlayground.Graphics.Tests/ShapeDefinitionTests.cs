@@ -18,6 +18,15 @@ namespace BlazorPlayground.Graphics.Tests {
         }
 
         [Fact]
+        public void Get_By_Shape() {
+            var shape = new Line(new Point(100, 200), new Point(150, 250));
+
+            var definition = ShapeDefinition.Get(shape);
+
+            Assert.Equal(ShapeDefinition.Get(typeof(Line)), definition);
+        }
+
+        [Fact]
         public void Line() {
             var definition = Assert.Single(ShapeDefinition.Values, d => d.Name == "Line");
 

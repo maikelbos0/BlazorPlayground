@@ -8,6 +8,7 @@ namespace BlazorPlayground.Graphics {
         public Linecap StrokeLinecap { get; set; } = Linecap.Butt;
         public Linejoin StrokeLinejoin { get; set; } = Linejoin.Miter;
         public int Sides { get; set; } = 3;
+        public ShapeDefinition Definition => ShapeDefinition.Get(this);
         public abstract string ElementName { get; }
         public abstract IReadOnlyList<Anchor> Anchors { get; }
 

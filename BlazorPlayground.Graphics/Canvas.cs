@@ -31,7 +31,7 @@ namespace BlazorPlayground.Graphics {
         public DrawSettings DrawSettings { get; } = new DrawSettings();
         public bool IsDrawing { get; private set; } = true;
         public ShapeDefinition CurrentShapeDefinition {
-            get => SelectedShape == null ? currentShapeDefinition : ShapeDefinition.Get(SelectedShape.GetType());
+            get => SelectedShape == null ? currentShapeDefinition : ShapeDefinition.Get(SelectedShape);
             set => currentShapeDefinition = value;
         } 
         public Shape? SelectedShape { get; set; }
