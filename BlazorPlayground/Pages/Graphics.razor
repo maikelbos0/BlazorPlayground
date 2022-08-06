@@ -48,14 +48,12 @@
 
 <div class="mb-3 graphics-ribbon">
     <div class="btn-toolbar">
-        <div class="btn-group mb-3 me-3">
+        <fieldset class="btn-group mb-3 me-3">
             <button type="button" class="btn btn-secondary" @onclick="() => Save()">Save</button>
             <button type="button" class="btn btn-secondary" @onclick="() => ToggleLoadModal(true)">Load</button>
-        </div>
+        </fieldset>
 
-        @*TODO hide settings that are not applicable*@
-
-        <div class="input-group mb-3 me-3">
+        <fieldset class="input-group mb-3 me-3" disabled="@(!Canvas.CurrentShapeDefinition.UseFill)">
             <label for="fillColor" class="input-group-text">Fill</label>
 
             <div class="input-group-text">
@@ -70,12 +68,10 @@
                 <label class="form-check-label ps-2" for="fillPaintModeNone">None</label>
             </div>
 
-            @if (!Canvas.IsDrawing) {
-                <button type="button" class="btn btn-secondary" @onclick="() => ApplyFill()">Apply</button>
-            }
-        </div>
+            <button type="button" class="btn btn-secondary" @onclick="() => ApplyFill()" disabled="@(Canvas.SelectedShape == null)">Apply</button>
+        </fieldset>
 
-        <div class="input-group mb-3 me-3">
+        <fieldset class="input-group mb-3 me-3">
             <label for="strokeColor" class="input-group-text">Stroke</label>
 
             <div class="input-group-text">
@@ -90,21 +86,17 @@
                 <label class="form-check-label ps-2" for="strokePaintModeNone">None</label>
             </div>
 
-            @if (!Canvas.IsDrawing) {
-                <button type="button" class="btn btn-secondary" @onclick="() => ApplyStroke()">Apply</button>
-            }
-        </div>
+            <button type="button" class="btn btn-secondary" @onclick="() => ApplyStroke()" disabled="@(Canvas.SelectedShape == null)">Apply</button>
+        </fieldset>
 
-        <div class="input-group mb-3 me-3">
+        <fieldset class="input-group mb-3 me-3">
             <label for="strokeWidth" class="input-group-text">Stroke width</label>
             <input type="text" class="form-control" id="strokeWidth" @bind-value="Canvas.DrawSettings.StrokeWidth" />
 
-            @if (!Canvas.IsDrawing) {
-                <button type="button" class="btn btn-secondary" @onclick="() => ApplyStrokeWidth()">Apply</button>
-            }
-        </div>
+            <button type="button" class="btn btn-secondary" @onclick="() => ApplyStrokeWidth()" disabled="@(Canvas.SelectedShape == null)">Apply</button>
+        </fieldset>
 
-        <div class="input-group mb-3 me-3">
+        <fieldset class="input-group mb-3 me-3" disabled="@(!Canvas.CurrentShapeDefinition.UseStrokeLinecap)">
             <label for="strokeLinecap" class="input-group-text">Linecap</label>
 
             <select class="form-select" id="strokeLinecap" @bind="Canvas.DrawSettings.StrokeLinecap">
@@ -113,12 +105,10 @@
                 }
             </select>
 
-            @if (!Canvas.IsDrawing) {
-                <button type="button" class="btn btn-secondary" @onclick="() => ApplyStrokeLinecap()">Apply</button>
-            }
-        </div>
+            <button type="button" class="btn btn-secondary" @onclick="() => ApplyStrokeLinecap()" disabled="@(Canvas.SelectedShape == null)">Apply</button>
+        </fieldset>
 
-        <div class="input-group mb-3 me-3">
+        <fieldset class="input-group mb-3 me-3" disabled="@(!Canvas.CurrentShapeDefinition.UseStrokeLinejoin)">
             <label for="strokeLinejoin" class="input-group-text">Linejoin</label>
 
             <select class="form-select" id="strokeLinejoin" @bind="Canvas.DrawSettings.StrokeLinejoin">
@@ -127,47 +117,41 @@
                 }
             </select>
 
-            @if (!Canvas.IsDrawing) {
-                <button type="button" class="btn btn-secondary" @onclick="() => ApplyStrokeLinejoin()">Apply</button>
-            }
-        </div>
-        
-        <div class="input-group mb-3 me-3">
+            <button type="button" class="btn btn-secondary" @onclick="() => ApplyStrokeLinejoin()" disabled="@(Canvas.SelectedShape == null)">Apply</button>
+        </fieldset>
+
+        <fieldset class="input-group mb-3 me-3" disabled="@(!Canvas.CurrentShapeDefinition.UseSides)">
             <label for="sides" class="input-group-text">Sides</label>
             <input type="text" class="form-control" id="sides" @bind-value="Canvas.DrawSettings.Sides" />
-            
-            @if (!Canvas.IsDrawing) {
-                <button type="button" class="btn btn-secondary" @onclick="() => ApplySides()">Apply</button>
-            }
-        </div>
 
-        @if (!Canvas.IsDrawing) {
-            <div class="btn-group mb-3 me-3">
-                <button type="button" class="btn btn-secondary" @onclick="() => MoveSelectedShapeToFrontOfList()">Move to front</button>
-                <button type="button" class="btn btn-secondary" @onclick="() => MoveSelectedShapeInList(1)">Move forward</button>
-            </div>
+            <button type="button" class="btn btn-secondary" @onclick="() => ApplySides()" disabled="@(Canvas.SelectedShape == null)">Apply</button>
+        </fieldset>
 
-            <div class="btn-group mb-3 me-3">
-                <button type="button" class="btn btn-secondary" @onclick="() => MoveSelectedShapeInList(-1)">Move backward</button>
-                <button type="button" class="btn btn-secondary" @onclick="() => MoveSelectedShapeToBackOfList()">Move to back</button>
-            </div>
+        <fieldset class="btn-group mb-3 me-3" disabled="@(Canvas.SelectedShape == null)">
+            <button type="button" class="btn btn-secondary" @onclick="() => MoveSelectedShapeToFrontOfList()">Move to front</button>
+            <button type="button" class="btn btn-secondary" @onclick="() => MoveSelectedShapeInList(1)">Move forward</button>
+        </fieldset>
 
-            <div class="btn-group mb-3 me-3">
-                <button type="button" class="btn btn-secondary" @onclick="() => Canvas.DeleteSelectedShape()">Delete</button>
-            </div>
-        }
+        <fieldset class="btn-group mb-3 me-3" disabled="@(Canvas.SelectedShape == null)">
+            <button type="button" class="btn btn-secondary" @onclick="() => MoveSelectedShapeInList(-1)">Move backward</button>
+            <button type="button" class="btn btn-secondary" @onclick="() => MoveSelectedShapeToBackOfList()">Move to back</button>
+        </fieldset>
 
-        <div class="input-group mb-3 me-3">
+        <fieldset class="btn-group mb-3 me-3" disabled="@(Canvas.SelectedShape == null)">
+            <button type="button" class="btn btn-secondary" @onclick="() => Canvas.DeleteSelectedShape()">Delete</button>
+        </fieldset>
+
+        <fieldset class="input-group mb-3 me-3">
             <label for="canvasWidth" class="input-group-text">Width</label>
             <input type="text" class="form-control" id="canvasWidth" @bind-value="Canvas.Width" />
-        </div>
+        </fieldset>
 
-        <div class="input-group mb-3 me-3">
+        <fieldset class="input-group mb-3 me-3">
             <label for="canvasHeight" class="input-group-text">Height</label>
             <input type="text" class="form-control" id="canvasHeight" @bind-value="Canvas.Height" />
-        </div>
+        </fieldset>
 
-        <div class="input-group mb-3">
+        <fieldset class="input-group mb-3">
             <label for="gridSize" class="input-group-text">Grid size</label>
             <input type="text" class="form-control" id="gridSize" @bind-value="Canvas.GridSize" />
 
@@ -180,7 +164,7 @@
                 <input class="form-check-input mt-0" type="checkbox" id="snapToGrid" @bind="Canvas.SnapToGrid" />
                 <label class="form-check-label ps-2" for="snapToGrid">Snap</label>
             </div>
-        </div>
+        </fieldset>
     </div>
 </div>
 
@@ -296,7 +280,7 @@
     private void OnAnchorMouseUp(MouseEventArgs args, Anchor anchor) {
         if (args.Button == 0) {
             Canvas.TransformSelectedShapeAnchor();
-        }    
+        }
     }
 
     private void ApplyFill() {
