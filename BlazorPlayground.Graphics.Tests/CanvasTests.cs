@@ -33,12 +33,33 @@ namespace BlazorPlayground.Graphics.Tests {
         }
 
         [Fact]
+        public void CurrentShapeDefinition_IsDrawing() {
+            var canvas = new Canvas() {
+                IsDrawing = true,
+                CurrentShapeDefinition = ShapeDefinition.Get(typeof(Circle))
+            };
+
+            Assert.Same(ShapeDefinition.Get(typeof(Circle)), canvas.CurrentShapeDefinition);
+        }
+
+        [Fact]
         public void CurrentShapeDefinition_SelectedShape() {
             var canvas = new Canvas() {
+                IsDrawing = false,
+                CurrentShapeDefinition = ShapeDefinition.Get(typeof(Circle)),
                 SelectedShape = new Rectangle(new Point(100, 150), new Point(200, 250))
             };
 
-            Assert.Equal(ShapeDefinition.Get(typeof(Rectangle)), canvas.CurrentShapeDefinition);
+            Assert.Same(ShapeDefinition.Get(typeof(Rectangle)), canvas.CurrentShapeDefinition);
+        }
+
+        [Fact]
+        public void CurrentShapeDefinition_Not_IsDrawing_No_SelectedShape() {
+            var canvas = new Canvas() {
+                IsDrawing = false
+            };
+
+            Assert.Same(ShapeDefinition.None, canvas.CurrentShapeDefinition);
         }
 
         [Theory]
@@ -158,28 +179,29 @@ namespace BlazorPlayground.Graphics.Tests {
 
         [Fact]
         public void StartDrawing() {
-            var definition = ShapeDefinition.Values.Single(d => d.Name == "Quadratic bezier");
             var canvas = new Canvas() {
+                IsDrawing = false,
+                CurrentShapeDefinition = ShapeDefinition.Get(typeof(Circle)),
                 SelectedShape = new Line(new Point(100, 200), new Point(150, 250))
             };
 
-            canvas.StartDrawing(definition);
+            canvas.StartDrawing(ShapeDefinition.Get(typeof(Rectangle)));
 
             Assert.True(canvas.IsDrawing);
-            Assert.Equal(definition, canvas.CurrentShapeDefinition);
+            Assert.Equal(ShapeDefinition.Get(typeof(Rectangle)), canvas.CurrentShapeDefinition);
             Assert.Null(canvas.SelectedShape);
         }
 
         [Fact]
         public void StopDrawing() {
-            var definition = ShapeDefinition.Values.Single(d => d.Name == "Quadratic bezier");
-            var canvas = new Canvas();
+            var canvas = new Canvas() {
+                IsDrawing = true,
+                CurrentShapeDefinition = ShapeDefinition.Get(typeof(Circle))
+            };
 
-            canvas.StartDrawing(definition);
             canvas.StopDrawing();
 
             Assert.False(canvas.IsDrawing);
-            Assert.Equal(definition, canvas.CurrentShapeDefinition);
         }
 
         [Fact]

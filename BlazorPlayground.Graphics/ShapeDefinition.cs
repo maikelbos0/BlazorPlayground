@@ -12,6 +12,8 @@
             { typeof(CubicBezier), new("Cubic bezier", (startPoint, endPoint) => new CubicBezier(startPoint, endPoint), useFill: true, useStroke: true, useStrokeWidth: true, useStrokeLinecap: true, autoSelect: true) }
         };
 
+        public static ShapeDefinition None { get; } = new ShapeDefinition("None", (startPoint, endPoint) => throw new InvalidOperationException());
+
         public static IEnumerable<ShapeDefinition> Values => definitions.Values;
 
         public static ShapeDefinition Get(Shape shape) => Get(shape.GetType());

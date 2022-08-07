@@ -27,6 +27,19 @@ namespace BlazorPlayground.Graphics.Tests {
         }
 
         [Fact]
+        public void None() {
+            Assert.False(ShapeDefinition.None.UseFill);
+            Assert.False(ShapeDefinition.None.UseStroke);
+            Assert.False(ShapeDefinition.None.UseStrokeWidth);
+            Assert.False(ShapeDefinition.None.UseStrokeLinejoin);
+            Assert.False(ShapeDefinition.None.UseStrokeLinecap);
+            Assert.False(ShapeDefinition.None.UseSides);
+            Assert.False(ShapeDefinition.None.AutoSelect);
+
+            Assert.Throws<InvalidOperationException>(() => ShapeDefinition.None.Construct(new Point(100, 200), new Point(150, 250)));
+        }
+
+        [Fact]
         public void Line() {
             var definition = Assert.Single(ShapeDefinition.Values, d => d.Name == "Line");
 

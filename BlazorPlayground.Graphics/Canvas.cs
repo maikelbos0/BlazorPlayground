@@ -29,9 +29,20 @@ namespace BlazorPlayground.Graphics {
         public bool IsExecutingAction => StartPoint != null && EndPoint != null;
         public Point? Delta => StartPoint != null && EndPoint != null ? EndPoint - StartPoint : null;
         public DrawSettings DrawSettings { get; } = new DrawSettings();
-        public bool IsDrawing { get; private set; } = true;
+        public bool IsDrawing { get; internal set; } = true;
+
         public ShapeDefinition CurrentShapeDefinition {
-            get => SelectedShape == null ? currentShapeDefinition : ShapeDefinition.Get(SelectedShape);
+            get {
+                if (IsDrawing) {
+                    return currentShapeDefinition;
+                }
+                else if (SelectedShape != null) {
+                    return ShapeDefinition.Get(SelectedShape);
+                }
+                else {
+                    return ShapeDefinition.None;
+                }
+            }
             set => currentShapeDefinition = value;
         } 
         public Shape? SelectedShape { get; set; }
