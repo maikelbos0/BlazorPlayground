@@ -71,7 +71,7 @@
             <button type="button" class="btn btn-secondary" @onclick="() => ApplyFill()" disabled="@(Canvas.SelectedShape == null)">Apply</button>
         </fieldset>
 
-        <fieldset class="input-group mb-3 me-3">
+        <fieldset class="input-group mb-3 me-3" disabled="@(!Canvas.CurrentShapeDefinition.UseStroke)">
             <label for="strokeColor" class="input-group-text">Stroke</label>
 
             <div class="input-group-text">
@@ -89,7 +89,7 @@
             <button type="button" class="btn btn-secondary" @onclick="() => ApplyStroke()" disabled="@(Canvas.SelectedShape == null)">Apply</button>
         </fieldset>
 
-        <fieldset class="input-group mb-3 me-3">
+        <fieldset class="input-group mb-3 me-3" disabled="@(!Canvas.CurrentShapeDefinition.UseStrokeWidth)">
             <label for="strokeWidth" class="input-group-text">Stroke width</label>
             <input type="text" class="form-control" id="strokeWidth" @bind-value="Canvas.DrawSettings.StrokeWidth" />
 
@@ -277,6 +277,7 @@
         }
     }
 
+    // TODO if we're selecting a shape and the cursor falls on the anchor things get... weird
     private void OnAnchorMouseUp(MouseEventArgs args, Anchor anchor) {
         if (args.Button == 0) {
             Canvas.TransformSelectedShapeAnchor();
