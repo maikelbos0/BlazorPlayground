@@ -31,6 +31,8 @@ namespace BlazorPlayground.Graphics.Tests {
             var definition = Assert.Single(ShapeDefinition.Values, d => d.Name == "Line");
 
             Assert.False(definition.UseFill);
+            Assert.True(definition.UseStroke);
+            Assert.True(definition.UseStrokeWidth);
             Assert.False(definition.UseStrokeLinejoin);
             Assert.True(definition.UseStrokeLinecap);
             Assert.False(definition.UseSides);
@@ -47,6 +49,8 @@ namespace BlazorPlayground.Graphics.Tests {
             var definition = Assert.Single(ShapeDefinition.Values, d => d.Name == "Rectangle");
 
             Assert.True(definition.UseFill);
+            Assert.True(definition.UseStroke);
+            Assert.True(definition.UseStrokeWidth);
             Assert.True(definition.UseStrokeLinejoin);
             Assert.False(definition.UseStrokeLinecap);
             Assert.False(definition.UseSides);
@@ -63,6 +67,8 @@ namespace BlazorPlayground.Graphics.Tests {
             var definition = Assert.Single(ShapeDefinition.Values, d => d.Name == "Circle");
 
             Assert.True(definition.UseFill);
+            Assert.True(definition.UseStroke);
+            Assert.True(definition.UseStrokeWidth);
             Assert.False(definition.UseStrokeLinejoin);
             Assert.False(definition.UseStrokeLinecap);
             Assert.False(definition.UseSides);
@@ -79,6 +85,8 @@ namespace BlazorPlayground.Graphics.Tests {
             var definition = Assert.Single(ShapeDefinition.Values, d => d.Name == "Ellipse");
 
             Assert.True(definition.UseFill);
+            Assert.True(definition.UseStroke);
+            Assert.True(definition.UseStrokeWidth);
             Assert.False(definition.UseStrokeLinejoin);
             Assert.False(definition.UseStrokeLinecap);
             Assert.False(definition.UseSides);
@@ -95,6 +103,8 @@ namespace BlazorPlayground.Graphics.Tests {
             var definition = Assert.Single(ShapeDefinition.Values, d => d.Name == "Regular polygon");
 
             Assert.True(definition.UseFill);
+            Assert.True(definition.UseStroke);
+            Assert.True(definition.UseStrokeWidth);
             Assert.True(definition.UseStrokeLinejoin);
             Assert.False(definition.UseStrokeLinecap);
             Assert.True(definition.UseSides);
@@ -111,6 +121,8 @@ namespace BlazorPlayground.Graphics.Tests {
             var definition = Assert.Single(ShapeDefinition.Values, d => d.Name == "Quadratic bezier");
 
             Assert.True(definition.UseFill);
+            Assert.True(definition.UseStroke);
+            Assert.True(definition.UseStrokeWidth);
             Assert.False(definition.UseStrokeLinejoin);
             Assert.True(definition.UseStrokeLinecap);
             Assert.False(definition.UseSides);
@@ -127,6 +139,8 @@ namespace BlazorPlayground.Graphics.Tests {
             var definition = Assert.Single(ShapeDefinition.Values, d => d.Name == "Cubic bezier");
 
             Assert.True(definition.UseFill);
+            Assert.True(definition.UseStroke);
+            Assert.True(definition.UseStrokeWidth);
             Assert.False(definition.UseStrokeLinejoin);
             Assert.True(definition.UseStrokeLinecap);
             Assert.False(definition.UseSides);
