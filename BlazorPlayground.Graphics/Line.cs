@@ -10,6 +10,8 @@
         public Point StartPoint { get; set; }
         public Point EndPoint { get; set; }
 
+        private Line() : this(new Point(0, 0), new Point(0, 0)) { }
+
         public Line(Point startPoint, Point endPoint) {
             StartPoint = startPoint;
             EndPoint = endPoint;

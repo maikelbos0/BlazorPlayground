@@ -14,6 +14,8 @@
         public Point ControlPoint2 { get; set; }
         public Point EndPoint { get; set; }
 
+        private CubicBezier() : this(new Point(0, 0), new Point(0, 0)) { }
+
         public CubicBezier(Point startPoint, Point endPoint) {
             StartPoint = startPoint;
             EndPoint = endPoint;

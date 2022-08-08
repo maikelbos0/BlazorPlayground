@@ -11,6 +11,8 @@
         public Point CenterPoint { get; set; }
         public Point RadiusPoint { get; set; }
 
+        private Ellipse() : this(new Point(0, 0), new Point(0, 0)) { }
+
         public Ellipse(Point centerPoint, Point radiusPoint) {
             CenterPoint = centerPoint;
             RadiusPoint = radiusPoint;

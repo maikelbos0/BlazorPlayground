@@ -12,6 +12,8 @@
         public Point ControlPoint { get; set; }
         public Point EndPoint { get; set; }
 
+        private QuadraticBezier() : this(new Point(0, 0), new Point(0, 0)) { }
+
         public QuadraticBezier(Point startPoint, Point endPoint) {
             StartPoint = startPoint;
             ControlPoint = (startPoint + endPoint) / 2;

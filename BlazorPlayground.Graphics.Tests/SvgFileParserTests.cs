@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using System.Xml.Linq;
+using Xunit;
 
 namespace BlazorPlayground.Graphics.Tests {
     public class SvgFileParserTests {
@@ -19,12 +20,21 @@ namespace BlazorPlayground.Graphics.Tests {
         }
 
         [Fact]
-        public void Parse_Raw_Shape() {
-            var result = SvgFileParser.Parse("<svg><line x1=\"100\" y1=\"150\" x2=\"200\" y2=\"250\" stroke=\"black\" /></svg>");
+        public void Parse_Valid_Svg() {
+            var result = SvgFileParser.Parse("<svg><g><line x1=\"100\" y1=\"150\" x2=\"200\" y2=\"250\" stroke=\"black\" /></g><line x1=\"200\" y1=\"250\" x2=\"300\" y2=\"350\" stroke=\"black\" /></svg>");
 
             Assert.True(result.IsSuccess);
 
-            var shape = Assert.IsType<RawShape>(Assert.Single(result.Canvas.Shapes));
+            Assert.Equal(2, result.Canvas.Shapes.Count);
+        }
+
+        // TODO parse canvas size
+
+        [Fact]
+        public void Parse_Raw_Shape() {
+            var result = SvgFileParser.Parse(XElement.Parse("<line x1=\"100\" y1=\"150\" x2=\"200\" y2=\"250\" stroke=\"black\" />"));
+
+            var shape = Assert.IsType<RawShape>(result);
             var element = shape.CreateSvgElement();
 
             Assert.Equal("line", element.Name);
@@ -33,5 +43,108 @@ namespace BlazorPlayground.Graphics.Tests {
             Assert.Equal("200", element.Attribute("x2")?.Value);
             Assert.Equal("250", element.Attribute("y2")?.Value);
         }
+
+        [Fact]
+        public void Parse_Incomplete_Shape() {
+            var result = SvgFileParser.Parse(XElement.Parse("<line x1=\"100\" y1=\"150\" x2=\"200\" y2=\"250\" stroke=\"black\" data-shape-type=\"Line\" />"));
+
+            var shape = Assert.IsType<RawShape>(result);
+            var element = shape.CreateSvgElement();
+
+            Assert.Equal("line", element.Name);
+            Assert.Equal("100", element.Attribute("x1")?.Value);
+            Assert.Equal("150", element.Attribute("y1")?.Value);
+            Assert.Equal("200", element.Attribute("x2")?.Value);
+            Assert.Equal("250", element.Attribute("y2")?.Value);
+        }
+
+        [Fact]
+        public void Parse_Shape_With_Invalid_Coordinates() {
+            var result = SvgFileParser.Parse(XElement.Parse("<line x1=\"100\" y1=\"150\" x2=\"200\" y2=\"250\" stroke=\"black\" data-shape-type=\"Line\" data-shape-anchor-0=\"100,150\" data-shape-anchor-1=\"200,a\" />"));
+
+            var shape = Assert.IsType<RawShape>(result);
+            var element = shape.CreateSvgElement();
+
+            Assert.Equal("line", element.Name);
+            Assert.Equal("100", element.Attribute("x1")?.Value);
+            Assert.Equal("150", element.Attribute("y1")?.Value);
+            Assert.Equal("200", element.Attribute("x2")?.Value);
+            Assert.Equal("250", element.Attribute("y2")?.Value);
+        }
+
+        [Fact]
+        public void Parse_Line() {
+            var result = SvgFileParser.Parse(XElement.Parse("<line stroke=\"#000000\" stroke-width=\"1\" stroke-linecap=\"butt\" x1=\"50\" y1=\"50\" x2=\"150\" y2=\"100\" data-shape-type=\"Line\" data-shape-anchor-0=\"50,50\" data-shape-anchor-1=\"150,100\"/>"));
+
+            var line = Assert.IsType<Line>(result);
+
+            PointAssert.Equal(new Point(50, 50), line.StartPoint);
+            PointAssert.Equal(new Point(150, 100), line.EndPoint);
+        }
+
+        [Fact]
+        public void Parse_Rectangle() {
+            var result = SvgFileParser.Parse(XElement.Parse("<rect fill=\"none\" stroke=\"#000000\" stroke-width=\"1\" stroke-linejoin=\"miter\" x=\"250\" y=\"150\" width=\"100\" height=\"150\" data-shape-type=\"Rectangle\" data-shape-anchor-0=\"250,150\" data-shape-anchor-1=\"350,300\"/>"));
+
+            var rectangle = Assert.IsType<Rectangle>(result);
+
+            PointAssert.Equal(new Point(250, 150), rectangle.StartPoint);
+            PointAssert.Equal(new Point(350, 300), rectangle.EndPoint);
+        }
+
+        [Fact]
+        public void Parse_Circle() {
+            var result = SvgFileParser.Parse(XElement.Parse("<circle fill=\"none\" stroke=\"#000000\" stroke-width=\"1\" cx=\"100\" cy=\"200\" r=\"50\" data-shape-type=\"Circle\" data-shape-anchor-0=\"100,200\" data-shape-anchor-1=\"150,212.5\"/>"));
+
+            var circle = Assert.IsType<Circle>(result);
+
+            PointAssert.Equal(new Point(100, 200), circle.CenterPoint);
+            PointAssert.Equal(new Point(150, 212.5), circle.RadiusPoint);
+        }
+
+        [Fact]
+        public void Parse_Ellipse() {
+            var result = SvgFileParser.Parse(XElement.Parse("<ellipse fill=\"none\" stroke=\"#000000\" stroke-width=\"1\" cx=\"250\" cy=\"150\" rx=\"100\" ry=\"50\" data-shape-type=\"Ellipse\" data-shape-anchor-0=\"250,150\" data-shape-anchor-1=\"350,200\"/>"));
+
+            var ellipse = Assert.IsType<Ellipse>(result);
+
+            PointAssert.Equal(new Point(250, 150), ellipse.CenterPoint);
+            PointAssert.Equal(new Point(350, 200), ellipse.RadiusPoint);
+        }
+
+        [Fact]
+        public void Parse_RegularPolygon() {
+            var result = SvgFileParser.Parse(XElement.Parse("<polygon fill=\"none\" stroke=\"#000000\" stroke-width=\"1\" stroke-linejoin=\"miter\" points=\"600,300 438.39745962155615,193.30127018922198 611.6025403784438,106.69872981077803\" data-shape-type=\"RegularPolygon\" data-shape-anchor-0=\"550,200\" data-shape-anchor-1=\"600,300\"/>"));
+
+            var rectangle = Assert.IsType<RegularPolygon>(result);
+
+            PointAssert.Equal(new Point(550, 200), rectangle.CenterPoint);
+            PointAssert.Equal(new Point(600, 300), rectangle.RadiusPoint);
+        }
+
+        [Fact]
+        public void Parse_QuadraticBezier() {
+            var result = SvgFileParser.Parse(XElement.Parse("<path fill=\"none\" stroke=\"#000000\" stroke-width=\"1\" stroke-linecap=\"butt\" d=\"M 50 50 Q 200 100, 100 350\" data-shape-type=\"QuadraticBezier\" data-shape-anchor-0=\"50,50\" data-shape-anchor-1=\"200,100\" data-shape-anchor-2=\"100,350\"/>"));
+
+            var rectangle = Assert.IsType<QuadraticBezier>(result);
+
+            PointAssert.Equal(new Point(50, 50), rectangle.StartPoint);
+            PointAssert.Equal(new Point(200, 100), rectangle.ControlPoint);
+            PointAssert.Equal(new Point(100, 350), rectangle.EndPoint);
+        }
+
+        [Fact]
+        public void Parse_CubicBezier() {
+            var result = SvgFileParser.Parse(XElement.Parse("<path fill=\"none\" stroke=\"#000000\" stroke-width=\"1\" stroke-linecap=\"butt\" d=\"M 200 50 C 200 200, 300 200, 250 350\" data-shape-type=\"CubicBezier\" data-shape-anchor-0=\"200,50\" data-shape-anchor-1=\"200,200\" data-shape-anchor-2=\"300,200\" data-shape-anchor-3=\"250,350\"/>"));
+
+            var rectangle = Assert.IsType<CubicBezier>(result);
+
+            PointAssert.Equal(new Point(200, 50), rectangle.StartPoint);
+            PointAssert.Equal(new Point(200, 200), rectangle.ControlPoint1);
+            PointAssert.Equal(new Point(300, 200), rectangle.ControlPoint2);
+            PointAssert.Equal(new Point(250, 350), rectangle.EndPoint);
+        }
+
+        // TODO parse general shape properties
     }
 }

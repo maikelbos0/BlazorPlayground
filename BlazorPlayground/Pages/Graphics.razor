@@ -301,6 +301,7 @@
     }
 
     // TODO if we're selecting a shape and the cursor falls on the anchor things get... weird
+    // TODO also snapping to grid puts anchor outside mouse control... same may apply to moving shape
     private void OnAnchorMouseUp(MouseEventArgs args, Anchor anchor) {
         if (args.Button == 0) {
             Canvas.TransformSelectedShapeAnchor();
