@@ -44,9 +44,10 @@ namespace BlazorPlayground.Graphics {
                 }
             }
             set => currentShapeDefinition = value;
-        } 
-        public Shape? SelectedShape { get; set; }
-        public Anchor? SelectedAnchor { get; set; }
+        }
+        public Shape? SelectedShape { get; internal set; }
+        public bool IsSelecting { get; internal set; } = false;
+        public Anchor? SelectedAnchor { get; internal set; }
 
         private Point? Snap(Point? point) {
             if (!SnapToGrid || point == null) {
@@ -66,7 +67,73 @@ namespace BlazorPlayground.Graphics {
             IsDrawing = false;
         }
 
-        public void AddShape() {
+        public Shape CreateVirtualSelectedShape() {
+            if (SelectedShape == null) {
+                throw new InvalidOperationException($"{nameof(CreateVirtualSelectedShape)} can only be called when {nameof(SelectedShape)} has a value.");
+            }
+
+            if (Delta == null || SnappedEndPoint == null) {
+                throw new InvalidOperationException($"{nameof(CreateVirtualSelectedShape)} can only be called when {nameof(IsExecutingAction)} is true.");
+            }
+
+            var virtualShape = SelectedShape.Clone();
+
+            if (SelectedAnchor == null) {
+                virtualShape.Transform(Delta, SnapToGrid, GridSize);
+            }
+            else {
+                SelectedAnchor.Set(virtualShape, SnappedEndPoint);
+            }
+
+            return virtualShape;
+        }
+
+        public void SelectShape(Shape shape) {
+            if (!IsDrawing) {
+                SelectedShape = shape;
+                IsSelecting = true;
+            }
+        }
+
+        public void SelectAnchor(Anchor anchor) {
+            if (!IsDrawing) {
+                SelectedAnchor = anchor;
+            }
+        }
+
+        public void StartActionExecution(Point startPoint) {
+            StartPoint = startPoint;
+        }
+
+        public void UpdateActionExecution(Point endPoint) {
+            if (StartPoint != null) {
+                EndPoint = endPoint;
+            }
+        }
+
+        public void EndActionExecution() {
+            if (StartPoint != null && EndPoint != null) {
+                if (IsDrawing) {
+                    AddShape();
+                }
+                else if (SelectedAnchor != null) {
+                    TransformSelectedShapeAnchor();
+                }
+                else if (SelectedShape != null) {
+                    TransformSelectedShape();
+                }
+            }
+            else if (!IsSelecting) {
+                SelectedShape = null;
+            }
+
+            StartPoint = null;
+            EndPoint = null;
+            SelectedAnchor = null;
+            IsSelecting = false;
+        }
+
+        internal void AddShape() {
             var shape = CreateShape();
 
             if (shape != null) {
@@ -96,41 +163,16 @@ namespace BlazorPlayground.Graphics {
             return shape;
         }
 
-        public Shape CreateVirtualSelectedShape() {
-            if (SelectedShape == null) {
-                throw new InvalidOperationException($"{nameof(CreateVirtualSelectedShape)} can only be called when {nameof(SelectedShape)} has a value.");
-            }
-
-            if (Delta == null || SnappedEndPoint == null) {
-                throw new InvalidOperationException($"{nameof(CreateVirtualSelectedShape)} can only be called when {nameof(IsExecutingAction)} is true.");
-            }
-
-            var virtualShape = SelectedShape.Clone();
-
-            if (SelectedAnchor == null) {
-                virtualShape.Transform(Delta, SnapToGrid, GridSize);
-            }
-            else {
-                SelectedAnchor.Set(virtualShape, SnappedEndPoint);
-            }
-
-            return virtualShape;
-        }
-
-        public void TransformSelectedShape() {
+        internal void TransformSelectedShape() {
             if (SelectedShape != null && Delta != null) {
                 SelectedShape.Transform(Delta, SnapToGrid, GridSize);
             }
-
-            ClearActionExecution();
         }
 
-        public void TransformSelectedShapeAnchor() {
+        internal void TransformSelectedShapeAnchor() {
             if (SelectedShape != null && SelectedAnchor != null && SnappedEndPoint != null) {
                 SelectedAnchor.Set(SelectedShape, SnappedEndPoint);
             }
-
-            ClearActionExecution();
         }
 
         public void DeleteSelectedShape() {
@@ -139,13 +181,7 @@ namespace BlazorPlayground.Graphics {
                 SelectedShape = null;
             }
         }
-
-        public void ClearActionExecution() {
-            StartPoint = null;
-            EndPoint = null;
-            SelectedAnchor = null;
-        }
-
+        
         public XElement ExportSvg() => new(
             "svg",
             new XAttribute("viewBox", $"0 0 {Width} {Height}"),

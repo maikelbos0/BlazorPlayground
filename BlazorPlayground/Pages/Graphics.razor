@@ -191,7 +191,11 @@
     </fieldset>
 </div>
 
-<svg class="graphics-main" viewBox="0 0 @Canvas.Width @Canvas.Height" width="@Canvas.Width" height="@Canvas.Height" @onmousedown="OnCanvasMouseDown" @onmousemove="OnCanvasMouseMove" @onmouseup="OnCanvasMouseUp">
+<svg class="graphics-main" viewBox="0 0 @Canvas.Width @Canvas.Height" width="@Canvas.Width" height="@Canvas.Height" 
+        @onmousedown="args => Canvas.StartActionExecution(GetPoint(args))" 
+        @onmousemove="args => Canvas.UpdateActionExecution(GetPoint(args))" 
+        @onmouseup="() => Canvas.EndActionExecution()">
+
     @if (Canvas.ShowGrid) {
         for (var x = Canvas.GridSize; x < Canvas.Width; x += Canvas.GridSize) {
             <line class="grid-line" x1="@x" y1="0" x2="@x" y2="@Canvas.Height" />
@@ -207,26 +211,26 @@
             if (Canvas.IsExecutingAction) {
                 var virtualShape = Canvas.CreateVirtualSelectedShape();
 
-                <ShapeRenderer Shape="virtualShape" IsVirtual="true" OnMouseUp="args => OnShapeMouseUp(args, shape)" />
+                <ShapeRenderer Shape="virtualShape" IsVirtual="true" />
 
                 foreach (var anchor in virtualShape.Anchors) {
                     var point = anchor.Get(virtualShape);
 
-                    <rect class="shape-anchor" x="@((point.X - 5).ToString(CultureInfo.InvariantCulture))" y="@((point.Y - 5).ToString(CultureInfo.InvariantCulture))" width="10" height="10" @onmouseup="args => OnAnchorMouseUp(args, anchor)" @onmouseup:stopPropagation="true" />
+                    <rect class="shape-anchor" x="@((point.X - 5).ToString(CultureInfo.InvariantCulture))" y="@((point.Y - 5).ToString(CultureInfo.InvariantCulture))" width="10" height="10" />
                 }
             }
             else {
-                <ShapeRenderer @key="shape" Shape="shape" OnMouseDown="args => OnShapeMouseDown(args, shape)" IsSelected="true" OnMouseUp="args => OnShapeMouseUp(args, shape)" />
+                <ShapeRenderer @key="shape" Shape="shape" OnMouseDown="() => Canvas.SelectShape(shape)" IsSelected="true" />
 
                 foreach (var anchor in shape.Anchors) {
                     var point = anchor.Get(shape);
 
-                    <rect class="shape-anchor" x="@((point.X - 5).ToString(CultureInfo.InvariantCulture))" y="@((point.Y - 5).ToString(CultureInfo.InvariantCulture))" width="10" height="10" @onmousedown="args => OnAnchorMouseDown(args, anchor)" />
+                    <rect class="shape-anchor" x="@((point.X - 5).ToString(CultureInfo.InvariantCulture))" y="@((point.Y - 5).ToString(CultureInfo.InvariantCulture))" width="10" height="10" @onmousedown="args => Canvas.SelectAnchor(anchor)" />
                 }
             }
         }
         else {
-            <ShapeRenderer @key="shape" Shape="shape" OnMouseDown="args => OnShapeMouseDown(args, shape)" IsSelected="false" />
+            <ShapeRenderer @key="shape" Shape="shape" OnMouseDown="() => Canvas.SelectShape(shape)" IsSelected="false" />
         }
     }
 
@@ -256,57 +260,7 @@
         }
     }
 
-    private void OnCanvasMouseDown(MouseEventArgs args) {
-        if (args.Button == 0) {
-            Canvas.StartPoint = new Point(args.OffsetX, args.OffsetY);
-        }
-    }
-
-    private void OnCanvasMouseMove(MouseEventArgs args) {
-        if (args.Button == 0 && Canvas.StartPoint != null) {
-            Canvas.EndPoint = new Point(args.OffsetX, args.OffsetY);
-        }
-    }
-
-    private void OnCanvasMouseUp(MouseEventArgs args) {
-        if (args.Button == 0) {
-            if (Canvas.IsDrawing && Canvas.IsExecutingAction) {
-                Canvas.AddShape();
-            }
-            else {
-                Canvas.SelectedShape = null;
-            }
-
-            Canvas.ClearActionExecution();
-        }
-    }
-
-    private void OnShapeMouseDown(MouseEventArgs args, Shape shape) {
-        if (!Canvas.IsDrawing && args.Button == 0) {
-            // TODO set correct definition after selecting
-            Canvas.SelectedShape = shape;
-        }
-    }
-
-    private void OnShapeMouseUp(MouseEventArgs args, Shape shape) {
-        if (args.Button == 0) {
-            Canvas.TransformSelectedShape();
-        }
-    }
-
-    private void OnAnchorMouseDown(MouseEventArgs args, Anchor anchor) {
-        if (args.Button == 0) {
-            Canvas.SelectedAnchor = anchor;
-        }
-    }
-
-    // TODO if we're selecting a shape and the cursor falls on the anchor things get... weird
-    // TODO also snapping to grid puts anchor outside mouse control... same may apply to moving shape
-    private void OnAnchorMouseUp(MouseEventArgs args, Anchor anchor) {
-        if (args.Button == 0) {
-            Canvas.TransformSelectedShapeAnchor();
-        }
-    }
+    private Point GetPoint(MouseEventArgs args) => new Point(args.OffsetX, args.OffsetY);
 
     private void ApplyFill() {
         if (Canvas.SelectedShape != null) {

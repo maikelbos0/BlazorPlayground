@@ -205,6 +205,219 @@ namespace BlazorPlayground.Graphics.Tests {
         }
 
         [Fact]
+        public void CreateVirtualSelectedShape_Shape() {
+            var shape = new Line(new Point(100, 100), new Point(200, 200));
+            var canvas = new Canvas() {
+                StartPoint = new Point(150, 150),
+                EndPoint = new Point(177, 202),
+                SnapToGrid = true,
+                GridSize = 25,
+                SelectedShape = shape
+            };
+
+            var virtualShape = Assert.IsType<Line>(canvas.CreateVirtualSelectedShape());
+
+            Assert.NotSame(shape, virtualShape);
+            Assert.Equal(new Point(100, 100), shape.StartPoint);
+            Assert.Equal(new Point(200, 200), shape.EndPoint);
+            Assert.Equal(new Point(125, 150), virtualShape.StartPoint);
+            Assert.Equal(new Point(225, 250), virtualShape.EndPoint);
+        }
+
+        [Fact]
+        public void CreateVirtualSelectedShape_Anchor() {
+            var shape = new Line(new Point(100, 100), new Point(200, 200));
+            var canvas = new Canvas() {
+                StartPoint = new Point(150, 150),
+                EndPoint = new Point(177, 202),
+                SnapToGrid = true,
+                GridSize = 25,
+                SelectedShape = shape,
+                SelectedAnchor = shape.Anchors[0]
+            };
+
+            var virtualShape = Assert.IsType<Line>(canvas.CreateVirtualSelectedShape());
+
+            Assert.NotSame(shape, virtualShape);
+            Assert.Equal(new Point(100, 100), shape.StartPoint);
+            Assert.Equal(new Point(200, 200), shape.EndPoint);
+            Assert.Equal(new Point(175, 200), virtualShape.StartPoint);
+            Assert.Equal(new Point(200, 200), virtualShape.EndPoint);
+        }
+
+        [Fact]
+        public void CreateVirtualSelectedShape_Throws_For_Null_SelectedShape() {
+            var canvas = new Canvas() {
+                StartPoint = new Point(150, 150),
+                EndPoint = new Point(177, 202)
+            };
+
+            Assert.Throws<InvalidOperationException>(() => canvas.CreateVirtualSelectedShape());
+        }
+
+        [Fact]
+        public void CreateVirtualSelectedShape_Throws_For_Null_StartPoint() {
+            var canvas = new Canvas() {
+                EndPoint = new Point(177, 202),
+                SelectedShape = new Line(new Point(100, 100), new Point(200, 200))
+            };
+
+            Assert.Throws<InvalidOperationException>(() => canvas.CreateVirtualSelectedShape());
+        }
+
+        [Fact]
+        public void CreateVirtualSelectedShape_Throws_For_Null_EndPoint() {
+            var canvas = new Canvas() {
+                StartPoint = new Point(150, 150),
+                SelectedShape = new Line(new Point(100, 100), new Point(200, 200))
+            };
+
+            Assert.Throws<InvalidOperationException>(() => canvas.CreateVirtualSelectedShape());
+        }
+
+        [Fact]
+        public void StartActionExecution() {
+            var canvas = new Canvas();
+
+            canvas.StartActionExecution(new Point(100, 150));
+
+            PointAssert.Equal(new Point(100, 150), canvas.StartPoint);
+        }
+
+        [Fact]
+        public void UpdateActionExecution_Null_StartPoint() {
+            var canvas = new Canvas();
+
+            canvas.UpdateActionExecution(new Point(200, 250));
+
+            Assert.Null(canvas.EndPoint);
+        }
+
+        [Fact]
+        public void UpdateActionExecution() {
+            var canvas = new Canvas() {
+                StartPoint = new Point(100, 150)
+            };
+
+            canvas.UpdateActionExecution(new Point(200, 250));
+
+            PointAssert.Equal(new Point(200, 250), canvas.EndPoint);
+        }
+
+        [Fact]
+        public void EndActionExecution_Null_StartPoint() {
+            var canvas = new Canvas() {
+                IsDrawing = true
+            };
+
+            canvas.EndActionExecution();
+
+            Assert.Empty(canvas.Shapes);
+        }
+
+        [Fact]
+        public void EndActionExecution_Null_EndPoint() {
+            var canvas = new Canvas() {
+                StartPoint = new Point(100, 150),
+                IsDrawing = true
+            };
+
+            canvas.EndActionExecution();
+
+            Assert.Empty(canvas.Shapes);
+        }
+
+        [Fact]
+        public void EndActionExecution_IsDrawing() {
+            var canvas = new Canvas() {
+                StartPoint = new Point(100, 150),
+                EndPoint = new Point(200, 250),
+                IsDrawing = true
+            };
+
+            canvas.EndActionExecution();
+
+            Assert.Single(canvas.Shapes);
+        }
+
+        [Fact]
+        public void EndActionExecution_SelectedShape() {
+            var shape = new Rectangle(new Point(100, 150), new Point(200, 250));
+            var canvas = new Canvas() {
+                StartPoint = new Point(100, 150),
+                EndPoint = new Point(200, 250),
+                IsDrawing = false,
+                SelectedShape = shape
+            };
+
+            canvas.EndActionExecution();
+
+            Assert.Equal(new Point(200, 250), shape.StartPoint);
+            Assert.Equal(new Point(300, 350), shape.EndPoint);
+        }
+
+        [Fact]
+        public void EndActionExecution_SelectedAnchor() {
+            var shape = new Rectangle(new Point(100, 150), new Point(200, 250));
+            var canvas = new Canvas() {
+                StartPoint = new Point(100, 150),
+                EndPoint = new Point(200, 250),
+                IsDrawing = false,
+                SelectedShape = shape,
+                SelectedAnchor = shape.Anchors[0]
+            };
+
+            canvas.EndActionExecution();
+
+            Assert.Equal(new Point(200, 250), shape.StartPoint);
+            Assert.Equal(new Point(200, 250), shape.EndPoint);
+        }
+
+        [Fact]
+        public void EndActionExecution_IsSelecting() {
+            var shape = new Rectangle(new Point(100, 150), new Point(200, 250));
+            var canvas = new Canvas() {
+                SelectedShape = shape,
+                IsSelecting = true
+            };
+
+            canvas.EndActionExecution();
+
+            Assert.Same(shape, canvas.SelectedShape);
+        }
+
+        [Fact]
+        public void EndActionExecution_Not_IsSelecting() {
+            var canvas = new Canvas() {
+                SelectedShape = new Rectangle(new Point(100, 150), new Point(200, 250))
+            };
+
+            canvas.EndActionExecution();
+
+            Assert.Null(canvas.SelectedShape);
+        }
+
+        [Fact]
+        public void EndActionExecution_Clears() {
+            var shape = new Line(new Point(100, 100), new Point(200, 200));
+            var canvas = new Canvas() {
+                StartPoint = new Point(150, 177),
+                EndPoint = new Point(150, 202),
+                SelectedShape = shape,
+                IsSelecting = true,
+                SelectedAnchor = shape.Anchors[0]
+            };
+
+            canvas.EndActionExecution();
+
+            Assert.Null(canvas.StartPoint);
+            Assert.Null(canvas.EndPoint);
+            Assert.False(canvas.IsSelecting);
+            Assert.Null(canvas.SelectedAnchor);
+        }
+
+
+        [Fact]
         public void AddShape_Without_AutoSelect() {
             var canvas = new Canvas() {
                 StartPoint = new Point(100, 200),
@@ -277,77 +490,6 @@ namespace BlazorPlayground.Graphics.Tests {
             PaintServerAssert.Equal(new Color(255, 0, 0, 1), shape.Stroke);
             Assert.Equal(5, shape.StrokeWidth);
         }
-        
-        [Fact]
-        public void CreateVirtualSelectedShape_Shape() {
-            var shape = new Line(new Point(100, 100), new Point(200, 200));
-            var canvas = new Canvas() {
-                StartPoint = new Point(150, 150),
-                EndPoint = new Point(177, 202),
-                SnapToGrid = true,
-                GridSize = 25,
-                SelectedShape = shape
-            };
-
-            var virtualShape = Assert.IsType<Line>(canvas.CreateVirtualSelectedShape());
-
-            Assert.NotSame(shape, virtualShape);
-            Assert.Equal(new Point(100, 100), shape.StartPoint);
-            Assert.Equal(new Point(200, 200), shape.EndPoint);
-            Assert.Equal(new Point(125, 150), virtualShape.StartPoint);
-            Assert.Equal(new Point(225, 250), virtualShape.EndPoint);
-        }
-        
-        [Fact]
-        public void CreateVirtualSelectedShape_Anchor() {
-            var shape = new Line(new Point(100, 100), new Point(200, 200));
-            var canvas = new Canvas() {
-                StartPoint = new Point(150, 150),
-                EndPoint = new Point(177, 202),
-                SnapToGrid = true,
-                GridSize = 25,
-                SelectedShape = shape,
-                SelectedAnchor = shape.Anchors[0]
-            };
-
-            var virtualShape = Assert.IsType<Line>(canvas.CreateVirtualSelectedShape());
-
-            Assert.NotSame(shape, virtualShape);
-            Assert.Equal(new Point(100, 100), shape.StartPoint);
-            Assert.Equal(new Point(200, 200), shape.EndPoint);
-            Assert.Equal(new Point(175, 200), virtualShape.StartPoint);
-            Assert.Equal(new Point(200, 200), virtualShape.EndPoint);
-        }
-        
-        [Fact]
-        public void CreateVirtualSelectedShape_Throws_For_Null_SelectedShape() {
-            var canvas = new Canvas() {
-                StartPoint = new Point(150, 150),
-                EndPoint = new Point(177, 202)
-            };
-
-            Assert.Throws<InvalidOperationException>(() => canvas.CreateVirtualSelectedShape());
-        }
-        
-        [Fact]
-        public void CreateVirtualSelectedShape_Throws_For_Null_StartPoint() {
-            var canvas = new Canvas() {
-                EndPoint = new Point(177, 202),
-                SelectedShape = new Line(new Point(100, 100), new Point(200, 200))
-            };
-
-            Assert.Throws<InvalidOperationException>(() => canvas.CreateVirtualSelectedShape());
-        }
-        
-        [Fact]
-        public void CreateVirtualSelectedShape_Throws_For_Null_EndPoint() {
-            var canvas = new Canvas() {
-                StartPoint = new Point(150, 150),
-                SelectedShape = new Line(new Point(100, 100), new Point(200, 200))
-            };
-
-            Assert.Throws<InvalidOperationException>(() => canvas.CreateVirtualSelectedShape());
-        }
 
         [Fact]
         public void TransformSelectedShape() {
@@ -387,23 +529,6 @@ namespace BlazorPlayground.Graphics.Tests {
 
             PointAssert.Equal(new Point(100, 100), shape.StartPoint);
             PointAssert.Equal(new Point(200, 200), shape.EndPoint);
-        }
-
-        [Fact]
-        public void TransformSelectedShape_Clears() {
-            var shape = new Line(new Point(100, 100), new Point(200, 200));
-            var canvas = new Canvas() {
-                StartPoint = new Point(150, 177),
-                EndPoint = new Point(150, 202),
-                SelectedShape = shape,
-                SelectedAnchor = shape.Anchors[0]
-            };
-
-            canvas.TransformSelectedShape();
-
-            Assert.Null(canvas.StartPoint);
-            Assert.Null(canvas.EndPoint);
-            Assert.Null(canvas.SelectedAnchor);
         }
 
         [Fact]
@@ -459,27 +584,11 @@ namespace BlazorPlayground.Graphics.Tests {
         }
 
         [Fact]
-        public void TransformSelectedShapeAnchor_Clears() {
-            var shape = new Line(new Point(100, 100), new Point(200, 200));
-            var canvas = new Canvas() {
-                EndPoint = new Point(127, 152),
-                SelectedShape = shape,
-                SelectedAnchor = shape.Anchors[0]
-            };
-
-            canvas.TransformSelectedShapeAnchor();
-
-            Assert.Null(canvas.StartPoint);
-            Assert.Null(canvas.EndPoint);
-            Assert.Null(canvas.SelectedAnchor);
-        }
-
-        [Fact]
         public void DeleteSelectedShape() {
             var selectedShape = new Line(new Point(100, 100), new Point(200, 200));
             var shape = new Line(new Point(200, 200), new Point(100, 200));
             var canvas = new Canvas() {
-                Shapes = new List<Shape>() { 
+                Shapes = new List<Shape>() {
                     selectedShape,
                     shape
                 },
