@@ -53,6 +53,14 @@ namespace BlazorPlayground.Graphics {
             foreach (var attribute in GetAttributes()) {
                 yield return new XAttribute(attribute.Key, attribute.Value);
             }
+
+            yield return new XAttribute("data-shape-type", GetType().Name);
+
+            for (var i = 0; i < Anchors.Count; i++) {
+                var point = Anchors[i].Get(this);
+
+                yield return new XAttribute($"data-shape-anchor-{i}", FormattableString.Invariant($"{point.X},{point.Y}"));
+            }
         }
 
         public Shape Clone() {

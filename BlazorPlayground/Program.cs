@@ -12,7 +12,6 @@ namespace BlazorPlayground {
      * Add stroke array?
      * Add opacity
      * Add fill opacity?
-     * Add stroke opacity?
      * Add arc
      * Add load/import of svg
      */

@@ -53,6 +53,9 @@ namespace BlazorPlayground.Graphics.Tests {
             Assert.Equal("#800000", result.Attribute("stroke")?.Value);
             Assert.Equal("5", result.Attribute("stroke-width")?.Value);
             Assert.Equal("round", result.Attribute("stroke-linecap")?.Value);
+            Assert.Equal("Line", result.Attribute("data-shape-type")?.Value);
+            Assert.Equal("100,200", result.Attribute("data-shape-anchor-0")?.Value);
+            Assert.Equal("150,250", result.Attribute("data-shape-anchor-1")?.Value);
         }
 
         [Fact]
@@ -75,6 +78,9 @@ namespace BlazorPlayground.Graphics.Tests {
             Assert.Equal("#800000", result.Attribute("stroke")?.Value);
             Assert.Equal("5", result.Attribute("stroke-width")?.Value);
             Assert.Equal("arcs", result.Attribute("stroke-linejoin")?.Value);
+            Assert.Equal("Rectangle", result.Attribute("data-shape-type")?.Value);
+            Assert.Equal("100,200", result.Attribute("data-shape-anchor-0")?.Value);
+            Assert.Equal("150,250", result.Attribute("data-shape-anchor-1")?.Value);
         }
 
         [Fact]
