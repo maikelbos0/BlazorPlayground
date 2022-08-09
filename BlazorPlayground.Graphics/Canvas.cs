@@ -175,6 +175,42 @@ namespace BlazorPlayground.Graphics {
             }
         }
 
+        public void ApplyFillToSelectedShape() {
+            if (SelectedShape != null) {
+                SelectedShape.Fill = DrawSettings.FillPaintManager.Server;
+            }
+        }
+
+        public void ApplyStrokeToSelectedShape() {
+            if (SelectedShape != null) {
+                SelectedShape.Stroke = DrawSettings.StrokePaintManager.Server;
+            }
+        }
+
+        public void ApplyStrokeLinecapToSelectedShape() {
+            if (SelectedShape != null) {
+                SelectedShape.StrokeLinecap = DrawSettings.StrokeLinecap;
+            }
+        }
+
+        public void ApplyStrokeLinejoinToSelectedShape() {
+            if (SelectedShape != null) {
+                SelectedShape.StrokeLinejoin = DrawSettings.StrokeLinejoin;
+            }
+        }
+
+        public void ApplyStrokeWidthToSelectedShape() {
+            if (SelectedShape != null) {
+                SelectedShape.StrokeWidth = DrawSettings.StrokeWidth;
+            }
+        }
+
+        public void ApplySidesToSelectedShape() {
+            if (SelectedShape != null) {
+                SelectedShape.Sides = DrawSettings.Sides;
+            }
+        }
+
         public void MoveSelectedShapeToBack() {
             if (SelectedShape != null) {
                 Shapes.Remove(SelectedShape);

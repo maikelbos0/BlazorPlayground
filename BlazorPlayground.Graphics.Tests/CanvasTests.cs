@@ -601,6 +601,86 @@ namespace BlazorPlayground.Graphics.Tests {
         }
 
         [Fact]
+        public void ApplyFillToSelectedShape() {
+            var canvas = new Canvas() {
+                SelectedShape = new Line(new Point(100, 100), new Point(200, 200)),
+            };
+
+            canvas.DrawSettings.FillPaintManager.Mode = PaintMode.Color;
+            canvas.DrawSettings.FillPaintManager.ColorValue = "yellow";
+
+            canvas.ApplyFillToSelectedShape();
+
+            PaintServerAssert.Equal(new Color(255, 255, 0, 1), canvas.SelectedShape.Fill);
+        }
+
+        [Fact]
+        public void ApplyStrokeToSelectedShape() {
+            var canvas = new Canvas() {
+                SelectedShape = new Rectangle(new Point(100, 100), new Point(200, 200)),
+            };
+
+            canvas.DrawSettings.StrokePaintManager.Mode = PaintMode.Color;
+            canvas.DrawSettings.StrokePaintManager.ColorValue = "yellow";
+
+            canvas.ApplyStrokeToSelectedShape();
+
+            PaintServerAssert.Equal(new Color(255, 255, 0, 1), canvas.SelectedShape.Stroke);
+        }
+
+        [Fact]
+        public void ApplyStrokeLinecapToSelectedShape() {
+            var canvas = new Canvas() {
+                SelectedShape = new Line(new Point(100, 100), new Point(200, 200)),
+            };
+
+            canvas.DrawSettings.StrokeLinecap = Linecap.Round;
+
+            canvas.ApplyStrokeLinecapToSelectedShape();
+
+            Assert.Equal(Linecap.Round, canvas.SelectedShape.StrokeLinecap);
+        }
+
+        [Fact]
+        public void ApplyStrokeLinejoinToSelectedShape() {
+            var canvas = new Canvas() {
+                SelectedShape = new Rectangle(new Point(100, 100), new Point(200, 200)),
+            };
+
+            canvas.DrawSettings.StrokeLinejoin = Linejoin.Round;
+
+            canvas.ApplyStrokeLinejoinToSelectedShape();
+
+            Assert.Equal(Linejoin.Round, canvas.SelectedShape.StrokeLinejoin);
+        }
+
+        [Fact]
+        public void ApplyStrokeWidthToSelectedShape() {
+            var canvas = new Canvas() {
+                SelectedShape = new Line(new Point(100, 100), new Point(200, 200)),
+            };
+
+            canvas.DrawSettings.StrokeWidth = 5;
+
+            canvas.ApplyStrokeWidthToSelectedShape();
+
+            Assert.Equal(5, canvas.SelectedShape.StrokeWidth);
+        }
+
+        [Fact]
+        public void ApplySidesToSelectedShape() {
+            var canvas = new Canvas() {
+                SelectedShape = new RegularPolygon(new Point(100, 100), new Point(200, 200)),
+            };
+
+            canvas.DrawSettings.Sides = 5;
+
+            canvas.ApplySidesToSelectedShape();
+
+            Assert.Equal(5, canvas.SelectedShape.Sides);
+        }
+
+        [Fact]
         public void MoveSelectedShapeToBack() {
             var shapes = Enumerable.Range(0, 5).Select(i => new Line(new Point(100, 100), new Point(200, 200))).ToList();
             var canvas = new Canvas();

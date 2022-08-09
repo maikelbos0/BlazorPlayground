@@ -105,7 +105,7 @@
             <label class="form-check-label ps-2" for="fillPaintModeNone">None</label>
         </div>
 
-        <button type="button" class="btn btn-secondary" @onclick="() => ApplyFill()" disabled="@(Canvas.SelectedShape == null)">Apply</button>
+        <button type="button" class="btn btn-secondary" @onclick="() => Canvas.ApplyFillToSelectedShape()" disabled="@(Canvas.SelectedShape == null)">Apply</button>
     </fieldset>
 
     <fieldset class="input-group mb-3 me-3" disabled="@(!Canvas.CurrentShapeDefinition.UseStroke)">
@@ -125,7 +125,7 @@
             <label class="form-check-label ps-2" for="strokePaintModeNone">None</label>
         </div>
 
-        <button type="button" class="btn btn-secondary" @onclick="() => ApplyStroke()" disabled="@(Canvas.SelectedShape == null)">Apply</button>
+        <button type="button" class="btn btn-secondary" @onclick="() => Canvas.ApplyStrokeToSelectedShape()" disabled="@(Canvas.SelectedShape == null)">Apply</button>
     </fieldset>
 
     <fieldset class="input-group mb-3 me-3" disabled="@(!Canvas.CurrentShapeDefinition.UseStrokeWidth)">
@@ -135,7 +135,7 @@
         
         <input type="text" class="form-control" id="strokeWidth" @bind-value="Canvas.DrawSettings.StrokeWidth" />
 
-        <button type="button" class="btn btn-secondary" @onclick="() => ApplyStrokeWidth()" disabled="@(Canvas.SelectedShape == null)">Apply</button>
+        <button type="button" class="btn btn-secondary" @onclick="() => Canvas.ApplyStrokeWidthToSelectedShape()" disabled="@(Canvas.SelectedShape == null)">Apply</button>
     </fieldset>
 
     <fieldset class="input-group mb-3 me-3" disabled="@(!Canvas.CurrentShapeDefinition.UseStrokeLinecap)">
@@ -149,7 +149,7 @@
             }
         </select>
 
-        <button type="button" class="btn btn-secondary" @onclick="() => ApplyStrokeLinecap()" disabled="@(Canvas.SelectedShape == null)">Apply</button>
+        <button type="button" class="btn btn-secondary" @onclick="() => Canvas.ApplyStrokeLinecapToSelectedShape()" disabled="@(Canvas.SelectedShape == null)">Apply</button>
     </fieldset>
 
     <fieldset class="input-group mb-3 me-3" disabled="@(!Canvas.CurrentShapeDefinition.UseStrokeLinejoin)">
@@ -163,7 +163,7 @@
             }
         </select>
 
-        <button type="button" class="btn btn-secondary" @onclick="() => ApplyStrokeLinejoin()" disabled="@(Canvas.SelectedShape == null)">Apply</button>
+        <button type="button" class="btn btn-secondary" @onclick="() => Canvas.ApplyStrokeLinejoinToSelectedShape()" disabled="@(Canvas.SelectedShape == null)">Apply</button>
     </fieldset>
 
     <fieldset class="input-group mb-3 me-3" disabled="@(!Canvas.CurrentShapeDefinition.UseSides)">
@@ -173,7 +173,7 @@
 
         <input type="text" class="form-control" id="sides" @bind-value="Canvas.DrawSettings.Sides" />
 
-        <button type="button" class="btn btn-secondary" @onclick="() => ApplySides()" disabled="@(Canvas.SelectedShape == null)">Apply</button>
+        <button type="button" class="btn btn-secondary" @onclick="() => Canvas.ApplySidesToSelectedShape()" disabled="@(Canvas.SelectedShape == null)">Apply</button>
     </fieldset>
 
     <fieldset class="btn-group mb-3 me-3" disabled="@(Canvas.SelectedShape == null)">
@@ -261,42 +261,6 @@
     }
 
     private Point GetPoint(MouseEventArgs args) => new Point(args.OffsetX, args.OffsetY);
-
-    private void ApplyFill() {
-        if (Canvas.SelectedShape != null) {
-            Canvas.SelectedShape.Fill = Canvas.DrawSettings.FillPaintManager.Server;
-        }
-    }
-
-    private void ApplyStroke() {
-        if (Canvas.SelectedShape != null) {
-            Canvas.SelectedShape.Stroke = Canvas.DrawSettings.StrokePaintManager.Server;
-        }
-    }
-
-    private void ApplyStrokeLinecap() {
-        if (Canvas.SelectedShape != null) {
-            Canvas.SelectedShape.StrokeLinecap = Canvas.DrawSettings.StrokeLinecap;
-        }
-    }
-
-    private void ApplyStrokeLinejoin() {
-        if (Canvas.SelectedShape != null) {
-            Canvas.SelectedShape.StrokeLinejoin = Canvas.DrawSettings.StrokeLinejoin;
-        }
-    }
-
-    private void ApplyStrokeWidth() {
-        if (Canvas.SelectedShape != null) {
-            Canvas.SelectedShape.StrokeWidth = Canvas.DrawSettings.StrokeWidth;
-        }
-    }
-
-    private void ApplySides() {
-        if (Canvas.SelectedShape != null) {
-            Canvas.SelectedShape.Sides = Canvas.DrawSettings.Sides;
-        }
-    }
 
     private async Task Save() {
         var element = Canvas.ExportSvg();
