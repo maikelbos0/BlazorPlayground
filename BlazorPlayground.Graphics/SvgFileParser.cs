@@ -26,38 +26,53 @@ namespace BlazorPlayground.Graphics {
         }
 
         internal static Shape Parse(XElement element) {
-            var shapeTypeName = element.Attribute("data-shape-type")?.Value;
+            var shape = CreateShape(element);
 
-            if (shapeTypeName == null) {
-                return new RawShape(element);
+            if (shape != null && SetAnchors(shape, element)) {
+                shape.Fill = ParsePaintServer(element.Attribute("fill")?.Value);
+                shape.Stroke = ParsePaintServer(element.Attribute("stroke")?.Value);
+
+                return shape;
             }
 
+            return new RawShape(element);
+        }
+
+        private static Shape? CreateShape(XElement element) {
+            var shapeTypeName = element.Attribute("data-shape-type")?.Value;
             var shapeType = Type.GetType($"BlazorPlayground.Graphics.{shapeTypeName}");
 
             if (shapeType == null) {
-                return new RawShape(element);
+                return null;
             }
 
-            var shape = (Shape?)Activator.CreateInstance(shapeType, true);
+            return (Shape?)Activator.CreateInstance(shapeType, true);
+        }
 
-            if (shape == null) {
-                return new RawShape(element);
-            }
-
+        private static bool SetAnchors(Shape shape, XElement element) {
             for (var i = 0; i < shape.Anchors.Count; i++) {
                 var coordinates = element.Attribute($"data-shape-anchor-{i}")?.Value?.Split(',');
 
                 if (coordinates == null
-                        || coordinates.Length != 2 
-                        || !double.TryParse(coordinates[0], NumberStyles.Any, CultureInfo.InvariantCulture, out var x) 
+                        || coordinates.Length != 2
+                        || !double.TryParse(coordinates[0], NumberStyles.Any, CultureInfo.InvariantCulture, out var x)
                         || !double.TryParse(coordinates[1], NumberStyles.Any, CultureInfo.InvariantCulture, out var y)) {
-                    return new RawShape(element);
+                    return false;
                 }
 
                 shape.Anchors[i].Set(shape, new Point(x, y));
             }
 
-            return shape;
+            return true;
+        }
+
+        private static IPaintServer ParsePaintServer(string? paintServer) {
+            if (paintServer == PaintServer.None.ToString() || string.IsNullOrWhiteSpace(paintServer)) {
+                return PaintServer.None;
+            }
+            else {
+                return PaintManager.ParseColor(paintServer);
+            }
         }
     }
 }

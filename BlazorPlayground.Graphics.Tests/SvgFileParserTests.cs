@@ -145,6 +145,48 @@ namespace BlazorPlayground.Graphics.Tests {
             PointAssert.Equal(new Point(250, 350), rectangle.EndPoint);
         }
 
+        [Fact]
+        public void Parse_Fill_None() {
+            var result = SvgFileParser.Parse(XElement.Parse("<ellipse fill=\"none\" stroke=\"#000000\" stroke-width=\"1\" cx=\"250\" cy=\"150\" rx=\"100\" ry=\"50\" data-shape-type=\"Ellipse\" data-shape-anchor-0=\"250,150\" data-shape-anchor-1=\"350,200\"/>"));
+
+            Assert.Equal(PaintServer.None, result.Fill);
+        }
+
+        [Fact]
+        public void Parse_Fill_Color() {
+            var result = SvgFileParser.Parse(XElement.Parse("<ellipse fill=\"#ffff00\" stroke=\"#000000\" stroke-width=\"1\" cx=\"250\" cy=\"150\" rx=\"100\" ry=\"50\" data-shape-type=\"Ellipse\" data-shape-anchor-0=\"250,150\" data-shape-anchor-1=\"350,200\"/>"));
+
+            PaintServerAssert.Equal(new Color(255, 255, 0, 1), result.Fill);
+        }
+
+        [Fact]
+        public void Parse_Fill_Default() {
+            var result = SvgFileParser.Parse(XElement.Parse("<ellipse stroke=\"#000000\" stroke-width=\"1\" cx=\"250\" cy=\"150\" rx=\"100\" ry=\"50\" data-shape-type=\"Ellipse\" data-shape-anchor-0=\"250,150\" data-shape-anchor-1=\"350,200\"/>"));
+
+            Assert.Equal(PaintServer.None, result.Fill);
+        }
+
+        [Fact]
+        public void Parse_Stroke_None() {
+            var result = SvgFileParser.Parse(XElement.Parse("<ellipse fill=\"none\" stroke=\"none\" stroke-width=\"1\" cx=\"250\" cy=\"150\" rx=\"100\" ry=\"50\" data-shape-type=\"Ellipse\" data-shape-anchor-0=\"250,150\" data-shape-anchor-1=\"350,200\"/>"));
+
+            Assert.Equal(PaintServer.None, result.Stroke);
+        }
+
+        [Fact]
+        public void Parse_Stroke_Color() {
+            var result = SvgFileParser.Parse(XElement.Parse("<ellipse fill=\"none\" stroke=\"#ffff00\" stroke-width=\"1\" cx=\"250\" cy=\"150\" rx=\"100\" ry=\"50\" data-shape-type=\"Ellipse\" data-shape-anchor-0=\"250,150\" data-shape-anchor-1=\"350,200\"/>"));
+
+            PaintServerAssert.Equal(new Color(255, 255, 0, 1), result.Stroke);
+        }
+
+        [Fact]
+        public void Parse_Stroke_Default() {
+            var result = SvgFileParser.Parse(XElement.Parse("<ellipse stroke=\"none\" stroke-width=\"1\" cx=\"250\" cy=\"150\" rx=\"100\" ry=\"50\" data-shape-type=\"Ellipse\" data-shape-anchor-0=\"250,150\" data-shape-anchor-1=\"350,200\"/>"));
+
+            Assert.Equal(PaintServer.None, result.Stroke);
+        }
+
         // TODO parse general shape properties
     }
 }
