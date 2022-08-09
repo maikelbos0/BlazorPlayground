@@ -177,13 +177,13 @@
     </fieldset>
 
     <fieldset class="btn-group mb-3 me-3" disabled="@(Canvas.SelectedShape == null)">
-        <button type="button" class="btn btn-secondary" @onclick="() => MoveSelectedShapeToFrontOfList()">Move to front</button>
-        <button type="button" class="btn btn-secondary" @onclick="() => MoveSelectedShapeInList(1)">Move forward</button>
+        <button type="button" class="btn btn-secondary" @onclick="() => Canvas.MoveSelectedShapeToFront()">Move to front</button>
+        <button type="button" class="btn btn-secondary" @onclick="() => Canvas.MoveSelectedShapeForward()">Move forward</button>
     </fieldset>
 
     <fieldset class="btn-group mb-3 me-3" disabled="@(Canvas.SelectedShape == null)">
-        <button type="button" class="btn btn-secondary" @onclick="() => MoveSelectedShapeInList(-1)">Move backward</button>
-        <button type="button" class="btn btn-secondary" @onclick="() => MoveSelectedShapeToBackOfList()">Move to back</button>
+        <button type="button" class="btn btn-secondary" @onclick="() => Canvas.MoveSelectedShapeBackward()">Move backward</button>
+        <button type="button" class="btn btn-secondary" @onclick="() => Canvas.MoveSelectedShapeToBack()">Move to back</button>
     </fieldset>
 
     <fieldset class="btn-group mb-3 me-3" disabled="@(Canvas.SelectedShape == null)">
@@ -295,32 +295,6 @@
     private void ApplySides() {
         if (Canvas.SelectedShape != null) {
             Canvas.SelectedShape.Sides = Canvas.DrawSettings.Sides;
-        }
-    }
-
-    private void MoveSelectedShapeToBackOfList() {
-        if (Canvas.SelectedShape != null) {
-            Canvas.Shapes.Remove(Canvas.SelectedShape);
-            Canvas.Shapes.Insert(0, Canvas.SelectedShape);
-        }
-    }
-
-    private void MoveSelectedShapeInList(int indexChange) {
-        if (Canvas.SelectedShape != null) {
-            var index = Canvas.Shapes.IndexOf(Canvas.SelectedShape);
-            var newIndex = index + indexChange;
-
-            if (newIndex > 0 && newIndex < Canvas.Shapes.Count) {
-                Canvas.Shapes[index] = Canvas.Shapes[newIndex];
-                Canvas.Shapes[newIndex] = Canvas.SelectedShape;
-            }
-        }
-    }
-
-    private void MoveSelectedShapeToFrontOfList() {
-        if (Canvas.SelectedShape != null) {
-            Canvas.Shapes.Remove(Canvas.SelectedShape);
-            Canvas.Shapes.Add(Canvas.SelectedShape);
         }
     }
 

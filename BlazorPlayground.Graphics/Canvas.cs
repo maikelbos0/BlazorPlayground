@@ -175,6 +175,44 @@ namespace BlazorPlayground.Graphics {
             }
         }
 
+        public void MoveSelectedShapeToBack() {
+            if (SelectedShape != null) {
+                Shapes.Remove(SelectedShape);
+                Shapes.Insert(0, SelectedShape);
+            }
+        }
+
+        public void MoveSelectedShapeBackward() {
+            if (SelectedShape != null) {
+                var index = Shapes.IndexOf(SelectedShape);
+                var newIndex = index - 1;
+
+                if (newIndex >= 0 && newIndex < Shapes.Count) {
+                    Shapes[index] = Shapes[newIndex];
+                    Shapes[newIndex] = SelectedShape;
+                }
+            }
+        }
+
+        public void MoveSelectedShapeForward() {
+            if (SelectedShape != null) {
+                var index = Shapes.IndexOf(SelectedShape);
+                var newIndex = index + 1;
+
+                if (newIndex >= 0 && newIndex < Shapes.Count) {
+                    Shapes[index] = Shapes[newIndex];
+                    Shapes[newIndex] = SelectedShape;
+                }
+            }
+        }
+
+        public void MoveSelectedShapeToFront() {
+            if (SelectedShape != null) {
+                Shapes.Remove(SelectedShape);
+                Shapes.Add(SelectedShape);
+            }
+        }
+
         public void DeleteSelectedShape() {
             if (SelectedShape != null) {
                 Shapes.Remove(SelectedShape);

@@ -416,7 +416,6 @@ namespace BlazorPlayground.Graphics.Tests {
             Assert.Null(canvas.SelectedAnchor);
         }
 
-
         [Fact]
         public void AddShape_Without_AutoSelect() {
             var canvas = new Canvas() {
@@ -599,6 +598,74 @@ namespace BlazorPlayground.Graphics.Tests {
 
             Assert.Null(canvas.SelectedShape);
             Assert.Equal(shape, Assert.Single(canvas.Shapes));
+        }
+
+        [Fact]
+        public void MoveSelectedShapeToBack() {
+            var shapes = Enumerable.Range(0, 5).Select(i => new Line(new Point(100, 100), new Point(200, 200))).ToList();
+            var canvas = new Canvas();
+
+            canvas.Shapes.AddRange(shapes);
+            canvas.SelectedShape = shapes[2];
+
+            canvas.MoveSelectedShapeToBack();
+
+            Assert.Same(shapes[0], canvas.Shapes[1]);
+            Assert.Same(shapes[1], canvas.Shapes[2]);
+            Assert.Same(shapes[2], canvas.Shapes[0]);
+            Assert.Same(shapes[3], canvas.Shapes[3]);
+            Assert.Same(shapes[4], canvas.Shapes[4]);
+        }
+
+        [Fact]
+        public void MoveSelectedShapeBackward() {
+            var shapes = Enumerable.Range(0, 5).Select(i => new Line(new Point(100, 100), new Point(200, 200))).ToList();
+            var canvas = new Canvas();
+
+            canvas.Shapes.AddRange(shapes);
+            canvas.SelectedShape = shapes[2];
+
+            canvas.MoveSelectedShapeBackward();
+
+            Assert.Same(shapes[0], canvas.Shapes[0]);
+            Assert.Same(shapes[1], canvas.Shapes[2]);
+            Assert.Same(shapes[2], canvas.Shapes[1]);
+            Assert.Same(shapes[3], canvas.Shapes[3]);
+            Assert.Same(shapes[4], canvas.Shapes[4]);
+        }
+
+        [Fact]
+        public void MoveSelectedShapeForward() {
+            var shapes = Enumerable.Range(0, 5).Select(i => new Line(new Point(100, 100), new Point(200, 200))).ToList();
+            var canvas = new Canvas();
+
+            canvas.Shapes.AddRange(shapes);
+            canvas.SelectedShape = shapes[2];
+
+            canvas.MoveSelectedShapeForward();
+
+            Assert.Same(shapes[0], canvas.Shapes[0]);
+            Assert.Same(shapes[1], canvas.Shapes[1]);
+            Assert.Same(shapes[2], canvas.Shapes[3]);
+            Assert.Same(shapes[3], canvas.Shapes[2]);
+            Assert.Same(shapes[4], canvas.Shapes[4]);
+        }
+
+        [Fact]
+        public void MoveSelectedShapeToFront() {
+            var shapes = Enumerable.Range(0, 5).Select(i => new Line(new Point(100, 100), new Point(200, 200))).ToList();
+            var canvas = new Canvas();
+
+            canvas.Shapes.AddRange(shapes);
+            canvas.SelectedShape = shapes[2];
+
+            canvas.MoveSelectedShapeToFront();
+
+            Assert.Same(shapes[0], canvas.Shapes[0]);
+            Assert.Same(shapes[1], canvas.Shapes[1]);
+            Assert.Same(shapes[2], canvas.Shapes[4]);
+            Assert.Same(shapes[3], canvas.Shapes[2]);
+            Assert.Same(shapes[4], canvas.Shapes[3]);
         }
 
         [Fact]
