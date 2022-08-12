@@ -205,6 +205,50 @@ namespace BlazorPlayground.Graphics.Tests {
             Assert.Equal(expectedStrokeWidth, result.StrokeWidth);
         }
 
+        [Fact]
+        public void Parse_Null_StrokeLinecap() {
+            var result = SvgFileParser.Parse(XElement.Parse("<line stroke=\"#000000\" stroke-width=\"1\" x1=\"50\" y1=\"50\" x2=\"150\" y2=\"100\" data-shape-type=\"Line\" data-shape-anchor-0=\"50,50\" data-shape-anchor-1=\"150,100\"/>"));
+
+            Assert.Equal(Linecap.Butt, result.StrokeLinecap);
+        }
+
+        [Theory]
+        [InlineData("", Linecap.Butt)]
+        [InlineData("foo", Linecap.Butt)]
+        [InlineData("butt", Linecap.Butt)]
+        [InlineData("square", Linecap.Square)]
+        [InlineData("Square", Linecap.Square)]
+        [InlineData("round", Linecap.Round)]
+        [InlineData("Round", Linecap.Round)]
+        public void Parse_StrokeLinecap(string strokeLinecap, Linecap expectedStrokeLinecap) {
+            var result = SvgFileParser.Parse(XElement.Parse($"<line stroke=\"#000000\" stroke-width=\"1\" stroke-linecap=\"{strokeLinecap}\" x1=\"50\" y1=\"50\" x2=\"150\" y2=\"100\" data-shape-type=\"Line\" data-shape-anchor-0=\"50,50\" data-shape-anchor-1=\"150,100\"/>"));
+
+            Assert.Equal(expectedStrokeLinecap, result.StrokeLinecap);
+        }
+
+        [Fact]
+        public void Parse_Null_StrokeLinejoin() {
+            var result = SvgFileParser.Parse(XElement.Parse("<rect fill=\"none\" stroke=\"#000000\" stroke-width=\"1\" x=\"250\" y=\"150\" width=\"100\" height=\"150\" data-shape-type=\"Rectangle\" data-shape-anchor-0=\"250,150\" data-shape-anchor-1=\"350,300\"/>"));
+
+            Assert.Equal(Linejoin.Miter, result.StrokeLinejoin);
+        }
+
+        [Theory]
+        [InlineData("", Linejoin.Miter)]
+        [InlineData("foo", Linejoin.Miter)]
+        [InlineData("miter", Linejoin.Miter)]
+        [InlineData("arcs", Linejoin.Arcs)]
+        [InlineData("Arcs", Linejoin.Arcs)]
+        [InlineData("bevel", Linejoin.Bevel)]
+        [InlineData("Bevel", Linejoin.Bevel)]
+        [InlineData("round", Linejoin.Round)]
+        [InlineData("Round", Linejoin.Round)]
+        public void Parse_StrokeLinejoin(string strokeLinejoin, Linejoin expectedStrokeLinejoin) {
+            var result = SvgFileParser.Parse(XElement.Parse($"<rect fill=\"none\" stroke=\"#000000\" stroke-width=\"1\" stroke-linejoin=\"{strokeLinejoin}\" x=\"250\" y=\"150\" width=\"100\" height=\"150\" data-shape-type=\"Rectangle\" data-shape-anchor-0=\"250,150\" data-shape-anchor-1=\"350,300\"/>"));
+
+            Assert.Equal(expectedStrokeLinejoin, result.StrokeLinejoin);
+        }
+
         // TODO parse general shape properties
     }
 }

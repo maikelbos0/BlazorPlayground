@@ -32,6 +32,8 @@ namespace BlazorPlayground.Graphics {
                 shape.Fill = ParsePaintServer(element.Attribute("fill")?.Value);
                 shape.Stroke = ParsePaintServer(element.Attribute("stroke")?.Value);
                 shape.StrokeWidth = ParseDimension(element.Attribute("stroke-width")?.Value);
+                shape.StrokeLinecap = ParseEnum(element.Attribute("stroke-linecap")?.Value, Linecap.Butt);
+                shape.StrokeLinejoin = ParseEnum(element.Attribute("stroke-linejoin")?.Value, Linejoin.Miter);
 
                 return shape;
             }
@@ -82,6 +84,14 @@ namespace BlazorPlayground.Graphics {
             }
 
             return 1;
+        }
+
+        private static TEnum ParseEnum<TEnum>(string? enumValue, TEnum defaultValue) where TEnum : struct, Enum {
+            if (enumValue != null && Enum.TryParse<TEnum>(enumValue, true, out var value)) {
+                return value;
+            };
+
+            return defaultValue;
         }
     }
 }
