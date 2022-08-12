@@ -188,24 +188,21 @@ namespace BlazorPlayground.Graphics.Tests {
         }
 
         [Fact]
-        public void Parse_StrokeWidth_Null() {
+        public void Parse_Null_StrokeWidth() {
             var result = SvgFileParser.Parse(XElement.Parse("<ellipse fill=\"none\" stroke=\"none\" cx=\"250\" cy=\"150\" rx=\"100\" ry=\"50\" data-shape-type=\"Ellipse\" data-shape-anchor-0=\"250,150\" data-shape-anchor-1=\"350,200\"/>"));
 
             Assert.Equal(1, result.StrokeWidth);
         }
 
-        [Fact]
-        public void Parse_StrokeWidth_Below_Minimum() {
-            var result = SvgFileParser.Parse(XElement.Parse("<ellipse fill=\"none\" stroke=\"#ffff00\" stroke-width=\"0\" cx=\"250\" cy=\"150\" rx=\"100\" ry=\"50\" data-shape-type=\"Ellipse\" data-shape-anchor-0=\"250,150\" data-shape-anchor-1=\"350,200\"/>"));
+        [Theory]
+        [InlineData("0", 1)]
+        [InlineData("-1", 1)]
+        [InlineData("foo", 1)]
+        [InlineData("5", 5)]
+        public void Parse_Invalid_StrokeWidth(string strokeWidth, int expectedStrokeWidth) {
+            var result = SvgFileParser.Parse(XElement.Parse($"<ellipse fill=\"none\" stroke=\"#ffff00\" stroke-width=\"{strokeWidth}\" cx=\"250\" cy=\"150\" rx=\"100\" ry=\"50\" data-shape-type=\"Ellipse\" data-shape-anchor-0=\"250,150\" data-shape-anchor-1=\"350,200\"/>"));
             
-            Assert.Equal(1, result.StrokeWidth);
-        }
-
-        [Fact]
-        public void Parse_StrokeWidth() {
-            var result = SvgFileParser.Parse(XElement.Parse("<ellipse stroke=\"none\" stroke-width=\"5\" cx=\"250\" cy=\"150\" rx=\"100\" ry=\"50\" data-shape-type=\"Ellipse\" data-shape-anchor-0=\"250,150\" data-shape-anchor-1=\"350,200\"/>"));
-
-            Assert.Equal(5, result.StrokeWidth);
+            Assert.Equal(expectedStrokeWidth, result.StrokeWidth);
         }
 
         // TODO parse general shape properties
