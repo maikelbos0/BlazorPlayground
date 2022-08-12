@@ -31,6 +31,7 @@ namespace BlazorPlayground.Graphics {
             if (shape != null && SetAnchors(shape, element)) {
                 shape.Fill = ParsePaintServer(element.Attribute("fill")?.Value);
                 shape.Stroke = ParsePaintServer(element.Attribute("stroke")?.Value);
+                shape.StrokeWidth = ParseDimension(element.Attribute("stroke-width")?.Value);
 
                 return shape;
             }
@@ -73,6 +74,14 @@ namespace BlazorPlayground.Graphics {
             else {
                 return PaintManager.ParseColor(paintServer);
             }
+        }
+
+        private static int ParseDimension(string? dimensionValue) {
+            if (dimensionValue != null && int.TryParse(dimensionValue, out var dimension) && dimension >= 1) {
+                return dimension;
+            }
+
+            return 1;
         }
     }
 }

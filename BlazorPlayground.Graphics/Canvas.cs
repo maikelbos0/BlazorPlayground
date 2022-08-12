@@ -7,6 +7,7 @@ namespace BlazorPlayground.Graphics {
         private int gridSize = 50;
         private ShapeDefinition currentShapeDefinition = ShapeDefinition.Values.First();
 
+        // TODO use constants perhaps for dimension values here and in DrawSettings
         public int Width {
             get => width;
             set => width = Math.Max(value, 1);

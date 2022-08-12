@@ -1,6 +1,7 @@
 ﻿using System.Xml.Linq;
 
 namespace BlazorPlayground.Graphics {
+    // TODO what of this can be either internal or needs validation
     public abstract class Shape {
         public IPaintServer Fill { get; set; } = PaintServer.None;
         public IPaintServer Stroke { get; set; } = new Color(0, 0, 0, 1);
