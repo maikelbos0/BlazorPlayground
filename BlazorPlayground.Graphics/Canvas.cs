@@ -2,23 +2,29 @@
 
 namespace BlazorPlayground.Graphics {
     public class Canvas {
-        private int width = 800;
-        private int height = 800;
-        private int gridSize = 50;
+        public const int DefaultWidth = 800;
+        public const int MinimumWidth = 100;
+        public const int DefaultHeight = 800;
+        public const int MinimumHeight = 100;
+        public const int DefaultGridSize = 50;
+        public const int MinimumGridSize = 1;
+
+        private int width = DefaultWidth;
+        private int height = DefaultHeight;
+        private int gridSize = DefaultGridSize;
         private ShapeDefinition currentShapeDefinition = ShapeDefinition.Values.First();
 
-        // TODO use constants perhaps for dimension values here and in DrawSettings
         public int Width {
             get => width;
-            set => width = Math.Max(value, 1);
+            set => width = Math.Max(value, MinimumWidth);
         }
         public int Height {
             get => height;
-            set => height = Math.Max(value, 1);
+            set => height = Math.Max(value, MinimumHeight);
         }
         public int GridSize {
             get => gridSize;
-            set => gridSize = Math.Max(value, 1);
+            set => gridSize = Math.Max(value, MinimumGridSize);
         }
         public bool ShowGrid { get; set; } = false;
         public bool SnapToGrid { get; set; } = false;

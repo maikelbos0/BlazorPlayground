@@ -11,7 +11,7 @@ namespace BlazorPlayground.Graphics.Tests {
                 Width = 0
             };
 
-            Assert.Equal(1, canvas.Width);
+            Assert.Equal(Canvas.MinimumWidth, canvas.Width);
         }
 
         [Fact]
@@ -20,7 +20,7 @@ namespace BlazorPlayground.Graphics.Tests {
                 Height = 0
             };
 
-            Assert.Equal(1, canvas.Height);
+            Assert.Equal(Canvas.MinimumHeight, canvas.Height);
         }
 
         [Fact]
@@ -29,7 +29,7 @@ namespace BlazorPlayground.Graphics.Tests {
                 GridSize = 0
             };
 
-            Assert.Equal(1, canvas.GridSize);
+            Assert.Equal(Canvas.MinimumGridSize, canvas.GridSize);
         }
 
         [Fact]

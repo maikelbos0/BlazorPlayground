@@ -13,8 +13,8 @@ namespace BlazorPlayground.Graphics {
 
                 return new SvgFileParseResult(new Canvas() {
                     Shapes = graphicsElement.Elements().Select(Parse).ToList(),
-                    Height = ParseDimension(graphicsElement.Attribute("height")?.Value, 1),
-                    Width = ParseDimension(graphicsElement.Attribute("width")?.Value, 1),
+                    Width = ParseDimension(graphicsElement.Attribute("width")?.Value, Canvas.MinimumWidth, Canvas.DefaultWidth),
+                    Height = ParseDimension(graphicsElement.Attribute("height")?.Value, Canvas.MinimumHeight, Canvas.DefaultHeight)
                 });
             }
             catch {
@@ -28,10 +28,10 @@ namespace BlazorPlayground.Graphics {
             if (shape != null && SetAnchors(shape, element)) {
                 shape.Fill = ParsePaintServer(element.Attribute("fill")?.Value);
                 shape.Stroke = ParsePaintServer(element.Attribute("stroke")?.Value);
-                shape.StrokeWidth = ParseDimension(element.Attribute("stroke-width")?.Value, 1);
-                shape.StrokeLinecap = ParseEnum(element.Attribute("stroke-linecap")?.Value, Linecap.Butt);
-                shape.StrokeLinejoin = ParseEnum(element.Attribute("stroke-linejoin")?.Value, Linejoin.Miter);
-                shape.Sides = ParseDimension(element.Attribute("data-shape-sides")?.Value, 3);
+                shape.StrokeWidth = ParseDimension(element.Attribute("stroke-width")?.Value, DrawSettings.MinimumStrokeWidth, DrawSettings.DefaultStrokeWidth);
+                shape.StrokeLinecap = ParseEnum(element.Attribute("stroke-linecap")?.Value, DrawSettings.DefaultStrokeLinecap);
+                shape.StrokeLinejoin = ParseEnum(element.Attribute("stroke-linejoin")?.Value, DrawSettings.DefaultStrokeLinejoin);
+                shape.Sides = ParseDimension(element.Attribute("data-shape-sides")?.Value, DrawSettings.MinimumSides, DrawSettings.DefaultSides);
 
                 return shape;
             }
@@ -76,12 +76,12 @@ namespace BlazorPlayground.Graphics {
             }
         }
 
-        private static int ParseDimension(string? dimensionValue, int minimumValue) {
+        private static int ParseDimension(string? dimensionValue, int minimumValue, int defaultValue) {
             if (dimensionValue != null && int.TryParse(dimensionValue, out var dimension) && dimension >= minimumValue) {
                 return dimension;
             }
 
-            return minimumValue;
+            return defaultValue;
         }
 
         private static TEnum ParseEnum<TEnum>(string? enumValue, TEnum defaultValue) where TEnum : struct, Enum {

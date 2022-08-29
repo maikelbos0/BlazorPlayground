@@ -1,24 +1,33 @@
 ﻿namespace BlazorPlayground.Graphics {
     public class DrawSettings {
-        private int strokeWidth = 1;
-        private int sides = 3;
+        public const int DefaultStrokeWidth = 1;
+        public const int MinimumStrokeWidth = 1;
+        public const Linecap DefaultStrokeLinecap = Linecap.Butt;
+        public const Linejoin DefaultStrokeLinejoin = Linejoin.Miter;
+        public const int DefaultSides = 6;
+        public const int MinimumSides = 3;
+
+        // TODO perhaps default paintservers/managers
+
+        private int strokeWidth = DefaultStrokeWidth;
+        private int sides = DefaultSides;
 
         public PaintManager FillPaintManager { get; set; } = new PaintManager() { Mode = PaintMode.None, ColorValue = "#FFFFFF" };
 
         public PaintManager StrokePaintManager { get; set; } = new PaintManager() { Mode = PaintMode.Color, ColorValue = "#000000" };
 
-        public Linecap StrokeLinecap { get; set; } = Linecap.Butt;
+        public Linecap StrokeLinecap { get; set; } = DefaultStrokeLinecap;
 
-        public Linejoin StrokeLinejoin { get; set; } = Linejoin.Miter;
+        public Linejoin StrokeLinejoin { get; set; } = DefaultStrokeLinejoin;
 
         public int StrokeWidth {
             get => strokeWidth;
-            set => strokeWidth = Math.Max(value, 1);
+            set => strokeWidth = Math.Max(value, MinimumStrokeWidth);
         }
 
         public int Sides {
             get => sides;
-            set => sides = Math.Max(value, 3);
+            set => sides = Math.Max(value, MinimumSides);
         }
     }
 }

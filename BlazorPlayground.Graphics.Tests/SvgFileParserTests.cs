@@ -32,13 +32,13 @@ namespace BlazorPlayground.Graphics.Tests {
         public void Parse_Null_Canvas_Height() {
             var result = SvgFileParser.Parse("<svg></svg>");
 
-            Assert.Equal(1, result.Canvas.Height);
+            Assert.Equal(Canvas.DefaultHeight, result.Canvas.Height);
         }
 
         [Theory]
-        [InlineData("-1", 1)]
-        [InlineData("0", 1)]
-        [InlineData("foo", 1)]
+        [InlineData("-1", Canvas.DefaultHeight)]
+        [InlineData("0", Canvas.DefaultHeight)]
+        [InlineData("foo", Canvas.DefaultHeight)]
         [InlineData("600", 600)]
         public void Parse_Canvas_Height(string height, int expectedHeight) {
             var result = SvgFileParser.Parse($"<svg width=\"500\" height=\"{height}\"></svg>");
@@ -50,13 +50,13 @@ namespace BlazorPlayground.Graphics.Tests {
         public void Parse_Null_Canvas_Width() {
             var result = SvgFileParser.Parse("<svg></svg>");
 
-            Assert.Equal(1, result.Canvas.Width);
+            Assert.Equal(Canvas.DefaultWidth, result.Canvas.Width);
         }
 
         [Theory]
-        [InlineData("-1", 1)]
-        [InlineData("0", 1)]
-        [InlineData("foo", 1)]
+        [InlineData("-1", Canvas.DefaultWidth)]
+        [InlineData("0", Canvas.DefaultWidth)]
+        [InlineData("foo", Canvas.DefaultWidth)]
         [InlineData("600", 600)]
         public void Parse_Canvas_Width(string width, int expectedWidth) {
             var result = SvgFileParser.Parse($"<svg width=\"{width}\" height=\"500\"></svg>");
@@ -225,13 +225,13 @@ namespace BlazorPlayground.Graphics.Tests {
         public void Parse_Null_StrokeWidth() {
             var result = SvgFileParser.Parse(XElement.Parse("<ellipse fill=\"none\" stroke=\"none\" cx=\"250\" cy=\"150\" rx=\"100\" ry=\"50\" data-shape-type=\"Ellipse\" data-shape-anchor-0=\"250,150\" data-shape-anchor-1=\"350,200\"/>"));
 
-            Assert.Equal(1, result.StrokeWidth);
+            Assert.Equal(DrawSettings.DefaultStrokeWidth, result.StrokeWidth);
         }
 
         [Theory]
-        [InlineData("0", 1)]
-        [InlineData("-1", 1)]
-        [InlineData("foo", 1)]
+        [InlineData("0", DrawSettings.DefaultStrokeWidth)]
+        [InlineData("-1", DrawSettings.DefaultStrokeWidth)]
+        [InlineData("foo", DrawSettings.DefaultStrokeWidth)]
         [InlineData("5", 5)]
         public void Parse_StrokeWidth(string strokeWidth, int expectedStrokeWidth) {
             var result = SvgFileParser.Parse(XElement.Parse($"<ellipse fill=\"none\" stroke=\"#ffff00\" stroke-width=\"{strokeWidth}\" cx=\"250\" cy=\"150\" rx=\"100\" ry=\"50\" data-shape-type=\"Ellipse\" data-shape-anchor-0=\"250,150\" data-shape-anchor-1=\"350,200\"/>"));
@@ -243,12 +243,12 @@ namespace BlazorPlayground.Graphics.Tests {
         public void Parse_Null_StrokeLinecap() {
             var result = SvgFileParser.Parse(XElement.Parse("<line stroke=\"#000000\" stroke-width=\"1\" x1=\"50\" y1=\"50\" x2=\"150\" y2=\"100\" data-shape-type=\"Line\" data-shape-anchor-0=\"50,50\" data-shape-anchor-1=\"150,100\"/>"));
 
-            Assert.Equal(Linecap.Butt, result.StrokeLinecap);
+            Assert.Equal(DrawSettings.DefaultStrokeLinecap, result.StrokeLinecap);
         }
 
         [Theory]
-        [InlineData("", Linecap.Butt)]
-        [InlineData("foo", Linecap.Butt)]
+        [InlineData("", DrawSettings.DefaultStrokeLinecap)]
+        [InlineData("foo", DrawSettings.DefaultStrokeLinecap)]
         [InlineData("butt", Linecap.Butt)]
         [InlineData("square", Linecap.Square)]
         [InlineData("Square", Linecap.Square)]
@@ -264,12 +264,12 @@ namespace BlazorPlayground.Graphics.Tests {
         public void Parse_Null_StrokeLinejoin() {
             var result = SvgFileParser.Parse(XElement.Parse("<rect fill=\"none\" stroke=\"#000000\" stroke-width=\"1\" x=\"250\" y=\"150\" width=\"100\" height=\"150\" data-shape-type=\"Rectangle\" data-shape-anchor-0=\"250,150\" data-shape-anchor-1=\"350,300\"/>"));
 
-            Assert.Equal(Linejoin.Miter, result.StrokeLinejoin);
+            Assert.Equal(DrawSettings.DefaultStrokeLinejoin, result.StrokeLinejoin);
         }
 
         [Theory]
-        [InlineData("", Linejoin.Miter)]
-        [InlineData("foo", Linejoin.Miter)]
+        [InlineData("", DrawSettings.DefaultStrokeLinejoin)]
+        [InlineData("foo", DrawSettings.DefaultStrokeLinejoin)]
         [InlineData("miter", Linejoin.Miter)]
         [InlineData("arcs", Linejoin.Arcs)]
         [InlineData("Arcs", Linejoin.Arcs)]
@@ -287,13 +287,13 @@ namespace BlazorPlayground.Graphics.Tests {
         public void Parse_Null_Sides() {
             var result = SvgFileParser.Parse(XElement.Parse("<polygon fill=\"none\" stroke=\"#000000\" stroke-width=\"1\" stroke-linejoin=\"miter\" points=\"600,300 438.39745962155615,193.30127018922198 611.6025403784438,106.69872981077803\" data-shape-type=\"RegularPolygon\" data-shape-anchor-0=\"550,200\" data-shape-anchor-1=\"600,300\"/>"));
 
-            Assert.Equal(1, result.StrokeWidth);
+            Assert.Equal(DrawSettings.DefaultSides, result.Sides);
         }
 
         [Theory]
-        [InlineData("2", 3)]
-        [InlineData("-1", 3)]
-        [InlineData("foo", 3)]
+        [InlineData("2", DrawSettings.DefaultSides)]
+        [InlineData("-1", DrawSettings.DefaultSides)]
+        [InlineData("foo", DrawSettings.DefaultSides)]
         [InlineData("5", 5)]
         public void Parse_Sides(string sides, int expectedSides) {
             var result = SvgFileParser.Parse(XElement.Parse($"<polygon fill=\"none\" stroke=\"#000000\" stroke-width=\"1\" stroke-linejoin=\"miter\" points=\"600,300 438.39745962155615,193.30127018922198 611.6025403784438,106.69872981077803\" data-shape-type=\"RegularPolygon\" data-shape-anchor-0=\"550,200\" data-shape-anchor-1=\"600,300\" data-shape-sides=\"{sides}\"/>"));

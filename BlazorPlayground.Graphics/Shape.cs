@@ -5,10 +5,10 @@ namespace BlazorPlayground.Graphics {
     public abstract class Shape {
         public IPaintServer Fill { get; set; } = PaintServer.None;
         public IPaintServer Stroke { get; set; } = new Color(0, 0, 0, 1);
-        public int StrokeWidth { get; set; } = 1;
-        public Linecap StrokeLinecap { get; set; } = Linecap.Butt;
-        public Linejoin StrokeLinejoin { get; set; } = Linejoin.Miter;
-        public int Sides { get; set; } = 3;
+        public int StrokeWidth { get; set; } = DrawSettings.DefaultStrokeWidth;
+        public Linecap StrokeLinecap { get; set; } = DrawSettings.DefaultStrokeLinecap;
+        public Linejoin StrokeLinejoin { get; set; } = DrawSettings.DefaultStrokeLinejoin;
+        public int Sides { get; set; } = DrawSettings.DefaultSides;
         public ShapeDefinition Definition => ShapeDefinition.Get(this);
         public abstract string ElementName { get; }
         public abstract IReadOnlyList<Anchor> Anchors { get; }
