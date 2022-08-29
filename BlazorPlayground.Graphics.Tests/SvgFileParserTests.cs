@@ -114,7 +114,7 @@ namespace BlazorPlayground.Graphics.Tests {
 
         [Fact]
         public void Parse_RegularPolygon() {
-            var result = SvgFileParser.Parse(XElement.Parse("<polygon fill=\"none\" stroke=\"#000000\" stroke-width=\"1\" stroke-linejoin=\"miter\" points=\"600,300 438.39745962155615,193.30127018922198 611.6025403784438,106.69872981077803\" data-shape-type=\"RegularPolygon\" data-shape-anchor-0=\"550,200\" data-shape-anchor-1=\"600,300\"/>"));
+            var result = SvgFileParser.Parse(XElement.Parse("<polygon fill=\"none\" stroke=\"#000000\" stroke-width=\"1\" stroke-linejoin=\"miter\" points=\"600,300 438.39745962155615,193.30127018922198 611.6025403784438,106.69872981077803\" data-shape-type=\"RegularPolygon\" data-shape-anchor-0=\"550,200\" data-shape-anchor-1=\"600,300\" data-shape-sides=\"5\"/>"));
 
             var rectangle = Assert.IsType<RegularPolygon>(result);
 
@@ -199,7 +199,7 @@ namespace BlazorPlayground.Graphics.Tests {
         [InlineData("-1", 1)]
         [InlineData("foo", 1)]
         [InlineData("5", 5)]
-        public void Parse_Invalid_StrokeWidth(string strokeWidth, int expectedStrokeWidth) {
+        public void Parse_StrokeWidth(string strokeWidth, int expectedStrokeWidth) {
             var result = SvgFileParser.Parse(XElement.Parse($"<ellipse fill=\"none\" stroke=\"#ffff00\" stroke-width=\"{strokeWidth}\" cx=\"250\" cy=\"150\" rx=\"100\" ry=\"50\" data-shape-type=\"Ellipse\" data-shape-anchor-0=\"250,150\" data-shape-anchor-1=\"350,200\"/>"));
             
             Assert.Equal(expectedStrokeWidth, result.StrokeWidth);
@@ -249,6 +249,22 @@ namespace BlazorPlayground.Graphics.Tests {
             Assert.Equal(expectedStrokeLinejoin, result.StrokeLinejoin);
         }
 
-        // TODO parse general shape properties
+        [Fact]
+        public void Parse_Null_Sides() {
+            var result = SvgFileParser.Parse(XElement.Parse("<polygon fill=\"none\" stroke=\"#000000\" stroke-width=\"1\" stroke-linejoin=\"miter\" points=\"600,300 438.39745962155615,193.30127018922198 611.6025403784438,106.69872981077803\" data-shape-type=\"RegularPolygon\" data-shape-anchor-0=\"550,200\" data-shape-anchor-1=\"600,300\"/>"));
+
+            Assert.Equal(1, result.StrokeWidth);
+        }
+
+        [Theory]
+        [InlineData("2", 3)]
+        [InlineData("-1", 3)]
+        [InlineData("foo", 3)]
+        [InlineData("5", 5)]
+        public void Parse_Sides(string sides, int expectedSides) {
+            var result = SvgFileParser.Parse(XElement.Parse($"<polygon fill=\"none\" stroke=\"#000000\" stroke-width=\"1\" stroke-linejoin=\"miter\" points=\"600,300 438.39745962155615,193.30127018922198 611.6025403784438,106.69872981077803\" data-shape-type=\"RegularPolygon\" data-shape-anchor-0=\"550,200\" data-shape-anchor-1=\"600,300\" data-shape-sides=\"{sides}\"/>"));
+
+            Assert.Equal(expectedSides, result.Sides);
+        }
     }
 }
