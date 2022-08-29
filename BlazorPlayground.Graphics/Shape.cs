@@ -1,16 +1,32 @@
 ﻿using System.Xml.Linq;
 
 namespace BlazorPlayground.Graphics {
-    // TODO what of this can be either internal or needs validation
     public abstract class Shape {
+        private int strokeWidth = DrawSettings.DefaultStrokeWidth;
+        private int sides = DrawSettings.DefaultSides;
+
         public IPaintServer Fill { get; set; } = PaintServer.None;
+
         public IPaintServer Stroke { get; set; } = PaintManager.ParseColor(DrawSettings.DefaultStrokeColor);
-        public int StrokeWidth { get; set; } = DrawSettings.DefaultStrokeWidth;
+
+        public int StrokeWidth {
+            get => strokeWidth;
+            set => strokeWidth = Math.Max(value, DrawSettings.MinimumStrokeWidth);
+        }
+
         public Linecap StrokeLinecap { get; set; } = DrawSettings.DefaultStrokeLinecap;
+
         public Linejoin StrokeLinejoin { get; set; } = DrawSettings.DefaultStrokeLinejoin;
-        public int Sides { get; set; } = DrawSettings.DefaultSides;
+
+        public int Sides {
+            get => sides;
+            set => sides = Math.Max(value, DrawSettings.MinimumSides);
+        }
+
         public ShapeDefinition Definition => ShapeDefinition.Get(this);
+
         public abstract string ElementName { get; }
+
         public abstract IReadOnlyList<Anchor> Anchors { get; }
 
         public abstract ShapeAttributeCollection GetAttributes();

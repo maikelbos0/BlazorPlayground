@@ -16,14 +16,14 @@
 
         public PaintManager StrokePaintManager { get; set; } = new PaintManager() { Mode = PaintMode.Color, ColorValue = DefaultStrokeColor };
 
-        public Linecap StrokeLinecap { get; set; } = DefaultStrokeLinecap;
-
-        public Linejoin StrokeLinejoin { get; set; } = DefaultStrokeLinejoin;
-
         public int StrokeWidth {
             get => strokeWidth;
             set => strokeWidth = Math.Max(value, MinimumStrokeWidth);
         }
+
+        public Linecap StrokeLinecap { get; set; } = DefaultStrokeLinecap;
+
+        public Linejoin StrokeLinejoin { get; set; } = DefaultStrokeLinejoin;
 
         public int Sides {
             get => sides;

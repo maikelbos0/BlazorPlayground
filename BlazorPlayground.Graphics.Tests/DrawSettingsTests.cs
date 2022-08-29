@@ -2,22 +2,30 @@
 
 namespace BlazorPlayground.Graphics.Tests {
     public class DrawSettingsTests {
-        [Fact]
-        public void StrokeWidth_Minimum() {
-            var settings = new DrawSettings() {
-                StrokeWidth = 0
+        [Theory]
+        [InlineData(-1, DrawSettings.MinimumStrokeWidth)]
+        [InlineData(DrawSettings.MinimumStrokeWidth - 1, DrawSettings.MinimumStrokeWidth)]
+        [InlineData(DrawSettings.MinimumStrokeWidth, DrawSettings.MinimumStrokeWidth)]
+        [InlineData(DrawSettings.MinimumStrokeWidth + 1, DrawSettings.MinimumStrokeWidth + 1)]
+        public void StrokeWidth(int strokeWidth, int expectedStrokeWidth) {
+            var shape = new Line(new Point(100, 150), new Point(200, 250)) {
+                StrokeWidth = strokeWidth
             };
 
-            Assert.Equal(1, settings.StrokeWidth);
+            Assert.Equal(expectedStrokeWidth, shape.StrokeWidth);
         }
 
-        [Fact]
-        public void Sides_Minimum() {
+        [Theory]
+        [InlineData(-1, DrawSettings.MinimumSides)]
+        [InlineData(DrawSettings.MinimumSides - 1, DrawSettings.MinimumSides)]
+        [InlineData(DrawSettings.MinimumSides, DrawSettings.MinimumSides)]
+        [InlineData(DrawSettings.MinimumSides + 1, DrawSettings.MinimumSides + 1)]
+        public void Sides(int sides, int expectedSides) {
             var settings = new DrawSettings() {
-                Sides = 2
+                Sides = sides
             };
 
-            Assert.Equal(3, settings.Sides);
+            Assert.Equal(expectedSides, settings.Sides);
         }
     }
 }
