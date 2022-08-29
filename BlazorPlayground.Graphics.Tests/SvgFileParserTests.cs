@@ -28,7 +28,41 @@ namespace BlazorPlayground.Graphics.Tests {
             Assert.Equal(2, result.Canvas.Shapes.Count);
         }
 
-        // TODO parse canvas size
+        [Fact]
+        public void Parse_Null_Canvas_Height() {
+            var result = SvgFileParser.Parse("<svg></svg>");
+
+            Assert.Equal(1, result.Canvas.Height);
+        }
+
+        [Theory]
+        [InlineData("-1", 1)]
+        [InlineData("0", 1)]
+        [InlineData("foo", 1)]
+        [InlineData("600", 600)]
+        public void Parse_Canvas_Height(string height, int expectedHeight) {
+            var result = SvgFileParser.Parse($"<svg width=\"500\" height=\"{height}\"></svg>");
+
+            Assert.Equal(expectedHeight, result.Canvas.Height);
+        }
+
+        [Fact]
+        public void Parse_Null_Canvas_Width() {
+            var result = SvgFileParser.Parse("<svg></svg>");
+
+            Assert.Equal(1, result.Canvas.Width);
+        }
+
+        [Theory]
+        [InlineData("-1", 1)]
+        [InlineData("0", 1)]
+        [InlineData("foo", 1)]
+        [InlineData("600", 600)]
+        public void Parse_Canvas_Width(string width, int expectedWidth) {
+            var result = SvgFileParser.Parse($"<svg width=\"{width}\" height=\"500\"></svg>");
+
+            Assert.Equal(expectedWidth, result.Canvas.Width);
+        }
 
         [Fact]
         public void Parse_Raw_Shape() {

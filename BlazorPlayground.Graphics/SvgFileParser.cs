@@ -12,7 +12,9 @@ namespace BlazorPlayground.Graphics {
                 }
 
                 return new SvgFileParseResult(new Canvas() {
-                    Shapes = graphicsElement.Elements().Select(Parse).ToList()
+                    Shapes = graphicsElement.Elements().Select(Parse).ToList(),
+                    Height = ParseDimension(graphicsElement.Attribute("height")?.Value, 1),
+                    Width = ParseDimension(graphicsElement.Attribute("width")?.Value, 1),
                 });
             }
             catch {
