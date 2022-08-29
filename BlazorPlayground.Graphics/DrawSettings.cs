@@ -6,15 +6,15 @@
         public const Linejoin DefaultStrokeLinejoin = Linejoin.Miter;
         public const int DefaultSides = 6;
         public const int MinimumSides = 3;
-
-        // TODO perhaps default paintservers/managers
+        public const string DefaultFillColor = "#FFFFFF";
+        public const string DefaultStrokeColor = "#000000";
 
         private int strokeWidth = DefaultStrokeWidth;
         private int sides = DefaultSides;
 
-        public PaintManager FillPaintManager { get; set; } = new PaintManager() { Mode = PaintMode.None, ColorValue = "#FFFFFF" };
+        public PaintManager FillPaintManager { get; set; } = new PaintManager() { Mode = PaintMode.None, ColorValue = DefaultFillColor };
 
-        public PaintManager StrokePaintManager { get; set; } = new PaintManager() { Mode = PaintMode.Color, ColorValue = "#000000" };
+        public PaintManager StrokePaintManager { get; set; } = new PaintManager() { Mode = PaintMode.Color, ColorValue = DefaultStrokeColor };
 
         public Linecap StrokeLinecap { get; set; } = DefaultStrokeLinecap;
 
