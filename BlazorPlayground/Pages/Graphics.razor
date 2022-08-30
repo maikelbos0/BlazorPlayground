@@ -80,7 +80,7 @@
             <label class="form-check-label ps-2" for="modeSelect">Select</label>
         </div>
 
-        @foreach (var definition in ShapeDefinition.Values) {
+        @foreach (var definition in ShapeDefinition.Values.Where(v => v.IsConstructable)) {
             <div class="input-group-text">
                 <input class="form-check-input mt-0" type="radio" name="mode" id="@("mode" + definition.Name)" @onclick="() => Canvas.StartDrawing(definition)" checked="@(Canvas.IsDrawing && Canvas.CurrentShapeDefinition == definition)" />
                 <label class="form-check-label ps-2" for="@("mode" + definition.Name)">@definition.Name</label>

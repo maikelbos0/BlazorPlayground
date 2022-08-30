@@ -164,5 +164,20 @@ namespace BlazorPlayground.Graphics.Tests {
             PointAssert.Equal(new Point(100, 200), shape.StartPoint);
             PointAssert.Equal(new Point(150, 250), shape.EndPoint);
         }
+
+        [Fact]
+        public void RawShape() {
+            var definition = Assert.Single(ShapeDefinition.Values, d => d.Name == "Raw shape");
+
+            Assert.False(definition.UseFill);
+            Assert.False(definition.UseStroke);
+            Assert.False(definition.UseStrokeWidth);
+            Assert.False(definition.UseStrokeLinejoin);
+            Assert.False(definition.UseStrokeLinecap);
+            Assert.False(definition.UseSides);
+            Assert.False(definition.AutoSelect);
+
+            Assert.Throws<InvalidOperationException>(() => definition.Construct(new Point(100, 200), new Point(150, 250)));
+        }
     }
 }

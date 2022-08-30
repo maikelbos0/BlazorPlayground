@@ -9,10 +9,11 @@
             { typeof(Ellipse), new("Ellipse", (startPoint, endPoint) => new Ellipse(startPoint, endPoint), useFill: true, useStroke: true, useStrokeWidth: true) },
             { typeof(RegularPolygon), new("Regular polygon", (startPoint, endPoint) => new RegularPolygon(startPoint, endPoint), useFill: true, useStroke: true, useStrokeWidth: true, useStrokeLinejoin: true, useSides: true) },
             { typeof(QuadraticBezier), new("Quadratic bezier", (startPoint, endPoint) => new QuadraticBezier(startPoint, endPoint), useFill: true, useStroke: true, useStrokeWidth: true, useStrokeLinecap: true, autoSelect: true) },
-            { typeof(CubicBezier), new("Cubic bezier", (startPoint, endPoint) => new CubicBezier(startPoint, endPoint), useFill: true, useStroke: true, useStrokeWidth: true, useStrokeLinecap: true, autoSelect: true) }
+            { typeof(CubicBezier), new("Cubic bezier", (startPoint, endPoint) => new CubicBezier(startPoint, endPoint), useFill: true, useStroke: true, useStrokeWidth: true, useStrokeLinecap: true, autoSelect: true) },
+            { typeof(RawShape), new("Raw shape") }
         };
 
-        public static ShapeDefinition None { get; } = new ShapeDefinition("None", (startPoint, endPoint) => throw new InvalidOperationException());
+        public static ShapeDefinition None { get; } = new ShapeDefinition("None");
 
         public static IEnumerable<ShapeDefinition> Values => definitions.Values;
 
@@ -21,6 +22,7 @@
         public static ShapeDefinition Get(Type type) => definitions[type];
 
         public string Name { get; }
+        public bool IsConstructable { get; }
         public Constructor Construct { get; }
         public bool UseFill { get; }
         public bool UseStroke { get; }
@@ -30,9 +32,10 @@
         public bool UseSides { get; }
         public bool AutoSelect { get; }
 
-        private ShapeDefinition(string name, Constructor construct, bool useFill = false, bool useStroke = false, bool useStrokeWidth = false, bool useStrokeLinecap = false, bool useStrokeLinejoin = false, bool useSides = false, bool autoSelect = false) {
+        private ShapeDefinition(string name, Constructor? construct = null, bool useFill = false, bool useStroke = false, bool useStrokeWidth = false, bool useStrokeLinecap = false, bool useStrokeLinejoin = false, bool useSides = false, bool autoSelect = false) {
             Name = name;
-            Construct = construct;
+            IsConstructable = construct != null;
+            Construct = construct ?? ((_, _) => throw new InvalidOperationException($"{nameof(Construct)} can only be called when {nameof(IsConstructable)} is true."));
             UseFill = useFill;
             UseStroke = useStroke;
             UseStrokeWidth = useStrokeWidth;
