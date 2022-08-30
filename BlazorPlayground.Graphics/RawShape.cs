@@ -18,7 +18,7 @@ namespace BlazorPlayground.Graphics {
 
         public override XElement CreateSvgElement() => new(element);
 
-        public override void BuildRenderTree(RenderTreeBuilder builder, ShapeRenderer renderer) {
+        public override void BuildRenderTree(RenderTreeBuilder builder) {
             builder.AddContent(1, new MarkupString(element.ToString()));
         }
     }

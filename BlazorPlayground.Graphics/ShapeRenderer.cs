@@ -18,7 +18,12 @@ namespace BlazorPlayground.Graphics {
 
         protected override void BuildRenderTree(RenderTreeBuilder builder) {
             if (Shape != null) {
-                Shape.BuildRenderTree(builder, this);
+                builder.OpenElement(1, "g");
+                builder.SetKey(Shape);
+                builder.AddAttribute(2, "class", IsSelected ? "shape-selected" : IsVirtual ? "shape-virtual" : "");
+                builder.AddAttribute(3, "onmousedown", OnMouseDown);
+                builder.AddContent(4, Shape.BuildRenderTree);
+                builder.CloseElement();
             }
         }
     }

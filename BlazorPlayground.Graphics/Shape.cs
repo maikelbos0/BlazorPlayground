@@ -28,7 +28,7 @@ namespace BlazorPlayground.Graphics {
 
         public abstract IReadOnlyList<Anchor> Anchors { get; }
 
-        public abstract void BuildRenderTree(RenderTreeBuilder builder, ShapeRenderer renderer);
+        public abstract void BuildRenderTree(RenderTreeBuilder builder);
 
         public abstract XElement CreateSvgElement();
 

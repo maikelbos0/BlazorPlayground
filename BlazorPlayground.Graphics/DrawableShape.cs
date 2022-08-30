@@ -5,39 +5,40 @@ namespace BlazorPlayground.Graphics {
     public abstract class DrawableShape : Shape {
         public abstract string ElementName { get; }
 
-        // TODO remove renderer here, move renderer attributes properties back to renderer BuildRenderTree (as group?)
-        public override void BuildRenderTree(RenderTreeBuilder builder, ShapeRenderer renderer) {
-            builder.OpenElement(1, "g");
+        public override void BuildRenderTree(RenderTreeBuilder builder) {            
+            builder.OpenElement(1, ElementName);
+
+            if (Definition.UseFill) {
+                builder.AddAttribute(2, "fill", Fill);
+            }
+
+            builder.AddAttribute(3, "stroke", Stroke);
+            builder.AddAttribute(4, "stroke-width", StrokeWidth);
 
             if (Definition.UseStrokeLinecap) {
-                builder.AddAttribute(2, "stroke-linecap", StrokeLinecap.ToString().ToLower());
+                builder.AddAttribute(5, "stroke-linecap", StrokeLinecap.ToString().ToLower());
             }
 
             if (Definition.UseStrokeLinejoin) {
-                builder.AddAttribute(3, "stroke-linejoin", StrokeLinejoin.ToString().ToLower());
+                builder.AddAttribute(6, "stroke-linejoin", StrokeLinejoin.ToString().ToLower());
             }
 
-            builder.SetKey(this);
+            builder.AddMultipleAttributes(7, GetAttributes());
+            builder.CloseElement();
 
-            builder.OpenElement(4, ElementName);
-            builder.AddAttribute(5, "class", renderer.IsSelected ? "shape-selected" : renderer.IsVirtual ? "shape-virtual" : "");
+            builder.OpenElement(8, ElementName);
+            builder.AddAttribute(9, "class", "shape-selector");
 
-            if (Definition.UseFill) {
-                builder.AddAttribute(6, "fill", Fill);
+            if (Definition.UseStrokeLinecap) {
+                builder.AddAttribute(10, "stroke-linecap", StrokeLinecap.ToString().ToLower());
             }
 
-            builder.AddAttribute(7, "stroke", Stroke);
-            builder.AddAttribute(8, "stroke-width", StrokeWidth);
-            builder.AddMultipleAttributes(9, GetAttributes());
-            builder.CloseElement();
+            if (Definition.UseStrokeLinejoin) {
+                builder.AddAttribute(11, "stroke-linejoin", StrokeLinejoin.ToString().ToLower());
+            }
 
-            builder.OpenElement(10, ElementName);
-            builder.AddAttribute(11, "class", "shape-selector");
-            builder.AddAttribute(12, "onmousedown", renderer.OnMouseDown);
-            builder.AddAttribute(13, "stroke-width", Math.Max(StrokeWidth, 12));
-            builder.AddMultipleAttributes(14, GetAttributes());
-            builder.CloseElement();
-
+            builder.AddAttribute(12, "stroke-width", Math.Max(StrokeWidth, 12));
+            builder.AddMultipleAttributes(13, GetAttributes());
             builder.CloseElement();
         }
 
