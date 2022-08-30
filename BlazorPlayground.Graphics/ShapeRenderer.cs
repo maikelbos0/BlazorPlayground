@@ -18,44 +18,7 @@ namespace BlazorPlayground.Graphics {
 
         protected override void BuildRenderTree(RenderTreeBuilder builder) {
             if (Shape != null) {
-                if (Shape is IRenderable renderableShape) {
-                    renderableShape.BuildRenderTree(builder);
-                }
-                else {
-                    // TODO refactor this; does a renderer still need to exist?
-                    builder.OpenElement(1, "g");
-
-                    if (Shape.Definition.UseStrokeLinecap) {
-                        builder.AddAttribute(2, "stroke-linecap", Shape.StrokeLinecap.ToString().ToLower());
-                    }
-
-                    if (Shape.Definition.UseStrokeLinejoin) {
-                        builder.AddAttribute(3, "stroke-linejoin", Shape.StrokeLinejoin.ToString().ToLower());
-                    }
-
-                    builder.SetKey(Shape);
-
-                    builder.OpenElement(4, Shape.ElementName);
-                    builder.AddAttribute(5, "class", IsSelected ? "shape-selected" : IsVirtual ? "shape-virtual" : "");
-                    
-                    if (Shape.Definition.UseFill) {
-                        builder.AddAttribute(6, "fill", Shape.Fill);
-                    }
-
-                    builder.AddAttribute(7, "stroke", Shape.Stroke);
-                    builder.AddAttribute(8, "stroke-width", Shape.StrokeWidth);
-                    builder.AddMultipleAttributes(9, Shape.GetAttributes());
-                    builder.CloseElement();
-
-                    builder.OpenElement(10, Shape.ElementName);
-                    builder.AddAttribute(11, "class", "shape-selector");
-                    builder.AddAttribute(12, "onmousedown", OnMouseDown);
-                    builder.AddAttribute(13, "stroke-width", Math.Max(Shape.StrokeWidth, 12));
-                    builder.AddMultipleAttributes(14, Shape.GetAttributes());
-                    builder.CloseElement();
-
-                    builder.CloseElement();
-                }
+                Shape.BuildRenderTree(builder, this);
             }
         }
     }

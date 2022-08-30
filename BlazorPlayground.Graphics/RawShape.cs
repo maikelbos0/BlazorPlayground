@@ -4,25 +4,21 @@ using System.Collections.ObjectModel;
 using System.Xml.Linq;
 
 namespace BlazorPlayground.Graphics {
-    public class RawShape : Shape, IRenderable {
+    // TODO make raw shape selectable with display, delete and move forward/front/backward/back
+    public class RawShape : Shape {
         private readonly XElement element;
 
         public RawShape(XElement element) {
             this.element = element;
         }
 
-        public override string ElementName => element.Name.ToString();
-
         public override IReadOnlyList<Anchor> Anchors => new ReadOnlyCollection<Anchor>(Array.Empty<Anchor>());
 
         protected override Shape CreateClone() => new RawShape(new XElement(element));
 
-        // TODO refactor this; GetAttributes is not a property of a renderable shape at all
-        public override ShapeAttributeCollection GetAttributes() => new();
-
         public override XElement CreateSvgElement() => new(element);
 
-        public void BuildRenderTree(RenderTreeBuilder builder) {
+        public override void BuildRenderTree(RenderTreeBuilder builder, ShapeRenderer renderer) {
             builder.AddContent(1, new MarkupString(element.ToString()));
         }
     }

@@ -1,4 +1,5 @@
-﻿using System.Xml.Linq;
+﻿using Microsoft.AspNetCore.Components.Rendering;
+using System.Xml.Linq;
 
 namespace BlazorPlayground.Graphics {
     public abstract class Shape {
@@ -25,13 +26,11 @@ namespace BlazorPlayground.Graphics {
 
         public ShapeDefinition Definition => ShapeDefinition.Get(this);
 
-        public abstract string ElementName { get; }
-
         public abstract IReadOnlyList<Anchor> Anchors { get; }
 
-        public abstract ShapeAttributeCollection GetAttributes();
+        public abstract void BuildRenderTree(RenderTreeBuilder builder, ShapeRenderer renderer);
 
-        protected abstract Shape CreateClone();
+        public abstract XElement CreateSvgElement();
 
         public void Transform(Point delta, bool snapToGrid, int gridSize) {
             if (snapToGrid) {
@@ -49,41 +48,6 @@ namespace BlazorPlayground.Graphics {
             }
         }
 
-        public virtual XElement CreateSvgElement() => new(ElementName, CreateSvgAttributes());
-
-        private IEnumerable<XAttribute> CreateSvgAttributes() {
-            if (Definition.UseFill) {
-                yield return new XAttribute("fill", Fill);
-            }
-
-            yield return new XAttribute("stroke", Stroke);
-            yield return new XAttribute("stroke-width", StrokeWidth);
-
-            if (Definition.UseStrokeLinecap) {
-                yield return new XAttribute("stroke-linecap", StrokeLinecap.ToString().ToLower());
-            }
-
-            if (Definition.UseStrokeLinejoin) {
-                yield return new XAttribute("stroke-linejoin", StrokeLinejoin.ToString().ToLower());
-            }
-
-            foreach (var attribute in GetAttributes()) {
-                yield return new XAttribute(attribute.Key, attribute.Value);
-            }
-
-            yield return new XAttribute("data-shape-type", GetType().Name);
-
-            for (var i = 0; i < Anchors.Count; i++) {
-                var point = Anchors[i].Get(this);
-
-                yield return new XAttribute($"data-shape-anchor-{i}", FormattableString.Invariant($"{point.X},{point.Y}"));
-            }
-
-            if (Definition.UseSides) {
-                yield return new XAttribute("data-shape-sides", Sides);
-            }
-        }
-
         public Shape Clone() {
             var clone = CreateClone();
 
@@ -96,5 +60,7 @@ namespace BlazorPlayground.Graphics {
 
             return clone;
         }
+        
+        protected abstract Shape CreateClone();
     }
 }

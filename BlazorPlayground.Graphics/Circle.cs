@@ -1,5 +1,5 @@
 ﻿namespace BlazorPlayground.Graphics {
-    public class Circle : Shape {
+    public class Circle : DrawableShape {
 
         private readonly static Anchor[] anchors = new[] {
             new Anchor<Circle>(s => s.CenterPoint, (s, p) => s.CenterPoint = p),
