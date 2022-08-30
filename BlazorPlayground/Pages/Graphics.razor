@@ -17,17 +17,17 @@
                 <button type="button" class="btn-close" aria-label="Close" @onclick="() => ToggleLoadModal(false)"></button>
             </div>
             <div class="modal-body">
-                <p>Please note that only valid SVG files can be parsed and only Canvas.Shapes written by this graphics module can be edited.</p>
+                <p>Please note that only valid SVG files can be parsed and only shapes created with this graphics module can be edited.</p>
 
                 <label for="inputFileToLoad" class="form-label">SVG file</label>
-                <InputFile id="inputFileToLoad" class="@(FileLoadHasError ? "form-control is-invalid" : "form-control")" OnChange="OnInputFileToLoadChange" />
+                <InputFile @key="FileLoadKey" id="inputFileToLoad" class="@(FileLoadHasError ? "form-control is-invalid" : "form-control")" OnChange="OnInputFileToLoadChange" />
 
                 @if (FileLoadHasError) {
                     <div class="invalid-feedback">@FileLoadError</div>
                 }
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" @onclick="Load">Load</button>
+                <button type="button" class="btn btn-primary" @onclick="() => Load()">Load</button>
                 <button type="button" class="btn btn-secondary" @onclick="() => ToggleLoadModal(false)">Cancel</button>
             </div>
         </div>
@@ -245,6 +245,7 @@
     private string FileLoadError { get; set; }
     private bool FileLoadHasError => !string.IsNullOrWhiteSpace(FileLoadError);
     private IBrowserFile FileToLoad { get; set; }
+    private Guid FileLoadKey { get; set; }
     private string FileName { get; set; }
     private Canvas Canvas { get; set; } = new Canvas();
 
@@ -269,13 +270,13 @@
     }
 
     private void ToggleLoadModal(bool showLoadModal) {
-        ShowLoadModal = showLoadModal;
+        FileLoadKey = Guid.NewGuid();
         FileLoadError = null;
         FileToLoad = null;
+        ShowLoadModal = showLoadModal;
     }
 
     private void OnInputFileToLoadChange(InputFileChangeEventArgs e) {
-        // TODO clear input as well
         FileToLoad = e.File;
     }
 

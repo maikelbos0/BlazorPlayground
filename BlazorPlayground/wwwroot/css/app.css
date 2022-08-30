@@ -166,6 +166,6 @@ fieldset:disabled label, fieldset:disabled .form-control:disabled, fieldset:disa
     opacity: 0.5;
 }
 
-.form-control, .form-select {
+.btn-toolbar .form-control, .btn-toolbar .form-select {
     max-width: 8em;
 }
