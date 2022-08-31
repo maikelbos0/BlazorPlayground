@@ -1,16 +1,25 @@
 ﻿namespace BlazorPlayground.Graphics {
     public class DrawSettings {
+        public const int DefaultOpacity = 100;
+        public const int MinimumOpacity = 0;
+        public const int MaximumOpacity = 100;
+        public const string DefaultFillColor = "#FFFFFF";
+        public const string DefaultStrokeColor = "#000000";
         public const int DefaultStrokeWidth = 1;
         public const int MinimumStrokeWidth = 1;
         public const Linecap DefaultStrokeLinecap = Linecap.Butt;
         public const Linejoin DefaultStrokeLinejoin = Linejoin.Miter;
         public const int DefaultSides = 6;
         public const int MinimumSides = 3;
-        public const string DefaultFillColor = "#FFFFFF";
-        public const string DefaultStrokeColor = "#000000";
 
+        private int opacity = DefaultOpacity;
         private int strokeWidth = DefaultStrokeWidth;
         private int sides = DefaultSides;
+
+        public int Opacity {
+            get => opacity;
+            set => opacity = Math.Max(Math.Min(value, MaximumOpacity), MinimumOpacity);
+        }
 
         public PaintManager FillPaintManager { get; set; } = new PaintManager() { Mode = PaintMode.None, ColorValue = DefaultFillColor };
 
