@@ -13,7 +13,6 @@ namespace BlazorPlayground {
      * Add opacity
      * Add fill opacity?
      * Add arc
-     * Add load/import of svg
      */
 
     public class Program {

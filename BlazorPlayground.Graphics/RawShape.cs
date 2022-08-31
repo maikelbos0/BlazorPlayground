@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Xml.Linq;
 
 namespace BlazorPlayground.Graphics {
-    // TODO make raw shape selectable with display, delete and move forward/front/backward/back
     public class RawShape : Shape {
         private readonly XElement element;
 
