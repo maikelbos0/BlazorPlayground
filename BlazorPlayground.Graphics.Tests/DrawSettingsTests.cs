@@ -3,12 +3,12 @@
 namespace BlazorPlayground.Graphics.Tests {
     public class DrawSettingsTests {
         [Theory]
-        [InlineData(DrawSettings.MinimumOpacity - 1, DrawSettings.MinimumOpacity)]
+        [InlineData(DrawSettings.MinimumOpacity - 0.01, DrawSettings.MinimumOpacity)]
         [InlineData(DrawSettings.MinimumOpacity, DrawSettings.MinimumOpacity)]
-        [InlineData(50, 50)]
+        [InlineData(0.5, 0.5)]
         [InlineData(DrawSettings.MaximumOpacity, DrawSettings.MaximumOpacity)]
-        [InlineData(DrawSettings.MaximumOpacity + 1, DrawSettings.MaximumOpacity)]
-        public void Opacity(int opacity, int expectedOpacity) {
+        [InlineData(DrawSettings.MaximumOpacity + 0.01, DrawSettings.MaximumOpacity)]
+        public void Opacity(double opacity, double expectedOpacity) {
             var settings = new DrawSettings() {
                 Opacity = opacity
             };
