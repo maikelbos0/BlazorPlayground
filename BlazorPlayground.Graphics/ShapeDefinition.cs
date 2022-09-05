@@ -37,6 +37,7 @@
             Name = name;
             IsConstructable = construct != null;
             Construct = construct ?? ((_, _) => throw new InvalidOperationException($"{nameof(Construct)} can only be called when {nameof(IsConstructable)} is true."));
+            UseOpacity = useOpacity;
             UseFill = useFill;
             UseStroke = useStroke;
             UseStrokeWidth = useStrokeWidth;
