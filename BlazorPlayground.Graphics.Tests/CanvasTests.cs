@@ -601,6 +601,19 @@ namespace BlazorPlayground.Graphics.Tests {
         }
 
         [Fact]
+        public void ApplyOpacityToSelectedShape() {
+            var canvas = new Canvas() {
+                SelectedShape = new Line(new Point(100, 100), new Point(200, 200)),
+            };
+
+            canvas.DrawSettings.Opacity = 0.45;
+
+            canvas.ApplyOpacityToSelectedShape();
+
+            Assert.Equal(0.45, canvas.SelectedShape.Opacity);
+        }
+
+        [Fact]
         public void ApplyFillToSelectedShape() {
             var canvas = new Canvas() {
                 SelectedShape = new Line(new Point(100, 100), new Point(200, 200)),

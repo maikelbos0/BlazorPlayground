@@ -182,6 +182,12 @@ namespace BlazorPlayground.Graphics {
             }
         }
 
+        public void ApplyOpacityToSelectedShape() {
+            if (SelectedShape != null) {
+                SelectedShape.Opacity = DrawSettings.Opacity;
+            }
+        }
+
         public void ApplyFillToSelectedShape() {
             if (SelectedShape != null) {
                 SelectedShape.Fill = DrawSettings.FillPaintManager.Server;

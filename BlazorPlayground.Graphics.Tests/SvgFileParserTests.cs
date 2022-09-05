@@ -179,6 +179,19 @@ namespace BlazorPlayground.Graphics.Tests {
             PointAssert.Equal(new Point(250, 350), rectangle.EndPoint);
         }
 
+        [Theory]
+        [InlineData("0", DrawSettings.MinimumOpacity)]
+        [InlineData("-0.01", DrawSettings.DefaultOpacity)]
+        [InlineData("foo", DrawSettings.DefaultOpacity)]
+        [InlineData("1", DrawSettings.MaximumOpacity)]
+        [InlineData("1.01", DrawSettings.DefaultOpacity)]
+        [InlineData("0.45", 0.45)]
+        public void Parse_Opacity(string opacity, double expectedOpacity) {
+            var result = SvgFileParser.Parse(XElement.Parse($"<ellipse opacity=\"{opacity}\" fill=\"none\" stroke=\"#ffff00\" stroke-width=\"1\" cx=\"250\" cy=\"150\" rx=\"100\" ry=\"50\" data-shape-type=\"Ellipse\" data-shape-anchor-0=\"250,150\" data-shape-anchor-1=\"350,200\"/>"));
+
+            Assert.Equal(expectedOpacity, result.Opacity);
+        }
+
         [Fact]
         public void Parse_Fill_None() {
             var result = SvgFileParser.Parse(XElement.Parse("<ellipse fill=\"none\" stroke=\"#000000\" stroke-width=\"1\" cx=\"250\" cy=\"150\" rx=\"100\" ry=\"50\" data-shape-type=\"Ellipse\" data-shape-anchor-0=\"250,150\" data-shape-anchor-1=\"350,200\"/>"));

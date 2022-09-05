@@ -26,6 +26,7 @@ namespace BlazorPlayground.Graphics {
             var shape = CreateShape(element);
 
             if (shape != null && SetAnchors(shape, element)) {
+                shape.Opacity = ParseOpacity(element.Attribute("opacity")?.Value);
                 shape.Fill = ParsePaintServer(element.Attribute("fill")?.Value);
                 shape.Stroke = ParsePaintServer(element.Attribute("stroke")?.Value);
                 shape.StrokeWidth = ParseDimension(element.Attribute("stroke-width")?.Value, DrawSettings.MinimumStrokeWidth, DrawSettings.DefaultStrokeWidth);
@@ -65,6 +66,14 @@ namespace BlazorPlayground.Graphics {
             }
 
             return true;
+        }
+
+        private static double ParseOpacity(string? opacityValue) {
+            if (opacityValue != null && double.TryParse(opacityValue, NumberStyles.Any, CultureInfo.InvariantCulture, out var opacity) && opacity >= DrawSettings.MinimumOpacity && opacity <= DrawSettings.MaximumOpacity) {
+                return opacity;
+            }
+
+            return DrawSettings.DefaultOpacity;
         }
 
         private static IPaintServer ParsePaintServer(string? paintServer) {
