@@ -160,6 +160,7 @@ namespace BlazorPlayground.Graphics {
 
             var shape = CurrentShapeDefinition.Construct(SnappedStartPoint, SnappedEndPoint);
 
+            shape.Opacity = DrawSettings.Opacity;
             shape.Fill = DrawSettings.FillPaintManager.Server;
             shape.Stroke = DrawSettings.StrokePaintManager.Server;
             shape.StrokeWidth = DrawSettings.StrokeWidth;

@@ -472,6 +472,7 @@ namespace BlazorPlayground.Graphics.Tests {
                 EndPoint = new Point(150, 250)
             };
 
+            canvas.DrawSettings.Opacity = 45;
             canvas.DrawSettings.FillPaintManager.Mode = PaintMode.Color;
             canvas.DrawSettings.FillPaintManager.ColorValue = "yellow";
             canvas.DrawSettings.StrokeLinecap = Linecap.Round;
@@ -483,7 +484,8 @@ namespace BlazorPlayground.Graphics.Tests {
             var shape = canvas.CreateShape();
 
             Assert.NotNull(shape);
-            PaintServerAssert.Equal(new Color(255, 255, 0, 1), shape!.Fill);
+            Assert.Equal(45, shape!.Opacity);
+            PaintServerAssert.Equal(new Color(255, 255, 0, 1), shape.Fill);
             Assert.Equal(Linecap.Round, shape.StrokeLinecap);
             Assert.Equal(Linejoin.Round, shape.StrokeLinejoin);
             PaintServerAssert.Equal(new Color(255, 0, 0, 1), shape.Stroke);
