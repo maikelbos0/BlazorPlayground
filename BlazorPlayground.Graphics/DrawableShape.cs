@@ -10,7 +10,7 @@ namespace BlazorPlayground.Graphics {
             builder.OpenElement(1, ElementName);
 
             if (Definition.UseOpacity) {
-                builder.AddAttribute(2, "opacity", Opacity.ToString(CultureInfo.InvariantCulture));
+                builder.AddAttribute(2, "opacity", (Opacity / 100.0).ToString(CultureInfo.InvariantCulture));
             }
 
             if (Definition.UseFill) {
@@ -58,7 +58,7 @@ namespace BlazorPlayground.Graphics {
 
         private IEnumerable<XAttribute> CreateSvgAttributes() {
             if (Definition.UseOpacity) {
-                yield return new XAttribute("opacity", Opacity);
+                yield return new XAttribute("opacity", Opacity / 100.0);
             }
 
             if (Definition.UseFill) {

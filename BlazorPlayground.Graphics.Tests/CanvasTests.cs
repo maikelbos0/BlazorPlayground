@@ -606,11 +606,11 @@ namespace BlazorPlayground.Graphics.Tests {
                 SelectedShape = new Line(new Point(100, 100), new Point(200, 200)),
             };
 
-            canvas.DrawSettings.Opacity = 0.45;
+            canvas.DrawSettings.Opacity = 45;
 
             canvas.ApplyOpacityToSelectedShape();
 
-            Assert.Equal(0.45, canvas.SelectedShape.Opacity);
+            Assert.Equal(45, canvas.SelectedShape.Opacity);
         }
 
         [Fact]

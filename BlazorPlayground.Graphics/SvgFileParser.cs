@@ -68,9 +68,9 @@ namespace BlazorPlayground.Graphics {
             return true;
         }
 
-        private static double ParseOpacity(string? opacityValue) {
-            if (opacityValue != null && double.TryParse(opacityValue, NumberStyles.Any, CultureInfo.InvariantCulture, out var opacity) && opacity >= DrawSettings.MinimumOpacity && opacity <= DrawSettings.MaximumOpacity) {
-                return opacity;
+        private static int ParseOpacity(string? opacityValue) {
+            if (opacityValue != null && double.TryParse(opacityValue, NumberStyles.Any, CultureInfo.InvariantCulture, out var opacity) && opacity * 100 >= DrawSettings.MinimumOpacity && opacity * 100 <= DrawSettings.MaximumOpacity) {
+                return (int)(opacity * 100);
             }
 
             return DrawSettings.DefaultOpacity;

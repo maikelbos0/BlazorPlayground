@@ -3,11 +3,11 @@ using System.Xml.Linq;
 
 namespace BlazorPlayground.Graphics {
     public abstract class Shape {
-        private double opacity = DrawSettings.DefaultOpacity;
+        private int opacity = DrawSettings.DefaultOpacity;
         private int strokeWidth = DrawSettings.DefaultStrokeWidth;
         private int sides = DrawSettings.DefaultSides;
 
-        public double Opacity {
+        public int Opacity {
             get => opacity;
             set => opacity = Math.Max(Math.Min(value, DrawSettings.MaximumOpacity), DrawSettings.MinimumOpacity);
         }
