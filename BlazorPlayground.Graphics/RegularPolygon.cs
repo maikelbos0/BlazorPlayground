@@ -7,6 +7,8 @@
 
         public override string ElementName => "polygon";
         public override IReadOnlyList<Anchor> Anchors { get; } = Array.AsReadOnly(anchors);
+        // TODO test
+        public override IReadOnlyList<Point> SnapPoints => Array.AsReadOnly(GetPoints().Append(CenterPoint).ToArray());
         public Point CenterPoint { get; set; }
         public Point RadiusPoint { get; set; }
 

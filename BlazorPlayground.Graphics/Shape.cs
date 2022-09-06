@@ -34,12 +34,17 @@ namespace BlazorPlayground.Graphics {
 
         public abstract IReadOnlyList<Anchor> Anchors { get; }
 
+        // TODO make abstract when all shapes have an implementation
+        public virtual IReadOnlyList<Point> SnapPoints => Array.Empty<Point>();
+
         public abstract void BuildRenderTree(RenderTreeBuilder builder);
 
         public abstract XElement CreateSvgElement();
 
+        // TODO add snap to shapes
         public void Transform(Point delta, bool snapToGrid, int gridSize) {
             if (snapToGrid) {
+                // TODO work with snap points rather than anchors
                 var point = Anchors
                     .Select(a => a.Get(this))
                     .Select(p => new { Original = p, Transformed = p + delta, Anchored = (p + delta).SnapToGrid(gridSize) })

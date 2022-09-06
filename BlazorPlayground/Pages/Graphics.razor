@@ -210,46 +210,61 @@
      @onmousemove="args => Canvas.UpdateActionExecution(GetPoint(args))"
      @onmouseup="() => Canvas.EndActionExecution()">
 
-    @if (Canvas.ShowGrid) {
-        for (var x = Canvas.GridSize; x < Canvas.Width; x += Canvas.GridSize) {
-            <line class="grid-line" x1="@x" y1="0" x2="@x" y2="@Canvas.Height" />
-        }
-
-        for (var y = Canvas.GridSize; y < Canvas.Height; y += Canvas.GridSize) {
-            <line class="grid-line" x1="0" y1="@y" x2="@Canvas.Width" y2="@y" />
-        }
-    }
-
-    @foreach (var shape in Canvas.Shapes) {
-        if (shape == Canvas.SelectedShape) {
-            if (Canvas.IsExecutingAction) {
-                var virtualShape = Canvas.CreateVirtualSelectedShape();
-
-                <ShapeRenderer Shape="virtualShape" IsVirtual="true" />
-
-                foreach (var anchor in virtualShape.Anchors) {
-                    var point = anchor.Get(virtualShape);
-
-                    <rect class="shape-anchor" x="@((point.X - 5).ToString(CultureInfo.InvariantCulture))" y="@((point.Y - 5).ToString(CultureInfo.InvariantCulture))" width="10" height="10" />
-                }
+    @{
+        if (Canvas.ShowGrid) {
+            for (var x = Canvas.GridSize; x < Canvas.Width; x += Canvas.GridSize) {
+                <line class="grid-line" x1="@x" y1="0" x2="@x" y2="@Canvas.Height" />
             }
-            else {
-                <ShapeRenderer @key="shape" Shape="shape" OnMouseDown="() => Canvas.SelectShape(shape)" IsSelected="true" />
 
-                foreach (var anchor in shape.Anchors) {
-                    var point = anchor.Get(shape);
-
-                    <rect class="shape-anchor" x="@((point.X - 5).ToString(CultureInfo.InvariantCulture))" y="@((point.Y - 5).ToString(CultureInfo.InvariantCulture))" width="10" height="10" @onmousedown="args => Canvas.SelectAnchor(anchor)" />
-                }
+            for (var y = Canvas.GridSize; y < Canvas.Height; y += Canvas.GridSize) {
+                <line class="grid-line" x1="0" y1="@y" x2="@Canvas.Width" y2="@y" />
             }
         }
-        else {
+
+        Shape anchorShape = null;
+        var snapPoints = new List<Point>();
+
+        foreach (var shape in Canvas.Shapes.Where(s => Canvas.SelectedShape == null || s != Canvas.SelectedShape)) {
+            snapPoints.AddRange(shape.SnapPoints);
+
             <ShapeRenderer @key="shape" Shape="shape" OnMouseDown="() => Canvas.SelectShape(shape)" IsSelected="false" />
         }
-    }
 
-    @if (Canvas.IsDrawing && Canvas.IsExecutingAction) {
-        <ShapeRenderer Shape="Canvas.CreateShape()" IsVirtual="true" />
+        if (Canvas.IsDrawing && Canvas.IsExecutingAction) {
+            var virtualShape = Canvas.CreateShape();
+
+            snapPoints.AddRange(virtualShape.SnapPoints.Except(virtualShape.Anchors.Select(a => a.Get(virtualShape))));
+
+            <ShapeRenderer Shape="virtualShape" IsVirtual="true" />
+        }
+        else if (Canvas.SelectedShape != null && Canvas.IsExecutingAction) {
+            var virtualShape = Canvas.CreateVirtualSelectedShape();
+
+            anchorShape = virtualShape;
+            snapPoints.AddRange(virtualShape.SnapPoints.Except(virtualShape.Anchors.Select(a => a.Get(virtualShape))));
+
+            <ShapeRenderer Shape="virtualShape" IsVirtual="true" />
+        }
+        else if (Canvas.SelectedShape != null) {
+            anchorShape = Canvas.SelectedShape;
+
+            <ShapeRenderer @key="Canvas.SelectedShape" Shape="Canvas.SelectedShape" OnMouseDown="() => {}" IsSelected="true" />
+        }
+
+        if (anchorShape != null) {
+            foreach (var anchor in anchorShape.Anchors) {
+                var point = anchor.Get(anchorShape);
+
+                <rect @key="anchor" class="shape-anchor" x="@((point.X - 5).ToString(CultureInfo.InvariantCulture))" y="@((point.Y - 5).ToString(CultureInfo.InvariantCulture))" width="10" height="10" @onmousedown="args => Canvas.SelectAnchor(anchor)" />
+            }
+        }
+
+        // TODO only show when snapping to shapes
+        if (Canvas.IsExecutingAction) {
+            foreach (var snapPoint in snapPoints) {
+                <circle @key="snapPoint" class="shape-snap-point" cx="@snapPoint.X.ToString(CultureInfo.InvariantCulture)" cy="@snapPoint.Y.ToString(CultureInfo.InvariantCulture)" r="5" />
+            }
+        }
     }
 </svg>
 

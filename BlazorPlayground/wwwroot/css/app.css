@@ -149,6 +149,12 @@ a, .btn-link {
     fill: transparent;
 }
 
+.graphics-main .shape-snap-point {
+    stroke: #999999;
+    stroke-width: 1;
+    fill: transparent;
+}
+
 .graphics-main .grid-line {
     stroke: #dee2e6;
     stroke-width: 1;
