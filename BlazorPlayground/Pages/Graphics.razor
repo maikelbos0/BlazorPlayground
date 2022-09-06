@@ -76,6 +76,13 @@
 
     <fieldset class="input-group mb-3 me-3">
         <div class="input-group-text">
+            <input class="form-check-input mt-0" type="checkbox" id="snapToShapes" @bind="Canvas.SnapToShapes" />
+            <label class="form-check-label ps-2" for="snapToShapes">Snap to shapes</label>
+        </div>
+    </fieldset>
+
+    <fieldset class="input-group mb-3 me-3">
+        <div class="input-group-text">
             <input class="form-check-input mt-0" type="radio" name="mode" id="modeSelect" @onclick="() => Canvas.StopDrawing()" checked="@(!Canvas.IsDrawing)" />
             <label class="form-check-label ps-2" for="modeSelect">Select</label>
         </div>
@@ -259,8 +266,7 @@
             }
         }
 
-        // TODO only show when snapping to shapes
-        if (Canvas.IsExecutingAction) {
+        if (Canvas.SnapToShapes && Canvas.IsExecutingAction) {
             foreach (var snapPoint in snapPoints) {
                 <circle @key="snapPoint" class="shape-snap-point" cx="@snapPoint.X.ToString(CultureInfo.InvariantCulture)" cy="@snapPoint.Y.ToString(CultureInfo.InvariantCulture)" r="5" />
             }

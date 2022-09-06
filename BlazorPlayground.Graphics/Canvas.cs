@@ -28,7 +28,7 @@ namespace BlazorPlayground.Graphics {
         }
         public bool ShowGrid { get; set; } = false;
         public bool SnapToGrid { get; set; } = false;
-        // TODO add snap to shapes
+        public bool SnapToShapes { get; set; } = false;
         public List<Shape> Shapes { get; set; } = new List<Shape>();
         public Point? StartPoint { get; set; }
         public Point? SnappedStartPoint => Snap(StartPoint);
