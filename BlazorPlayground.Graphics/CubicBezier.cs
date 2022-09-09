@@ -16,6 +16,8 @@
 
         private CubicBezier() : this(new Point(0, 0), new Point(0, 0)) { }
 
+        public override IReadOnlyList<Point> GetSnapPoints() => Array.AsReadOnly(new[] { StartPoint, EndPoint });
+
         public CubicBezier(Point startPoint, Point endPoint) {
             StartPoint = startPoint;
             EndPoint = endPoint;

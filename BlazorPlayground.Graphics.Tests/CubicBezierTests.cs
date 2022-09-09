@@ -10,6 +10,17 @@ namespace BlazorPlayground.Graphics.Tests {
         }
 
         [Fact]
+        public void GetSnapPoints() {
+            var bezier = new CubicBezier(new Point(100, 150), new Point(200, 250));
+
+            var result = bezier.GetSnapPoints();
+
+            Assert.Equal(2, result.Count);
+            PointAssert.Contains(result, new Point(100, 150));
+            PointAssert.Contains(result, new Point(200, 250));
+        }
+
+        [Fact]
         public void ControlPoints() {
             var bezier = new CubicBezier(new Point(100, 150), new Point(200, 250));
 

@@ -14,6 +14,8 @@
 
         private QuadraticBezier() : this(new Point(0, 0), new Point(0, 0)) { }
 
+        public override IReadOnlyList<Point> GetSnapPoints() => Array.AsReadOnly(new[] { StartPoint, EndPoint });
+
         public QuadraticBezier(Point startPoint, Point endPoint) {
             StartPoint = startPoint;
             ControlPoint = (startPoint + endPoint) / 2;
