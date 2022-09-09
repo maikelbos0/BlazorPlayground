@@ -17,6 +17,8 @@
             EndPoint = endPoint;
         }
 
+        public override IReadOnlyList<Point> GetSnapPoints() => Array.AsReadOnly(new[] { StartPoint, EndPoint, new Point(StartPoint.X, EndPoint.Y), new Point(EndPoint.X, StartPoint.Y) });
+
         public override ShapeAttributeCollection GetAttributes() => new() {
             { "x", Math.Min(StartPoint.X, EndPoint.X) },
             { "y", Math.Min(StartPoint.Y, EndPoint.Y) },

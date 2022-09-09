@@ -11,6 +11,19 @@ namespace BlazorPlayground.Graphics.Tests {
         }
 
         [Fact]
+        public void GetSnapPoints() {
+            var rectangle = new Rectangle(new Point(100, 150), new Point(200, 250));
+
+            var result = rectangle.GetSnapPoints();
+
+            Assert.Equal(4, result.Count);
+            PointAssert.Contains(result, new Point(100, 150));
+            PointAssert.Contains(result, new Point(200, 150));
+            PointAssert.Contains(result, new Point(100, 250));
+            PointAssert.Contains(result, new Point(200, 250));
+        }
+
+        [Fact]
         public void GetAttributes() {
             var rectangle = new Rectangle(new Point(180, 210), new Point(100, 150));
 
