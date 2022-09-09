@@ -11,6 +11,22 @@ namespace BlazorPlayground.Graphics.Tests {
         }
 
         [Fact]
+        public void GetSnapPoints() {
+            var square = new RegularPolygon(new Point(100, 100), new Point(50, 50)) {
+                Sides = 4
+            };
+
+            var result = square.GetSnapPoints();
+
+            Assert.Equal(5, result.Count);
+            PointAssert.Contains(result, new Point(50, 50));
+            PointAssert.Contains(result, new Point(150, 50));
+            PointAssert.Contains(result, new Point(150, 150));
+            PointAssert.Contains(result, new Point(50, 150));
+            PointAssert.Contains(result, new Point(100, 100));
+        }
+
+        [Fact]
         public void GetPoints_Square_0_Degrees() {
             var square = new RegularPolygon(new Point(100, 100), new Point(50, 50)) {
                 Sides = 4

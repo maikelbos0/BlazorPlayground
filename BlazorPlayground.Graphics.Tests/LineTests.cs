@@ -11,6 +11,17 @@ namespace BlazorPlayground.Graphics.Tests {
         }
 
         [Fact]
+        public void GetSnapPoints() {
+            var line = new Line(new Point(100, 150), new Point(200, 250));
+
+            var result = line.GetSnapPoints();
+
+            Assert.Equal(2, result.Count);
+            PointAssert.Contains(result, new Point(100, 150));
+            PointAssert.Contains(result, new Point(200, 250));
+        }
+
+        [Fact]
         public void GetAttributes() {
             var line = new Line(new Point(100, 150), new Point(200, 250));
 
@@ -28,7 +39,7 @@ namespace BlazorPlayground.Graphics.Tests {
             var line = new Line(new Point(100, 150), new Point(200, 250));
 
             var result = line.Anchors;
-            
+
             Assert.Equal(2, result.Count);
             PointAssert.Equal(new Point(100, 150), result[0].Get(line));
             PointAssert.Equal(new Point(200, 250), result[1].Get(line));
@@ -39,7 +50,7 @@ namespace BlazorPlayground.Graphics.Tests {
             var line = new Line(new Point(100, 150), new Point(200, 250));
 
             var result = line.Anchors;
-            
+
             Assert.Equal(2, result.Count);
             result[0].Set(line, new Point(110, 160));
             result[1].Set(line, new Point(210, 260));

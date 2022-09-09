@@ -232,7 +232,7 @@
         var snapPoints = new List<Point>();
 
         foreach (var shape in Canvas.Shapes.Where(s => Canvas.SelectedShape == null || s != Canvas.SelectedShape)) {
-            snapPoints.AddRange(shape.SnapPoints);
+            snapPoints.AddRange(shape.GetSnapPoints());
 
             <ShapeRenderer @key="shape" Shape="shape" OnMouseDown="() => Canvas.SelectShape(shape)" IsSelected="false" />
         }
@@ -240,7 +240,7 @@
         if (Canvas.IsDrawing && Canvas.IsExecutingAction) {
             var virtualShape = Canvas.CreateShape();
 
-            snapPoints.AddRange(virtualShape.SnapPoints.Except(virtualShape.Anchors.Select(a => a.Get(virtualShape))));
+            snapPoints.AddRange(virtualShape.GetSnapPoints().Except(virtualShape.Anchors.Select(a => a.Get(virtualShape))));
 
             <ShapeRenderer Shape="virtualShape" IsVirtual="true" />
         }
@@ -248,7 +248,7 @@
             var virtualShape = Canvas.CreateVirtualSelectedShape();
 
             anchorShape = virtualShape;
-            snapPoints.AddRange(virtualShape.SnapPoints.Except(virtualShape.Anchors.Select(a => a.Get(virtualShape))));
+            snapPoints.AddRange(virtualShape.GetSnapPoints().Except(virtualShape.Anchors.Select(a => a.Get(virtualShape))));
 
             <ShapeRenderer Shape="virtualShape" IsVirtual="true" />
         }
