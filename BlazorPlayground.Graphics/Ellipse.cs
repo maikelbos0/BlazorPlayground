@@ -18,6 +18,18 @@
             RadiusPoint = radiusPoint;
         }
 
+        public override IReadOnlyList<Point> GetSnapPoints() {
+            var delta = CenterPoint - RadiusPoint;
+
+            return Array.AsReadOnly(new[] {
+                CenterPoint,
+                new Point(CenterPoint.X, CenterPoint.Y + delta.Y),
+                new Point(CenterPoint.X, CenterPoint.Y - delta.Y),
+                new Point(CenterPoint.X + delta.X, CenterPoint.Y),
+                new Point(CenterPoint.X - delta.X, CenterPoint.Y),
+            });
+        }
+
         public override ShapeAttributeCollection GetAttributes() => new() {
             { "cx", CenterPoint.X },
             { "cy", CenterPoint.Y },

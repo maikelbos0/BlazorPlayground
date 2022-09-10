@@ -24,6 +24,20 @@ namespace BlazorPlayground.Graphics.Tests {
         }
 
         [Fact]
+        public void GetSnapPoints() {
+            var ellipse = new Ellipse(new Point(100, 150), new Point(200, 200));
+
+            var result = ellipse.GetSnapPoints();
+
+            Assert.Equal(5, result.Count);
+            PointAssert.Contains(result, new Point(100, 150));
+            PointAssert.Contains(result, new Point(200, 150));
+            PointAssert.Contains(result, new Point(0, 150));
+            PointAssert.Contains(result, new Point(100, 200));
+            PointAssert.Contains(result, new Point(100, 100));
+        }
+
+        [Fact]
         public void Anchors_Get() {
             var ellipse = new Ellipse(new Point(100, 150), new Point(200, 250));
 
