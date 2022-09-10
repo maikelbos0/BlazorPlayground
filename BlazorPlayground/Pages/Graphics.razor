@@ -266,8 +266,9 @@
             }
         }
 
+        // TODO fix when to show snap points
         if (Canvas.SnapToShapes && Canvas.IsExecutingAction) {
-            foreach (var snapPoint in snapPoints) {
+            foreach (var snapPoint in snapPoints.Distinct()) {
                 <circle @key="snapPoint" class="shape-snap-point" cx="@snapPoint.X.ToString(CultureInfo.InvariantCulture)" cy="@snapPoint.Y.ToString(CultureInfo.InvariantCulture)" r="5" />
             }
         }
