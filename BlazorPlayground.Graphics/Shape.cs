@@ -34,8 +34,7 @@ namespace BlazorPlayground.Graphics {
 
         public abstract IReadOnlyList<Anchor> Anchors { get; }
 
-        // TODO make abstract when all shapes have an implementation
-        public virtual IReadOnlyList<Point> GetSnapPoints() => Array.Empty<Point>();
+        public abstract IReadOnlyList<Point> GetSnapPoints();
 
         public abstract void BuildRenderTree(RenderTreeBuilder builder);
 

@@ -12,12 +12,12 @@
 
         private Line() : this(new Point(0, 0), new Point(0, 0)) { }
 
-        public override IReadOnlyList<Point> GetSnapPoints() => Array.AsReadOnly(new[] { StartPoint, EndPoint });
-
         public Line(Point startPoint, Point endPoint) {
             StartPoint = startPoint;
             EndPoint = endPoint;
         }
+
+        public override IReadOnlyList<Point> GetSnapPoints() => Array.AsReadOnly(new[] { StartPoint, EndPoint });
 
         public override ShapeAttributeCollection GetAttributes() => new() {
             { "x1", StartPoint.X },

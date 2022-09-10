@@ -13,6 +13,8 @@ namespace BlazorPlayground.Graphics {
 
         public override IReadOnlyList<Anchor> Anchors => new ReadOnlyCollection<Anchor>(Array.Empty<Anchor>());
 
+        public override IReadOnlyList<Point> GetSnapPoints() => Array.Empty<Point>();
+
         protected override Shape CreateClone() => new RawShape(new XElement(element));
 
         public override XElement CreateSvgElement() => new(element);

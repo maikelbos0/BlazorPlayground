@@ -16,8 +16,6 @@
 
         private CubicBezier() : this(new Point(0, 0), new Point(0, 0)) { }
 
-        public override IReadOnlyList<Point> GetSnapPoints() => Array.AsReadOnly(new[] { StartPoint, EndPoint });
-
         public CubicBezier(Point startPoint, Point endPoint) {
             StartPoint = startPoint;
             EndPoint = endPoint;
@@ -27,6 +25,8 @@
             ControlPoint1 = StartPoint + step;
             ControlPoint2 = StartPoint + step * 2;
         }
+
+        public override IReadOnlyList<Point> GetSnapPoints() => Array.AsReadOnly(new[] { StartPoint, EndPoint });
 
         public override ShapeAttributeCollection GetAttributes() => new() {
             { "d", FormattableString.Invariant($"M {StartPoint.X} {StartPoint.Y} C {ControlPoint1.X} {ControlPoint1.Y}, {ControlPoint2.X} {ControlPoint2.Y}, {EndPoint.X} {EndPoint.Y}") }

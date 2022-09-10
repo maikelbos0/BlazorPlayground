@@ -13,6 +13,11 @@
 
         private Circle() : this(new Point(0, 0), new Point(0, 0)) { }
 
+        public Circle(Point centerPoint, Point radiusPoint) {
+            CenterPoint = centerPoint;
+            RadiusPoint = radiusPoint;
+        }
+
         public override IReadOnlyList<Point> GetSnapPoints() {
             var delta = CenterPoint - RadiusPoint;
 
@@ -23,11 +28,6 @@
                 new Point(CenterPoint.X + delta.Y, CenterPoint.Y - delta.X),
                 new Point(CenterPoint.X - delta.Y, CenterPoint.Y + delta.X),
             });
-        }
-
-        public Circle(Point centerPoint, Point radiusPoint) {
-            CenterPoint = centerPoint;
-            RadiusPoint = radiusPoint;
         }
 
         public override ShapeAttributeCollection GetAttributes() => new() {
