@@ -11,6 +11,20 @@ namespace BlazorPlayground.Graphics.Tests {
         }
 
         [Fact]
+        public void GetSnapPoints() {
+            var circle = new Circle(new Point(100, 150), new Point(200, 200));
+
+            var result = circle.GetSnapPoints();
+
+            Assert.Equal(5, result.Count);
+            PointAssert.Contains(result, new Point(100, 150));
+            PointAssert.Contains(result, new Point(200, 200));
+            PointAssert.Contains(result, new Point(0, 100));
+            PointAssert.Contains(result, new Point(150, 50));
+            PointAssert.Contains(result, new Point(50, 250));
+        }
+
+        [Fact]
         public void GetAttributes() {
             var circle = new Circle(new Point(100, 150), new Point(200, 250));
 

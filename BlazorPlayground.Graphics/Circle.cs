@@ -13,6 +13,18 @@
 
         private Circle() : this(new Point(0, 0), new Point(0, 0)) { }
 
+        public override IReadOnlyList<Point> GetSnapPoints() {
+            var delta = CenterPoint - RadiusPoint;
+
+            return Array.AsReadOnly(new[] {
+                CenterPoint,
+                RadiusPoint,
+                new Point(CenterPoint.X + delta.X, CenterPoint.Y + delta.Y),
+                new Point(CenterPoint.X + delta.Y, CenterPoint.Y - delta.X),
+                new Point(CenterPoint.X - delta.Y, CenterPoint.Y + delta.X),
+            });
+        }
+
         public Circle(Point centerPoint, Point radiusPoint) {
             CenterPoint = centerPoint;
             RadiusPoint = radiusPoint;
