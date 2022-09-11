@@ -240,7 +240,7 @@
         if (Canvas.IsDrawing && Canvas.IsExecutingAction) {
             var virtualShape = Canvas.CreateShape();
 
-            snapPoints.AddRange(virtualShape.GetSnapPoints().Except(virtualShape.Anchors.Select(a => a.Get(virtualShape))));
+            snapPoints.AddRange(virtualShape.GetSnapPoints());
 
             <ShapeRenderer Shape="virtualShape" IsVirtual="true" />
         }
@@ -266,8 +266,7 @@
             }
         }
 
-        // TODO fix when to show snap points
-        if (Canvas.SnapToShapes && Canvas.IsExecutingAction) {
+        if (Canvas.SnapToShapes) {
             foreach (var snapPoint in snapPoints.Distinct()) {
                 <circle @key="snapPoint" class="shape-snap-point" cx="@snapPoint.X.ToString(CultureInfo.InvariantCulture)" cy="@snapPoint.Y.ToString(CultureInfo.InvariantCulture)" r="5" />
             }

@@ -143,14 +143,8 @@ a, .btn-link {
     opacity: 0;
 }
 
-.graphics-main .shape-anchor {
+.graphics-main .shape-anchor, .graphics-main .shape-snap-point {
     stroke: #000000;
-    stroke-width: 1;
-    fill: transparent;
-}
-
-.graphics-main .shape-snap-point {
-    stroke: #999999;
     stroke-width: 1;
     fill: transparent;
 }
