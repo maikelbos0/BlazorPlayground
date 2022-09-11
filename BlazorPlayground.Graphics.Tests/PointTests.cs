@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using System.Linq;
+using Xunit;
 
 namespace BlazorPlayground.Graphics.Tests {
     public class PointTests {
@@ -68,6 +69,57 @@ namespace BlazorPlayground.Graphics.Tests {
             var point = new Point(x, y);
 
             PointAssert.Equal(new Point(expectedX, expectedY), point.SnapToGrid(gridSize));
+        }
+
+        [Theory]
+        [InlineData(100, 200, 50, 100, 200)]
+        [InlineData(101, 201, 50, 100, 200)]
+        [InlineData(124.9, 224.9, 50, 100, 200)]
+        [InlineData(101, 199, 50, 100, 200)]
+        [InlineData(124.9, 175.1, 50, 100, 200)]
+        [InlineData(99, 201, 50, 100, 200)]
+        [InlineData(75.1, 224.9, 50, 100, 200)]
+        [InlineData(99, 199, 50, 100, 200)]
+        [InlineData(75.1, 175.1, 50, 100, 200)]
+        public void Snap_ToGrid(double x, double y, int gridSize, double expectedX, double expectedY) {
+            var point = new Point(x, y);
+
+            PointAssert.Equal(new Point(expectedX, expectedY), point.Snap(true, gridSize, true, Enumerable.Empty<Point>()));
+        }
+
+        [Fact]
+        public void Snap_NotToSnapPoints() {
+            var point = new Point(90, 110);
+
+            PointAssert.Equal(new Point(100, 100), point.Snap(true, 50, false, new[] { new Point(95, 105) }));
+        }
+
+        [Fact]
+        public void Snap_NotToGrid() {
+            var point = new Point(90, 110);
+
+            PointAssert.Equal(new Point(105, 95), point.Snap(false, 50, true, new[] { new Point(105, 95) }));
+        }
+
+        [Fact]
+        public void Snap_NotToSnapPointsAndNotToGrid() {
+            var point = new Point(90, 110);
+
+            PointAssert.Equal(new Point(90, 110), point.Snap(false, 50, false, new[] { new Point(95, 105) }));
+        }
+
+        [Theory]
+        [InlineData(110, 220, 110, 220)]
+        [InlineData(110, 220, 109, 221, 108, 221, 111, 218, 109, 221, 112, 219)]
+        [InlineData(100, 150, 200, 300, 200, 300, -1, -1)]
+        [InlineData(100, 150, 0, 300, 0, 300, 201, -1)]
+        [InlineData(100, 150, 200, 0, 200, 0, -1, 301)]
+        [InlineData(100, 150, 0, 0, 201, 301, 0, 0)]
+        public void Snap_ToPoints(double x, double y, double expectedX, double expectedY, params int[] pointCoordinates) {
+            var points = Enumerable.Range(0, pointCoordinates.Length / 2).Select(n => new Point(pointCoordinates[n * 2], pointCoordinates[n * 2 + 1]));
+            var point = new Point(x, y);
+
+            PointAssert.Equal(new Point(expectedX, expectedY), point.Snap(false, 50, true, points));
         }
     }
 }

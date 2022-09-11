@@ -27,5 +27,32 @@
 
             return gridPoints.OrderBy(p => p.Distance).First() + this;
         }
+
+        public Point Snap(bool snapToGrid, int gridSize, bool snapToPoints, IEnumerable<Point> points) {
+            var snapDeltas = new List<Point>();
+
+            if (snapToPoints) {
+                snapDeltas.AddRange(points.Select(p => p - this));
+            }
+
+            if (snapToGrid) {
+                var remainderX = X % gridSize;
+                var remainderY = Y % gridSize;
+
+                snapDeltas.Add(new Point(-remainderX, -remainderY));
+                snapDeltas.Add(new Point(-remainderX + gridSize, -remainderY));
+                snapDeltas.Add(new Point(-remainderX, -remainderY + gridSize));
+                snapDeltas.Add(new Point(-remainderX + gridSize, -remainderY + gridSize));
+            }
+
+            var delta = snapDeltas.OrderBy(p => p.Distance).FirstOrDefault();
+
+            if (delta != null) {
+                return this + delta;
+            }
+            else {
+                return this;
+            }
+        }
     }
 }
