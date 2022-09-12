@@ -57,12 +57,12 @@ namespace BlazorPlayground.Graphics {
         public bool IsSelecting { get; internal set; } = false;
         public Anchor? SelectedAnchor { get; internal set; }
 
-        private Point? Snap(Point? point) {
-            if (!SnapToGrid || point == null) {
+        public Point? Snap(Point? point) {
+            if (point == null) {
                 return point;
             }
 
-            return point.SnapToGrid(GridSize);
+            return point.Snap(SnapToGrid, GridSize, SnapToShapes, GetSnapPoints());
         }
 
         public HashSet<Point> GetSnapPoints() {

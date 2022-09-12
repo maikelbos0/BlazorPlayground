@@ -178,6 +178,84 @@ namespace BlazorPlayground.Graphics.Tests {
         }
 
         [Fact]
+        public void Snap_Null() {
+            var canvas = new Canvas();
+
+            Assert.Null(canvas.Snap(null));
+        }
+
+        [Fact]
+        public void Snap_ToNothing() {
+            var canvas = new Canvas() {
+                GridSize = 50,
+                Shapes = new List<Shape>() {
+                    new Line(new Point(45, 45), new Point(60, 60)),
+                    new Rectangle(new Point(20, 20), new Point(30, 30))
+                }
+            };
+
+            PointAssert.Equal(new Point(35, 35), canvas.Snap(new Point(35, 35)));
+        }
+
+        [Fact]
+        public void Snap_ToGrid() {
+            var canvas = new Canvas() {
+                SnapToGrid = true,
+                GridSize = 50,
+                Shapes = new List<Shape>() {
+                    new Line(new Point(45, 45), new Point(60, 60)),
+                    new Rectangle(new Point(20, 20), new Point(30, 30))
+                }
+            };
+
+            PointAssert.Equal(new Point(50, 50), canvas.Snap(new Point(35, 35)));
+        }
+
+        [Fact]
+        public void Snap_ToShapes() {
+            var canvas = new Canvas() {
+                GridSize = 50,
+                SnapToShapes = true,
+                Shapes = new List<Shape>() {
+                    new Line(new Point(45, 45), new Point(60, 60)),
+                    new Rectangle(new Point(20, 20), new Point(30, 30))
+                }
+            };
+
+            PointAssert.Equal(new Point(30, 30), canvas.Snap(new Point(35, 35)));
+        }
+
+        [Fact]
+        public void Snap_ToGridAndShapes_Grid() {
+            var canvas = new Canvas() {
+                SnapToGrid = true,
+                GridSize = 16,
+                SnapToShapes = true,
+                Shapes = new List<Shape>() {
+                    new Line(new Point(45, 45), new Point(60, 60)),
+                    new Rectangle(new Point(20, 20), new Point(30, 30))
+                }
+            };
+
+            PointAssert.Equal(new Point(32, 32), canvas.Snap(new Point(35, 35)));
+        }
+
+        [Fact]
+        public void Snap_ToGridAndShapes_Shapes() {
+            var canvas = new Canvas() {
+                SnapToGrid = true,
+                GridSize = 50,
+                SnapToShapes = true,
+                Shapes = new List<Shape>() {
+                    new Line(new Point(45, 45), new Point(60, 60)),
+                    new Rectangle(new Point(20, 20), new Point(30, 30))
+                }
+            };
+
+            PointAssert.Equal(new Point(30, 30), canvas.Snap(new Point(35, 35)));
+        }
+
+        [Fact]
         public void GetSnapPoints_SelectedShape() {
             var selectedShape = new Line(new Point(100, 100), new Point(200, 100));
             var canvas = new Canvas() {
