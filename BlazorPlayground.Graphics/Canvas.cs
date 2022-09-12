@@ -65,10 +65,12 @@ namespace BlazorPlayground.Graphics {
             return point.Snap(SnapToGrid, GridSize, SnapToShapes, GetSnapPoints());
         }
 
+        public IEnumerable<Shape> GetStaticShapes() => Shapes.Where(s => SelectedShape == null || s != SelectedShape);
+
         public HashSet<Point> GetSnapPoints() {
             var snapPoints = new HashSet<Point>();
 
-            foreach (var shape in Shapes.Where(s => SelectedShape == null || s != SelectedShape)) {
+            foreach (var shape in GetStaticShapes()) {
                 snapPoints.UnionWith(shape.GetSnapPoints());
             }
 
@@ -161,7 +163,7 @@ namespace BlazorPlayground.Graphics {
         }
 
         public Shape? CreateShape() {
-            if (SnappedStartPoint == null || SnappedEndPoint == null) {
+            if (!IsDrawing || SnappedStartPoint == null || SnappedEndPoint == null) {
                 return null;
             }
 

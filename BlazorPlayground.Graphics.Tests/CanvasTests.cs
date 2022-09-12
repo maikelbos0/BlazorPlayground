@@ -256,7 +256,37 @@ namespace BlazorPlayground.Graphics.Tests {
         }
 
         [Fact]
-        public void GetSnapPoints_SelectedShape() {
+        public void GetStaticShapes_SelectedShape() {
+            var selectedShape = new Line(new Point(100, 100), new Point(200, 100));
+            var canvas = new Canvas() {
+                Shapes = new List<Shape>() {
+                    selectedShape,
+                    new Line(new Point(100, 100), new Point(100, 200)),
+                    new Rectangle(new Point(50, 50), new Point(150, 150))
+                },
+                SelectedShape = selectedShape
+            };
+
+            var shapes = canvas.GetStaticShapes().ToList();
+
+            Assert.Equal(2, shapes.Count);
+            Assert.DoesNotContain(selectedShape, shapes);
+        }
+
+        [Fact]
+        public void GetStaticShapes_NoSelectedShape() {
+            var canvas = new Canvas() {
+                Shapes = new List<Shape>() {
+                    new Line(new Point(100, 100), new Point(100, 200)),
+                    new Rectangle(new Point(50, 50), new Point(150, 150))
+                }
+            };
+
+            Assert.Equal(canvas.Shapes, canvas.GetStaticShapes());
+        }
+
+        [Fact]
+        public void GetSnapPoints() {
             var selectedShape = new Line(new Point(100, 100), new Point(200, 100));
             var canvas = new Canvas() {
                 Shapes = new List<Shape>() {
@@ -277,26 +307,6 @@ namespace BlazorPlayground.Graphics.Tests {
             PointAssert.Contains(result, new Point(150, 50));
             PointAssert.Contains(result, new Point(150, 150));
             PointAssert.DoesNotContain(result, new Point(200, 100));
-        }
-
-        [Fact]
-        public void GetSnapPoints_NoSelectedShape() {
-            var canvas = new Canvas() {
-                Shapes = new List<Shape>() {
-                    new Line(new Point(100, 100), new Point(100, 200)),
-                    new Rectangle(new Point(50, 50), new Point(150, 150))
-                }
-            };
-
-            var result = canvas.GetSnapPoints();
-
-            Assert.Equal(6, result.Count);
-            PointAssert.Contains(result, new Point(100, 100));
-            PointAssert.Contains(result, new Point(100, 200));
-            PointAssert.Contains(result, new Point(50, 150));
-            PointAssert.Contains(result, new Point(50, 50));
-            PointAssert.Contains(result, new Point(150, 50));
-            PointAssert.Contains(result, new Point(150, 150));
         }
 
         [Fact]
@@ -567,6 +577,18 @@ namespace BlazorPlayground.Graphics.Tests {
 
             Assert.Equal(Assert.Single(canvas.Shapes), canvas.SelectedShape);
             Assert.False(canvas.IsDrawing);
+        }
+
+        [Fact]
+        public void CreateShape_Not_IsDrawing() {
+            var canvas = new Canvas() {
+                StartPoint = new Point(150, 250),
+                EndPoint = new Point(150, 250)
+            };
+
+            canvas.StopDrawing();
+
+            Assert.Null(canvas.CreateShape());
         }
 
         [Fact]
