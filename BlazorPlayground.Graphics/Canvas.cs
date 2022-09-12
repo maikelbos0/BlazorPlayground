@@ -65,6 +65,16 @@ namespace BlazorPlayground.Graphics {
             return point.SnapToGrid(GridSize);
         }
 
+        public HashSet<Point> GetSnapPoints() {
+            var snapPoints = new HashSet<Point>();
+
+            foreach (var shape in Shapes.Where(s => SelectedShape == null || s != SelectedShape)) {
+                snapPoints.UnionWith(shape.GetSnapPoints());
+            }
+
+            return snapPoints;
+        }
+
         public void StartDrawing(ShapeDefinition shapeDefinition) {
             SelectedShape = null;
             IsDrawing = true;

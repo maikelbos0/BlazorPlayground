@@ -11,7 +11,11 @@ namespace BlazorPlayground.Graphics.Tests {
         }
 
         public static void Contains(IEnumerable<Point> collection, Point actual) {
-            Assert.Single(collection, p => Math.Abs(p.X - actual.X) < 0.1 && Math.Abs(p.Y - actual.Y) < 0.1);
+            Assert.Contains(collection, p => Math.Abs(p.X - actual.X) < 0.1 && Math.Abs(p.Y - actual.Y) < 0.1);
+        }
+
+        public static void DoesNotContain(IEnumerable<Point> collection, Point actual) {
+            Assert.DoesNotContain(collection, p => Math.Abs(p.X - actual.X) < 0.1 && Math.Abs(p.Y - actual.Y) < 0.1);
         }
     }
 }
