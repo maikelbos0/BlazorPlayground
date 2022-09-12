@@ -85,13 +85,9 @@ namespace BlazorPlayground.Graphics {
             IsDrawing = false;
         }
 
-        public Shape CreateVirtualSelectedShape() {
-            if (SelectedShape == null) {
-                throw new InvalidOperationException($"{nameof(CreateVirtualSelectedShape)} can only be called when {nameof(SelectedShape)} has a value.");
-            }
-
-            if (Delta == null || SnappedEndPoint == null) {
-                throw new InvalidOperationException($"{nameof(CreateVirtualSelectedShape)} can only be called when {nameof(IsExecutingAction)} is true.");
+        public Shape? CreateVirtualSelectedShape() {
+            if (SelectedShape == null || Delta == null || SnappedEndPoint == null) {
+                return null;
             }
 
             var virtualShape = SelectedShape.Clone();

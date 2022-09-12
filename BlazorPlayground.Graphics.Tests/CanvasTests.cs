@@ -368,33 +368,33 @@ namespace BlazorPlayground.Graphics.Tests {
         }
 
         [Fact]
-        public void CreateVirtualSelectedShape_Throws_For_Null_SelectedShape() {
+        public void CreateVirtualSelectedShape_Is_Null_For_Null_SelectedShape() {
             var canvas = new Canvas() {
                 StartPoint = new Point(150, 150),
                 EndPoint = new Point(177, 202)
             };
 
-            Assert.Throws<InvalidOperationException>(() => canvas.CreateVirtualSelectedShape());
+            Assert.Null(canvas.CreateVirtualSelectedShape());
         }
 
         [Fact]
-        public void CreateVirtualSelectedShape_Throws_For_Null_StartPoint() {
+        public void CreateVirtualSelectedShape_Is_Null_For_Null_StartPoint() {
             var canvas = new Canvas() {
                 EndPoint = new Point(177, 202),
                 SelectedShape = new Line(new Point(100, 100), new Point(200, 200))
             };
 
-            Assert.Throws<InvalidOperationException>(() => canvas.CreateVirtualSelectedShape());
+            Assert.Null(canvas.CreateVirtualSelectedShape());
         }
 
         [Fact]
-        public void CreateVirtualSelectedShape_Throws_For_Null_EndPoint() {
+        public void CreateVirtualSelectedShape_Is_Null_For_Null_EndPoint() {
             var canvas = new Canvas() {
                 StartPoint = new Point(150, 150),
                 SelectedShape = new Line(new Point(100, 100), new Point(200, 200))
             };
 
-            Assert.Throws<InvalidOperationException>(() => canvas.CreateVirtualSelectedShape());
+            Assert.Null(canvas.CreateVirtualSelectedShape());
         }
 
         [Fact]
