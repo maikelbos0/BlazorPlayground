@@ -53,24 +53,50 @@ namespace BlazorPlayground.Graphics.Tests {
         public void Transform() {
             var shape = new Line(new Point(100, 150), new Point(200, 250));
 
-            shape.Transform(new Point(10, 20), false, 0);
+            shape.Transform(new Point(10, 20), false, 50, false, new[] { new Point(50, 50) });
 
             PointAssert.Equal(new Point(110, 170), shape.StartPoint);
             PointAssert.Equal(new Point(210, 270), shape.EndPoint);
         }
 
-        [Theory]
-        [InlineData(110, 105, 200, 300, 450, 550)]
-        [InlineData(90, 95, 200, 300, 450, 550)]
-        [InlineData(60, 55, 150, 250, 400, 500)]
-        [InlineData(40, 45, 150, 250, 400, 500)]
-        public void Transform_With_SnapToGrid(double deltaX, double deltaY, double expectedStartX, double expectedStartY, double expectedEndX, double expectedEndY) {
-            var shape = new Line(new Point(101, 201), new Point(351, 451));
+        [Fact]
+        public void Transform_With_SnapToGrid() {
+            var shape = new Line(new Point(105, 205), new Point(155, 255));
 
-            shape.Transform(new Point(deltaX, deltaY), true, 100);
+            shape.Transform(new Point(50, 50), true, 50, false, new[] { new Point(151, 251) });
 
-            PointAssert.Equal(new Point(expectedStartX, expectedStartY), shape.StartPoint);
-            PointAssert.Equal(new Point(expectedEndX, expectedEndY), shape.EndPoint);
+            PointAssert.Equal(new Point(150, 250), shape.StartPoint);
+            PointAssert.Equal(new Point(200, 300), shape.EndPoint);
+        }
+
+        [Fact]
+        public void Transform_With_SnapToShapes() {
+            var shape = new Line(new Point(105, 205), new Point(155, 255));
+
+            shape.Transform(new Point(50, 50), false, 50, true, new[] { new Point(151, 251) });
+
+            PointAssert.Equal(new Point(151, 251), shape.StartPoint);
+            PointAssert.Equal(new Point(201, 301), shape.EndPoint);
+        }
+
+        [Fact]
+        public void Transform_With_SnapToGrid_And_SnapToShapes_Grid() {
+            var shape = new Line(new Point(105, 205), new Point(155, 255));
+
+            shape.Transform(new Point(50, 50), true, 50, true, new[] { new Point(149, 249) });
+
+            PointAssert.Equal(new Point(150, 250), shape.StartPoint);
+            PointAssert.Equal(new Point(200, 300), shape.EndPoint);
+        }
+
+        [Fact]
+        public void Transform_With_SnapToGrid_And_SnapToShapes_Points() {
+            var shape = new Line(new Point(105, 205), new Point(155, 255));
+
+            shape.Transform(new Point(50, 50), true, 50, true, new[] { new Point(151, 251) });
+
+            PointAssert.Equal(new Point(151, 251), shape.StartPoint);
+            PointAssert.Equal(new Point(201, 301), shape.EndPoint);
         }
 
         [Fact]

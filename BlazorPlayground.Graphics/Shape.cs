@@ -40,16 +40,13 @@ namespace BlazorPlayground.Graphics {
 
         public abstract XElement CreateSvgElement();
 
-        // TODO add snap to shapes
-        public void Transform(Point delta, bool snapToGrid, int gridSize) {
-            if (snapToGrid) {
-                // TODO work with snap points rather than anchors
-                var point = Anchors
-                    .Select(a => a.Get(this))
-                    .Select(p => new { Original = p, Transformed = p + delta, Anchored = (p + delta).SnapToGrid(gridSize) })
-                    .OrderBy(p => (p.Transformed - p.Anchored).Distance)
-                    .First();
+        public void Transform(Point delta, bool snapToGrid, int gridSize, bool snapToPoints, IEnumerable<Point> points) {
+            var point = GetSnapPoints()
+                .Select(p => new { Original = p, Transformed = p + delta, Anchored = (p + delta).Snap(snapToGrid, gridSize, snapToPoints, points) })
+                .OrderBy(p => (p.Transformed - p.Anchored).Distance)
+                .FirstOrDefault();
 
+            if (point != null) {
                 delta = point.Anchored - point.Original;
             }
 
@@ -70,7 +67,7 @@ namespace BlazorPlayground.Graphics {
 
             return clone;
         }
-        
+
         protected abstract Shape CreateClone();
     }
 }
