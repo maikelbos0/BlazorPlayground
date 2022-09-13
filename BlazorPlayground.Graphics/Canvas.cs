@@ -70,8 +70,10 @@ namespace BlazorPlayground.Graphics {
         public HashSet<Point> GetSnapPoints() {
             var snapPoints = new HashSet<Point>();
 
-            foreach (var shape in GetStaticShapes()) {
-                snapPoints.UnionWith(shape.GetSnapPoints());
+            if (SnapToShapes) {
+                foreach (var shape in GetStaticShapes()) {
+                    snapPoints.UnionWith(shape.GetSnapPoints());
+                }
             }
 
             return snapPoints;
@@ -95,7 +97,7 @@ namespace BlazorPlayground.Graphics {
             var virtualShape = SelectedShape.Clone();
 
             if (SelectedAnchor == null) {
-                virtualShape.Transform(Delta, SnapToGrid, GridSize);
+                virtualShape.Transform(Delta, SnapToGrid, GridSize, SnapToShapes, GetSnapPoints());
             }
             else {
                 SelectedAnchor.Set(virtualShape, SnappedEndPoint);
@@ -182,7 +184,7 @@ namespace BlazorPlayground.Graphics {
 
         internal void TransformSelectedShape() {
             if (SelectedShape != null && Delta != null) {
-                SelectedShape.Transform(Delta, SnapToGrid, GridSize);
+                SelectedShape.Transform(Delta, SnapToGrid, GridSize, SnapToShapes, GetSnapPoints());
             }
         }
 

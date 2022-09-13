@@ -294,7 +294,8 @@ namespace BlazorPlayground.Graphics.Tests {
                     new Line(new Point(100, 100), new Point(100, 200)),
                     new Rectangle(new Point(50, 50), new Point(150, 150))
                 },
-                SelectedShape = selectedShape
+                SelectedShape = selectedShape,
+                SnapToShapes = true
             };
 
             var result = canvas.GetSnapPoints();
