@@ -81,28 +81,28 @@ namespace BlazorPlayground.Graphics.Tests {
         [InlineData(75.1, 224.9, 50, 100, 200)]
         [InlineData(99, 199, 50, 100, 200)]
         [InlineData(75.1, 175.1, 50, 100, 200)]
-        public void Snap_ToGrid(double x, double y, int gridSize, double expectedX, double expectedY) {
+        public void Snap_SnapToGrid(double x, double y, int gridSize, double expectedX, double expectedY) {
             var point = new Point(x, y);
 
             PointAssert.Equal(new Point(expectedX, expectedY), point.Snap(true, gridSize, true, Enumerable.Empty<Point>()));
         }
 
         [Fact]
-        public void Snap_NotToSnapPoints() {
+        public void Snap_Not_SnapToPoints() {
             var point = new Point(90, 110);
 
             PointAssert.Equal(new Point(100, 100), point.Snap(true, 50, false, new[] { new Point(95, 105) }));
         }
 
         [Fact]
-        public void Snap_NotToGrid() {
+        public void Snap_Not_SnapToGrid() {
             var point = new Point(90, 110);
 
             PointAssert.Equal(new Point(105, 95), point.Snap(false, 50, true, new[] { new Point(105, 95) }));
         }
 
         [Fact]
-        public void Snap_NotToSnapPointsAndNotToGrid() {
+        public void Snap_Not_SnapToPoints_And_Not_SnapToGrid() {
             var point = new Point(90, 110);
 
             PointAssert.Equal(new Point(90, 110), point.Snap(false, 50, false, new[] { new Point(95, 105) }));
@@ -115,7 +115,7 @@ namespace BlazorPlayground.Graphics.Tests {
         [InlineData(100, 150, 0, 300, 0, 300, 201, -1)]
         [InlineData(100, 150, 200, 0, 200, 0, -1, 301)]
         [InlineData(100, 150, 0, 0, 201, 301, 0, 0)]
-        public void Snap_ToPoints(double x, double y, double expectedX, double expectedY, params int[] pointCoordinates) {
+        public void Snap_SnapToPoints(double x, double y, double expectedX, double expectedY, params int[] pointCoordinates) {
             var points = Enumerable.Range(0, pointCoordinates.Length / 2).Select(n => new Point(pointCoordinates[n * 2], pointCoordinates[n * 2 + 1]));
             var point = new Point(x, y);
 

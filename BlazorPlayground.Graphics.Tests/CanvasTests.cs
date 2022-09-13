@@ -198,7 +198,7 @@ namespace BlazorPlayground.Graphics.Tests {
         }
 
         [Fact]
-        public void Snap_ToGrid() {
+        public void Snap_With_SnapToGrid() {
             var canvas = new Canvas() {
                 SnapToGrid = true,
                 GridSize = 50,
@@ -212,7 +212,7 @@ namespace BlazorPlayground.Graphics.Tests {
         }
 
         [Fact]
-        public void Snap_ToShapes() {
+        public void Snap_With_SnapToShapes() {
             var canvas = new Canvas() {
                 GridSize = 50,
                 SnapToShapes = true,
@@ -226,7 +226,7 @@ namespace BlazorPlayground.Graphics.Tests {
         }
 
         [Fact]
-        public void Snap_ToGridAndShapes_Grid() {
+        public void Snap_With_SnapToGrid_And_SnapToShapes_Grid() {
             var canvas = new Canvas() {
                 SnapToGrid = true,
                 GridSize = 16,
@@ -241,7 +241,7 @@ namespace BlazorPlayground.Graphics.Tests {
         }
 
         [Fact]
-        public void Snap_ToGridAndShapes_Shapes() {
+        public void Snap_With_SnapToGrid_And_SnapToShapes_Shapes() {
             var canvas = new Canvas() {
                 SnapToGrid = true,
                 GridSize = 50,
@@ -256,7 +256,7 @@ namespace BlazorPlayground.Graphics.Tests {
         }
 
         [Fact]
-        public void GetStaticShapes_SelectedShape() {
+        public void GetStaticShapes_With_SelectedShape() {
             var selectedShape = new Line(new Point(100, 100), new Point(200, 100));
             var canvas = new Canvas() {
                 Shapes = new List<Shape>() {
@@ -274,7 +274,7 @@ namespace BlazorPlayground.Graphics.Tests {
         }
 
         [Fact]
-        public void GetStaticShapes_NoSelectedShape() {
+        public void GetStaticShapes_Without_SelectedShape() {
             var canvas = new Canvas() {
                 Shapes = new List<Shape>() {
                     new Line(new Point(100, 100), new Point(100, 200)),
