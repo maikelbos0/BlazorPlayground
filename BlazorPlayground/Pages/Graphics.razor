@@ -228,45 +228,40 @@
             }
         }
 
-        Shape anchorShape = null;
-        var snapPoints = Canvas.GetSnapPoints();
+        var virtualShape = Canvas.CreateShape();
+        var virtualSelectedShape = Canvas.CreateVirtualSelectedShape();
+        var selectedShape = virtualSelectedShape == null ? Canvas.SelectedShape : null;
+        var anchorShape = virtualSelectedShape ?? Canvas.SelectedShape;
 
-        foreach (var shape in Canvas.Shapes.Where(s => Canvas.SelectedShape == null || s != Canvas.SelectedShape)) {
-            <ShapeRenderer @key="shape" Shape="shape" OnMouseDown="() => Canvas.SelectShape(shape)" IsSelected="false" />
-        }
+        if (Canvas.SnapToShapes) {
+            var snapPoints = Canvas.GetSnapPoints();
 
-        if (Canvas.IsDrawing && Canvas.IsExecutingAction) {
-            var virtualShape = Canvas.CreateShape();
+            if (virtualShape != null) {
+                snapPoints.UnionWith(virtualShape.GetSnapPoints());
+            }
 
-            snapPoints.UnionWith(virtualShape.GetSnapPoints());
+            if (virtualSelectedShape != null) {
+                snapPoints.UnionWith(virtualSelectedShape.GetSnapPoints().Except(virtualSelectedShape.Anchors.Select(a => a.Get(virtualSelectedShape))));
+            }
 
-            <ShapeRenderer Shape="virtualShape" IsVirtual="true" />
-        }
-        else if (Canvas.SelectedShape != null && Canvas.IsExecutingAction) {
-            var virtualShape = Canvas.CreateVirtualSelectedShape();
-
-            anchorShape = virtualShape;
-            snapPoints.UnionWith(virtualShape.GetSnapPoints().Except(virtualShape.Anchors.Select(a => a.Get(virtualShape))));
-
-            <ShapeRenderer Shape="virtualShape" IsVirtual="true" />
-        }
-        else if (Canvas.SelectedShape != null) {
-            anchorShape = Canvas.SelectedShape;
-
-            <ShapeRenderer @key="Canvas.SelectedShape" Shape="Canvas.SelectedShape" OnMouseDown="() => {}" IsSelected="true" />
-        }
-
-        if (anchorShape != null) {
-            foreach (var anchor in anchorShape.Anchors) {
-                var point = anchor.Get(anchorShape);
-
-                <rect @key="anchor" class="shape-anchor" x="@((point.X - 5).ToString(CultureInfo.InvariantCulture))" y="@((point.Y - 5).ToString(CultureInfo.InvariantCulture))" width="10" height="10" @onmousedown="args => Canvas.SelectAnchor(anchor)" />
+            foreach (var snapPoint in snapPoints.Distinct()) {
+                <circle @key="snapPoint" class="shape-snap-point" cx="@snapPoint.X.ToString(CultureInfo.InvariantCulture)" cy="@snapPoint.Y.ToString(CultureInfo.InvariantCulture)" r="5" />
             }
         }
 
-        if (Canvas.SnapToShapes) {
-            foreach (var snapPoint in snapPoints.Distinct()) {
-                <circle @key="snapPoint" class="shape-snap-point" cx="@snapPoint.X.ToString(CultureInfo.InvariantCulture)" cy="@snapPoint.Y.ToString(CultureInfo.InvariantCulture)" r="5" />
+        foreach (var shape in Canvas.GetStaticShapes()) {
+            <ShapeRenderer @key="shape" Shape="shape" OnMouseDown="() => Canvas.SelectShape(shape)" IsSelected="false" />
+        }
+
+        <ShapeRenderer Shape="virtualShape" IsVirtual="true" />
+        <ShapeRenderer Shape="virtualSelectedShape" IsVirtual="true" />
+        <ShapeRenderer Shape="selectedShape" IsSelected="true" />
+
+        if (anchorShape != null) {
+            foreach (var anchor in anchorShape?.Anchors) {
+                var point = anchor.Get(anchorShape);
+
+                <rect @key="anchor" class="shape-anchor" x="@((point.X - 5).ToString(CultureInfo.InvariantCulture))" y="@((point.Y - 5).ToString(CultureInfo.InvariantCulture))" width="10" height="10" @onmousedown="args => Canvas.SelectAnchor(anchor)" />
             }
         }
     }
