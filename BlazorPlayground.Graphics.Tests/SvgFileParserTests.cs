@@ -196,21 +196,21 @@ namespace BlazorPlayground.Graphics.Tests {
         public void Parse_Fill_None() {
             var result = SvgFileParser.Parse(XElement.Parse("<ellipse fill=\"none\" stroke=\"#000000\" stroke-width=\"1\" cx=\"250\" cy=\"150\" rx=\"100\" ry=\"50\" data-shape-type=\"Ellipse\" data-shape-anchor-0=\"250,150\" data-shape-anchor-1=\"350,200\"/>"));
 
-            Assert.Equal(PaintServer.None, result.Fill);
+            Assert.Equal(PaintServer.None, Assert.IsAssignableFrom<IShapeWithFill>(result).GetFill());
         }
 
         [Fact]
         public void Parse_Fill_Color() {
             var result = SvgFileParser.Parse(XElement.Parse("<ellipse fill=\"#ffff00\" stroke=\"#000000\" stroke-width=\"1\" cx=\"250\" cy=\"150\" rx=\"100\" ry=\"50\" data-shape-type=\"Ellipse\" data-shape-anchor-0=\"250,150\" data-shape-anchor-1=\"350,200\"/>"));
 
-            PaintServerAssert.Equal(new Color(255, 255, 0, 1), result.Fill);
+            PaintServerAssert.Equal(new Color(255, 255, 0, 1), Assert.IsAssignableFrom<IShapeWithFill>(result).GetFill());
         }
 
         [Fact]
         public void Parse_Fill_Default() {
             var result = SvgFileParser.Parse(XElement.Parse("<ellipse stroke=\"#000000\" stroke-width=\"1\" cx=\"250\" cy=\"150\" rx=\"100\" ry=\"50\" data-shape-type=\"Ellipse\" data-shape-anchor-0=\"250,150\" data-shape-anchor-1=\"350,200\"/>"));
 
-            Assert.Equal(PaintServer.None, result.Fill);
+            Assert.Equal(PaintServer.None, Assert.IsAssignableFrom<IShapeWithFill>(result).GetFill());
         }
 
         [Fact]

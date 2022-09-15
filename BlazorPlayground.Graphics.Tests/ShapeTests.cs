@@ -100,9 +100,19 @@ namespace BlazorPlayground.Graphics.Tests {
         }
 
         [Fact]
+        public void Clone_SetFill() {
+            var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250));
+
+            polygon.SetFill(new Color(255, 0, 255, 1));
+
+            var result = polygon.Clone();
+
+            PaintServerAssert.Equal(new Color(255, 0, 255, 1), Assert.IsAssignableFrom<IShapeWithFill>(result).GetFill());
+        }
+
+        [Fact]
         public void Clone() {
             var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250)) {
-                Fill = new Color(255, 0, 255, 1),
                 Stroke = new Color(0, 255, 0, 1),
                 Sides = 5,
                 StrokeLinecap = Linecap.Round,
@@ -113,7 +123,8 @@ namespace BlazorPlayground.Graphics.Tests {
             var result = polygon.Clone();
 
             Assert.NotSame(polygon, result);
-            PaintServerAssert.Equal(new Color(255, 0, 255, 1), result.Fill);
+
+            // TODO move to separate test per property
             PaintServerAssert.Equal(new Color(0, 255, 0, 1), result.Stroke);
             Assert.Equal(5, result.Sides);
             Assert.Equal(Linecap.Round, result.StrokeLinecap);

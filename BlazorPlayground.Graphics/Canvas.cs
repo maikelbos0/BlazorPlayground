@@ -172,7 +172,8 @@ namespace BlazorPlayground.Graphics {
             var shape = CurrentShapeDefinition.Construct(SnappedStartPoint, SnappedEndPoint);
 
             shape.Opacity = DrawSettings.Opacity;
-            shape.Fill = DrawSettings.FillPaintManager.Server;
+
+            (shape as IShapeWithFill)?.SetFill(DrawSettings.FillPaintManager.Server);
             shape.Stroke = DrawSettings.StrokePaintManager.Server;
             shape.StrokeWidth = DrawSettings.StrokeWidth;
             shape.StrokeLinecap = DrawSettings.StrokeLinecap;
@@ -201,9 +202,7 @@ namespace BlazorPlayground.Graphics {
         }
 
         public void ApplyFillToSelectedShape() {
-            if (SelectedShape != null) {
-                SelectedShape.Fill = DrawSettings.FillPaintManager.Server;
-            }
+            (SelectedShape as IShapeWithFill)?.SetFill(DrawSettings.FillPaintManager.Server);
         }
 
         public void ApplyStrokeToSelectedShape() {
@@ -280,7 +279,7 @@ namespace BlazorPlayground.Graphics {
                 SelectedShape = null;
             }
         }
-        
+
         public XElement ExportSvg() => new(
             "svg",
             new XAttribute("viewBox", $"0 0 {Width} {Height}"),

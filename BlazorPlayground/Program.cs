@@ -8,11 +8,9 @@ namespace BlazorPlayground {
 
     /*
      * TODO
-     * Snap to existing point (how? point != anchor)
-     * Add stroke array?
      * Add fill opacity
      * Add stroke opacity
-     * Add arc
+     * Add angle of shape
      */
 
     public class Program {

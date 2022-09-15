@@ -613,13 +613,12 @@ namespace BlazorPlayground.Graphics.Tests {
         [Fact]
         public void CreateShape() {
             var canvas = new Canvas() {
+                CurrentShapeDefinition = ShapeDefinition.Get(typeof(Line)),
                 StartPoint = new Point(150, 250),
-                EndPoint = new Point(150, 250)
+                EndPoint = new Point(200, 300)
             };
 
             canvas.DrawSettings.Opacity = 45;
-            canvas.DrawSettings.FillPaintManager.Mode = PaintMode.Color;
-            canvas.DrawSettings.FillPaintManager.ColorValue = "yellow";
             canvas.DrawSettings.StrokeLinecap = Linecap.Round;
             canvas.DrawSettings.StrokeLinejoin = Linejoin.Round;
             canvas.DrawSettings.StrokePaintManager.Mode = PaintMode.Color;
@@ -627,14 +626,33 @@ namespace BlazorPlayground.Graphics.Tests {
             canvas.DrawSettings.StrokeWidth = 5;
 
             var shape = canvas.CreateShape();
+            var line = Assert.IsType<Line>(shape);
 
-            Assert.NotNull(shape);
+            PointAssert.Equal(new Point(150, 250), line.StartPoint);
+            PointAssert.Equal(new Point(200, 300), line.EndPoint);
+
+            // TODO move to separate test per property
             Assert.Equal(45, shape!.Opacity);
-            PaintServerAssert.Equal(new Color(255, 255, 0, 1), shape.Fill);
             Assert.Equal(Linecap.Round, shape.StrokeLinecap);
             Assert.Equal(Linejoin.Round, shape.StrokeLinejoin);
             PaintServerAssert.Equal(new Color(255, 0, 0, 1), shape.Stroke);
             Assert.Equal(5, shape.StrokeWidth);
+        }
+
+        [Fact]
+        public void CreateShape_SetFill() {
+            var canvas = new Canvas() {
+                CurrentShapeDefinition = ShapeDefinition.Get(typeof(Rectangle)),
+                StartPoint = new Point(150, 250),
+                EndPoint = new Point(200, 300)
+            };
+
+            canvas.DrawSettings.FillPaintManager.Mode = PaintMode.Color;
+            canvas.DrawSettings.FillPaintManager.ColorValue = "yellow";
+
+            var shape = canvas.CreateShape();
+
+            PaintServerAssert.Equal(new Color(255, 255, 0, 1), Assert.IsAssignableFrom<IShapeWithFill>(shape).GetFill());
         }
 
         [Fact]
@@ -763,7 +781,7 @@ namespace BlazorPlayground.Graphics.Tests {
         [Fact]
         public void ApplyFillToSelectedShape() {
             var canvas = new Canvas() {
-                SelectedShape = new Line(new Point(100, 100), new Point(200, 200)),
+                SelectedShape = new Rectangle(new Point(100, 100), new Point(200, 200)),
             };
 
             canvas.DrawSettings.FillPaintManager.Mode = PaintMode.Color;
@@ -771,7 +789,7 @@ namespace BlazorPlayground.Graphics.Tests {
 
             canvas.ApplyFillToSelectedShape();
 
-            PaintServerAssert.Equal(new Color(255, 255, 0, 1), canvas.SelectedShape.Fill);
+            PaintServerAssert.Equal(new Color(255, 255, 0, 1), Assert.IsAssignableFrom<IShapeWithFill>(canvas.SelectedShape).GetFill());
         }
 
         [Fact]

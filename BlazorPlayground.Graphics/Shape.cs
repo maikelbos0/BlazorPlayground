@@ -12,8 +12,6 @@ namespace BlazorPlayground.Graphics {
             set => opacity = Math.Max(Math.Min(value, DrawSettings.MaximumOpacity), DrawSettings.MinimumOpacity);
         }
 
-        public IPaintServer Fill { get; set; } = PaintServer.None;
-
         public IPaintServer Stroke { get; set; } = PaintManager.ParseColor(DrawSettings.DefaultStrokeColor);
 
         public int StrokeWidth {
@@ -58,7 +56,10 @@ namespace BlazorPlayground.Graphics {
         public Shape Clone() {
             var clone = CreateClone();
 
-            clone.Fill = Fill;
+            if (this is IShapeWithFill shapeWithFill && clone is IShapeWithFill cloneWithFill) {
+                cloneWithFill.SetFill(shapeWithFill.GetFill());
+            }
+
             clone.Stroke = Stroke;
             clone.StrokeWidth = StrokeWidth;
             clone.StrokeLinecap = StrokeLinecap;

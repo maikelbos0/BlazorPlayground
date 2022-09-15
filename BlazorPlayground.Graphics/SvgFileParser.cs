@@ -27,7 +27,7 @@ namespace BlazorPlayground.Graphics {
 
             if (shape != null && SetAnchors(shape, element)) {
                 shape.Opacity = ParseOpacity(element.Attribute("opacity")?.Value);
-                shape.Fill = ParsePaintServer(element.Attribute("fill")?.Value);
+                (shape as IShapeWithFill)?.SetFill(ParsePaintServer(element.Attribute("fill")?.Value));
                 shape.Stroke = ParsePaintServer(element.Attribute("stroke")?.Value);
                 shape.StrokeWidth = ParseDimension(element.Attribute("stroke-width")?.Value, DrawSettings.MinimumStrokeWidth, DrawSettings.DefaultStrokeWidth);
                 shape.StrokeLinecap = ParseEnum(element.Attribute("stroke-linecap")?.Value, DrawSettings.DefaultStrokeLinecap);

@@ -13,8 +13,8 @@ namespace BlazorPlayground.Graphics {
                 builder.AddAttribute(2, "opacity", (Opacity / 100.0).ToString(CultureInfo.InvariantCulture));
             }
 
-            if (Definition.UseFill) {
-                builder.AddAttribute(3, "fill", Fill);
+            if (this is IShapeWithFill shapeWithFill) {
+                builder.AddAttribute(3, "fill", shapeWithFill.GetFill());
             }
 
             if (Definition.UseStroke) {
@@ -61,8 +61,8 @@ namespace BlazorPlayground.Graphics {
                 yield return new XAttribute("opacity", Opacity / 100.0);
             }
 
-            if (Definition.UseFill) {
-                yield return new XAttribute("fill", Fill);
+            if (this is IShapeWithFill shapeWithFill) {
+                yield return new XAttribute("fill", shapeWithFill.GetFill());
             }
 
             if (Definition.UseStroke) {
