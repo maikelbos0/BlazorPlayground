@@ -4,11 +4,14 @@ namespace BlazorPlayground.Graphics {
     public interface IShapeWithFill { }
 
     public static class ShapeWithFill {
+        private class Data {
+            public IPaintServer Fill { get; set; } = PaintServer.None;
+        }
 
-        private static readonly ConditionalWeakTable<IShapeWithFill, IPaintServer> shapes = new();
+        private static readonly ConditionalWeakTable<IShapeWithFill, Data> shapes = new();
 
-        public static void SetFill(this IShapeWithFill shape, IPaintServer fill) => shapes.AddOrUpdate(shape, fill);
+        public static void SetFill(this IShapeWithFill shape, IPaintServer fill) => shapes.GetOrCreateValue(shape).Fill = fill;
 
-        public static IPaintServer GetFill(this IShapeWithFill shape) => shapes.TryGetValue(shape, out var fill) ? fill : PaintServer.None;
+        public static IPaintServer GetFill(this IShapeWithFill shape) => shapes.GetOrCreateValue(shape).Fill;
     }
 }
