@@ -2,19 +2,6 @@
 
 namespace BlazorPlayground.Graphics.Tests {
     public class ShapeTests {
-        [Theory]
-        [InlineData(-1, DrawSettings.MinimumSides)]
-        [InlineData(DrawSettings.MinimumSides - 1, DrawSettings.MinimumSides)]
-        [InlineData(DrawSettings.MinimumSides, DrawSettings.MinimumSides)]
-        [InlineData(DrawSettings.MinimumSides + 1, DrawSettings.MinimumSides + 1)]
-        public void Sides(int sides, int expectedSides) {
-            var shape = new Line(new Point(100, 150), new Point(200, 250)) {
-                Sides = sides
-            };
-
-            Assert.Equal(expectedSides, shape.Sides);
-        }
-
         [Fact]
         public void Definition() {
             var shape = new Line(new Point(100, 150), new Point(200, 250));
@@ -117,9 +104,19 @@ namespace BlazorPlayground.Graphics.Tests {
         }
 
         [Fact]
+        public void Clone_SetSides() {
+            var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250));
+
+            polygon.SetSides(5);
+
+            var result = polygon.Clone();
+
+            Assert.Equal(5, Assert.IsAssignableFrom<IShapeWithSides>(result).GetSides());
+        }
+
+        [Fact]
         public void Clone() {
             var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250)) {
-                Sides = 5,
                 StrokeLinecap = Linecap.Round,
                 StrokeLinejoin = Linejoin.Round,
             };
@@ -129,7 +126,6 @@ namespace BlazorPlayground.Graphics.Tests {
             Assert.NotSame(polygon, result);
 
             // TODO move to separate test per property
-            Assert.Equal(5, result.Sides);
             Assert.Equal(Linecap.Round, result.StrokeLinecap);
             Assert.Equal(Linejoin.Round, result.StrokeLinejoin);
         }

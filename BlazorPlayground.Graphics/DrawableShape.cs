@@ -87,8 +87,8 @@ namespace BlazorPlayground.Graphics {
                 yield return new XAttribute($"data-shape-anchor-{i}", FormattableString.Invariant($"{point.X},{point.Y}"));
             }
 
-            if (Definition.UseSides) {
-                yield return new XAttribute("data-shape-sides", Sides);
+            if (this is IShapeWithSides shapeWithSides) {
+                yield return new XAttribute("data-shape-sides", shapeWithSides.GetSides());
             }
         }
     }

@@ -695,6 +695,21 @@ namespace BlazorPlayground.Graphics.Tests {
         }
 
         [Fact]
+        public void CreateShape_SetSides() {
+            var canvas = new Canvas() {
+                CurrentShapeDefinition = ShapeDefinition.Get(typeof(RegularPolygon)),
+                StartPoint = new Point(150, 250),
+                EndPoint = new Point(200, 300)
+            };
+
+            canvas.DrawSettings.Sides = 5;
+
+            var shape = canvas.CreateShape();
+
+            Assert.Equal(5, Assert.IsAssignableFrom<IShapeWithSides>(shape).GetSides());
+        }
+
+        [Fact]
         public void TransformSelectedShape() {
             var shape = new Line(new Point(100, 100), new Point(200, 200));
             var canvas = new Canvas() {
@@ -894,7 +909,7 @@ namespace BlazorPlayground.Graphics.Tests {
 
             canvas.ApplySidesToSelectedShape();
 
-            Assert.Equal(5, canvas.SelectedShape.Sides);
+            Assert.Equal(5, Assert.IsAssignableFrom<IShapeWithSides>(canvas.SelectedShape).GetSides());
         }
 
         [Fact]

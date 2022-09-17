@@ -3,16 +3,9 @@ using System.Xml.Linq;
 
 namespace BlazorPlayground.Graphics {
     public abstract class Shape {
-        private int sides = DrawSettings.DefaultSides;
-
         public Linecap StrokeLinecap { get; set; } = DrawSettings.DefaultStrokeLinecap;
 
         public Linejoin StrokeLinejoin { get; set; } = DrawSettings.DefaultStrokeLinejoin;
-
-        public int Sides {
-            get => sides;
-            set => sides = Math.Max(value, DrawSettings.MinimumSides);
-        }
 
         public ShapeDefinition Definition => ShapeDefinition.Get(this);
 
@@ -57,7 +50,10 @@ namespace BlazorPlayground.Graphics {
 
             clone.StrokeLinecap = StrokeLinecap;
             clone.StrokeLinejoin = StrokeLinejoin;
-            clone.Sides = Sides;
+
+            if (this is IShapeWithSides shapeWithSides && clone is IShapeWithSides cloneWithSides) {
+                cloneWithSides.SetSides(shapeWithSides.GetSides());
+            }
 
             return clone;
         }

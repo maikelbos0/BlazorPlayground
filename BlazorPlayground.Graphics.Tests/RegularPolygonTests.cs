@@ -12,9 +12,9 @@ namespace BlazorPlayground.Graphics.Tests {
 
         [Fact]
         public void GetSnapPoints() {
-            var square = new RegularPolygon(new Point(100, 100), new Point(50, 50)) {
-                Sides = 4
-            };
+            var square = new RegularPolygon(new Point(100, 100), new Point(50, 50));
+
+            square.SetSides(4);
 
             var result = square.GetSnapPoints();
 
@@ -28,9 +28,9 @@ namespace BlazorPlayground.Graphics.Tests {
 
         [Fact]
         public void GetPoints_Square_0_Degrees() {
-            var square = new RegularPolygon(new Point(100, 100), new Point(50, 50)) {
-                Sides = 4
-            };
+            var square = new RegularPolygon(new Point(100, 100), new Point(50, 50));
+
+            square.SetSides(4);
 
             var result = square.GetPoints().ToList();
 
@@ -43,9 +43,9 @@ namespace BlazorPlayground.Graphics.Tests {
 
         [Fact]
         public void GetPoints_Square_45_Degrees() {
-            var square = new RegularPolygon(new Point(100, 100), new Point(50, 100)) {
-                Sides = 4
-            };
+            var square = new RegularPolygon(new Point(100, 100), new Point(50, 100));
+
+            square.SetSides(4);
 
             var result = square.GetPoints().ToList();
 
@@ -58,9 +58,9 @@ namespace BlazorPlayground.Graphics.Tests {
 
         [Fact]
         public void GetPoints_Square_22_Degrees() {
-            var square = new RegularPolygon(new Point(100, 100), new Point(50, 120)) {
-                Sides = 4
-            };
+            var square = new RegularPolygon(new Point(100, 100), new Point(50, 120));
+
+            square.SetSides(4);
 
             var result = square.GetPoints().ToList();
 
@@ -73,9 +73,9 @@ namespace BlazorPlayground.Graphics.Tests {
 
         [Fact]
         public void GetPoints_Square_112_Degrees() {
-            var square = new RegularPolygon(new Point(100, 100), new Point(150, 120)) {
-                Sides = 4
-            };
+            var square = new RegularPolygon(new Point(100, 100), new Point(150, 120));
+
+            square.SetSides(4);
 
             var result = square.GetPoints().ToList();
 
@@ -88,9 +88,9 @@ namespace BlazorPlayground.Graphics.Tests {
 
         [Fact]
         public void GetPoints_Triangle() {
-            var triangle = new RegularPolygon(new Point(100, 100), new Point(100, 50)) {
-                Sides = 3
-            };
+            var triangle = new RegularPolygon(new Point(100, 100), new Point(100, 50));
+
+            triangle.SetSides(3);
 
             var result = triangle.GetPoints().ToList();
 
@@ -103,9 +103,9 @@ namespace BlazorPlayground.Graphics.Tests {
 
         [Fact]
         public void GetPoints_Hexagon() {
-            var hexagon = new RegularPolygon(new Point(100, 100), new Point(100, 50)) {
-                Sides = 6
-            };
+            var hexagon = new RegularPolygon(new Point(100, 100), new Point(100, 50));
+
+            hexagon.SetSides(6);
 
             var result = hexagon.GetPoints().ToList();
 
@@ -121,9 +121,9 @@ namespace BlazorPlayground.Graphics.Tests {
 
         [Fact]
         public void GetAttributes() {
-            var polygon = new RegularPolygon(new Point(100, 100), new Point(50, 50)) {
-                Sides = 4
-            };
+            var polygon = new RegularPolygon(new Point(100, 100), new Point(50, 50));
+
+            polygon.SetSides(4);
 
             var attributes = polygon.GetAttributes();
 

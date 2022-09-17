@@ -177,7 +177,7 @@ namespace BlazorPlayground.Graphics {
             (shape as IShapeWithStroke)?.SetStrokeWidth(DrawSettings.StrokeWidth);
             shape.StrokeLinecap = DrawSettings.StrokeLinecap;
             shape.StrokeLinejoin = DrawSettings.StrokeLinejoin;
-            shape.Sides = DrawSettings.Sides;
+            (shape as IShapeWithSides)?.SetSides(DrawSettings.Sides);
 
             return shape;
         }
@@ -223,9 +223,7 @@ namespace BlazorPlayground.Graphics {
         }
 
         public void ApplySidesToSelectedShape() {
-            if (SelectedShape != null) {
-                SelectedShape.Sides = DrawSettings.Sides;
-            }
+            (SelectedShape as IShapeWithSides)?.SetSides(DrawSettings.Sides);
         }
 
         public void MoveSelectedShapeToBack() {

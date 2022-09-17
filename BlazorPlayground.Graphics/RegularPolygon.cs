@@ -1,5 +1,5 @@
 ﻿namespace BlazorPlayground.Graphics {
-    public class RegularPolygon : DrawableShape, IShapeWithOpacity, IShapeWithFill, IShapeWithStroke {
+    public class RegularPolygon : DrawableShape, IShapeWithOpacity, IShapeWithFill, IShapeWithStroke, IShapeWithSides {
         private readonly static Anchor[] anchors = new[] {
             new Anchor<RegularPolygon>(s => s.CenterPoint, (s, p) => s.CenterPoint = p),
             new Anchor<RegularPolygon>(s => s.RadiusPoint, (s, p) => s.RadiusPoint = p)
@@ -23,9 +23,9 @@
             var vector = RadiusPoint - CenterPoint;
             var radius = Math.Sqrt(Math.Pow(vector.X, 2) + Math.Pow(vector.Y, 2));
             var startingAngle = Math.Atan2(vector.Y, vector.X);
-            var pointAngle = Math.PI / Sides * 2;
+            var pointAngle = Math.PI / this.GetSides() * 2;
 
-            for (var i = 0; i < Sides; i++) {
+            for (var i = 0; i < this.GetSides(); i++) {
                 var angle = startingAngle + pointAngle * i;
 
                 yield return CenterPoint + new Point(radius * Math.Cos(angle), radius * Math.Sin(angle));
