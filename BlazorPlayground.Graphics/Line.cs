@@ -1,5 +1,5 @@
 ﻿namespace BlazorPlayground.Graphics {
-    public class Line : DrawableShape {
+    public class Line : DrawableShape, IShapeWithOpacity {
         private readonly static Anchor[] anchors = new[] {
             new Anchor<Line>(s => s.StartPoint, (s, p) => s.StartPoint = p),
             new Anchor<Line>(s => s.EndPoint, (s, p) => s.EndPoint = p)
