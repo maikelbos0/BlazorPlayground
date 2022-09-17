@@ -3,14 +3,8 @@ using System.Xml.Linq;
 
 namespace BlazorPlayground.Graphics {
     public abstract class Shape {
-        private int opacity = DrawSettings.DefaultOpacity;
         private int strokeWidth = DrawSettings.DefaultStrokeWidth;
         private int sides = DrawSettings.DefaultSides;
-
-        public int Opacity {
-            get => opacity;
-            set => opacity = Math.Max(Math.Min(value, DrawSettings.MaximumOpacity), DrawSettings.MinimumOpacity);
-        }
 
         public IPaintServer Stroke { get; set; } = PaintManager.ParseColor(DrawSettings.DefaultStrokeColor);
 
@@ -55,6 +49,10 @@ namespace BlazorPlayground.Graphics {
 
         public Shape Clone() {
             var clone = CreateClone();
+
+            if (this is IShapeWithOpacity shapeWithOpacity && clone is IShapeWithOpacity cloneWithOpacity) {
+                cloneWithOpacity.SetOpacity(shapeWithOpacity.GetOpacity());
+            }
 
             if (this is IShapeWithFill shapeWithFill && clone is IShapeWithFill cloneWithFill) {
                 cloneWithFill.SetFill(shapeWithFill.GetFill());

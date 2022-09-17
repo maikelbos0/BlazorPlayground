@@ -171,8 +171,7 @@ namespace BlazorPlayground.Graphics {
 
             var shape = CurrentShapeDefinition.Construct(SnappedStartPoint, SnappedEndPoint);
 
-            shape.Opacity = DrawSettings.Opacity;
-
+            (shape as IShapeWithOpacity)?.SetOpacity(DrawSettings.Opacity);
             (shape as IShapeWithFill)?.SetFill(DrawSettings.FillPaintManager.Server);
             shape.Stroke = DrawSettings.StrokePaintManager.Server;
             shape.StrokeWidth = DrawSettings.StrokeWidth;
@@ -196,9 +195,7 @@ namespace BlazorPlayground.Graphics {
         }
 
         public void ApplyOpacityToSelectedShape() {
-            if (SelectedShape != null) {
-                SelectedShape.Opacity = DrawSettings.Opacity;
-            }
+            (SelectedShape as IShapeWithOpacity)?.SetOpacity(DrawSettings.Opacity);
         }
 
         public void ApplyFillToSelectedShape() {

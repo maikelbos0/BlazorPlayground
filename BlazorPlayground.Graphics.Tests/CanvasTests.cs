@@ -632,8 +632,7 @@ namespace BlazorPlayground.Graphics.Tests {
             PointAssert.Equal(new Point(200, 300), line.EndPoint);
 
             // TODO move to separate test per property
-            Assert.Equal(45, shape!.Opacity);
-            Assert.Equal(Linecap.Round, shape.StrokeLinecap);
+            Assert.Equal(Linecap.Round, shape!.StrokeLinecap);
             Assert.Equal(Linejoin.Round, shape.StrokeLinejoin);
             PaintServerAssert.Equal(new Color(255, 0, 0, 1), shape.Stroke);
             Assert.Equal(5, shape.StrokeWidth);
@@ -653,6 +652,21 @@ namespace BlazorPlayground.Graphics.Tests {
             var shape = canvas.CreateShape();
 
             PaintServerAssert.Equal(new Color(255, 255, 0, 1), Assert.IsAssignableFrom<IShapeWithFill>(shape).GetFill());
+        }
+
+        [Fact]
+        public void CreateShape_SetOpacity() {
+            var canvas = new Canvas() {
+                CurrentShapeDefinition = ShapeDefinition.Get(typeof(Rectangle)),
+                StartPoint = new Point(150, 250),
+                EndPoint = new Point(200, 300)
+            };
+
+            canvas.DrawSettings.Opacity = 50;
+
+            var shape = canvas.CreateShape();
+
+            Assert.Equal(50, Assert.IsAssignableFrom<IShapeWithOpacity>(shape).GetOpacity());
         }
 
         [Fact]
@@ -768,14 +782,14 @@ namespace BlazorPlayground.Graphics.Tests {
         [Fact]
         public void ApplyOpacityToSelectedShape() {
             var canvas = new Canvas() {
-                SelectedShape = new Line(new Point(100, 100), new Point(200, 200)),
+                SelectedShape = new Rectangle(new Point(100, 100), new Point(200, 200)),
             };
 
             canvas.DrawSettings.Opacity = 45;
 
             canvas.ApplyOpacityToSelectedShape();
 
-            Assert.Equal(45, canvas.SelectedShape.Opacity);
+            Assert.Equal(45, Assert.IsAssignableFrom<IShapeWithOpacity>(canvas.SelectedShape).GetOpacity());
         }
 
         [Fact]

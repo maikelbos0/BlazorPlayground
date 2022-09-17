@@ -26,7 +26,7 @@ namespace BlazorPlayground.Graphics {
             var shape = CreateShape(element);
 
             if (shape != null && SetAnchors(shape, element)) {
-                shape.Opacity = ParseOpacity(element.Attribute("opacity")?.Value);
+                (shape as IShapeWithOpacity)?.SetOpacity(ParseOpacity(element.Attribute("opacity")?.Value));
                 (shape as IShapeWithFill)?.SetFill(ParsePaintServer(element.Attribute("fill")?.Value));
                 shape.Stroke = ParsePaintServer(element.Attribute("stroke")?.Value);
                 shape.StrokeWidth = ParseDimension(element.Attribute("stroke-width")?.Value, DrawSettings.MinimumStrokeWidth, DrawSettings.DefaultStrokeWidth);
