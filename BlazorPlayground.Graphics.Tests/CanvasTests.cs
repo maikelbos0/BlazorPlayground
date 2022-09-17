@@ -618,12 +618,8 @@ namespace BlazorPlayground.Graphics.Tests {
                 EndPoint = new Point(200, 300)
             };
 
-            canvas.DrawSettings.Opacity = 45;
             canvas.DrawSettings.StrokeLinecap = Linecap.Round;
             canvas.DrawSettings.StrokeLinejoin = Linejoin.Round;
-            canvas.DrawSettings.StrokePaintManager.Mode = PaintMode.Color;
-            canvas.DrawSettings.StrokePaintManager.ColorValue = "red";
-            canvas.DrawSettings.StrokeWidth = 5;
 
             var shape = canvas.CreateShape();
             var line = Assert.IsType<Line>(shape);
@@ -634,8 +630,6 @@ namespace BlazorPlayground.Graphics.Tests {
             // TODO move to separate test per property
             Assert.Equal(Linecap.Round, shape!.StrokeLinecap);
             Assert.Equal(Linejoin.Round, shape.StrokeLinejoin);
-            PaintServerAssert.Equal(new Color(255, 0, 0, 1), shape.Stroke);
-            Assert.Equal(5, shape.StrokeWidth);
         }
 
         [Fact]
@@ -667,6 +661,37 @@ namespace BlazorPlayground.Graphics.Tests {
             var shape = canvas.CreateShape();
 
             Assert.Equal(50, Assert.IsAssignableFrom<IShapeWithOpacity>(shape).GetOpacity());
+        }
+
+        [Fact]
+        public void CreateShape_SetStroke() {
+            var canvas = new Canvas() {
+                CurrentShapeDefinition = ShapeDefinition.Get(typeof(Rectangle)),
+                StartPoint = new Point(150, 250),
+                EndPoint = new Point(200, 300)
+            };
+
+            canvas.DrawSettings.StrokePaintManager.Mode = PaintMode.Color;
+            canvas.DrawSettings.StrokePaintManager.ColorValue = "red";
+
+            var shape = canvas.CreateShape();
+
+            PaintServerAssert.Equal(new Color(255, 0, 0, 1), Assert.IsAssignableFrom<IShapeWithStroke>(shape).GetStroke());
+        }
+
+        [Fact]
+        public void CreateShape_SetStrokeWidth() {
+            var canvas = new Canvas() {
+                CurrentShapeDefinition = ShapeDefinition.Get(typeof(Rectangle)),
+                StartPoint = new Point(150, 250),
+                EndPoint = new Point(200, 300)
+            };
+
+            canvas.DrawSettings.StrokeWidth = 10;
+
+            var shape = canvas.CreateShape();
+
+            Assert.Equal(10, Assert.IsAssignableFrom<IShapeWithStroke>(shape).GetStrokeWidth());
         }
 
         [Fact]
@@ -817,7 +842,20 @@ namespace BlazorPlayground.Graphics.Tests {
 
             canvas.ApplyStrokeToSelectedShape();
 
-            PaintServerAssert.Equal(new Color(255, 255, 0, 1), canvas.SelectedShape.Stroke);
+            PaintServerAssert.Equal(new Color(255, 255, 0, 1), Assert.IsAssignableFrom<IShapeWithStroke>(canvas.SelectedShape).GetStroke());
+        }
+
+        [Fact]
+        public void ApplyStrokeWidthToSelectedShape() {
+            var canvas = new Canvas() {
+                SelectedShape = new Line(new Point(100, 100), new Point(200, 200)),
+            };
+
+            canvas.DrawSettings.StrokeWidth = 5;
+
+            canvas.ApplyStrokeWidthToSelectedShape();
+
+            Assert.Equal(5, Assert.IsAssignableFrom<IShapeWithStroke>(canvas.SelectedShape).GetStrokeWidth());
         }
 
         [Fact]
@@ -844,19 +882,6 @@ namespace BlazorPlayground.Graphics.Tests {
             canvas.ApplyStrokeLinejoinToSelectedShape();
 
             Assert.Equal(Linejoin.Round, canvas.SelectedShape.StrokeLinejoin);
-        }
-
-        [Fact]
-        public void ApplyStrokeWidthToSelectedShape() {
-            var canvas = new Canvas() {
-                SelectedShape = new Line(new Point(100, 100), new Point(200, 200)),
-            };
-
-            canvas.DrawSettings.StrokeWidth = 5;
-
-            canvas.ApplyStrokeWidthToSelectedShape();
-
-            Assert.Equal(5, canvas.SelectedShape.StrokeWidth);
         }
 
         [Fact]

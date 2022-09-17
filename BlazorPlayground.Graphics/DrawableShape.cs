@@ -17,12 +17,9 @@ namespace BlazorPlayground.Graphics {
                 builder.AddAttribute(3, "fill", shapeWithFill.GetFill());
             }
 
-            if (Definition.UseStroke) {
-                builder.AddAttribute(4, "stroke", Stroke);
-            }
-
-            if (Definition.UseStrokeWidth) {
-                builder.AddAttribute(5, "stroke-width", StrokeWidth);
+            if (this is IShapeWithStroke shapeWithStroke) {
+                builder.AddAttribute(4, "stroke", shapeWithStroke.GetStroke());
+                builder.AddAttribute(5, "stroke-width", shapeWithStroke.GetStrokeWidth());
             }
 
             if (Definition.UseStrokeLinecap) {
@@ -47,7 +44,7 @@ namespace BlazorPlayground.Graphics {
                 builder.AddAttribute(12, "stroke-linejoin", StrokeLinejoin.ToString().ToLower());
             }
 
-            builder.AddAttribute(13, "stroke-width", Math.Max(StrokeWidth, 12));
+            builder.AddAttribute(13, "stroke-width", 12);
             builder.AddMultipleAttributes(14, GetAttributes());
             builder.CloseElement();
         }
@@ -65,12 +62,9 @@ namespace BlazorPlayground.Graphics {
                 yield return new XAttribute("fill", shapeWithFill.GetFill());
             }
 
-            if (Definition.UseStroke) {
-                yield return new XAttribute("stroke", Stroke);
-            }
-
-            if (Definition.UseStrokeWidth) {
-                yield return new XAttribute("stroke-width", StrokeWidth);
+            if (this is IShapeWithStroke shapeWithStroke) {
+                yield return new XAttribute("stroke", shapeWithStroke.GetStroke());
+                yield return new XAttribute("stroke-width", shapeWithStroke.GetStrokeWidth());
             }
 
             if (Definition.UseStrokeLinecap) {

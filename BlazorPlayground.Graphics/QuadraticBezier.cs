@@ -1,5 +1,5 @@
 ﻿namespace BlazorPlayground.Graphics {
-    public class QuadraticBezier : DrawableShape, IShapeWithFill, IShapeWithOpacity {
+    public class QuadraticBezier : DrawableShape, IShapeWithOpacity, IShapeWithFill, IShapeWithStroke {
         private readonly static Anchor[] anchors = new[] {
             new Anchor<QuadraticBezier>(s => s.StartPoint, (s, p) => s.StartPoint = p),
             new Anchor<QuadraticBezier>(s => s.ControlPoint, (s, p) => s.ControlPoint = p),

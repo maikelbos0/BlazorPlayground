@@ -1,5 +1,5 @@
 ﻿namespace BlazorPlayground.Graphics {
-    public class Rectangle : DrawableShape, IShapeWithFill, IShapeWithOpacity {
+    public class Rectangle : DrawableShape, IShapeWithOpacity, IShapeWithFill, IShapeWithStroke {
         private readonly static Anchor[] anchors = new[] {
             new Anchor<Rectangle>(s => s.StartPoint, (s, p) => s.StartPoint = p),
             new Anchor<Rectangle>(s => s.EndPoint, (s, p) => s.EndPoint = p)

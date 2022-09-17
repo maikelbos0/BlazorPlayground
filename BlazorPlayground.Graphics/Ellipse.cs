@@ -1,5 +1,5 @@
 ﻿namespace BlazorPlayground.Graphics {
-    public class Ellipse : DrawableShape, IShapeWithFill, IShapeWithOpacity {
+    public class Ellipse : DrawableShape, IShapeWithOpacity, IShapeWithFill, IShapeWithStroke {
         private readonly static Anchor[] anchors = new[] {
             new Anchor<Ellipse>(s => s.CenterPoint, (s, p) => s.CenterPoint = p),
             new Anchor<Ellipse>(s => s.RadiusPoint, (s, p) => s.RadiusPoint = p)

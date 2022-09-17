@@ -173,8 +173,8 @@ namespace BlazorPlayground.Graphics {
 
             (shape as IShapeWithOpacity)?.SetOpacity(DrawSettings.Opacity);
             (shape as IShapeWithFill)?.SetFill(DrawSettings.FillPaintManager.Server);
-            shape.Stroke = DrawSettings.StrokePaintManager.Server;
-            shape.StrokeWidth = DrawSettings.StrokeWidth;
+            (shape as IShapeWithStroke)?.SetStroke(DrawSettings.StrokePaintManager.Server);
+            (shape as IShapeWithStroke)?.SetStrokeWidth(DrawSettings.StrokeWidth);
             shape.StrokeLinecap = DrawSettings.StrokeLinecap;
             shape.StrokeLinejoin = DrawSettings.StrokeLinejoin;
             shape.Sides = DrawSettings.Sides;
@@ -203,9 +203,11 @@ namespace BlazorPlayground.Graphics {
         }
 
         public void ApplyStrokeToSelectedShape() {
-            if (SelectedShape != null) {
-                SelectedShape.Stroke = DrawSettings.StrokePaintManager.Server;
-            }
+            (SelectedShape as IShapeWithStroke)?.SetStroke(DrawSettings.StrokePaintManager.Server);
+        }
+
+        public void ApplyStrokeWidthToSelectedShape() {
+            (SelectedShape as IShapeWithStroke)?.SetStrokeWidth(DrawSettings.StrokeWidth);
         }
 
         public void ApplyStrokeLinecapToSelectedShape() {
@@ -217,12 +219,6 @@ namespace BlazorPlayground.Graphics {
         public void ApplyStrokeLinejoinToSelectedShape() {
             if (SelectedShape != null) {
                 SelectedShape.StrokeLinejoin = DrawSettings.StrokeLinejoin;
-            }
-        }
-
-        public void ApplyStrokeWidthToSelectedShape() {
-            if (SelectedShape != null) {
-                SelectedShape.StrokeWidth = DrawSettings.StrokeWidth;
             }
         }
 

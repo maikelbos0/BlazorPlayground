@@ -3,15 +3,7 @@ using System.Xml.Linq;
 
 namespace BlazorPlayground.Graphics {
     public abstract class Shape {
-        private int strokeWidth = DrawSettings.DefaultStrokeWidth;
         private int sides = DrawSettings.DefaultSides;
-
-        public IPaintServer Stroke { get; set; } = PaintManager.ParseColor(DrawSettings.DefaultStrokeColor);
-
-        public int StrokeWidth {
-            get => strokeWidth;
-            set => strokeWidth = Math.Max(value, DrawSettings.MinimumStrokeWidth);
-        }
 
         public Linecap StrokeLinecap { get; set; } = DrawSettings.DefaultStrokeLinecap;
 
@@ -58,8 +50,11 @@ namespace BlazorPlayground.Graphics {
                 cloneWithFill.SetFill(shapeWithFill.GetFill());
             }
 
-            clone.Stroke = Stroke;
-            clone.StrokeWidth = StrokeWidth;
+            if (this is IShapeWithStroke shapeWithStroke && clone is IShapeWithStroke cloneWithStroke) {
+                cloneWithStroke.SetStroke(shapeWithStroke.GetStroke());
+                cloneWithStroke.SetStrokeWidth(shapeWithStroke.GetStrokeWidth());
+            }
+
             clone.StrokeLinecap = StrokeLinecap;
             clone.StrokeLinejoin = StrokeLinejoin;
             clone.Sides = Sides;

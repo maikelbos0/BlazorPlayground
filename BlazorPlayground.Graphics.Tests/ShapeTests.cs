@@ -3,19 +3,6 @@
 namespace BlazorPlayground.Graphics.Tests {
     public class ShapeTests {
         [Theory]
-        [InlineData(-1, DrawSettings.MinimumStrokeWidth)]
-        [InlineData(DrawSettings.MinimumStrokeWidth - 1, DrawSettings.MinimumStrokeWidth)]
-        [InlineData(DrawSettings.MinimumStrokeWidth, DrawSettings.MinimumStrokeWidth)]
-        [InlineData(DrawSettings.MinimumStrokeWidth + 1, DrawSettings.MinimumStrokeWidth + 1)]
-        public void StrokeWidth(int strokeWidth, int expectedStrokeWidth) {
-            var shape = new Line(new Point(100, 150), new Point(200, 250)) {
-                StrokeWidth = strokeWidth
-            };
-
-            Assert.Equal(expectedStrokeWidth, shape.StrokeWidth);
-        }
-
-        [Theory]
         [InlineData(-1, DrawSettings.MinimumSides)]
         [InlineData(DrawSettings.MinimumSides - 1, DrawSettings.MinimumSides)]
         [InlineData(DrawSettings.MinimumSides, DrawSettings.MinimumSides)]
@@ -86,6 +73,17 @@ namespace BlazorPlayground.Graphics.Tests {
         }
 
         [Fact]
+        public void Clone_SetOpacity() {
+            var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250));
+
+            polygon.SetOpacity(50);
+
+            var result = polygon.Clone();
+
+            Assert.Equal(50, Assert.IsAssignableFrom<IShapeWithOpacity>(result).GetOpacity());
+        }
+
+        [Fact]
         public void Clone_SetFill() {
             var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250));
 
@@ -97,13 +95,33 @@ namespace BlazorPlayground.Graphics.Tests {
         }
 
         [Fact]
+        public void Clone_SetStroke() {
+            var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250));
+
+            polygon.SetStroke(new Color(255, 0, 255, 1));
+
+            var result = polygon.Clone();
+
+            PaintServerAssert.Equal(new Color(255, 0, 255, 1), Assert.IsAssignableFrom<IShapeWithStroke>(result).GetStroke());
+        }
+
+        [Fact]
+        public void Clone_SetStrokeWidth() {
+            var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250));
+
+            polygon.SetStrokeWidth(10);
+
+            var result = polygon.Clone();
+
+            Assert.Equal(10, Assert.IsAssignableFrom<IShapeWithStroke>(result).GetStrokeWidth());
+        }
+
+        [Fact]
         public void Clone() {
             var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250)) {
-                Stroke = new Color(0, 255, 0, 1),
                 Sides = 5,
                 StrokeLinecap = Linecap.Round,
                 StrokeLinejoin = Linejoin.Round,
-                StrokeWidth = 10
             };
 
             var result = polygon.Clone();
@@ -111,11 +129,9 @@ namespace BlazorPlayground.Graphics.Tests {
             Assert.NotSame(polygon, result);
 
             // TODO move to separate test per property
-            PaintServerAssert.Equal(new Color(0, 255, 0, 1), result.Stroke);
             Assert.Equal(5, result.Sides);
             Assert.Equal(Linecap.Round, result.StrokeLinecap);
             Assert.Equal(Linejoin.Round, result.StrokeLinejoin);
-            Assert.Equal(10, result.StrokeWidth);
         }
     }
 }
