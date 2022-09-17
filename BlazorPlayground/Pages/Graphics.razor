@@ -149,7 +149,7 @@
         <button type="button" class="btn btn-secondary" @onclick="() => Canvas.ApplyStrokeToSelectedShape()" disabled="@(Canvas.SelectedShape == null)">Apply</button>
     </fieldset>
 
-    <fieldset class="input-group mb-3 me-3" disabled="@(!Canvas.CurrentShapeDefinition.UseStrokeWidth)">
+    <fieldset class="input-group mb-3 me-3" disabled="@(!Canvas.CurrentShapeDefinition.UseStroke)">
         <div class="input-group-text">
             <label for="strokeWidth">Stroke width</label>
         </div>

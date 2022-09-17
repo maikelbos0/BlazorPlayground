@@ -28,7 +28,6 @@
         public bool UseOpacity { get; }
         public bool UseFill { get; }
         public bool UseStroke { get; }
-        public bool UseStrokeWidth { get; }
         public bool UseStrokeLinecap { get; }
         public bool UseStrokeLinejoin { get; }
         public bool UseSides { get; }

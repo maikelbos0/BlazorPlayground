@@ -31,7 +31,6 @@ namespace BlazorPlayground.Graphics.Tests {
             Assert.Null(ShapeDefinition.None.Type);
             Assert.False(ShapeDefinition.None.UseFill);
             Assert.False(ShapeDefinition.None.UseStroke);
-            Assert.False(ShapeDefinition.None.UseStrokeWidth);
             Assert.False(ShapeDefinition.None.UseStrokeLinejoin);
             Assert.False(ShapeDefinition.None.UseStrokeLinecap);
             Assert.False(ShapeDefinition.None.UseSides);
@@ -47,7 +46,6 @@ namespace BlazorPlayground.Graphics.Tests {
             Assert.Equal(typeof(Line), definition.Type);
             Assert.False(definition.UseFill);
             Assert.True(definition.UseStroke);
-            Assert.True(definition.UseStrokeWidth);
             Assert.False(definition.UseStrokeLinejoin);
             Assert.True(definition.UseStrokeLinecap);
             Assert.False(definition.UseSides);
@@ -66,7 +64,6 @@ namespace BlazorPlayground.Graphics.Tests {
             Assert.Equal(typeof(Rectangle), definition.Type);
             Assert.True(definition.UseFill);
             Assert.True(definition.UseStroke);
-            Assert.True(definition.UseStrokeWidth);
             Assert.True(definition.UseStrokeLinejoin);
             Assert.False(definition.UseStrokeLinecap);
             Assert.False(definition.UseSides);
@@ -85,7 +82,6 @@ namespace BlazorPlayground.Graphics.Tests {
             Assert.Equal(typeof(Circle), definition.Type);
             Assert.True(definition.UseFill);
             Assert.True(definition.UseStroke);
-            Assert.True(definition.UseStrokeWidth);
             Assert.False(definition.UseStrokeLinejoin);
             Assert.False(definition.UseStrokeLinecap);
             Assert.False(definition.UseSides);
@@ -104,7 +100,6 @@ namespace BlazorPlayground.Graphics.Tests {
             Assert.Equal(typeof(Ellipse), definition.Type);
             Assert.True(definition.UseFill);
             Assert.True(definition.UseStroke);
-            Assert.True(definition.UseStrokeWidth);
             Assert.False(definition.UseStrokeLinejoin);
             Assert.False(definition.UseStrokeLinecap);
             Assert.False(definition.UseSides);
@@ -123,7 +118,6 @@ namespace BlazorPlayground.Graphics.Tests {
             Assert.Equal(typeof(RegularPolygon), definition.Type);
             Assert.True(definition.UseFill);
             Assert.True(definition.UseStroke);
-            Assert.True(definition.UseStrokeWidth);
             Assert.True(definition.UseStrokeLinejoin);
             Assert.False(definition.UseStrokeLinecap);
             Assert.True(definition.UseSides);
@@ -142,7 +136,6 @@ namespace BlazorPlayground.Graphics.Tests {
             Assert.Equal(typeof(QuadraticBezier), definition.Type);
             Assert.True(definition.UseFill);
             Assert.True(definition.UseStroke);
-            Assert.True(definition.UseStrokeWidth);
             Assert.False(definition.UseStrokeLinejoin);
             Assert.True(definition.UseStrokeLinecap);
             Assert.False(definition.UseSides);
@@ -161,7 +154,6 @@ namespace BlazorPlayground.Graphics.Tests {
             Assert.Equal(typeof(CubicBezier), definition.Type);
             Assert.True(definition.UseFill);
             Assert.True(definition.UseStroke);
-            Assert.True(definition.UseStrokeWidth);
             Assert.False(definition.UseStrokeLinejoin);
             Assert.True(definition.UseStrokeLinecap);
             Assert.False(definition.UseSides);
@@ -180,7 +172,6 @@ namespace BlazorPlayground.Graphics.Tests {
             Assert.Equal(typeof(RawShape), definition.Type);
             Assert.False(definition.UseFill);
             Assert.False(definition.UseStroke);
-            Assert.False(definition.UseStrokeWidth);
             Assert.False(definition.UseStrokeLinejoin);
             Assert.False(definition.UseStrokeLinecap);
             Assert.False(definition.UseSides);
