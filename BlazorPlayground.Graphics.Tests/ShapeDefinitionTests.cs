@@ -29,6 +29,7 @@ namespace BlazorPlayground.Graphics.Tests {
         [Fact]
         public void None() {
             Assert.Null(ShapeDefinition.None.Type);
+            Assert.False(ShapeDefinition.None.UseOpacity);
             Assert.False(ShapeDefinition.None.UseFill);
             Assert.False(ShapeDefinition.None.UseStroke);
             Assert.False(ShapeDefinition.None.UseStrokeLinejoin);
@@ -44,6 +45,7 @@ namespace BlazorPlayground.Graphics.Tests {
             var definition = Assert.Single(ShapeDefinition.Values, d => d.Name == "Line");
 
             Assert.Equal(typeof(Line), definition.Type);
+            Assert.True(definition.UseOpacity);
             Assert.False(definition.UseFill);
             Assert.True(definition.UseStroke);
             Assert.False(definition.UseStrokeLinejoin);
@@ -62,6 +64,7 @@ namespace BlazorPlayground.Graphics.Tests {
             var definition = Assert.Single(ShapeDefinition.Values, d => d.Name == "Rectangle");
 
             Assert.Equal(typeof(Rectangle), definition.Type);
+            Assert.True(definition.UseOpacity);
             Assert.True(definition.UseFill);
             Assert.True(definition.UseStroke);
             Assert.True(definition.UseStrokeLinejoin);
@@ -80,6 +83,7 @@ namespace BlazorPlayground.Graphics.Tests {
             var definition = Assert.Single(ShapeDefinition.Values, d => d.Name == "Circle");
 
             Assert.Equal(typeof(Circle), definition.Type);
+            Assert.True(definition.UseOpacity);
             Assert.True(definition.UseFill);
             Assert.True(definition.UseStroke);
             Assert.False(definition.UseStrokeLinejoin);
@@ -98,6 +102,7 @@ namespace BlazorPlayground.Graphics.Tests {
             var definition = Assert.Single(ShapeDefinition.Values, d => d.Name == "Ellipse");
 
             Assert.Equal(typeof(Ellipse), definition.Type);
+            Assert.True(definition.UseOpacity);
             Assert.True(definition.UseFill);
             Assert.True(definition.UseStroke);
             Assert.False(definition.UseStrokeLinejoin);
@@ -116,6 +121,7 @@ namespace BlazorPlayground.Graphics.Tests {
             var definition = Assert.Single(ShapeDefinition.Values, d => d.Name == "Regular polygon");
 
             Assert.Equal(typeof(RegularPolygon), definition.Type);
+            Assert.True(definition.UseOpacity);
             Assert.True(definition.UseFill);
             Assert.True(definition.UseStroke);
             Assert.True(definition.UseStrokeLinejoin);
@@ -134,6 +140,7 @@ namespace BlazorPlayground.Graphics.Tests {
             var definition = Assert.Single(ShapeDefinition.Values, d => d.Name == "Quadratic bezier");
 
             Assert.Equal(typeof(QuadraticBezier), definition.Type);
+            Assert.True(definition.UseOpacity);
             Assert.True(definition.UseFill);
             Assert.True(definition.UseStroke);
             Assert.False(definition.UseStrokeLinejoin);
@@ -152,6 +159,7 @@ namespace BlazorPlayground.Graphics.Tests {
             var definition = Assert.Single(ShapeDefinition.Values, d => d.Name == "Cubic bezier");
 
             Assert.Equal(typeof(CubicBezier), definition.Type);
+            Assert.True(definition.UseOpacity);
             Assert.True(definition.UseFill);
             Assert.True(definition.UseStroke);
             Assert.False(definition.UseStrokeLinejoin);
@@ -170,6 +178,7 @@ namespace BlazorPlayground.Graphics.Tests {
             var definition = Assert.Single(ShapeDefinition.Values, d => d.Name == "Raw shape");
 
             Assert.Equal(typeof(RawShape), definition.Type);
+            Assert.False(definition.UseOpacity);
             Assert.False(definition.UseFill);
             Assert.False(definition.UseStroke);
             Assert.False(definition.UseStrokeLinejoin);
