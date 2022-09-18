@@ -15,26 +15,28 @@ namespace BlazorPlayground.Graphics {
 
             if (this is IShapeWithFill shapeWithFill) {
                 builder.AddAttribute(3, "fill", shapeWithFill.GetFill());
+                builder.AddAttribute(4, "fill-opacity", (shapeWithFill.GetFillOpacity() / 100.0).ToString(CultureInfo.InvariantCulture));
             }
 
             if (this is IShapeWithStroke shapeWithStroke) {
-                builder.AddAttribute(4, "stroke", shapeWithStroke.GetStroke());
-                builder.AddAttribute(5, "stroke-width", shapeWithStroke.GetStrokeWidth());
+                builder.AddAttribute(5, "stroke", shapeWithStroke.GetStroke());
+                builder.AddAttribute(6, "stroke-width", shapeWithStroke.GetStrokeWidth());
+                builder.AddAttribute(7, "stroke-opacity", (shapeWithStroke.GetStrokeOpacity() / 100.0).ToString(CultureInfo.InvariantCulture));
             }
 
             if (this is IShapeWithStrokeLinecap shapeWithStrokeLinecap) {
-                builder.AddAttribute(6, "stroke-linecap", shapeWithStrokeLinecap.GetStrokeLinecap().ToString().ToLower());
+                builder.AddAttribute(8, "stroke-linecap", shapeWithStrokeLinecap.GetStrokeLinecap().ToString().ToLower());
             }
 
             if (this is IShapeWithStrokeLinejoin shapeWithStrokeLinejoin) {
-                builder.AddAttribute(6, "stroke-linejoin", shapeWithStrokeLinejoin.GetStrokeLinejoin().ToString().ToLower());
+                builder.AddAttribute(9, "stroke-linejoin", shapeWithStrokeLinejoin.GetStrokeLinejoin().ToString().ToLower());
             }
-
-            builder.AddMultipleAttributes(8, GetAttributes());
+            
+            builder.AddMultipleAttributes(10, GetAttributes());
             builder.CloseElement();
 
-            builder.OpenElement(9, ElementName);
-            builder.AddAttribute(10, "class", "shape-selector");
+            builder.OpenElement(11, ElementName);
+            builder.AddAttribute(12, "class", "shape-selector");
             builder.AddAttribute(13, "stroke-width", 12);
             builder.AddMultipleAttributes(14, GetAttributes());
             builder.CloseElement();
@@ -51,11 +53,13 @@ namespace BlazorPlayground.Graphics {
 
             if (this is IShapeWithFill shapeWithFill) {
                 yield return new XAttribute("fill", shapeWithFill.GetFill());
+                yield return new XAttribute("fill-opacity", shapeWithFill.GetFillOpacity() / 100.0);
             }
 
             if (this is IShapeWithStroke shapeWithStroke) {
                 yield return new XAttribute("stroke", shapeWithStroke.GetStroke());
                 yield return new XAttribute("stroke-width", shapeWithStroke.GetStrokeWidth());
+                yield return new XAttribute("stroke-opacity", shapeWithStroke.GetStrokeOpacity() / 100.0);
             }
 
             if (this is IShapeWithStrokeLinecap shapeWithStrokeLinecap) {

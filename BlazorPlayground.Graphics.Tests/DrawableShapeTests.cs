@@ -41,6 +41,17 @@ namespace BlazorPlayground.Graphics.Tests {
         }
 
         [Fact]
+        public void CreateSvgElement_FillOpacity() {
+            var shape = new Rectangle(new Point(100, 200), new Point(150, 250));
+
+            shape.SetFillOpacity(50);
+
+            var result = shape.CreateSvgElement();
+
+            Assert.Equal("0.5", result.Attribute("fill-opacity")?.Value);
+        }
+
+        [Fact]
         public void CreateSvgElement_Stroke() {
             var shape = new Rectangle(new Point(100, 200), new Point(150, 250));
 
@@ -60,6 +71,17 @@ namespace BlazorPlayground.Graphics.Tests {
             var result = shape.CreateSvgElement();
 
             Assert.Equal("10", result.Attribute("stroke-width")?.Value);
+        }
+
+        [Fact]
+        public void CreateSvgElement_StrokeOpacity() {
+            var shape = new Rectangle(new Point(100, 200), new Point(150, 250));
+
+            shape.SetStrokeOpacity(50);
+
+            var result = shape.CreateSvgElement();
+
+            Assert.Equal("0.5", result.Attribute("stroke-opacity")?.Value);
         }
 
         [Fact]
