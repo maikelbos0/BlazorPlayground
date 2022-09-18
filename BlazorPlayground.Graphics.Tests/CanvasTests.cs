@@ -626,9 +626,6 @@ namespace BlazorPlayground.Graphics.Tests {
 
             PointAssert.Equal(new Point(150, 250), line.StartPoint);
             PointAssert.Equal(new Point(200, 300), line.EndPoint);
-
-            // TODO move to separate test per property
-            Assert.Equal(Linejoin.Round, shape!.StrokeLinejoin);
         }
 
         [Fact]
@@ -706,6 +703,21 @@ namespace BlazorPlayground.Graphics.Tests {
             var shape = canvas.CreateShape();
 
             Assert.Equal(Linecap.Square, Assert.IsAssignableFrom<IShapeWithStrokeLinecap>(shape).GetStrokeLinecap());
+        }
+
+        [Fact]
+        public void CreateShape_SetStrokeLinejoin() {
+            var canvas = new Canvas() {
+                CurrentShapeDefinition = ShapeDefinition.Get(typeof(Rectangle)),
+                StartPoint = new Point(150, 250),
+                EndPoint = new Point(200, 300)
+            };
+
+            canvas.DrawSettings.StrokeLinejoin = Linejoin.Arcs;
+
+            var shape = canvas.CreateShape();
+
+            Assert.Equal(Linejoin.Arcs, Assert.IsAssignableFrom<IShapeWithStrokeLinejoin>(shape).GetStrokeLinejoin());
         }
 
         [Fact]
@@ -910,7 +922,7 @@ namespace BlazorPlayground.Graphics.Tests {
 
             canvas.ApplyStrokeLinejoinToSelectedShape();
 
-            Assert.Equal(Linejoin.Round, canvas.SelectedShape.StrokeLinejoin);
+            Assert.Equal(Linejoin.Round, Assert.IsAssignableFrom<IShapeWithStrokeLinejoin>(canvas.SelectedShape).GetStrokeLinejoin());
         }
 
         [Fact]

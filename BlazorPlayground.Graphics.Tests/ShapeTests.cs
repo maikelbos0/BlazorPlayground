@@ -60,6 +60,15 @@ namespace BlazorPlayground.Graphics.Tests {
         }
 
         [Fact]
+        public void Clone() {
+            var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250));
+
+            var result = polygon.Clone();
+
+            Assert.NotSame(polygon, result);
+        }
+
+        [Fact]
         public void Clone_SetOpacity() {
             var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250));
 
@@ -115,6 +124,17 @@ namespace BlazorPlayground.Graphics.Tests {
         }
 
         [Fact]
+        public void Clone_SetStrokeLinejoin() {
+            var rectangle = new Rectangle(new Point(100, 150), new Point(200, 250));
+
+            rectangle.SetStrokeLinejoin(Linejoin.Arcs);
+
+            var result = rectangle.Clone();
+
+            Assert.Equal(Linejoin.Arcs, Assert.IsAssignableFrom<IShapeWithStrokeLinejoin>(result).GetStrokeLinejoin());
+        }
+
+        [Fact]
         public void Clone_SetSides() {
             var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250));
 
@@ -123,20 +143,6 @@ namespace BlazorPlayground.Graphics.Tests {
             var result = polygon.Clone();
 
             Assert.Equal(5, Assert.IsAssignableFrom<IShapeWithSides>(result).GetSides());
-        }
-
-        [Fact]
-        public void Clone() {
-            var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250)) {
-                StrokeLinejoin = Linejoin.Round,
-            };
-
-            var result = polygon.Clone();
-
-            Assert.NotSame(polygon, result);
-
-            // TODO move to separate test per property
-            Assert.Equal(Linejoin.Round, result.StrokeLinejoin);
         }
     }
 }

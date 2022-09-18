@@ -26,8 +26,8 @@ namespace BlazorPlayground.Graphics {
                 builder.AddAttribute(6, "stroke-linecap", shapeWithStrokeLinecap.GetStrokeLinecap().ToString().ToLower());
             }
 
-            if (Definition.UseStrokeLinejoin) {
-                builder.AddAttribute(7, "stroke-linejoin", StrokeLinejoin.ToString().ToLower());
+            if (this is IShapeWithStrokeLinejoin shapeWithStrokeLinejoin) {
+                builder.AddAttribute(6, "stroke-linejoin", shapeWithStrokeLinejoin.GetStrokeLinejoin().ToString().ToLower());
             }
 
             builder.AddMultipleAttributes(8, GetAttributes());
@@ -62,8 +62,8 @@ namespace BlazorPlayground.Graphics {
                 yield return new XAttribute("stroke-linecap", shapeWithStrokeLinecap.GetStrokeLinecap().ToString().ToLower());
             }
 
-            if (Definition.UseStrokeLinejoin) {
-                yield return new XAttribute("stroke-linejoin", StrokeLinejoin.ToString().ToLower());
+            if (this is IShapeWithStrokeLinejoin shapeWithStrokeLinejoin) {
+                yield return new XAttribute("stroke-linejoin", shapeWithStrokeLinejoin.GetStrokeLinejoin().ToString().ToLower());
             }
 
             foreach (var attribute in GetAttributes()) {

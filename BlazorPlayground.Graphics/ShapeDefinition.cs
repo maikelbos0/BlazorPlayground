@@ -4,10 +4,10 @@
 
         private readonly static Dictionary<Type, ShapeDefinition> definitions = new() {
             { typeof(Line), new(typeof(Line), "Line", (startPoint, endPoint) => new Line(startPoint, endPoint)) },
-            { typeof(Rectangle), new(typeof(Rectangle), "Rectangle", (startPoint, endPoint) => new Rectangle(startPoint, endPoint), useStrokeLinejoin: true) },
+            { typeof(Rectangle), new(typeof(Rectangle), "Rectangle", (startPoint, endPoint) => new Rectangle(startPoint, endPoint)) },
             { typeof(Circle), new(typeof(Circle), "Circle", (startPoint, endPoint) => new Circle(startPoint, endPoint)) },
             { typeof(Ellipse), new(typeof(Ellipse), "Ellipse", (startPoint, endPoint) => new Ellipse(startPoint, endPoint)) },
-            { typeof(RegularPolygon), new(typeof(RegularPolygon), "Regular polygon", (startPoint, endPoint) => new RegularPolygon(startPoint, endPoint), useStrokeLinejoin: true) },
+            { typeof(RegularPolygon), new(typeof(RegularPolygon), "Regular polygon", (startPoint, endPoint) => new RegularPolygon(startPoint, endPoint)) },
             { typeof(QuadraticBezier), new(typeof(QuadraticBezier), "Quadratic bezier", (startPoint, endPoint) => new QuadraticBezier(startPoint, endPoint), autoSelect: true) },
             { typeof(CubicBezier), new(typeof(CubicBezier), "Cubic bezier", (startPoint, endPoint) => new CubicBezier(startPoint, endPoint), autoSelect: true) },
             { typeof(RawShape), new(typeof(RawShape), "Raw shape") }
@@ -33,7 +33,7 @@
         public bool UseSides { get; }
         public bool AutoSelect { get; }
 
-        private ShapeDefinition(Type? type, string name, Constructor? construct = null, bool useStrokeLinejoin = false, bool autoSelect = false) {
+        private ShapeDefinition(Type? type, string name, Constructor? construct = null, bool autoSelect = false) {
             Type = type;
             Name = name;
             IsConstructable = construct != null;
@@ -42,7 +42,7 @@
             UseFill = typeof(IShapeWithFill).IsAssignableFrom(type);
             UseStroke = typeof(IShapeWithStroke).IsAssignableFrom(type);
             UseStrokeLinecap = typeof(IShapeWithStrokeLinecap).IsAssignableFrom(type);
-            UseStrokeLinejoin = useStrokeLinejoin;
+            UseStrokeLinejoin = typeof(IShapeWithStrokeLinejoin).IsAssignableFrom(type); ;
             UseSides = typeof(IShapeWithSides).IsAssignableFrom(type);
             AutoSelect = autoSelect;
         }

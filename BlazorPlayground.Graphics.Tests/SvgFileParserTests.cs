@@ -277,7 +277,7 @@ namespace BlazorPlayground.Graphics.Tests {
         public void Parse_Null_StrokeLinejoin() {
             var result = SvgFileParser.Parse(XElement.Parse("<rect fill=\"none\" stroke=\"#000000\" stroke-width=\"1\" x=\"250\" y=\"150\" width=\"100\" height=\"150\" data-shape-type=\"Rectangle\" data-shape-anchor-0=\"250,150\" data-shape-anchor-1=\"350,300\"/>"));
 
-            Assert.Equal(DrawSettings.DefaultStrokeLinejoin, result.StrokeLinejoin);
+            Assert.Equal(DrawSettings.DefaultStrokeLinejoin, Assert.IsAssignableFrom<IShapeWithStrokeLinejoin>(result).GetStrokeLinejoin());
         }
 
         [Theory]
@@ -293,7 +293,7 @@ namespace BlazorPlayground.Graphics.Tests {
         public void Parse_StrokeLinejoin(string strokeLinejoin, Linejoin expectedStrokeLinejoin) {
             var result = SvgFileParser.Parse(XElement.Parse($"<rect fill=\"none\" stroke=\"#000000\" stroke-width=\"1\" stroke-linejoin=\"{strokeLinejoin}\" x=\"250\" y=\"150\" width=\"100\" height=\"150\" data-shape-type=\"Rectangle\" data-shape-anchor-0=\"250,150\" data-shape-anchor-1=\"350,300\"/>"));
 
-            Assert.Equal(expectedStrokeLinejoin, result.StrokeLinejoin);
+            Assert.Equal(expectedStrokeLinejoin, Assert.IsAssignableFrom<IShapeWithStrokeLinejoin>(result).GetStrokeLinejoin());
         }
 
         [Fact]

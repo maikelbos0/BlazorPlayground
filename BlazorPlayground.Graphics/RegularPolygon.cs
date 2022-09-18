@@ -1,5 +1,5 @@
 ﻿namespace BlazorPlayground.Graphics {
-    public class RegularPolygon : DrawableShape, IShapeWithOpacity, IShapeWithFill, IShapeWithStroke, IShapeWithSides {
+    public class RegularPolygon : DrawableShape, IShapeWithOpacity, IShapeWithFill, IShapeWithStroke, IShapeWithSides, IShapeWithStrokeLinejoin {
         private readonly static Anchor[] anchors = new[] {
             new Anchor<RegularPolygon>(s => s.CenterPoint, (s, p) => s.CenterPoint = p),
             new Anchor<RegularPolygon>(s => s.RadiusPoint, (s, p) => s.RadiusPoint = p)
