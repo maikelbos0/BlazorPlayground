@@ -8,8 +8,6 @@ namespace BlazorPlayground {
 
     /*
      * TODO
-     * Add fill opacity
-     * Add stroke opacity
      * Add angle of shape
      */
 

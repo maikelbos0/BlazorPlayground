@@ -129,6 +129,20 @@
         <button type="button" class="btn btn-secondary" @onclick="() => Canvas.ApplyFillToSelectedShape()" disabled="@(Canvas.SelectedShape == null)">Apply</button>
     </fieldset>
 
+    <fieldset class="input-group mb-3 me-3" disabled="@(!Canvas.CurrentShapeDefinition.UseFill)">
+        <div class="input-group-text">
+            <label for="fillOpacity">Fill opacity</label>
+        </div>
+
+        <div class="input-group-text bg-white">
+            <input class="form-range" type="range" name="vol" min="@DrawSettings.MinimumOpacity" max="@DrawSettings.MaximumOpacity" step="1" @bind="Canvas.DrawSettings.FillOpacity" />
+        </div>
+
+        <input type="text" class="form-control" id="fillOpacity" @bind="Canvas.DrawSettings.FillOpacity" />
+
+        <button type="button" class="btn btn-secondary" @onclick="() => Canvas.ApplyFillOpacityToSelectedShape()" disabled="@(Canvas.SelectedShape == null)">Apply</button>
+    </fieldset>
+
     <fieldset class="input-group mb-3 me-3" disabled="@(!Canvas.CurrentShapeDefinition.UseStroke)">
         <div class="input-group-text">
             <label for="strokeColor">Stroke</label>
@@ -157,6 +171,20 @@
         <input type="text" class="form-control" id="strokeWidth" @bind-value="Canvas.DrawSettings.StrokeWidth" />
 
         <button type="button" class="btn btn-secondary" @onclick="() => Canvas.ApplyStrokeWidthToSelectedShape()" disabled="@(Canvas.SelectedShape == null)">Apply</button>
+    </fieldset>
+
+    <fieldset class="input-group mb-3 me-3" disabled="@(!Canvas.CurrentShapeDefinition.UseStroke)">
+        <div class="input-group-text">
+            <label for="strokeOpacity">Stroke opacity</label>
+        </div>
+
+        <div class="input-group-text bg-white">
+            <input class="form-range" type="range" name="vol" min="@DrawSettings.MinimumOpacity" max="@DrawSettings.MaximumOpacity" step="1" @bind="Canvas.DrawSettings.StrokeOpacity" />
+        </div>
+
+        <input type="text" class="form-control" id="strokeOpacity" @bind="Canvas.DrawSettings.StrokeOpacity" />
+
+        <button type="button" class="btn btn-secondary" @onclick="() => Canvas.ApplyStrokeOpacityToSelectedShape()" disabled="@(Canvas.SelectedShape == null)">Apply</button>
     </fieldset>
 
     <fieldset class="input-group mb-3 me-3" disabled="@(!Canvas.CurrentShapeDefinition.UseStrokeLinecap)">
