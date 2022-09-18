@@ -15,5 +15,19 @@ namespace BlazorPlayground.Graphics.Tests {
 
             Assert.Equal(expectedStrokeWidth, shape.GetStrokeWidth());
         }
+
+        [Theory]
+        [InlineData(DrawSettings.MinimumOpacity - 1, DrawSettings.MinimumOpacity)]
+        [InlineData(DrawSettings.MinimumOpacity, DrawSettings.MinimumOpacity)]
+        [InlineData(45, 45)]
+        [InlineData(DrawSettings.MaximumOpacity, DrawSettings.MaximumOpacity)]
+        [InlineData(DrawSettings.MaximumOpacity + 1, DrawSettings.MaximumOpacity)]
+        public void SetStrokeOpacity(int opacity, int expectedOpacity) {
+            var shape = Substitute.For<IShapeWithStroke>();
+
+            shape.SetStrokeOpacity(opacity);
+
+            Assert.Equal(expectedOpacity, shape.GetStrokeOpacity());
+        }
     }
 }
