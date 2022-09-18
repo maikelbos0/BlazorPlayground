@@ -175,7 +175,7 @@ namespace BlazorPlayground.Graphics {
             (shape as IShapeWithFill)?.SetFill(DrawSettings.FillPaintManager.Server);
             (shape as IShapeWithStroke)?.SetStroke(DrawSettings.StrokePaintManager.Server);
             (shape as IShapeWithStroke)?.SetStrokeWidth(DrawSettings.StrokeWidth);
-            shape.StrokeLinecap = DrawSettings.StrokeLinecap;
+            (shape as IShapeWithStrokeLinecap)?.SetStrokeLinecap(DrawSettings.StrokeLinecap);
             shape.StrokeLinejoin = DrawSettings.StrokeLinejoin;
             (shape as IShapeWithSides)?.SetSides(DrawSettings.Sides);
 
@@ -211,9 +211,7 @@ namespace BlazorPlayground.Graphics {
         }
 
         public void ApplyStrokeLinecapToSelectedShape() {
-            if (SelectedShape != null) {
-                SelectedShape.StrokeLinecap = DrawSettings.StrokeLinecap;
-            }
+            (SelectedShape as IShapeWithStrokeLinecap)?.SetStrokeLinecap(DrawSettings.StrokeLinecap);
         }
 
         public void ApplyStrokeLinejoinToSelectedShape() {

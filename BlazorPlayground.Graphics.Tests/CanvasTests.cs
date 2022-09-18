@@ -628,8 +628,7 @@ namespace BlazorPlayground.Graphics.Tests {
             PointAssert.Equal(new Point(200, 300), line.EndPoint);
 
             // TODO move to separate test per property
-            Assert.Equal(Linecap.Round, shape!.StrokeLinecap);
-            Assert.Equal(Linejoin.Round, shape.StrokeLinejoin);
+            Assert.Equal(Linejoin.Round, shape!.StrokeLinejoin);
         }
 
         [Fact]
@@ -692,6 +691,21 @@ namespace BlazorPlayground.Graphics.Tests {
             var shape = canvas.CreateShape();
 
             Assert.Equal(10, Assert.IsAssignableFrom<IShapeWithStroke>(shape).GetStrokeWidth());
+        }
+
+        [Fact]
+        public void CreateShape_SetStrokeLinecap() {
+            var canvas = new Canvas() {
+                CurrentShapeDefinition = ShapeDefinition.Get(typeof(Line)),
+                StartPoint = new Point(150, 250),
+                EndPoint = new Point(200, 300)
+            };
+
+            canvas.DrawSettings.StrokeLinecap = Linecap.Square;
+
+            var shape = canvas.CreateShape();
+
+            Assert.Equal(Linecap.Square, Assert.IsAssignableFrom<IShapeWithStrokeLinecap>(shape).GetStrokeLinecap());
         }
 
         [Fact]
@@ -883,7 +897,7 @@ namespace BlazorPlayground.Graphics.Tests {
 
             canvas.ApplyStrokeLinecapToSelectedShape();
 
-            Assert.Equal(Linecap.Round, canvas.SelectedShape.StrokeLinecap);
+            Assert.Equal(Linecap.Round, Assert.IsAssignableFrom<IShapeWithStrokeLinecap>(canvas.SelectedShape).GetStrokeLinecap());
         }
 
         [Fact]

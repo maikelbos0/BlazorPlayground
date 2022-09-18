@@ -3,13 +3,13 @@
         public delegate Shape Constructor(Point startPoint, Point endPoint);
 
         private readonly static Dictionary<Type, ShapeDefinition> definitions = new() {
-            { typeof(Line), new(typeof(Line), "Line", (startPoint, endPoint) => new Line(startPoint, endPoint), useStrokeLinecap: true) },
+            { typeof(Line), new(typeof(Line), "Line", (startPoint, endPoint) => new Line(startPoint, endPoint)) },
             { typeof(Rectangle), new(typeof(Rectangle), "Rectangle", (startPoint, endPoint) => new Rectangle(startPoint, endPoint), useStrokeLinejoin: true) },
             { typeof(Circle), new(typeof(Circle), "Circle", (startPoint, endPoint) => new Circle(startPoint, endPoint)) },
             { typeof(Ellipse), new(typeof(Ellipse), "Ellipse", (startPoint, endPoint) => new Ellipse(startPoint, endPoint)) },
             { typeof(RegularPolygon), new(typeof(RegularPolygon), "Regular polygon", (startPoint, endPoint) => new RegularPolygon(startPoint, endPoint), useStrokeLinejoin: true) },
-            { typeof(QuadraticBezier), new(typeof(QuadraticBezier), "Quadratic bezier", (startPoint, endPoint) => new QuadraticBezier(startPoint, endPoint), useStrokeLinecap: true, autoSelect: true) },
-            { typeof(CubicBezier), new(typeof(CubicBezier), "Cubic bezier", (startPoint, endPoint) => new CubicBezier(startPoint, endPoint), useStrokeLinecap: true, autoSelect: true) },
+            { typeof(QuadraticBezier), new(typeof(QuadraticBezier), "Quadratic bezier", (startPoint, endPoint) => new QuadraticBezier(startPoint, endPoint), autoSelect: true) },
+            { typeof(CubicBezier), new(typeof(CubicBezier), "Cubic bezier", (startPoint, endPoint) => new CubicBezier(startPoint, endPoint), autoSelect: true) },
             { typeof(RawShape), new(typeof(RawShape), "Raw shape") }
         };
 
@@ -33,7 +33,7 @@
         public bool UseSides { get; }
         public bool AutoSelect { get; }
 
-        private ShapeDefinition(Type? type, string name, Constructor? construct = null, bool useStrokeLinecap = false, bool useStrokeLinejoin = false, bool autoSelect = false) {
+        private ShapeDefinition(Type? type, string name, Constructor? construct = null, bool useStrokeLinejoin = false, bool autoSelect = false) {
             Type = type;
             Name = name;
             IsConstructable = construct != null;
@@ -41,7 +41,7 @@
             UseOpacity = typeof(IShapeWithOpacity).IsAssignableFrom(type);
             UseFill = typeof(IShapeWithFill).IsAssignableFrom(type);
             UseStroke = typeof(IShapeWithStroke).IsAssignableFrom(type);
-            UseStrokeLinecap = useStrokeLinecap;
+            UseStrokeLinecap = typeof(IShapeWithStrokeLinecap).IsAssignableFrom(type);
             UseStrokeLinejoin = useStrokeLinejoin;
             UseSides = typeof(IShapeWithSides).IsAssignableFrom(type);
             AutoSelect = autoSelect;

@@ -22,8 +22,8 @@ namespace BlazorPlayground.Graphics {
                 builder.AddAttribute(5, "stroke-width", shapeWithStroke.GetStrokeWidth());
             }
 
-            if (Definition.UseStrokeLinecap) {
-                builder.AddAttribute(6, "stroke-linecap", StrokeLinecap.ToString().ToLower());
+            if (this is IShapeWithStrokeLinecap shapeWithStrokeLinecap) {
+                builder.AddAttribute(6, "stroke-linecap", shapeWithStrokeLinecap.GetStrokeLinecap().ToString().ToLower());
             }
 
             if (Definition.UseStrokeLinejoin) {
@@ -35,15 +35,6 @@ namespace BlazorPlayground.Graphics {
 
             builder.OpenElement(9, ElementName);
             builder.AddAttribute(10, "class", "shape-selector");
-
-            if (Definition.UseStrokeLinecap) {
-                builder.AddAttribute(11, "stroke-linecap", StrokeLinecap.ToString().ToLower());
-            }
-
-            if (Definition.UseStrokeLinejoin) {
-                builder.AddAttribute(12, "stroke-linejoin", StrokeLinejoin.ToString().ToLower());
-            }
-
             builder.AddAttribute(13, "stroke-width", 12);
             builder.AddMultipleAttributes(14, GetAttributes());
             builder.CloseElement();
@@ -67,8 +58,8 @@ namespace BlazorPlayground.Graphics {
                 yield return new XAttribute("stroke-width", shapeWithStroke.GetStrokeWidth());
             }
 
-            if (Definition.UseStrokeLinecap) {
-                yield return new XAttribute("stroke-linecap", StrokeLinecap.ToString().ToLower());
+            if (this is IShapeWithStrokeLinecap shapeWithStrokeLinecap) {
+                yield return new XAttribute("stroke-linecap", shapeWithStrokeLinecap.GetStrokeLinecap().ToString().ToLower());
             }
 
             if (Definition.UseStrokeLinejoin) {

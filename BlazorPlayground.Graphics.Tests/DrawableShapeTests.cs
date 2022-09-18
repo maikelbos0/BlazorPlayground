@@ -62,11 +62,21 @@ namespace BlazorPlayground.Graphics.Tests {
             Assert.Equal("10", result.Attribute("stroke-width")?.Value);
         }
 
+        [Fact]
+        public void CreateSvgElement_StrokeLinecap() {
+            var shape = new Line(new Point(100, 200), new Point(150, 250));
+
+            shape.SetStrokeLinecap(Linecap.Square);
+
+            var result = shape.CreateSvgElement();
+
+            Assert.Equal("square", result.Attribute("stroke-linecap")?.Value);
+        }
+
         // TODO move to separate test per property
         [Fact]
         public void CreateSvgElement_Line() {
             var shape = new Line(new Point(100, 200), new Point(150, 250)) {
-                StrokeLinecap = Linecap.Round,
                 StrokeLinejoin = Linejoin.Arcs
             };
 
@@ -77,7 +87,6 @@ namespace BlazorPlayground.Graphics.Tests {
             Assert.Equal("200", result.Attribute("y1")?.Value);
             Assert.Equal("150", result.Attribute("x2")?.Value);
             Assert.Equal("250", result.Attribute("y2")?.Value);
-            Assert.Equal("round", result.Attribute("stroke-linecap")?.Value);
             Assert.Equal("Line", result.Attribute("data-shape-type")?.Value);
             Assert.Equal("100,200", result.Attribute("data-shape-anchor-0")?.Value);
             Assert.Equal("150,250", result.Attribute("data-shape-anchor-1")?.Value);

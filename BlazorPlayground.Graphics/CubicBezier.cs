@@ -1,5 +1,5 @@
 ﻿namespace BlazorPlayground.Graphics {
-    public class CubicBezier : DrawableShape, IShapeWithOpacity, IShapeWithFill, IShapeWithStroke {
+    public class CubicBezier : DrawableShape, IShapeWithOpacity, IShapeWithFill, IShapeWithStroke, IShapeWithStrokeLinecap {
         private readonly static Anchor[] anchors = new[] {
             new Anchor<CubicBezier>(s => s.StartPoint, (s, p) => s.StartPoint = p),
             new Anchor<CubicBezier>(s => s.ControlPoint1, (s, p) => s.ControlPoint1 = p),

@@ -104,6 +104,17 @@ namespace BlazorPlayground.Graphics.Tests {
         }
 
         [Fact]
+        public void Clone_SetStrokeLinecap() {
+            var line = new Line(new Point(100, 150), new Point(200, 250));
+
+            line.SetStrokeLinecap(Linecap.Square);
+
+            var result = line.Clone();
+
+            Assert.Equal(Linecap.Square, Assert.IsAssignableFrom<IShapeWithStrokeLinecap>(result).GetStrokeLinecap());
+        }
+
+        [Fact]
         public void Clone_SetSides() {
             var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250));
 
@@ -117,7 +128,6 @@ namespace BlazorPlayground.Graphics.Tests {
         [Fact]
         public void Clone() {
             var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250)) {
-                StrokeLinecap = Linecap.Round,
                 StrokeLinejoin = Linejoin.Round,
             };
 
@@ -126,7 +136,6 @@ namespace BlazorPlayground.Graphics.Tests {
             Assert.NotSame(polygon, result);
 
             // TODO move to separate test per property
-            Assert.Equal(Linecap.Round, result.StrokeLinecap);
             Assert.Equal(Linejoin.Round, result.StrokeLinejoin);
         }
     }

@@ -30,7 +30,7 @@ namespace BlazorPlayground.Graphics {
                 (shape as IShapeWithFill)?.SetFill(ParsePaintServer(element.Attribute("fill")?.Value));
                 (shape as IShapeWithStroke)?.SetStroke(ParsePaintServer(element.Attribute("stroke")?.Value));
                 (shape as IShapeWithStroke)?.SetStrokeWidth(ParseDimension(element.Attribute("stroke-width")?.Value, DrawSettings.MinimumStrokeWidth, DrawSettings.DefaultStrokeWidth));
-                shape.StrokeLinecap = ParseEnum(element.Attribute("stroke-linecap")?.Value, DrawSettings.DefaultStrokeLinecap);
+                (shape as IShapeWithStrokeLinecap)?.SetStrokeLinecap(ParseEnum(element.Attribute("stroke-linecap")?.Value, DrawSettings.DefaultStrokeLinecap));
                 shape.StrokeLinejoin = ParseEnum(element.Attribute("stroke-linejoin")?.Value, DrawSettings.DefaultStrokeLinejoin);
                 (shape as IShapeWithSides)?.SetSides(ParseDimension(element.Attribute("data-shape-sides")?.Value, DrawSettings.MinimumSides, DrawSettings.DefaultSides));
 

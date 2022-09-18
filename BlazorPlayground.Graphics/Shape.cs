@@ -3,8 +3,6 @@ using System.Xml.Linq;
 
 namespace BlazorPlayground.Graphics {
     public abstract class Shape {
-        public Linecap StrokeLinecap { get; set; } = DrawSettings.DefaultStrokeLinecap;
-
         public Linejoin StrokeLinejoin { get; set; } = DrawSettings.DefaultStrokeLinejoin;
 
         public ShapeDefinition Definition => ShapeDefinition.Get(this);
@@ -48,7 +46,10 @@ namespace BlazorPlayground.Graphics {
                 cloneWithStroke.SetStrokeWidth(shapeWithStroke.GetStrokeWidth());
             }
 
-            clone.StrokeLinecap = StrokeLinecap;
+            if (this is IShapeWithStrokeLinecap shapeWithStrokeLinecap && clone is IShapeWithStrokeLinecap cloneWithStrokeLinecap) {
+                cloneWithStrokeLinecap.SetStrokeLinecap(shapeWithStrokeLinecap.GetStrokeLinecap());
+            }
+
             clone.StrokeLinejoin = StrokeLinejoin;
 
             if (this is IShapeWithSides shapeWithSides && clone is IShapeWithSides cloneWithSides) {
