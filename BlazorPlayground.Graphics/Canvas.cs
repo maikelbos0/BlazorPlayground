@@ -173,8 +173,10 @@ namespace BlazorPlayground.Graphics {
 
             (shape as IShapeWithOpacity)?.SetOpacity(DrawSettings.Opacity);
             (shape as IShapeWithFill)?.SetFill(DrawSettings.FillPaintManager.Server);
+            (shape as IShapeWithFill)?.SetFillOpacity(DrawSettings.FillOpacity);
             (shape as IShapeWithStroke)?.SetStroke(DrawSettings.StrokePaintManager.Server);
             (shape as IShapeWithStroke)?.SetStrokeWidth(DrawSettings.StrokeWidth);
+            (shape as IShapeWithStroke)?.SetStrokeOpacity(DrawSettings.StrokeOpacity);
             (shape as IShapeWithStrokeLinecap)?.SetStrokeLinecap(DrawSettings.StrokeLinecap);
             (shape as IShapeWithStrokeLinejoin)?.SetStrokeLinejoin(DrawSettings.StrokeLinejoin);
             (shape as IShapeWithSides)?.SetSides(DrawSettings.Sides);
@@ -202,12 +204,20 @@ namespace BlazorPlayground.Graphics {
             (SelectedShape as IShapeWithFill)?.SetFill(DrawSettings.FillPaintManager.Server);
         }
 
+        public void ApplyFillOpacityToSelectedShape() {
+            (SelectedShape as IShapeWithFill)?.SetFillOpacity(DrawSettings.FillOpacity);
+        }
+
         public void ApplyStrokeToSelectedShape() {
             (SelectedShape as IShapeWithStroke)?.SetStroke(DrawSettings.StrokePaintManager.Server);
         }
 
         public void ApplyStrokeWidthToSelectedShape() {
             (SelectedShape as IShapeWithStroke)?.SetStrokeWidth(DrawSettings.StrokeWidth);
+        }
+
+        public void ApplyStrokeOpacityToSelectedShape() {
+            (SelectedShape as IShapeWithStroke)?.SetStrokeOpacity(DrawSettings.StrokeOpacity);
         }
 
         public void ApplyStrokeLinecapToSelectedShape() {
