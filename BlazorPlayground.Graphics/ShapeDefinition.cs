@@ -8,8 +8,8 @@
             { typeof(Circle), new(typeof(Circle), "Circle", (startPoint, endPoint) => new Circle(startPoint, endPoint)) },
             { typeof(Ellipse), new(typeof(Ellipse), "Ellipse", (startPoint, endPoint) => new Ellipse(startPoint, endPoint)) },
             { typeof(RegularPolygon), new(typeof(RegularPolygon), "Regular polygon", (startPoint, endPoint) => new RegularPolygon(startPoint, endPoint)) },
-            { typeof(QuadraticBezier), new(typeof(QuadraticBezier), "Quadratic bezier", (startPoint, endPoint) => new QuadraticBezier(startPoint, endPoint), autoSelect: true) },
-            { typeof(CubicBezier), new(typeof(CubicBezier), "Cubic bezier", (startPoint, endPoint) => new CubicBezier(startPoint, endPoint), autoSelect: true) },
+            { typeof(QuadraticBezier), new(typeof(QuadraticBezier), "Quadratic bezier", (startPoint, endPoint) => new QuadraticBezier(startPoint, endPoint)) },
+            { typeof(CubicBezier), new(typeof(CubicBezier), "Cubic bezier", (startPoint, endPoint) => new CubicBezier(startPoint, endPoint)) },
             { typeof(RawShape), new(typeof(RawShape), "Raw shape") }
         };
 
@@ -33,7 +33,7 @@
         public bool UseSides { get; }
         public bool AutoSelect { get; }
 
-        private ShapeDefinition(Type? type, string name, Constructor? construct = null, bool autoSelect = false) {
+        private ShapeDefinition(Type? type, string name, Constructor? construct = null) {
             Type = type;
             Name = name;
             IsConstructable = construct != null;
@@ -44,7 +44,7 @@
             UseStrokeLinecap = typeof(IShapeWithStrokeLinecap).IsAssignableFrom(type);
             UseStrokeLinejoin = typeof(IShapeWithStrokeLinejoin).IsAssignableFrom(type); ;
             UseSides = typeof(IShapeWithSides).IsAssignableFrom(type);
-            AutoSelect = autoSelect;
+            AutoSelect = typeof(IAutoSelectedShape).IsAssignableFrom(type);
         }
     }
 }
