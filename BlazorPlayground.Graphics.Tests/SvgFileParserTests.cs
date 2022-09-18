@@ -213,6 +213,19 @@ namespace BlazorPlayground.Graphics.Tests {
             Assert.Equal(PaintServer.None, Assert.IsAssignableFrom<IShapeWithFill>(result).GetFill());
         }
 
+        [Theory]
+        [InlineData("0", DrawSettings.MinimumOpacity)]
+        [InlineData("-0.01", DrawSettings.DefaultOpacity)]
+        [InlineData("foo", DrawSettings.DefaultOpacity)]
+        [InlineData("1", DrawSettings.MaximumOpacity)]
+        [InlineData("1.01", DrawSettings.DefaultOpacity)]
+        [InlineData("0.45", 45)]
+        public void Parse_FillOpacity(string fillOpacity, int expectedFillOpacity) {
+            var result = SvgFileParser.Parse(XElement.Parse($"<ellipse opacity=\"1\" fill=\"#ffff00\" fill-opacity=\"{fillOpacity}\" stroke=\"#ffff00\" stroke-width=\"1\" cx=\"250\" cy=\"150\" rx=\"100\" ry=\"50\" data-shape-type=\"Ellipse\" data-shape-anchor-0=\"250,150\" data-shape-anchor-1=\"350,200\"/>"));
+
+            Assert.Equal(expectedFillOpacity, Assert.IsAssignableFrom<IShapeWithFill>(result).GetFillOpacity());
+        }
+
         [Fact]
         public void Parse_Stroke_None() {
             var result = SvgFileParser.Parse(XElement.Parse("<ellipse fill=\"none\" stroke=\"none\" stroke-width=\"1\" cx=\"250\" cy=\"150\" rx=\"100\" ry=\"50\" data-shape-type=\"Ellipse\" data-shape-anchor-0=\"250,150\" data-shape-anchor-1=\"350,200\"/>"));
@@ -252,6 +265,19 @@ namespace BlazorPlayground.Graphics.Tests {
             Assert.Equal(expectedStrokeWidth, Assert.IsAssignableFrom<IShapeWithStroke>(result).GetStrokeWidth());
         }
 
+        [Theory]
+        [InlineData("0", DrawSettings.MinimumOpacity)]
+        [InlineData("-0.01", DrawSettings.DefaultOpacity)]
+        [InlineData("foo", DrawSettings.DefaultOpacity)]
+        [InlineData("1", DrawSettings.MaximumOpacity)]
+        [InlineData("1.01", DrawSettings.DefaultOpacity)]
+        [InlineData("0.45", 45)]
+        public void Parse_StrokeOpacity(string strokeOpacity, int expectedStrokeOpacity) {
+            var result = SvgFileParser.Parse(XElement.Parse($"<ellipse opacity=\"1\" fill=\"#ffff00\" stroke=\"#ffff00\" stroke-width=\"1\" stroke-opacity=\"{strokeOpacity}\" cx=\"250\" cy=\"150\" rx=\"100\" ry=\"50\" data-shape-type=\"Ellipse\" data-shape-anchor-0=\"250,150\" data-shape-anchor-1=\"350,200\"/>"));
+
+            Assert.Equal(expectedStrokeOpacity, Assert.IsAssignableFrom<IShapeWithStroke>(result).GetStrokeOpacity());
+        }
+
         [Fact]
         public void Parse_Null_StrokeLinecap() {
             var result = SvgFileParser.Parse(XElement.Parse("<line stroke=\"#000000\" stroke-width=\"1\" x1=\"50\" y1=\"50\" x2=\"150\" y2=\"100\" data-shape-type=\"Line\" data-shape-anchor-0=\"50,50\" data-shape-anchor-1=\"150,100\"/>"));
@@ -279,7 +305,7 @@ namespace BlazorPlayground.Graphics.Tests {
 
             Assert.Equal(DrawSettings.DefaultStrokeLinejoin, Assert.IsAssignableFrom<IShapeWithStrokeLinejoin>(result).GetStrokeLinejoin());
         }
-
+        // TODO add stroke/fill opacity
         [Theory]
         [InlineData("", DrawSettings.DefaultStrokeLinejoin)]
         [InlineData("foo", DrawSettings.DefaultStrokeLinejoin)]
