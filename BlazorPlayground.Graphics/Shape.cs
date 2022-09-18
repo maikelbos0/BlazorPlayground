@@ -37,11 +37,13 @@ namespace BlazorPlayground.Graphics {
 
             if (this is IShapeWithFill shapeWithFill && clone is IShapeWithFill cloneWithFill) {
                 cloneWithFill.SetFill(shapeWithFill.GetFill());
+                cloneWithFill.SetFillOpacity(shapeWithFill.GetFillOpacity());
             }
 
             if (this is IShapeWithStroke shapeWithStroke && clone is IShapeWithStroke cloneWithStroke) {
                 cloneWithStroke.SetStroke(shapeWithStroke.GetStroke());
                 cloneWithStroke.SetStrokeWidth(shapeWithStroke.GetStrokeWidth());
+                cloneWithStroke.SetStrokeOpacity(shapeWithStroke.GetStrokeOpacity());
             }
 
             if (this is IShapeWithStrokeLinecap shapeWithStrokeLinecap && clone is IShapeWithStrokeLinecap cloneWithStrokeLinecap) {
