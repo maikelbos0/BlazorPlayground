@@ -13,6 +13,8 @@
         public const int MinimumSides = 3;
 
         private int opacity = DefaultOpacity;
+        private int fillOpacity = DefaultOpacity;
+        private int strokeOpacity = DefaultOpacity;
         private int strokeWidth = DefaultStrokeWidth;
         private int sides = DefaultSides;
 
@@ -23,11 +25,21 @@
 
         public PaintManager FillPaintManager { get; set; } = new PaintManager() { Mode = PaintMode.None, ColorValue = DefaultFillColor };
 
+        public int FillOpacity {
+            get => fillOpacity;
+            set => fillOpacity = Math.Max(Math.Min(value, MaximumOpacity), MinimumOpacity);
+        }
+
         public PaintManager StrokePaintManager { get; set; } = new PaintManager() { Mode = PaintMode.Color, ColorValue = DefaultStrokeColor };
 
         public int StrokeWidth {
             get => strokeWidth;
             set => strokeWidth = Math.Max(value, MinimumStrokeWidth);
+        }
+
+        public int StrokeOpacity {
+            get => strokeOpacity;
+            set => strokeOpacity = Math.Max(Math.Min(value, MaximumOpacity), MinimumOpacity);
         }
 
         public Linecap StrokeLinecap { get; set; } = DefaultStrokeLinecap;
