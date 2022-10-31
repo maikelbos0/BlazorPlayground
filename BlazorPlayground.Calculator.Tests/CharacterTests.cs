@@ -22,7 +22,7 @@ namespace BlazorPlayground.Calculator.Tests {
                     Symbol = new NegationOperator(){
                         Symbol = number
                     }
-                }                
+                }
             };
 
             Assert.True(character.TryAppendTo(symbols));

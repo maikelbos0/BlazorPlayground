@@ -9,6 +9,7 @@
             '−' => new SubtractionOperator(character),
             '+' => new AdditionOperator(character),
             '±' => new NegationOperator(),
+            '⁻' => new ReciprocalOperator(),
             '|' => new AbsoluteOperator(),
             '²' => new SquareOperator(),
             '√' => new SquareRootOperator(),
