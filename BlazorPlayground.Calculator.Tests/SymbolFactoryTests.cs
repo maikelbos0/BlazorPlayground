@@ -12,6 +12,7 @@ namespace BlazorPlayground.Calculator.Tests {
         [InlineData('−', typeof(SubtractionOperator))]
         [InlineData('+', typeof(AdditionOperator))]
         [InlineData('±', typeof(NegationOperator))]
+        [InlineData('|', typeof(AbsoluteOperator))]
         [InlineData('²', typeof(SquareOperator))]
         [InlineData('√', typeof(SquareRootOperator))]
         [InlineData('π', typeof(Pi))]
