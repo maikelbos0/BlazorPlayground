@@ -11,6 +11,7 @@
             '±' => new NegationOperator(),
             '⁻' => new ReciprocalOperator(),
             '|' => new AbsoluteOperator(),
+            '%' => new ModulusOperator(character),
             '²' => new SquareOperator(),
             '√' => new SquareRootOperator(),
             'π' => new Pi(),
