@@ -2,10 +2,28 @@
 
 <h1>Chart</h1>
 
-<div>
-    <button @onclick="AddDataSeries">Add data series</button>
-    <button @onclick="AddDataPoint">Add data point</button>
-    <button @onclick="GenerateData">Generate data</button>
+<div class="btn-toolbar">
+    <fieldset class="btn-group mb-3 me-3">
+        <button type="button" class="btn btn-secondary" @onclick="AddDataSeries">Add data series</button>
+        <button type="button" class="btn btn-secondary" @onclick="AddDataPoint">Add data point</button>
+        <button type="button" class="btn btn-secondary" @onclick="GenerateData">Generate data</button>
+    </fieldset>
+
+    <fieldset class="input-group mb-3 me-3">
+        <div class="input-group-text">
+            <label for="canvasWidth">Canvas width</label>
+        </div>
+
+        <input type="text" class="form-control" id="canvasWidth" @bind-value="CanvasWidth" />
+    </fieldset>
+
+    <fieldset class="input-group mb-3 me-3">
+        <div class="input-group-text">
+            <label for="canvasHeight">Canvas height</label>
+        </div>
+
+        <input type="text" class="form-control" id="canvasHeight" @bind-value="CanvasHeight" />
+    </fieldset>
 </div>
 
 <table>
@@ -16,7 +34,7 @@
             var y = y0;
 
             <th>
-                <input type="text" @bind-value="DataSeriesNames[y]" />
+                <input type="text" class="form-control" @bind-value="DataSeriesNames[y]" />
             </th>
         }
     </tr>
@@ -26,14 +44,14 @@
 
         <tr>
             <th>
-                <input type="text" @bind-value="Labels[x]" />
+                <input type="text" class="form-control" @bind-value="Labels[x]" />
             </th>
 
             @for (var y0 = 0; y0 < DataSeries.Count; y0++) {
                 var y = y0;
 
                 <td>
-                    <input type="text" @bind-value="DataSeries[y][x]" />
+                    <input type="text" class="form-control" @bind-value="DataSeries[y][x]" />
                 </td>
             }
         </tr>
@@ -41,6 +59,9 @@
 </table>
 
 @code {
+    private int CanvasWidth { get; set; } = 1200;
+    private int CanvasHeight { get; set; } = 600;
+
     private List<string> Labels { get; set; } = new List<string>();
     private List<string> DataSeriesNames { get; set; } = new List<string>();
     private List<List<double?>> DataSeries { get; set; } = new List<List<double?>>();
