@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorPlayground.Calculator
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorPlayground.Graphics", "BlazorPlayground.Graphics\BlazorPlayground.Graphics.csproj", "{370DB296-7F62-48CD-AD4B-F4F9680FF5CF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorPlayground.Graphics.Tests", "BlazorPlayground.Graphics.Tests\BlazorPlayground.Graphics.Tests.csproj", "{E363B001-C287-41A5-B3CF-3D261074967A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorPlayground.Graphics.Tests", "BlazorPlayground.Graphics.Tests\BlazorPlayground.Graphics.Tests.csproj", "{E363B001-C287-41A5-B3CF-3D261074967A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

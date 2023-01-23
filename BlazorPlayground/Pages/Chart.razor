@@ -1,0 +1,71 @@
+﻿@page "/chart"
+
+<h1>Chart</h1>
+
+<table>
+    <tr>
+        <th></th>
+
+        @for (var y0 = 0; y0 < DataSeriesNames.Count; y0++) {
+            var y = y0;
+            
+            <th>
+                <input type="text" @bind-value="DataSeriesNames[y]" />
+            </th>
+        }
+
+        <th>
+            <button @onclick="AddDataSeries">+</button>
+        </th>
+    </tr>
+
+    @for (var x0 = 0; x0 < Labels.Count; x0++) {
+        var x = x0;
+
+        <tr>
+            <th>
+                <input type="text" @bind-value="Labels[x]" />
+            </th>
+
+            @for (var y0 = 0; y0 < DataSeries.Count; y0++) {
+                var y = y0;
+
+                <td>
+                    <input type="text" @bind-value="DataSeries[y][x]" />
+                </td>
+            }
+        </tr>
+    }
+
+    <tr>
+        <th>
+            <button @onclick="AddDataPoint">+</button>
+        </th>
+    </tr>
+</table>
+
+@code {
+    private List<string> Labels { get; set; } = new List<string>();
+    private List<string> DataSeriesNames { get; set; } = new List<string>();
+    private List<List<double?>> DataSeries { get; set; } = new List<List<double?>>();
+
+    protected override void OnInitialized() {
+        base.OnInitialized();
+
+        Labels.Add("");
+        DataSeriesNames.Add("");
+        DataSeries.Add(new List<double?>() { null });
+    }
+
+    private void AddDataSeries() {
+        DataSeriesNames.Add("");
+        DataSeries.Add(Enumerable.Range(0, Labels.Count).Select(i => (double?)null).ToList());
+    }
+
+    private void AddDataPoint() {
+        Labels.Add("");
+        foreach (var dataSeries in DataSeries) {
+            dataSeries.Add(null);
+        }
+    }
+}
