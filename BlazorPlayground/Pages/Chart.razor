@@ -24,6 +24,34 @@
 
         <input type="text" class="form-control" id="canvasHeight" @bind-value="CanvasHeight" />
     </fieldset>
+
+    <fieldset class="input-group mb-3 me-3">
+        <div class="input-group-text">
+            <label for="canvasHeight">Canvas height</label>
+        </div>
+
+        <input type="text" class="form-control" id="canvasHeight" @bind-value="CanvasHeight" />
+    </fieldset>
+
+    <fieldset class="input-group mb-3 me-3">
+        <div class="input-group-text">
+            <label for="canvasHeight">Canvas height</label>
+        </div>
+
+        <input type="text" class="form-control" id="canvasHeight" @bind-value="CanvasHeight" />
+    </fieldset>
+
+    <fieldset class="input-group mb-3 me-3">
+        <div class="input-group-text">
+            <label for="canvasHeight">Chart area</label>
+        </div>
+
+        <input type="text" class="form-control" id="canvasHeight" @bind-value="ChartAreaMin" />
+
+        <input type="text" class="form-control" id="canvasHeight" @bind-value="ChartAreaMax" />
+
+        <button type="button" class="btn btn-secondary" @onclick="CalculateChartArea">Calculate</button>
+    </fieldset>
 </div>
 
 <table>
@@ -59,24 +87,29 @@
 </table>
 
 @code {
+    private const int DefaultChartAreaMin = -100;
+    private const int DefaultChartAreaMax = 1000;
+
     private int CanvasWidth { get; set; } = 1200;
     private int CanvasHeight { get; set; } = 600;
+    private decimal ChartAreaMin { get; set; } = DefaultChartAreaMin;
+    private decimal ChartAreaMax { get; set; } = DefaultChartAreaMax;
 
     private List<string> Labels { get; set; } = new List<string>();
     private List<string> DataSeriesNames { get; set; } = new List<string>();
-    private List<List<double?>> DataSeries { get; set; } = new List<List<double?>>();
+    private List<List<decimal?>> DataSeries { get; set; } = new List<List<decimal?>>();
 
     protected override void OnInitialized() {
         base.OnInitialized();
 
         Labels.Add("");
         DataSeriesNames.Add("");
-        DataSeries.Add(new List<double?>() { null });
+        DataSeries.Add(new List<decimal?>() { null });
     }
 
     private void AddDataSeries() {
         DataSeriesNames.Add("");
-        DataSeries.Add(Enumerable.Range(0, Labels.Count).Select(i => (double?)null).ToList());
+        DataSeries.Add(Enumerable.Range(0, Labels.Count).Select(i => (decimal?)null).ToList());
     }
 
     private void AddDataPoint() {
@@ -105,6 +138,23 @@
             if (string.IsNullOrWhiteSpace(DataSeriesNames[y])) {
                 DataSeriesNames[y] = $"Series {y + 1}";
             }
+        }
+    }
+
+    private void CalculateChartArea() {
+        var data = DataSeries.SelectMany(s => s).Where(d => d != null);
+
+        if (data.Any()) {
+            var min = (int)data.Min();
+            var max = (int)data.Max();
+            var delta = Math.Max(Math.Abs(max / 10), max - min);
+
+            ChartAreaMin = min - delta / 10;
+            ChartAreaMax = max + delta / 10;
+        }
+        else {
+            ChartAreaMin = DefaultChartAreaMin;
+            ChartAreaMax = DefaultChartAreaMax;
         }
     }
 }
