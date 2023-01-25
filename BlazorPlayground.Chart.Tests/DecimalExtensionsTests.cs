@@ -25,4 +25,19 @@ public class DecimalExtensionsTests {
     public void CeilingToScale(decimal value, decimal scale, decimal expectedValue) {
         Assert.Equal(expectedValue, value.CeilingToScale(scale));
     }
+    
+    [Theory]
+    [InlineData(0.05, 0.45, 0.1)]
+    [InlineData(0.5, 4.5, 1)]
+    [InlineData(0, 5, 1)]
+    [InlineData(0, 5.1, 2)]
+    [InlineData(1, 9, 2)]
+    [InlineData(0, 10, 2)]
+    [InlineData(-0.1, 10, 5)]
+    [InlineData(1, 24, 5)]
+    [InlineData(0, 25, 5)]
+    [InlineData(0, 26, 10)]
+    public void GetScale(decimal min, decimal max, decimal expectedScale) {
+        Assert.Equal(expectedScale, DecimalExtensions.GetScale(min, max));
+    }
 }
