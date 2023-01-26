@@ -43,13 +43,25 @@
     </fieldset>
 
     <fieldset class="input-group mb-3 me-3">
+        <div class="input-group-text">Chart range</div>
+        
         <div class="input-group-text">
-            <label for="canvasHeight">Chart area</label>
+            <label for="chartAreaMin">Min</label>
         </div>
 
-        <input type="text" class="form-control" id="canvasHeight" @bind-value="ChartAreaMin" />
+        <input type="text" class="form-control" id="chartAreaMin" @bind-value="ChartAreaMin" />
 
-        <input type="text" class="form-control" id="canvasHeight" @bind-value="ChartAreaMax" />
+        <div class="input-group-text">
+            <label for="chartAreaMax">Max</label>
+        </div>
+
+        <input type="text" class="form-control" id="chartAreaMax" @bind-value="ChartAreaMax" />
+
+        <div class="input-group-text">
+            <label for="chartAreaScale">Scale</label>
+        </div>
+
+        <input type="text" class="form-control" id="chartAreaScale" @bind-value="ChartAreaScale" />
 
         <button type="button" class="btn btn-secondary" @onclick="CalculateChartArea">Calculate</button>
     </fieldset>
@@ -89,11 +101,14 @@
 
 @code {
     private const int DefaultChartAreaMin = -200;
+    private const int DefaultChartAreaScale = 200;
     private const int DefaultChartAreaMax = 1000;
 
     private int CanvasWidth { get; set; } = 1200;
     private int CanvasHeight { get; set; } = 600;
+    // TODO figure out names here
     private double ChartAreaMin { get; set; } = DefaultChartAreaMin;
+    private double ChartAreaScale { get; set; } = DefaultChartAreaScale;
     private double ChartAreaMax { get; set; } = DefaultChartAreaMax;
 
     private List<string> Labels { get; set; } = new List<string>();
@@ -148,12 +163,13 @@
         if (data.Any()) {
             var min = data.Min();
             var max = data.Max();
-            var scale = DoubleExtensions.GetScale(min, max);
 
-            ChartAreaMin = min.FloorToScale(scale);
-            ChartAreaMax = max.CeilingToScale(scale);
+            ChartAreaScale = DoubleExtensions.GetScale(min, max);
+            ChartAreaMin = min.FloorToScale(ChartAreaScale);
+            ChartAreaMax = max.CeilingToScale(ChartAreaScale);
         }
         else {
+            ChartAreaScale = DefaultChartAreaScale;
             ChartAreaMin = DefaultChartAreaMin;
             ChartAreaMax = DefaultChartAreaMax;
         }
