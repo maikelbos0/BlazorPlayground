@@ -1,4 +1,6 @@
+using System;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace BlazorPlayground.Chart.Tests;
 
@@ -27,16 +29,17 @@ public class DecimalExtensionsTests {
     }
     
     [Theory]
-    [InlineData(0.05, 0.45, 0.1)]
-    [InlineData(0.5, 4.5, 1)]
-    [InlineData(0, 5, 1)]
-    [InlineData(0, 5.1, 2)]
-    [InlineData(1, 9, 2)]
-    [InlineData(0, 10, 2)]
-    [InlineData(-0.1, 10, 5)]
-    [InlineData(1, 24, 5)]
-    [InlineData(0, 25, 5)]
-    [InlineData(0, 26, 10)]
+    [InlineData(0.01, 0.79, 0.1)]
+    [InlineData(0.1, 7.9, 1)]
+    [InlineData(0, 8, 1)]
+    [InlineData(0, 8.1, 2)]
+    [InlineData(1, 15, 2)]
+    [InlineData(0, 16, 2)]
+    [InlineData(-0.1, 16, 5)]
+    [InlineData(1, 39, 5)]
+    [InlineData(0, 40, 5)]
+    [InlineData(0, 41, 10)]
+    [InlineData(-1, 80, 20)]
     public void GetScale(decimal min, decimal max, decimal expectedScale) {
         Assert.Equal(expectedScale, DecimalExtensions.GetScale(min, max));
     }
