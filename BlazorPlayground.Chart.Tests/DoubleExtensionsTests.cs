@@ -4,7 +4,7 @@ using Xunit.Abstractions;
 
 namespace BlazorPlayground.Chart.Tests;
 
-public class DecimalExtensionsTests {
+public class DoubleExtensionsTests {
     [Theory]
     [InlineData(9, 1, 9)]
     [InlineData(9, 2, 8)]
@@ -13,7 +13,7 @@ public class DecimalExtensionsTests {
     [InlineData(0.1, 5, 0)]
     [InlineData(119.9, 20, 100)]
     [InlineData(-100.1, 20, -120)]
-    public void FloorToScale(decimal value, decimal scale, decimal expectedValue) {
+    public void FloorToScale(double value, double scale, double expectedValue) {
         Assert.Equal(expectedValue, value.FloorToScale(scale));
     }
     [Theory]
@@ -24,7 +24,7 @@ public class DecimalExtensionsTests {
     [InlineData(0.1, 5, 5)]
     [InlineData(100.1, 20, 120)]
     [InlineData(-119.9, 20, -100)]
-    public void CeilingToScale(decimal value, decimal scale, decimal expectedValue) {
+    public void CeilingToScale(double value, double scale, double expectedValue) {
         Assert.Equal(expectedValue, value.CeilingToScale(scale));
     }
     
@@ -40,7 +40,7 @@ public class DecimalExtensionsTests {
     [InlineData(0, 40, 5)]
     [InlineData(0, 41, 10)]
     [InlineData(-1, 80, 20)]
-    public void GetScale(decimal min, decimal max, decimal expectedScale) {
-        Assert.Equal(expectedScale, DecimalExtensions.GetScale(min, max));
+    public void GetScale(double min, double max, double expectedScale) {
+        Assert.Equal(expectedScale, DoubleExtensions.GetScale(min, max));
     }
 }
