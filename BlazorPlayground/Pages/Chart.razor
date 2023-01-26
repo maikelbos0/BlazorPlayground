@@ -1,4 +1,5 @@
 ﻿@page "/chart"
+@using BlazorPlayground.Chart
 
 <h1>Chart</h1>
 
@@ -87,29 +88,29 @@
 </table>
 
 @code {
-    private const int DefaultChartAreaMin = -100;
+    private const int DefaultChartAreaMin = -200;
     private const int DefaultChartAreaMax = 1000;
 
     private int CanvasWidth { get; set; } = 1200;
     private int CanvasHeight { get; set; } = 600;
-    private decimal ChartAreaMin { get; set; } = DefaultChartAreaMin;
-    private decimal ChartAreaMax { get; set; } = DefaultChartAreaMax;
+    private double ChartAreaMin { get; set; } = DefaultChartAreaMin;
+    private double ChartAreaMax { get; set; } = DefaultChartAreaMax;
 
     private List<string> Labels { get; set; } = new List<string>();
     private List<string> DataSeriesNames { get; set; } = new List<string>();
-    private List<List<decimal?>> DataSeries { get; set; } = new List<List<decimal?>>();
+    private List<List<double?>> DataSeries { get; set; } = new List<List<double?>>();
 
     protected override void OnInitialized() {
         base.OnInitialized();
 
         Labels.Add("");
         DataSeriesNames.Add("");
-        DataSeries.Add(new List<decimal?>() { null });
+        DataSeries.Add(new List<double?>() { null });
     }
 
     private void AddDataSeries() {
         DataSeriesNames.Add("");
-        DataSeries.Add(Enumerable.Range(0, Labels.Count).Select(i => (decimal?)null).ToList());
+        DataSeries.Add(Enumerable.Range(0, Labels.Count).Select(i => (double?)null).ToList());
     }
 
     private void AddDataPoint() {
@@ -129,7 +130,7 @@
 
             for (var y = 0; y < DataSeriesNames.Count; y++) {
                 if (DataSeries[y][x] == null) {
-                    DataSeries[y][x] = random.Next(-100, 1000);
+                    DataSeries[y][x] = random.Next(-100, 900);
                 }
             }
         }
@@ -142,15 +143,15 @@
     }
 
     private void CalculateChartArea() {
-        var data = DataSeries.SelectMany(s => s).Where(d => d != null);
+        var data = DataSeries.SelectMany(s => s).Where(d => d != null).Cast<double>();
 
         if (data.Any()) {
-            var min = (int)data.Min();
-            var max = (int)data.Max();
-            var delta = Math.Max(Math.Abs(max / 10), max - min);
+            var min = data.Min();
+            var max = data.Max();
+            var scale = DoubleExtensions.GetScale(min, max);
 
-            ChartAreaMin = min - delta / 10;
-            ChartAreaMax = max + delta / 10;
+            ChartAreaMin = min.FloorToScale(scale);
+            ChartAreaMax = max.CeilingToScale(scale);
         }
         else {
             ChartAreaMin = DefaultChartAreaMin;
