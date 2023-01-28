@@ -26,25 +26,9 @@
         <input type="text" class="form-control" id="canvasHeight" @bind-value="CanvasHeight" />
     </fieldset>
 
-    <fieldset class="input-group mb-3 me-3">
-        <div class="input-group-text">
-            <label for="canvasHeight">Canvas height</label>
-        </div>
-
-        <input type="text" class="form-control" id="canvasHeight" @bind-value="CanvasHeight" />
-    </fieldset>
-
-    <fieldset class="input-group mb-3 me-3">
-        <div class="input-group-text">
-            <label for="canvasHeight">Canvas height</label>
-        </div>
-
-        <input type="text" class="form-control" id="canvasHeight" @bind-value="CanvasHeight" />
-    </fieldset>
-
-    <fieldset class="input-group mb-3 me-3">
+@*    <fieldset class="input-group mb-3 me-3">
         <div class="input-group-text">Chart range</div>
-        
+
         <div class="input-group-text">
             <label for="chartAreaMin">Min</label>
         </div>
@@ -64,35 +48,35 @@
         <input type="text" class="form-control" id="chartAreaScale" @bind-value="ChartAreaScale" />
 
         <button type="button" class="btn btn-secondary" @onclick="CalculateChartArea">Calculate</button>
-    </fieldset>
+    </fieldset>*@
 </div>
 
 <table>
     <tr>
         <th></th>
 
-        @for (var y0 = 0; y0 < DataSeriesNames.Count; y0++) {
+        @for (var y0 = 0; y0 < XYChart.DataSeries.Count; y0++) {
             var y = y0;
 
             <th>
-                <input type="text" class="form-control" @bind-value="DataSeriesNames[y]" />
+                <input type="text" class="form-control" @bind-value="XYChart.DataSeries[y].Name" />
             </th>
         }
     </tr>
 
-    @for (var x0 = 0; x0 < Labels.Count; x0++) {
+    @for (var x0 = 0; x0 < XYChart.Labels.Count; x0++) {
         var x = x0;
 
         <tr>
             <th>
-                <input type="text" class="form-control" @bind-value="Labels[x]" />
+                <input type="text" class="form-control" @bind-value="XYChart.Labels[x]" />
             </th>
 
-            @for (var y0 = 0; y0 < DataSeries.Count; y0++) {
+            @for (var y0 = 0; y0 < XYChart.DataSeries.Count; y0++) {
                 var y = y0;
 
                 <td>
-                    <input type="text" class="form-control" @bind-value="DataSeries[y][x]" />
+                    <input type="text" class="form-control" @bind-value="XYChart.DataSeries[y][x]" />
                 </td>
             }
         </tr>
@@ -100,37 +84,28 @@
 </table>
 
 @code {
-    private const int DefaultChartAreaMin = -200;
-    private const int DefaultChartAreaScale = 200;
-    private const int DefaultChartAreaMax = 1000;
+    private XYChart XYChart = new();
 
     private int CanvasWidth { get; set; } = 1200;
     private int CanvasHeight { get; set; } = 600;
-    // TODO figure out names here
-    private double ChartAreaMin { get; set; } = DefaultChartAreaMin;
-    private double ChartAreaScale { get; set; } = DefaultChartAreaScale;
-    private double ChartAreaMax { get; set; } = DefaultChartAreaMax;
-
-    private List<string> Labels { get; set; } = new List<string>();
-    private List<string> DataSeriesNames { get; set; } = new List<string>();
-    private List<List<double?>> DataSeries { get; set; } = new List<List<double?>>();
 
     protected override void OnInitialized() {
         base.OnInitialized();
 
-        Labels.Add("");
-        DataSeriesNames.Add("");
-        DataSeries.Add(new List<double?>() { null });
+        XYChart.Labels.Add("");
+        XYChart.DataSeries.Add(new DataSeries("") { null });
     }
 
     private void AddDataSeries() {
-        DataSeriesNames.Add("");
-        DataSeries.Add(Enumerable.Range(0, Labels.Count).Select(i => (double?)null).ToList());
+        var dataSeries = new DataSeries("");
+        dataSeries.AddRange(XYChart.Labels.Select(l => (double?)null));
+        XYChart.DataSeries.Add(dataSeries);
     }
 
     private void AddDataPoint() {
-        Labels.Add("");
-        foreach (var dataSeries in DataSeries) {
+        XYChart.Labels.Add("");
+
+        foreach (var dataSeries in XYChart.DataSeries) {
             dataSeries.Add(null);
         }
     }
@@ -138,40 +113,20 @@
     private void GenerateData() {
         var random = new Random();
 
-        for (var x = 0; x < Labels.Count; x++) {
-            if (string.IsNullOrWhiteSpace(Labels[x])) {
-                Labels[x] = $"Value {x + 1}";
+        for (var x = 0; x < XYChart.Labels.Count; x++) {
+            XYChart.Labels[x] = $"Value {x + 1}";
+        }
+
+        for (var y = 0; y < XYChart.DataSeries.Count; y++) {
+            if (string.IsNullOrWhiteSpace(XYChart.DataSeries[y].Name)) {
+                XYChart.DataSeries[y].Name = $"Series {y + 1}";
             }
 
-            for (var y = 0; y < DataSeriesNames.Count; y++) {
-                if (DataSeries[y][x] == null) {
-                    DataSeries[y][x] = random.Next(-100, 900);
+            for (var x = 0; x < XYChart.DataSeries[y].Count; x++) {
+                if (XYChart.DataSeries[y][x] == null) {
+                    XYChart.DataSeries[y][x] = random.Next(-100, 900);
                 }
             }
-        }
-
-        for (var y = 0; y < DataSeriesNames.Count; y++) {
-            if (string.IsNullOrWhiteSpace(DataSeriesNames[y])) {
-                DataSeriesNames[y] = $"Series {y + 1}";
-            }
-        }
-    }
-
-    private void CalculateChartArea() {
-        var data = DataSeries.SelectMany(s => s).Where(d => d != null).Cast<double>();
-
-        if (data.Any()) {
-            var min = data.Min();
-            var max = data.Max();
-
-            ChartAreaScale = DoubleExtensions.GetScale(min, max);
-            ChartAreaMin = min.FloorToScale(ChartAreaScale);
-            ChartAreaMax = max.CeilingToScale(ChartAreaScale);
-        }
-        else {
-            ChartAreaScale = DefaultChartAreaScale;
-            ChartAreaMin = DefaultChartAreaMin;
-            ChartAreaMax = DefaultChartAreaMax;
         }
     }
 }
