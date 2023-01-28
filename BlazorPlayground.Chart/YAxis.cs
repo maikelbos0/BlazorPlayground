@@ -23,7 +23,7 @@ public class YAxis {
             gridLineInterval *= gridLineMultipliers[i++];
         }
 
-        return new YAxis(gridLineInterval, min, max);
+        return new YAxis(gridLineInterval, min.FloorToScale(gridLineInterval), max.CeilingToScale(gridLineInterval));
     }
 
     public double Min { get; }

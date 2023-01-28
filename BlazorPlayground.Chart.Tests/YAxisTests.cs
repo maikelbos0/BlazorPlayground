@@ -3,11 +3,22 @@
 namespace BlazorPlayground.Chart.Tests;
 
 public class YAxisTests {
-
     [Theory]
     [InlineData(1.0, 0.0, 5.0)]
-    [InlineData(1.0, 100.5, 105.5, 103.0)]
-    // TODO add more tests
+    [InlineData(1.0, 100.0, 106.0, 103.0)]
+    [InlineData(1.0, 0.0, 5.0, 0.2, 4.8)]
+    [InlineData(2.0, -2.0, 10.0, -0.2, 8.2)]
+    [InlineData(0.1, 0.0, 0.8, 0.01, 0.79)]
+    [InlineData(1.0, 0.0, 8.0, 0.1, 7.9)]
+    [InlineData(1.0, 0.0, 8.0, 0.0, 8.0)]
+    [InlineData(2.0, 0.0, 10.0, 0.0, 8.1)]
+    [InlineData(2.0, 0.0, 16.0, 1.0, 15.0)]
+    [InlineData(2.0, 0.0, 16.0, 0.0, 16.0)]
+    [InlineData(5.0, -5.0, 20.0, -0.1, 16.0)]
+    [InlineData(5.0, 0.0, 40.0, 1.0, 39.0)]
+    [InlineData(5.0, 0.0, 40.0, 0.0, 40.0)]
+    [InlineData(10.0, 0.0, 50.0, 0.0, 41.0)]
+    [InlineData(20.0, -20.0, 80.0, -1.0, 80.0)]
     public void AutoScale(double expectedGridLineInterval, double expectedMin, double expectedMax, params double[] dataPoints) {
         var result = YAxis.AutoScale(dataPoints);
 
