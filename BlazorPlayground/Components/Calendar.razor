@@ -1,0 +1,43 @@
+﻿@using System.Globalization;
+@using System.Text;
+
+<div style="width: 300px">
+    <div>@ReferenceDate.ToString("MMMM yyyy", new CultureInfo("en-US"))</div>
+
+    <div class="d-flex justify-content-between">
+        <div style="width: 14%">Sun</div>
+        <div style="width: 14%">Mon</div>
+        <div style="width: 14%">Tue</div>
+        <div style="width: 14%">Wed</div>
+        <div style="width: 14%">Thu</div>
+        <div style="width: 14%">Fri</div>
+        <div style="width: 14%">Sat</div>
+    </div>
+
+    <div class="d-flex flex-wrap">
+
+        @for (var day = 1; day < DateTime.DaysInMonth(ReferenceDate.Year, ReferenceDate.Month); day++) {
+            var date = new DateOnly(ReferenceDate.Year, ReferenceDate.Month, day);
+            var styleBuilder = new StringBuilder("width: 14%");
+
+            if (day == 1) {
+                styleBuilder.Append($"; margin-left: {14 * (int)date.DayOfWeek}%");
+            }
+
+            if (HighlightedDates.Contains(date)) {
+                styleBuilder.Append("; font-weight: bold");
+            }
+
+            <div style="@styleBuilder">@day</div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    [EditorRequired]
+    public DateOnly ReferenceDate { get; set; }
+
+    [Parameter]
+    public HashSet<DateOnly> HighlightedDates { get; set; } = new HashSet<DateOnly>();
+}

@@ -13,9 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorPlayground.Graphics",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorPlayground.Graphics.Tests", "BlazorPlayground.Graphics.Tests\BlazorPlayground.Graphics.Tests.csproj", "{E363B001-C287-41A5-B3CF-3D261074967A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorPlayground.Chart", "BlazorPlayground.Chart\BlazorPlayground.Chart.csproj", "{D6DBA2BF-458F-4296-9F26-9765CC93D1EB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorPlayground.Chart", "BlazorPlayground.Chart\BlazorPlayground.Chart.csproj", "{D6DBA2BF-458F-4296-9F26-9765CC93D1EB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorPlayground.Chart.Tests", "BlazorPlayground.Chart.Tests\BlazorPlayground.Chart.Tests.csproj", "{7F25E3A6-DBEF-4D20-8FC3-F2D6825606DE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorPlayground.Chart.Tests", "BlazorPlayground.Chart.Tests\BlazorPlayground.Chart.Tests.csproj", "{7F25E3A6-DBEF-4D20-8FC3-F2D6825606DE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

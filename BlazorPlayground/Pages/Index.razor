@@ -1,33 +1,13 @@
 ﻿@page "/"
 
-    <GlobalEventHandler OnKeyDown="OnWindowKeyDown" />
+<h1>BlazorPlayground</h1>
 
-    <h1>BlazorPlayground</h1>
+<p>Here I will try things!</p>
 
-    <p>Here I will try things!</p>
+<div>
+    <Calendar ReferenceDate="DateOnly.FromDateTime(DateTime.Today)" HighlightedDates="highlightedDays" />
+</div>
 
-    @if (args != null) {
-        <p>The last pressed key:</p>
-
-        <ul>
-            <li>Alt key: @args.AltKey</li>
-            <li>Code: @args.Code</li>
-            <li>Ctrl key: @args.CtrlKey</li>
-            <li>Key: @args.Key</li>
-            <li>Location: @args.Location</li>
-            <li>Meta key: @args.MetaKey</li>
-            <li>Repeat: @args.Repeat</li>
-            <li>Shift key: @args.ShiftKey</li>
-            <li>Type: @args.Type</li>
-        </ul>
-    }
-
-    @code {
-        private KeyboardEventArgs args;
-
-        public Task OnWindowKeyDown(KeyboardEventArgs args) {
-            this.args = args;
-
-            return Task.CompletedTask;
-        }
-    }
+@code {
+    private HashSet<DateOnly> highlightedDays = new() { DateOnly.FromDateTime(DateTime.Today) };
+}
