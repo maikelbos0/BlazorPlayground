@@ -1,39 +1,36 @@
 ﻿namespace BlazorPlayground.Chart;
 
 public class YAxis {
-    public static YAxis AutoScale(IEnumerable<double> dataPoints) {
-        const double defaultMin = 0;
-        const double defaultMax = 5;
-        const double defaultMiddle = (defaultMax - defaultMin) / 2;
-        const int maxGridLineCount = 8;
-        double[] gridLineMultipliers = new[] { 2, 2.5, 2, 2 };
+    private const double defaultMin = 0;
+    private const double defaultMax = 5;
+    private const double defaultMiddle = (defaultMax - defaultMin) / 2;
+    private const double defaultGridLineInterval = 1;
+    private const int maxGridLineCount = 8;
+    private readonly static double[] gridLineMultipliers = new[] { 2, 2.5, 2, 2 };
 
-        var min = dataPoints.DefaultIfEmpty(defaultMin).Min();
-        var max = dataPoints.DefaultIfEmpty(defaultMax).Max();
+    public double Min { get; set; } = defaultMin;
+    public double Max { get; set; } = defaultMax;
+    public double GridLineInterval { get; set; } = defaultGridLineInterval;
 
-        if (min == max) {
-            min -= defaultMiddle;
-            max += defaultMiddle;
-        }
-
-        var gridLineInterval = Math.Pow(10, Math.Floor(Math.Log10(max - min) - 1));
+    public void AutoScale(IEnumerable<double> dataPoints) {
         var i = 0;
 
-        while ((max.CeilingToScale(gridLineInterval) - min.FloorToScale(gridLineInterval)) / gridLineInterval > maxGridLineCount) {
-            gridLineInterval *= gridLineMultipliers[i++];
+        Min = dataPoints.DefaultIfEmpty(defaultMin).Min();
+        Max = dataPoints.DefaultIfEmpty(defaultMax).Max();
+
+        if (Min == Max) {
+            Min -= defaultMiddle;
+            Max += defaultMiddle;
         }
 
-        return new YAxis(gridLineInterval, min.FloorToScale(gridLineInterval), max.CeilingToScale(gridLineInterval));
-    }
+        GridLineInterval = Math.Pow(10, Math.Floor(Math.Log10(Max - Min) - 1));
 
-    public double Min { get; }
-    public double Max { get; }
-    public double GridLineInterval { get; }
+        while ((Max.CeilingToScale(GridLineInterval) - Min.FloorToScale(GridLineInterval)) / GridLineInterval > maxGridLineCount) {
+            GridLineInterval *= gridLineMultipliers[i++];
+        }
 
-    public YAxis(double gridLineInterval, double min, double max) {
-        GridLineInterval = gridLineInterval;
-        Min = min;
-        Max = max;
+        Min = Min.FloorToScale(GridLineInterval);
+        Max = Max.CeilingToScale(GridLineInterval);
     }
 
     public IEnumerable<double> GetGridLines() {

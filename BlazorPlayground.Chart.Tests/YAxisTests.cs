@@ -20,16 +20,22 @@ public class YAxisTests {
     [InlineData(10.0, 0.0, 50.0, 0.0, 41.0)]
     [InlineData(20.0, -20.0, 80.0, -1.0, 80.0)]
     public void AutoScale(double expectedGridLineInterval, double expectedMin, double expectedMax, params double[] dataPoints) {
-        var result = YAxis.AutoScale(dataPoints);
+        var subject = new YAxis();
 
-        Assert.Equal(expectedGridLineInterval, result.GridLineInterval);
-        Assert.Equal(expectedMin, result.Min);
-        Assert.Equal(expectedMax, result.Max);
+        subject.AutoScale(dataPoints);
+
+        Assert.Equal(expectedGridLineInterval, subject.GridLineInterval);
+        Assert.Equal(expectedMin, subject.Min);
+        Assert.Equal(expectedMax, subject.Max);
     }
 
     [Fact]
     public void GridLines() {
-        var subject = new YAxis(20, -10, 105);
+        var subject = new YAxis() {            
+            Min = -10,
+            Max = 105,
+            GridLineInterval = 20
+        };
 
         Assert.Equal(new double[] { 0, 20, 40, 60, 80, 100 }, subject.GetGridLines());
     }
