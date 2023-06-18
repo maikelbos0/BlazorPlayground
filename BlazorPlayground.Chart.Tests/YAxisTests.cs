@@ -24,14 +24,14 @@ public class YAxisTests {
 
         subject.AutoScale(dataPoints);
 
-        Assert.Equal(expectedGridLineInterval, subject.GridLineInterval);
         Assert.Equal(expectedMin, subject.Min);
         Assert.Equal(expectedMax, subject.Max);
+        Assert.Equal(expectedGridLineInterval, subject.GridLineInterval);
     }
 
     [Fact]
     public void GridLines() {
-        var subject = new YAxis() {            
+        var subject = new YAxis() {
             Min = -10,
             Max = 105,
             GridLineInterval = 20
