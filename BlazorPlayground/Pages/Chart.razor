@@ -15,7 +15,7 @@
             <label for="canvasWidth">Canvas width</label>
         </div>
 
-        <input type="text" class="form-control" id="canvasWidth" @bind-value="CanvasWidth" />
+        <input type="text" class="form-control" id="canvasWidth" @bind-value="XYChart.CanvasWidth" />
     </fieldset>
 
     <fieldset class="input-group mb-3 me-3">
@@ -23,7 +23,7 @@
             <label for="canvasHeight">Canvas height</label>
         </div>
 
-        <input type="text" class="form-control" id="canvasHeight" @bind-value="CanvasHeight" />
+        <input type="text" class="form-control" id="canvasHeight" @bind-value="XYChart.CanvasHeight" />
     </fieldset>
 
     <fieldset class="input-group mb-3 me-3">
@@ -85,9 +85,6 @@
 
 @code {
     private XYChart XYChart = new();
-
-    private int CanvasWidth { get; set; } = 1200;
-    private int CanvasHeight { get; set; } = 600;
 
     protected override void OnInitialized() {
         base.OnInitialized();
