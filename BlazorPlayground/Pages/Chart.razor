@@ -26,29 +26,29 @@
         <input type="text" class="form-control" id="canvasHeight" @bind-value="CanvasHeight" />
     </fieldset>
 
-@*    <fieldset class="input-group mb-3 me-3">
-        <div class="input-group-text">Chart range</div>
+    <fieldset class="input-group mb-3 me-3">
+        <div class="input-group-text">Y axis range</div>
 
         <div class="input-group-text">
-            <label for="chartAreaMin">Min</label>
+            <label for="yAxisMin">Min</label>
         </div>
 
-        <input type="text" class="form-control" id="chartAreaMin" @bind-value="ChartAreaMin" />
+        <input type="text" class="form-control" id="yAxisMin" @bind-value="XYChart.YAxis.Min" />
 
         <div class="input-group-text">
-            <label for="chartAreaMax">Max</label>
+            <label for="yAxisMax">Max</label>
         </div>
 
-        <input type="text" class="form-control" id="chartAreaMax" @bind-value="ChartAreaMax" />
+        <input type="text" class="form-control" id="yAxisMax" @bind-value="XYChart.YAxis.Max" />
 
         <div class="input-group-text">
-            <label for="chartAreaScale">Scale</label>
+            <label for="yAxisGridLineInterval">Grid line interval</label>
         </div>
 
-        <input type="text" class="form-control" id="chartAreaScale" @bind-value="ChartAreaScale" />
+        <input type="text" class="form-control" id="yAxisGridLineInterval" @bind-value="XYChart.YAxis.GridLineInterval" />
 
-        <button type="button" class="btn btn-secondary" @onclick="CalculateChartArea">Calculate</button>
-    </fieldset>*@
+        <button type="button" class="btn btn-secondary" @onclick="XYChart.AutoScale">Calculate</button>
+    </fieldset>
 </div>
 
 <table>
