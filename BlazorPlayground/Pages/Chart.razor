@@ -11,19 +11,25 @@
     </fieldset>
 
     <fieldset class="input-group mb-3 me-3">
+        <div class="input-group-text">Chart dimensions</div>
+
         <div class="input-group-text">
-            <label for="canvasWidth">Canvas width</label>
+            <label for="width">Width</label>
         </div>
 
-        <input type="text" class="form-control" id="canvasWidth" @bind-value="XYChart.CanvasWidth" />
-    </fieldset>
+        <input type="text" class="form-control" id="width" @bind-value="XYChart.Width" />
 
-    <fieldset class="input-group mb-3 me-3">
         <div class="input-group-text">
-            <label for="canvasHeight">Canvas height</label>
+            <label for="height">Height</label>
         </div>
 
-        <input type="text" class="form-control" id="canvasHeight" @bind-value="XYChart.CanvasHeight" />
+        <input type="text" class="form-control" id="height" @bind-value="XYChart.Height" />
+
+        <div class="input-group-text">
+            <label for="padding">Padding</label>
+        </div>
+
+        <input type="text" class="form-control" id="padding" @bind-value="XYChart.Padding" />
     </fieldset>
 
     <fieldset class="input-group mb-3 me-3">
