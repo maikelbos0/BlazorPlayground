@@ -33,7 +33,39 @@
     </fieldset>
 
     <fieldset class="input-group mb-3 me-3">
-        <div class="input-group-text">Y axis range</div>
+        <div class="input-group-text">Y axis dimensions</div>
+
+        <div class="input-group-text">
+            <label for="yAxisSize">Size</label>
+        </div>
+
+        <input type="text" class="form-control" id="yAxisSize" @bind-value="XYChart.YAxis.Size" />
+
+        <div class="input-group-text">
+            <label for="yAxisLabelClearance">Label clearance</label>
+        </div>
+
+        <input type="text" class="form-control" id="yAxisLabelClearance" @bind-value="XYChart.YAxis.LabelClearance" />
+    </fieldset>
+
+    <fieldset class="input-group mb-3 me-3">
+        <div class="input-group-text">X axis dimensions</div>
+
+        <div class="input-group-text">
+            <label for="xAxisSize">Size</label>
+        </div>
+
+        <input type="text" class="form-control" id="xAxisSize" @bind-value="XYChart.XAxis.Size" />
+
+        <div class="input-group-text">
+            <label for="xAxisLabelClearance">Label clearance</label>
+        </div>
+
+        <input type="text" class="form-control" id="xAxisLabelClearance" @bind-value="XYChart.XAxis.LabelClearance" />
+    </fieldset>
+
+    <fieldset class="input-group mb-3 me-3">
+        <div class="input-group-text">Y axis</div>
 
         <div class="input-group-text">
             <label for="yAxisMin">Min</label>
