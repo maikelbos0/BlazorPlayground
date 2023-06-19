@@ -175,3 +175,8 @@ fieldset:disabled label, fieldset:disabled .form-control:disabled, fieldset:disa
 .btn-toolbar .form-control, .btn-toolbar .form-select {
     max-width: 8em;
 }
+
+.chart-main {
+    border: 1px solid #dee2e6;
+    user-select: none;
+}
