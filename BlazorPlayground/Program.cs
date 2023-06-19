@@ -5,12 +5,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace BlazorPlayground {
-
-    /*
-     * TODO
-     * Add angle of shape
-     */
-
     public class Program {
         public static async Task Main(string[] args) {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);

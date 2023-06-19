@@ -9,7 +9,6 @@
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.6" PrivateAssets="all" />
 		<PackageReference Include="System.Net.Http.Json" Version="6.0.0" />
 		<PackageReference Include="VDT.Core.Blazor.GlobalEventHandler" Version="1.1.2" />
-		<PackageReference Include="VDT.Core.Blazor.Wizard" Version="1.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>

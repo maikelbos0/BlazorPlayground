@@ -3,11 +3,3 @@
 <h1>BlazorPlayground</h1>
 
 <p>Here I will try things!</p>
-
-<div>
-    <Calendar ReferenceDate="DateOnly.FromDateTime(DateTime.Today)" HighlightedDates="highlightedDays" />
-</div>
-
-@code {
-    private HashSet<DateOnly> highlightedDays = new() { DateOnly.FromDateTime(DateTime.Today) };
-}
