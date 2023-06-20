@@ -11,5 +11,10 @@ public class XYChart {
     public int Padding { get; set; } = 10;
 
     public void AutoScale() => YAxis.AutoScale(DataSeries.SelectMany(dataSeries => dataSeries.Where(dataPoint => dataPoint != null).Select(dataPoint => dataPoint!.Value)));
-    internal PlotArea GetPlotArea() => new(Padding + YAxis.Size, Padding, Width - Padding * 2 - YAxis.Size, Height - Padding * 2 - XAxis.Size);
+
+    public IEnumerable<Shape> GetShapes() {
+        yield return GetPlotArea();
+    }
+
+    public PlotArea GetPlotArea() => new(Padding + YAxis.Size, Padding, Width - Padding * 2 - YAxis.Size, Height - Padding * 2 - XAxis.Size);
 }

@@ -20,6 +20,13 @@ public class XYChartTests {
     }
 
     [Fact]
+    public void GetShapes_PlotArea() {
+        var subject = new XYChart();
+
+        Assert.Single(subject.GetShapes(), shape => shape is PlotArea);
+    }
+
+    [Fact]
     public void GetPlotArea() {
         var subject = new XYChart() {
             Width = 1000,
