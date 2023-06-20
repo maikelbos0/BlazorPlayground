@@ -180,3 +180,9 @@ fieldset:disabled label, fieldset:disabled .form-control:disabled, fieldset:disa
     border: 1px solid #dee2e6;
     user-select: none;
 }
+
+.chart-main .plot-area {
+    stroke: #dee2e6;
+    stroke-width: 1px;
+    fill: transparent;
+}

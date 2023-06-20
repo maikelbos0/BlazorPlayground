@@ -15,6 +15,15 @@ public class ChartRenderer : ComponentBase {
             builder.AddAttribute(3, "viewbox", $"0 0 {Chart.Width} {Chart.Height}");
             builder.AddAttribute(4, "width", Chart.Width);
             builder.AddAttribute(5, "height", Chart.Height);
+
+            foreach (var shape in Chart.GetShapes()) {
+                // TODO add keys to shape elements; for now we have just the one so this is possible
+                builder.OpenElement(6, shape.ElementName);
+                builder.AddAttribute(7, "class", shape.CssClass);
+                builder.AddMultipleAttributes(8, shape.GetAttributes());
+                builder.CloseElement();
+            }
+
             builder.CloseElement();
         }
     }
