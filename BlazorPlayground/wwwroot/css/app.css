@@ -186,3 +186,9 @@ fieldset:disabled label, fieldset:disabled .form-control:disabled, fieldset:disa
     stroke-width: 1px;
     fill: transparent;
 }
+
+.chart-main .grid-line {
+    stroke: #dee2e6;
+    stroke-opacity: 0.5;
+    stroke-width: 1px;
+}
