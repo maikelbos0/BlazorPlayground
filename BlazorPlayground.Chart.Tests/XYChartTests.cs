@@ -49,4 +49,25 @@ public class XYChartTests {
         Assert.Equal(1000 - 25 - 25 - 75, plotArea.Width);
         Assert.Equal(500 - 25 - 25 - 50, plotArea.Height);
     }
+
+    [Fact]
+    public void MapToPlotArea() {
+        var subject = new XYChart() {
+            Width = 1000,
+            Height = 500,
+            Padding = 25,
+            XAxis = {
+                 Size = 50,
+                 LabelClearance = 5
+            },
+            YAxis = {
+                 Size = 75,
+                 LabelClearance = 10,
+                 Min = -100,
+                 Max = 500
+            }
+        };
+
+        Assert.Equal(100, subject.MapToPlotArea(50));
+    }
 }

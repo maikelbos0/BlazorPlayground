@@ -9,6 +9,8 @@ public class XYChart {
     public int Width { get; set; } = 1200;
     public int Height { get; set; } = 600;
     public int Padding { get; set; } = 10;
+    public int PlotAreaWidth => Width - Padding * 2 - YAxis.Size;
+    public int PlotAreaHeight => Height - Padding * 2 - XAxis.Size;
 
     public void AutoScale() => YAxis.AutoScale(DataSeries.SelectMany(dataSeries => dataSeries.Where(dataPoint => dataPoint != null).Select(dataPoint => dataPoint!.Value)));
 
@@ -16,5 +18,7 @@ public class XYChart {
         yield return GetPlotArea();
     }
 
-    public PlotArea GetPlotArea() => new(Padding + YAxis.Size, Padding, Width - Padding * 2 - YAxis.Size, Height - Padding * 2 - XAxis.Size);
+    public PlotArea GetPlotArea() => new(Padding + YAxis.Size, Padding, PlotAreaWidth, PlotAreaHeight);
+
+    public double MapToPlotArea(double dataPoint) => (dataPoint - YAxis.Min) / (YAxis.Max - YAxis.Min) * PlotAreaHeight;
 }
