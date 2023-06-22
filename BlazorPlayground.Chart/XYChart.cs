@@ -20,5 +20,7 @@ public class XYChart {
 
     public PlotArea GetPlotArea() => new(Padding + YAxis.Size, Padding, PlotAreaWidth, PlotAreaHeight);
 
+    public IEnumerable<GridLine> GetGridLines() => YAxis.GetGridLines().Select(y => new GridLine(Padding + YAxis.Size, Padding + MapToPlotArea(y), PlotAreaWidth));
+
     public double MapToPlotArea(double dataPoint) => (dataPoint - YAxis.Min) / (YAxis.Max - YAxis.Min) * PlotAreaHeight;
 }

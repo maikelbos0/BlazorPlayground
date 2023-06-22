@@ -3,11 +3,11 @@
 public class GridLine : Shape {
     public override string CssClass => "grid-line";
     public override string ElementName => "line";
-    public int X { get; }
-    public int Y { get; }
+    public double X { get; }
+    public double Y { get; }
     public int Width { get; }
 
-    public GridLine(int x, int y, int width) {
+    public GridLine(double x, double y, int width) {
         X = x;
         Y = y;
         Width = width;

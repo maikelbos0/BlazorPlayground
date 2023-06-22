@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using System.Linq;
+using Xunit;
 
 namespace BlazorPlayground.Chart.Tests;
 
@@ -48,6 +49,39 @@ public class XYChartTests {
         Assert.Equal(25, plotArea.Y);
         Assert.Equal(1000 - 25 - 25 - 75, plotArea.Width);
         Assert.Equal(500 - 25 - 25 - 50, plotArea.Height);
+    }
+
+    [Fact]
+    public void GetGridLines() {
+        var subject = new XYChart() {
+            Width = 1000,
+            Height = 500,
+            Padding = 25,
+            XAxis = {
+                 Size = 50,
+                 LabelClearance = 5
+            },
+            YAxis = {
+                 Size = 75,
+                 LabelClearance = 10,
+                 Min = -100,
+                 Max = 500,
+                 GridLineInterval = 200
+            }
+        };
+
+        var gridLines = subject.GetGridLines();
+
+        Assert.Equal(3, gridLines.Count());
+
+        Assert.All(gridLines, gridLine => {
+            Assert.Equal(25 + 75, gridLine.X);
+            Assert.Equal(1000 - 25 - 25 - 75, gridLine.Width);
+        });
+
+        Assert.Single(gridLines, gridLine => gridLine.Y == 25 + (0 - -100) / 600.0 * (500 - 25 - 25 - 50));
+        Assert.Single(gridLines, gridLine => gridLine.Y == 25 + (200 - -100) / 600.0 * (500 - 25 - 25 - 50));
+        Assert.Single(gridLines, gridLine => gridLine.Y == 25 + (400 - 100) / 600.0 * (500 - 25 - 25 - 50));
     }
 
     [Fact]
