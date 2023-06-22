@@ -36,6 +36,10 @@ public class YAxis : AxisBase {
     public IEnumerable<double> GetGridLines() {
         var gridLine = Min.CeilingToScale(GridLineInterval);
 
+        if (gridLine == Min) {
+            gridLine += GridLineInterval;
+        }
+
         while (gridLine < Max) {
             yield return gridLine;
 

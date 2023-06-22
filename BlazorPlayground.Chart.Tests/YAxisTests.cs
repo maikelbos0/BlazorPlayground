@@ -30,7 +30,7 @@ public class YAxisTests {
     }
 
     [Fact]
-    public void GridLines() {
+    public void GetGridLines() {
         var subject = new YAxis() {
             Min = -10,
             Max = 105,
@@ -38,5 +38,27 @@ public class YAxisTests {
         };
 
         Assert.Equal(new double[] { 0, 20, 40, 60, 80, 100 }, subject.GetGridLines());
+    }
+
+    [Fact]
+    public void GetGridLines_Skips_Min() {
+        var subject = new YAxis() {
+            Min = -10,
+            Max = 105,
+            GridLineInterval = 5
+        };
+
+        Assert.DoesNotContain(-10.0, subject.GetGridLines());
+    }
+
+    [Fact]
+    public void GetGridLines_Skips_Max() {
+        var subject = new YAxis() {
+            Min = -10,
+            Max = 105,
+            GridLineInterval = 5
+        };
+
+        Assert.DoesNotContain(105.0, subject.GetGridLines());
     }
 }
