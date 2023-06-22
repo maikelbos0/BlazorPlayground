@@ -28,6 +28,13 @@ public class XYChartTests {
     }
 
     [Fact]
+    public void GetShapes_GridLines() {
+        var subject = new XYChart();
+
+        Assert.Contains(subject.GetShapes(), shape => shape is GridLine);
+    }
+
+    [Fact]
     public void GetPlotArea() {
         var subject = new XYChart() {
             Width = 1000,

@@ -16,6 +16,10 @@ public class XYChart {
 
     public IEnumerable<Shape> GetShapes() {
         yield return GetPlotArea();
+
+        foreach (var gridLine in GetGridLines()) {
+            yield return gridLine;
+        }
     }
 
     public PlotArea GetPlotArea() => new(Padding + YAxis.Size, Padding, PlotAreaWidth, PlotAreaHeight);
