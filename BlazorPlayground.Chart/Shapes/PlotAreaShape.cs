@@ -1,6 +1,6 @@
 ﻿namespace BlazorPlayground.Chart.Shapes;
 
-public class PlotArea : Shape {
+public class PlotAreaShape : ShapeBase {
     public override string CssClass => "plot-area";
     public override string ElementName => "rect";
     public int X { get; }
@@ -8,7 +8,7 @@ public class PlotArea : Shape {
     public int Width { get; }
     public int Height { get; }
 
-    public PlotArea(int x, int y, int width, int height) {
+    public PlotAreaShape(int x, int y, int width, int height) {
         X = x;
         Y = y;
         Width = width;

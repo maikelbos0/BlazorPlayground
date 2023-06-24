@@ -4,10 +4,10 @@ using Xunit;
 
 namespace BlazorPlayground.Chart.Tests.Shapes;
 
-public class GridLineTests {
+public class GridLineShapeTests {
     [Fact]
     public void GetAttributes() {
-        var subject = new GridLine(20, 50, 80);
+        var subject = new GridLineShape(20, 50, 80);
 
         var result = subject.GetAttributes();
 

@@ -1,13 +1,13 @@
 ﻿namespace BlazorPlayground.Chart.Shapes;
 
-public class GridLine : Shape {
+public class GridLineShape : ShapeBase {
     public override string CssClass => "grid-line";
     public override string ElementName => "line";
     public double X { get; }
     public double Y { get; }
     public int Width { get; }
 
-    public GridLine(double x, double y, int width) {
+    public GridLineShape(double x, double y, int width) {
         X = x;
         Y = y;
         Width = width;

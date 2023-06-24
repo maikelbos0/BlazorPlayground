@@ -4,10 +4,10 @@ using Xunit;
 
 namespace BlazorPlayground.Chart.Tests.Shapes;
 
-public class PlotAreaTests {
+public class PlotAreaShapeTests {
     [Fact]
     public void GetAttributes() {
-        var subject = new PlotArea(20, 50, 80, 90);
+        var subject = new PlotAreaShape(20, 50, 80, 90);
 
         var result = subject.GetAttributes();
 
