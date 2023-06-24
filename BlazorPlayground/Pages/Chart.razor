@@ -8,6 +8,7 @@
         <button type="button" class="btn btn-secondary" @onclick="AddDataSeries">Add data series</button>
         <button type="button" class="btn btn-secondary" @onclick="AddDataPoint">Add data point</button>
         <button type="button" class="btn btn-secondary" @onclick="GenerateData">Generate data</button>
+        <button type="button" class="btn btn-secondary" @onclick="XYChart.AutoScale">Auto scale plot area</button>
     </fieldset>
 
     <fieldset class="input-group mb-3 me-3">
@@ -57,7 +58,7 @@
     </fieldset>
 
     <fieldset class="input-group mb-3 me-3">
-        <div class="input-group-text">Chart data</div>
+        <div class="input-group-text">Plot area</div>
 
         <div class="input-group-text">
             <label for="yAxisMin">Min</label>
@@ -76,8 +77,6 @@
         </div>
 
         <input type="text" class="form-control" id="yAxisGridLineInterval" @bind-value="XYChart.YAxis.GridLineInterval" />
-
-        <button type="button" class="btn btn-secondary" @onclick="XYChart.AutoScale">Calculate</button>
     </fieldset>
 </div>
 
