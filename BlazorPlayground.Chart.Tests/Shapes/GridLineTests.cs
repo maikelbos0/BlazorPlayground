@@ -1,7 +1,8 @@
-﻿using System.Linq;
+﻿using BlazorPlayground.Chart.Shapes;
+using System.Linq;
 using Xunit;
 
-namespace BlazorPlayground.Chart.Tests;
+namespace BlazorPlayground.Chart.Tests.Shapes;
 
 public class GridLineTests {
     [Fact]

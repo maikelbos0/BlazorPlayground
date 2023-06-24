@@ -1,4 +1,4 @@
-﻿namespace BlazorPlayground.Chart;
+﻿namespace BlazorPlayground.Chart.Shapes;
 
 public class PlotArea : Shape {
     public override string CssClass => "plot-area";

@@ -8,7 +8,7 @@ public class XYChart {
 
     public void AutoScale() => YAxis.AutoScale(DataSeries.SelectMany(dataSeries => dataSeries.Where(dataPoint => dataPoint != null).Select(dataPoint => dataPoint!.Value)));
 
-    public IEnumerable<Shape> GetShapes() {
+    public IEnumerable<Shapes.Shape> GetShapes() {
         yield return GetPlotArea();
 
         foreach (var gridLine in GetGridLines()) {
@@ -16,9 +16,9 @@ public class XYChart {
         }
     }
 
-    public PlotArea GetPlotArea() => new(Canvas.PlotAreaX, Canvas.PlotAreaY, Canvas.PlotAreaWidth, Canvas.PlotAreaHeight);
+    public Shapes.PlotArea GetPlotArea() => new(Canvas.PlotAreaX, Canvas.PlotAreaY, Canvas.PlotAreaWidth, Canvas.PlotAreaHeight);
 
-    public IEnumerable<GridLine> GetGridLines() => YAxis.GetGridLines().Select(y => new GridLine(Canvas.PlotAreaX, Canvas.PlotAreaY + MapToPlotArea(y), Canvas.PlotAreaWidth));
+    public IEnumerable<Shapes.GridLine> GetGridLines() => YAxis.GetGridLines().Select(y => new Shapes.GridLine(Canvas.PlotAreaX, Canvas.PlotAreaY + MapToPlotArea(y), Canvas.PlotAreaWidth));
 
     public double MapToPlotArea(double dataPoint) => (dataPoint - YAxis.Min) / (YAxis.Max - YAxis.Min) * Canvas.PlotAreaHeight;
 }

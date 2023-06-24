@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using ChartShapes = BlazorPlayground.Chart.Shapes;
+using System.Linq;
 using Xunit;
 
 namespace BlazorPlayground.Chart.Tests;
@@ -24,14 +25,14 @@ public class XYChartTests {
     public void GetShapes_PlotArea() {
         var subject = new XYChart();
 
-        Assert.Single(subject.GetShapes(), shape => shape is PlotArea);
+        Assert.Single(subject.GetShapes(), shape => shape is ChartShapes.PlotArea);
     }
 
     [Fact]
     public void GetShapes_GridLines() {
         var subject = new XYChart();
 
-        Assert.Contains(subject.GetShapes(), shape => shape is GridLine);
+        Assert.Contains(subject.GetShapes(), shape => shape is ChartShapes.GridLine);
     }
 
     [Fact]

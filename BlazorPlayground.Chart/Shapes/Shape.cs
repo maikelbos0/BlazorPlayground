@@ -1,4 +1,4 @@
-﻿namespace BlazorPlayground.Chart;
+﻿namespace BlazorPlayground.Chart.Shapes;
 
 public abstract class Shape {
     public abstract string CssClass { get; }
