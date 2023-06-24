@@ -2,7 +2,7 @@
 
 namespace BlazorPlayground.Chart.Tests;
 
-public class YAxisTests {
+public class PlotAreaTests {
     [Theory]
     [InlineData(1.0, 0.0, 5.0)]
     [InlineData(1.0, 100.0, 106.0, 103.0)]
@@ -20,7 +20,7 @@ public class YAxisTests {
     [InlineData(10.0, 0.0, 50.0, 0.0, 41.0)]
     [InlineData(20.0, -20.0, 80.0, -1.0, 80.0)]
     public void AutoScale(double expectedGridLineInterval, double expectedMin, double expectedMax, params double[] dataPoints) {
-        var subject = new YAxis();
+        var subject = new PlotArea();
 
         subject.AutoScale(dataPoints);
 
@@ -31,7 +31,7 @@ public class YAxisTests {
 
     [Fact]
     public void GetGridLines() {
-        var subject = new YAxis() {
+        var subject = new PlotArea() {
             Min = -10,
             Max = 105,
             GridLineInterval = 20
@@ -42,7 +42,7 @@ public class YAxisTests {
 
     [Fact]
     public void GetGridLines_Skips_Min() {
-        var subject = new YAxis() {
+        var subject = new PlotArea() {
             Min = -10,
             Max = 105,
             GridLineInterval = 5
@@ -53,7 +53,7 @@ public class YAxisTests {
 
     [Fact]
     public void GetGridLines_Skips_Max() {
-        var subject = new YAxis() {
+        var subject = new PlotArea() {
             Min = -10,
             Max = 105,
             GridLineInterval = 5

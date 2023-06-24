@@ -16,27 +16,27 @@ public class XYChartTests {
 
         subject.AutoScale();
 
-        Assert.Equal(-10, subject.YAxis.Min);
-        Assert.Equal(20, subject.YAxis.Max);
-        Assert.Equal(5, subject.YAxis.GridLineInterval);
+        Assert.Equal(-10, subject.PlotArea.Min);
+        Assert.Equal(20, subject.PlotArea.Max);
+        Assert.Equal(5, subject.PlotArea.GridLineInterval);
     }
 
     [Fact]
-    public void GetShapes_PlotArea() {
+    public void GetShapes_PlotAreaShape() {
         var subject = new XYChart();
 
         Assert.Single(subject.GetShapes(), shape => shape is PlotAreaShape);
     }
 
     [Fact]
-    public void GetShapes_GridLines() {
+    public void GetShapes_GridLineShapes() {
         var subject = new XYChart();
 
         Assert.Contains(subject.GetShapes(), shape => shape is GridLineShape);
     }
 
     [Fact]
-    public void GetGridLines() {
+    public void GetGridLineShapes() {
         var subject = new XYChart() {
             Canvas = {
                 Width = 1000,
@@ -47,14 +47,14 @@ public class XYChartTests {
                 YAxisLabelWidth = 75,
                 YAxisLabelClearance = 10
             },
-            YAxis = {
+            PlotArea = {
                  Min = -100,
                  Max = 500,
                  GridLineInterval = 200
             }
         };
 
-        var gridLines = subject.GetGridLines();
+        var gridLines = subject.GetGridLineShapes();
 
         Assert.Equal(3, gridLines.Count());
 
@@ -80,7 +80,7 @@ public class XYChartTests {
                 YAxisLabelWidth = 75,
                 YAxisLabelClearance = 10
             },
-            YAxis = {
+            PlotArea = {
                  Min = -100,
                  Max = 500
             }
