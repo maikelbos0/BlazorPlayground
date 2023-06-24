@@ -37,16 +37,14 @@ public class XYChartTests {
     [Fact]
     public void GetPlotArea() {
         var subject = new XYChart() {
-            Width = 1000,
-            Height = 500,
-            Padding = 25,
-            XAxis = {
-                 Size = 50,
-                 LabelClearance = 5
-            },
-            YAxis = {
-                 Size = 75,
-                 LabelClearance = 10
+            Canvas = {
+                Width = 1000,
+                Height = 500,
+                Padding = 25,
+                XAxisLabelHeight = 50,
+                XAxisLabelClearance = 5,
+                YAxisLabelWidth = 75,
+                YAxisLabelClearance = 10
             }
         };
 
@@ -61,16 +59,16 @@ public class XYChartTests {
     [Fact]
     public void GetGridLines() {
         var subject = new XYChart() {
-            Width = 1000,
-            Height = 500,
-            Padding = 25,
-            XAxis = {
-                 Size = 50,
-                 LabelClearance = 5
+            Canvas = {
+                Width = 1000,
+                Height = 500,
+                Padding = 25,
+                XAxisLabelHeight = 50,
+                XAxisLabelClearance = 5,
+                YAxisLabelWidth = 75,
+                YAxisLabelClearance = 10
             },
             YAxis = {
-                 Size = 75,
-                 LabelClearance = 10,
                  Min = -100,
                  Max = 500,
                  GridLineInterval = 200
@@ -94,16 +92,16 @@ public class XYChartTests {
     [Fact]
     public void MapToPlotArea() {
         var subject = new XYChart() {
-            Width = 1000,
-            Height = 500,
-            Padding = 25,
-            XAxis = {
-                 Size = 50,
-                 LabelClearance = 5
+            Canvas = {
+                Width = 1000,
+                Height = 500,
+                Padding = 25,
+                XAxisLabelHeight = 50,
+                XAxisLabelClearance = 5,
+                YAxisLabelWidth = 75,
+                YAxisLabelClearance = 10
             },
             YAxis = {
-                 Size = 75,
-                 LabelClearance = 10,
                  Min = -100,
                  Max = 500
             }

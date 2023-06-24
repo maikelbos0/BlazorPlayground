@@ -11,61 +11,53 @@
     </fieldset>
 
     <fieldset class="input-group mb-3 me-3">
-        <div class="input-group-text">Chart dimensions</div>
+        <div class="input-group-text">Canvas dimensions</div>
 
         <div class="input-group-text">
             <label for="width">Width</label>
         </div>
 
-        <input type="text" class="form-control" id="width" @bind-value="XYChart.Width" />
+        <input type="text" class="form-control" id="width" @bind-value="XYChart.Canvas.Width" />
 
         <div class="input-group-text">
             <label for="height">Height</label>
         </div>
 
-        <input type="text" class="form-control" id="height" @bind-value="XYChart.Height" />
+        <input type="text" class="form-control" id="height" @bind-value="XYChart.Canvas.Height" />
 
         <div class="input-group-text">
             <label for="padding">Padding</label>
         </div>
 
-        <input type="text" class="form-control" id="padding" @bind-value="XYChart.Padding" />
+        <input type="text" class="form-control" id="padding" @bind-value="XYChart.Canvas.Padding" />
+
+        <div class="input-group-text">
+            <label for="yAxisLabelWidth">Y-axis label width</label>
+        </div>
+
+        <input type="text" class="form-control" id="yAxisLabelWidth" @bind-value="XYChart.Canvas.YAxisLabelWidth" />
+
+        <div class="input-group-text">
+            <label for="yAxisLabelClearance">Y-axis label clearance</label>
+        </div>
+
+        <input type="text" class="form-control" id="yAxisLabelClearance" @bind-value="XYChart.Canvas.YAxisLabelClearance" />
+
+        <div class="input-group-text">
+            <label for="xAxisLabelHeight">X-axis label height</label>
+        </div>
+
+        <input type="text" class="form-control" id="xAxisLabelHeight" @bind-value="XYChart.Canvas.XAxisLabelHeight" />
+
+        <div class="input-group-text">
+            <label for="xAxisLabelClearance">X-axis label clearance</label>
+        </div>
+
+        <input type="text" class="form-control" id="xAxisLabelClearance" @bind-value="XYChart.Canvas.XAxisLabelClearance" />
     </fieldset>
 
     <fieldset class="input-group mb-3 me-3">
-        <div class="input-group-text">Y axis dimensions</div>
-
-        <div class="input-group-text">
-            <label for="yAxisSize">Size</label>
-        </div>
-
-        <input type="text" class="form-control" id="yAxisSize" @bind-value="XYChart.YAxis.Size" />
-
-        <div class="input-group-text">
-            <label for="yAxisLabelClearance">Label clearance</label>
-        </div>
-
-        <input type="text" class="form-control" id="yAxisLabelClearance" @bind-value="XYChart.YAxis.LabelClearance" />
-    </fieldset>
-
-    <fieldset class="input-group mb-3 me-3">
-        <div class="input-group-text">X axis dimensions</div>
-
-        <div class="input-group-text">
-            <label for="xAxisSize">Size</label>
-        </div>
-
-        <input type="text" class="form-control" id="xAxisSize" @bind-value="XYChart.XAxis.Size" />
-
-        <div class="input-group-text">
-            <label for="xAxisLabelClearance">Label clearance</label>
-        </div>
-
-        <input type="text" class="form-control" id="xAxisLabelClearance" @bind-value="XYChart.XAxis.LabelClearance" />
-    </fieldset>
-
-    <fieldset class="input-group mb-3 me-3">
-        <div class="input-group-text">Y axis</div>
+        <div class="input-group-text">Chart data</div>
 
         <div class="input-group-text">
             <label for="yAxisMin">Min</label>

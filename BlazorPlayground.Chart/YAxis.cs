@@ -1,6 +1,6 @@
 ﻿namespace BlazorPlayground.Chart;
 
-public class YAxis : AxisBase {
+public class YAxis {
     private const double defaultMin = 0;
     private const double defaultMax = 5;
     private const double defaultMiddle = (defaultMax - defaultMin) / 2;

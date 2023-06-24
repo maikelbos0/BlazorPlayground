@@ -12,9 +12,9 @@ public class ChartRenderer : ComponentBase {
         if (Chart != null) {
             builder.OpenElement(1, "svg");
             builder.AddAttribute(2, "class", "chart-main");
-            builder.AddAttribute(3, "viewbox", $"0 0 {Chart.Width} {Chart.Height}");
-            builder.AddAttribute(4, "width", Chart.Width);
-            builder.AddAttribute(5, "height", Chart.Height);
+            builder.AddAttribute(3, "viewbox", $"0 0 {Chart.Canvas.Width} {Chart.Canvas.Height}");
+            builder.AddAttribute(4, "width", Chart.Canvas.Width);
+            builder.AddAttribute(5, "height", Chart.Canvas.Height);
 
             foreach (var shape in Chart.GetShapes()) {
                 // TODO add keys to shape elements; for now we have just the one so this is possible
