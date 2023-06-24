@@ -11,14 +11,12 @@ public class XYChart {
     public void AutoScale() => YAxis.AutoScale(DataSeries.SelectMany(dataSeries => dataSeries.Where(dataPoint => dataPoint != null).Select(dataPoint => dataPoint!.Value)));
 
     public IEnumerable<ShapeBase> GetShapes() {
-        yield return GetPlotArea();
+        yield return Canvas.GetPlotAreaShape();
 
         foreach (var gridLine in GetGridLines()) {
             yield return gridLine;
         }
     }
-
-    public PlotAreaShape GetPlotArea() => new(Canvas.PlotAreaX, Canvas.PlotAreaY, Canvas.PlotAreaWidth, Canvas.PlotAreaHeight);
 
     public IEnumerable<GridLineShape> GetGridLines() => YAxis.GetGridLines().Select(y => new GridLineShape(Canvas.PlotAreaX, Canvas.PlotAreaY + MapToPlotArea(y), Canvas.PlotAreaWidth));
 

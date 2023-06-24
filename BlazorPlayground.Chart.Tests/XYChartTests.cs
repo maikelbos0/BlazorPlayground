@@ -36,28 +36,6 @@ public class XYChartTests {
     }
 
     [Fact]
-    public void GetPlotArea() {
-        var subject = new XYChart() {
-            Canvas = {
-                Width = 1000,
-                Height = 500,
-                Padding = 25,
-                XAxisLabelHeight = 50,
-                XAxisLabelClearance = 5,
-                YAxisLabelWidth = 75,
-                YAxisLabelClearance = 10
-            }
-        };
-
-        var plotArea = subject.GetPlotArea();
-
-        Assert.Equal(25 + 75, plotArea.X);
-        Assert.Equal(25, plotArea.Y);
-        Assert.Equal(1000 - 25 - 25 - 75, plotArea.Width);
-        Assert.Equal(500 - 25 - 25 - 50, plotArea.Height);
-    }
-
-    [Fact]
     public void GetGridLines() {
         var subject = new XYChart() {
             Canvas = {

@@ -8,9 +8,10 @@ public class Canvas {
     public int XAxisLabelClearance { get; set; } = 10;
     public int YAxisLabelWidth { get; set; } = 100;
     public int YAxisLabelClearance { get; set; } = 10;
-
     public int PlotAreaX => Padding + YAxisLabelWidth;
     public int PlotAreaY => Padding;
     public int PlotAreaWidth => Width - Padding * 2 - YAxisLabelWidth;
     public int PlotAreaHeight => Height - Padding * 2 - XAxisLabelHeight;
+
+    public Shapes.PlotAreaShape GetPlotAreaShape() => new(PlotAreaX, PlotAreaY, PlotAreaWidth, PlotAreaHeight);
 }
