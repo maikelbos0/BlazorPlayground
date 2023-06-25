@@ -21,6 +21,7 @@ public class ChartRenderer : ComponentBase {
                 builder.OpenElement(6, shape.ElementName);
                 builder.AddAttribute(7, "class", shape.CssClass);
                 builder.AddMultipleAttributes(8, shape.GetAttributes());
+                builder.AddContent(9, shape.GetContent());
                 builder.CloseElement();
             }
 

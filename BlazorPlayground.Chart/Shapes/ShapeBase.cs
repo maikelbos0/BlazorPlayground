@@ -5,4 +5,5 @@ public abstract class ShapeBase {
     public abstract string ElementName { get; }
 
     public abstract ShapeAttributeCollection GetAttributes();
+    public virtual string? GetContent() => null;
 }

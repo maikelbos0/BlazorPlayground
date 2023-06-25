@@ -192,3 +192,10 @@ fieldset:disabled label, fieldset:disabled .form-control:disabled, fieldset:disa
     stroke-dasharray: 5;
     stroke-width: 1px;
 }
+
+.chart-main .y-axis-label {
+    text-anchor: end;
+    font-family: Courier New, Courier, monospace;
+    font-size: 10pt;
+    alignment-baseline: central;
+}
