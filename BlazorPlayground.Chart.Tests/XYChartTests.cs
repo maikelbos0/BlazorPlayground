@@ -148,4 +148,27 @@ public class XYChartTests {
         Assert.Equal("red", result.Color);
         Assert.Equal(3, result.Count);
     }
+
+    [Fact]
+    public void AddDataPoint() {
+        var subject = new XYChart() {
+            Labels = {
+                "Value 1",
+                "Value 2"
+            },
+            DataSeries = {
+                new("Foo", "red") { 2.5, 3, 4 },
+                new("Bar", "blue") { 5.5, 6 },
+                new("Baz", "green")
+            }
+        };
+
+        subject.AddDataPoint("Value 3");
+
+        Assert.Equal(3, subject.Labels.Count);
+        Assert.Equal(new List<string> { "Value 1", "Value 2", "Value 3" }, subject.Labels);
+        Assert.Equal(new List<double?> { 2.5, 3, 4 }, subject.DataSeries[0]);
+        Assert.Equal(new List<double?> { 5.5, 6, null }, subject.DataSeries[1]);
+        Assert.Equal(new List<double?> { null, null, null }, subject.DataSeries[2]);
+    }
 }

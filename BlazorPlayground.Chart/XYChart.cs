@@ -53,4 +53,12 @@ public class XYChart {
 
         return dataSeries;
     }
+
+    public void AddDataPoint(string label) {
+        Labels.Add(label);
+
+        foreach (var dataSeries in DataSeries) {
+            dataSeries.AddRange(Enumerable.Range(0, Labels.Count - dataSeries.Count).Select<int, double?>(i => null));
+        }
+    }
 }

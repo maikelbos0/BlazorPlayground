@@ -120,7 +120,7 @@
     protected override void OnInitialized() {
         base.OnInitialized();
 
-        XYChart.Labels.Add("");
+        XYChart.AddDataPoint("");
         XYChart.AddDataSeries("");
     }
 
@@ -129,11 +129,7 @@
     }
 
     private void AddDataPoint() {
-        XYChart.Labels.Add("");
-
-        foreach (var dataSeries in XYChart.DataSeries) {
-            dataSeries.Add(null);
-        }
+        XYChart.AddDataPoint("");
     }
 
     private void GenerateData() {
