@@ -1,10 +1,32 @@
 ﻿using BlazorPlayground.Chart.Shapes;
+using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
 namespace BlazorPlayground.Chart.Tests;
 
 public class XYChartTests {
+    [Theory]
+    [InlineData(0, "red")]
+    [InlineData(1, "blue")]
+    [InlineData(2, "green")]
+    [InlineData(3, "red")]
+    public void GetColor(int index, string expectedColor) {
+        XYChart.DefaultColors = new List<string>() { "red", "blue", "green" };
+
+        Assert.Equal(expectedColor, XYChart.GetColor(index));
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(1)]
+    [InlineData(-1, "red", "red", "blue", "green")]
+    public void GetColor_Fallback(int index, params string[] defaultColors) {
+        XYChart.DefaultColors = defaultColors.ToList();
+
+        Assert.Equal(XYChart.FallbackColor, XYChart.GetColor(index));
+    }
+
     [Fact]
     public void AutoScale() {
         var subject = new XYChart() {
