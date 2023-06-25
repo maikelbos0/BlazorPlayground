@@ -42,4 +42,15 @@ public class XYChart {
     public IEnumerable<GridLineShape> GetGridLineShapes() => PlotArea.GetGridLines().Select(y => new GridLineShape(Canvas.PlotAreaX, Canvas.PlotAreaY + MapToPlotArea(y), Canvas.PlotAreaWidth));
 
     public double MapToPlotArea(double dataPoint) => (dataPoint - PlotArea.Min) / (PlotArea.Max - PlotArea.Min) * Canvas.PlotAreaHeight;
+
+    public DataSeries AddDataSeries(string name) => AddDataSeries(name, null);
+
+    public DataSeries AddDataSeries(string name, string? color) {
+        var dataSeries = new DataSeries(name, color ?? GetColor(DataSeries.Count));
+
+        dataSeries.AddRange(Enumerable.Range(0, Labels.Count).Select<int, double?>(i => null));
+        DataSeries.Add(dataSeries);
+
+        return dataSeries;
+    }
 }

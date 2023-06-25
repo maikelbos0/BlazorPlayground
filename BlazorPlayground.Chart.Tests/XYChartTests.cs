@@ -31,8 +31,8 @@ public class XYChartTests {
     public void AutoScale() {
         var subject = new XYChart() {
             DataSeries = {
-                new("Foo") { -9, 0 },
-                new("Bar") {-5, 19 }
+                new("Foo", "red") { -9, 0 },
+                new("Bar", "blue") {-5, 19 }
             }
         };
 
@@ -109,5 +109,43 @@ public class XYChartTests {
         };
 
         Assert.Equal(100, subject.MapToPlotArea(50));
+    }
+
+    [Fact]
+    public void AddDataSeries_With_Color() {
+        var subject = new XYChart() {
+            Labels = {
+                "Foo",
+                "Bar",
+                "Baz"
+            }
+        };
+
+        var result = subject.AddDataSeries("Data", "red");
+
+        Assert.Same(result, Assert.Single(subject.DataSeries));
+        Assert.Equal("Data", result.Name);
+        Assert.Equal("red", result.Color);
+        Assert.Equal(3, result.Count);
+    }
+
+    [Fact]
+    public void AddDataSeries_Without_Color() {
+        XYChart.DefaultColors = new List<string>() { "red", "blue", "green" };
+
+        var subject = new XYChart() {
+            Labels = {
+                "Foo",
+                "Bar",
+                "Baz"
+            }
+        };
+
+        var result = subject.AddDataSeries("Data");
+
+        Assert.Same(result, Assert.Single(subject.DataSeries));
+        Assert.Equal("Data", result.Name);
+        Assert.Equal("red", result.Color);
+        Assert.Equal(3, result.Count);
     }
 }

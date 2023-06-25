@@ -121,13 +121,11 @@
         base.OnInitialized();
 
         XYChart.Labels.Add("");
-        XYChart.DataSeries.Add(new DataSeries("") { null });
+        XYChart.AddDataSeries("");
     }
 
     private void AddDataSeries() {
-        var dataSeries = new DataSeries("");
-        dataSeries.AddRange(XYChart.Labels.Select(l => (double?)null));
-        XYChart.DataSeries.Add(dataSeries);
+        XYChart.AddDataSeries("");
     }
 
     private void AddDataPoint() {

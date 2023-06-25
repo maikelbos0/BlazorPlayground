@@ -7,7 +7,7 @@ public static class DoubleExtensions {
     public static double CeilingToScale(this double value, double scale)
         => Math.Ceiling(value / scale) * scale;
 
-    private static double[] scaleMultipliers = new[] { 2, 2.5, 2, 2 };
+    private readonly static double[] scaleMultipliers = new[] { 2, 2.5, 2, 2 };
 
     public static double GetScale(double min, double max) {
         if (min == max) {

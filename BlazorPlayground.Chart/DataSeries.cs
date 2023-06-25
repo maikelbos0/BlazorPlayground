@@ -2,8 +2,10 @@
 
 public class DataSeries : List<double?> {
     public string Name { get; set; }
+    public string Color { get; set; }
 
-    public DataSeries(string name) {
+    public DataSeries(string name, string color) {
         Name = name;
+        Color = color;
     }
 }
