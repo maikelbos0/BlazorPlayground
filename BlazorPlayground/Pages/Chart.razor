@@ -120,30 +120,22 @@
     protected override void OnInitialized() {
         base.OnInitialized();
 
-        XYChart.AddDataPoint("");
-        XYChart.AddDataSeries("");
+        AddDataPoint();
+        AddDataSeries();
     }
 
     private void AddDataSeries() {
-        XYChart.AddDataSeries("");
+        XYChart.AddDataSeries($"Series {XYChart.DataSeries.Count + 1}");
     }
 
     private void AddDataPoint() {
-        XYChart.AddDataPoint("");
+        XYChart.AddDataPoint($"Value {XYChart.Labels.Count + 1}");
     }
 
     private void GenerateData() {
         var random = new Random();
 
-        for (var x = 0; x < XYChart.Labels.Count; x++) {
-            XYChart.Labels[x] = $"Value {x + 1}";
-        }
-
         for (var y = 0; y < XYChart.DataSeries.Count; y++) {
-            if (string.IsNullOrWhiteSpace(XYChart.DataSeries[y].Name)) {
-                XYChart.DataSeries[y].Name = $"Series {y + 1}";
-            }
-
             for (var x = 0; x < XYChart.DataSeries[y].Count; x++) {
                 if (XYChart.DataSeries[y][x] == null) {
                     XYChart.DataSeries[y][x] = random.Next(-100, 900);
