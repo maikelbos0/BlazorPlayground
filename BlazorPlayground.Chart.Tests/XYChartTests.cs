@@ -58,6 +58,13 @@ public class XYChartTests {
     }
 
     [Fact]
+    public void GetShapes_YAxisLabelShapes() {
+        var subject = new XYChart();
+
+        Assert.Contains(subject.GetShapes(), shape => shape is YAxisLabelShape);
+    }
+
+    [Fact]
     public void GetGridLineShapes() {
         var subject = new XYChart() {
             Canvas = {
@@ -76,18 +83,50 @@ public class XYChartTests {
             }
         };
 
-        var gridLines = subject.GetGridLineShapes();
+        var result = subject.GetGridLineShapes();
 
-        Assert.Equal(3, gridLines.Count());
+        Assert.Equal(3, result.Count());
 
-        Assert.All(gridLines, gridLine => {
-            Assert.Equal(25 + 75, gridLine.X);
-            Assert.Equal(1000 - 25 - 25 - 75, gridLine.Width);
+        Assert.All(result, shape => {
+            Assert.Equal(25 + 75, shape.X);
+            Assert.Equal(1000 - 25 - 25 - 75, shape.Width);
         });
 
-        Assert.Single(gridLines, gridLine => gridLine.Y == 25 + (0 - -100) / 600.0 * (500 - 25 - 25 - 50));
-        Assert.Single(gridLines, gridLine => gridLine.Y == 25 + (200 - -100) / 600.0 * (500 - 25 - 25 - 50));
-        Assert.Single(gridLines, gridLine => gridLine.Y == 25 + (400 - 100) / 600.0 * (500 - 25 - 25 - 50));
+        Assert.Single(result, shape => shape.Y == 25 + (0 - -100) / 600.0 * (500 - 25 - 25 - 50));
+        Assert.Single(result, shape => shape.Y == 25 + (200 - -100) / 600.0 * (500 - 25 - 25 - 50));
+        Assert.Single(result, shape => shape.Y == 25 + (400 - -100) / 600.0 * (500 - 25 - 25 - 50));
+    }
+
+    [Fact]
+    public void GetYAxisLabelShapes() {
+        var subject = new XYChart() {
+            Canvas = {
+                Width = 1000,
+                Height = 500,
+                Padding = 25,
+                XAxisLabelHeight = 50,
+                XAxisLabelClearance = 5,
+                YAxisLabelWidth = 75,
+                YAxisLabelClearance = 10
+            },
+            PlotArea = {
+                 Min = -100,
+                 Max = 500,
+                 GridLineInterval = 200
+            }
+        };
+
+        var result = subject.GetYAxisLabelShapes();
+
+        Assert.Equal(3, result.Count());
+
+        Assert.All(result, shape => {
+            Assert.Equal(25 + 75 - 10, shape.X);
+        });
+
+        Assert.Single(result, shape => shape.Y == 25 + (0 - -100) / 600.0 * (500 - 25 - 25 - 50) && shape.Value == 400);
+        Assert.Single(result, shape => shape.Y == 25 + (200 - -100) / 600.0 * (500 - 25 - 25 - 50) && shape.Value == 200);
+        Assert.Single(result, shape => shape.Y == 25 + (400 - -100) / 600.0 * (500 - 25 - 25 - 50) && shape.Value == 0);
     }
 
     [Fact]

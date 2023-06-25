@@ -34,12 +34,18 @@ public class XYChart {
     public IEnumerable<ShapeBase> GetShapes() {
         yield return Canvas.GetPlotAreaShape();
 
-        foreach (var gridLine in GetGridLineShapes()) {
-            yield return gridLine;
+        foreach (var shape in GetGridLineShapes()) {
+            yield return shape;
+        }
+
+        foreach (var shape in GetYAxisLabelShapes()) {
+            yield return shape;
         }
     }
 
     public IEnumerable<GridLineShape> GetGridLineShapes() => PlotArea.GetGridLines().Select(y => new GridLineShape(Canvas.PlotAreaX, Canvas.PlotAreaY + MapToPlotArea(y), Canvas.PlotAreaWidth));
+
+    public IEnumerable<YAxisLabelShape> GetYAxisLabelShapes() => PlotArea.GetGridLines().Select(y => new YAxisLabelShape(Canvas.PlotAreaX - Canvas.YAxisLabelClearance, Canvas.PlotAreaY + MapToPlotArea(y), y));
 
     public double MapToPlotArea(double dataPoint) => (dataPoint - PlotArea.Min) / (PlotArea.Max - PlotArea.Min) * Canvas.PlotAreaHeight;
 
