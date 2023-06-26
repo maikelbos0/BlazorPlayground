@@ -6,7 +6,7 @@ namespace BlazorPlayground.Chart.Shapes;
 public class ShapeAttributeCollection : IEnumerable<KeyValuePair<string, object>> {
     private readonly Dictionary<string, object> attributes = new();
 
-    public void Add(string key, double value) => attributes.Add(key, value.ToString(CultureInfo.InvariantCulture));
+    public void Add(string key, decimal value) => attributes.Add(key, value.ToString(CultureInfo.InvariantCulture));
 
     public void Add(string key, string value) => attributes.Add(key, value);
 

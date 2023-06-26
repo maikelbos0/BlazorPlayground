@@ -47,14 +47,14 @@ public class XYChart {
 
     public IEnumerable<YAxisLabelShape> GetYAxisLabelShapes() => PlotArea.GetGridLineDataPoints().Select(dataPoint => new YAxisLabelShape(Canvas.PlotAreaX - Canvas.YAxisLabelClearance, Canvas.PlotAreaY + MapToPlotArea(dataPoint), dataPoint));
 
-    public double MapToPlotArea(double dataPoint) => (PlotArea.Max - dataPoint) / (PlotArea.Max - PlotArea.Min) * Canvas.PlotAreaHeight;
+    public decimal MapToPlotArea(decimal dataPoint) => (PlotArea.Max - dataPoint) / (PlotArea.Max - PlotArea.Min) * Canvas.PlotAreaHeight;
 
     public DataSeries AddDataSeries(string name) => AddDataSeries(name, null);
 
     public DataSeries AddDataSeries(string name, string? color) {
         var dataSeries = new DataSeries(name, color ?? GetColor(DataSeries.Count));
 
-        dataSeries.AddRange(Enumerable.Range(0, Labels.Count).Select<int, double?>(i => null));
+        dataSeries.AddRange(Enumerable.Range(0, Labels.Count).Select<int, decimal?>(i => null));
         DataSeries.Add(dataSeries);
 
         return dataSeries;
@@ -64,7 +64,7 @@ public class XYChart {
         Labels.Add(label);
 
         foreach (var dataSeries in DataSeries) {
-            dataSeries.AddRange(Enumerable.Range(0, Labels.Count - dataSeries.Count).Select<int, double?>(i => null));
+            dataSeries.AddRange(Enumerable.Range(0, Labels.Count - dataSeries.Count).Select<int, decimal?>(i => null));
         }
     }
 }

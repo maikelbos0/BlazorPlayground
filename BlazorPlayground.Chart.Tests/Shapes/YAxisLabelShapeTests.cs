@@ -7,7 +7,7 @@ namespace BlazorPlayground.Chart.Tests.Shapes;
 public class YAxisLabelShapeTests {
     [Fact]
     public void GetAttributes() {
-        var subject = new YAxisLabelShape(100, 50, 150);
+        var subject = new YAxisLabelShape(100M, 50M, 150);
 
         var result = subject.GetAttributes();
 

@@ -1,6 +1,6 @@
 ﻿namespace BlazorPlayground.Chart;
 
-public class DataSeries : List<double?> {
+public class DataSeries : List<decimal?> {
     public string Name { get; set; }
     public string Color { get; set; }
 

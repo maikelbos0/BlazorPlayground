@@ -5,11 +5,11 @@ namespace BlazorPlayground.Chart.Shapes;
 public class YAxisLabelShape : ShapeBase {
     public override string CssClass => "y-axis-label";
     public override string ElementName => "text";
-    public double X { get; }
-    public double Y { get; }
-    public double Value { get; }
+    public decimal X { get; }
+    public decimal Y { get; }
+    public decimal Value { get; }
 
-    public YAxisLabelShape(double x, double y, double value) {
+    public YAxisLabelShape(decimal x, decimal y, decimal value) {
         X = x;
         Y = y;
         Value = value;

@@ -31,16 +31,16 @@ public class XYChartTests {
     public void AutoScale() {
         var subject = new XYChart() {
             DataSeries = {
-                new("Foo", "red") { -9, 0 },
-                new("Bar", "blue") {-5, 19 }
+                new("Foo", "red") { -9M, 0M },
+                new("Bar", "blue") {-5M, 19M }
             }
         };
 
         subject.AutoScale();
 
-        Assert.Equal(-10, subject.PlotArea.Min);
-        Assert.Equal(20, subject.PlotArea.Max);
-        Assert.Equal(5, subject.PlotArea.GridLineInterval);
+        Assert.Equal(-10M, subject.PlotArea.Min);
+        Assert.Equal(20M, subject.PlotArea.Max);
+        Assert.Equal(5M, subject.PlotArea.GridLineInterval);
     }
 
     [Fact]
@@ -77,9 +77,9 @@ public class XYChartTests {
                 YAxisLabelClearance = 10
             },
             PlotArea = {
-                 Min = -100,
-                 Max = 500,
-                 GridLineInterval = 200
+                 Min = -100M,
+                 Max = 500M,
+                 GridLineInterval = 200M
             }
         };
 
@@ -92,9 +92,9 @@ public class XYChartTests {
             Assert.Equal(1000 - 25 - 25 - 75, shape.Width);
         });
 
-        Assert.Single(result, shape => shape.Y == 25 + (0 - -100) / 600.0 * (500 - 25 - 25 - 50));
-        Assert.Single(result, shape => shape.Y == 25 + (200 - -100) / 600.0 * (500 - 25 - 25 - 50));
-        Assert.Single(result, shape => shape.Y == 25 + (400 - -100) / 600.0 * (500 - 25 - 25 - 50));
+        Assert.Single(result, shape => shape.Y == 25 + (0M - -100M) / 600.0M * (500 - 25 - 25 - 50));
+        Assert.Single(result, shape => shape.Y == 25 + (200M - -100M) / 600.0M * (500 - 25 - 25 - 50));
+        Assert.Single(result, shape => shape.Y == 25 + (400M - -100M) / 600.0M * (500 - 25 - 25 - 50));
     }
 
     [Fact]
@@ -110,9 +110,9 @@ public class XYChartTests {
                 YAxisLabelClearance = 10
             },
             PlotArea = {
-                 Min = -100,
-                 Max = 500,
-                 GridLineInterval = 200
+                 Min = -100M,
+                 Max = 500M,
+                 GridLineInterval = 200M
             }
         };
 
@@ -124,16 +124,14 @@ public class XYChartTests {
             Assert.Equal(25 + 75 - 10, shape.X);
         });
 
-        Assert.Single(result, shape => shape.Y == 25 + (0 - -100) / 600.0 * (500 - 25 - 25 - 50) && shape.Value == 400);
-        Assert.Single(result, shape => shape.Y == 25 + (200 - -100) / 600.0 * (500 - 25 - 25 - 50) && shape.Value == 200);
-        Assert.Single(result, shape => shape.Y == 25 + (400 - -100) / 600.0 * (500 - 25 - 25 - 50) && shape.Value == 0);
+        Assert.Single(result, shape => shape.Y == 25 + (0M - -100M) / 600.0M * (500 - 25 - 25 - 50) && shape.Value == 400M);
+        Assert.Single(result, shape => shape.Y == 25 + (200M - -100M) / 600.0M * (500 - 25 - 25 - 50) && shape.Value == 200M);
+        Assert.Single(result, shape => shape.Y == 25 + (400M - -100M) / 600.0M * (500 - 25 - 25 - 50) && shape.Value == 0M);
     }
 
     [Theory]
-    [InlineData(50, 300)]
-    [InlineData(200, 200)]
-    [InlineData(350, 100)]
-    public void MapToPlotArea(double dataPoint, double expectedValue) {
+    [MemberData(nameof(MapToPlotAreaData))]
+    public void MapToPlotArea(decimal dataPoint, decimal expectedValue) {
         var subject = new XYChart() {
             Canvas = {
                 Width = 1000,
@@ -152,6 +150,12 @@ public class XYChartTests {
 
         Assert.Equal(expectedValue, subject.MapToPlotArea(dataPoint));
     }
+
+    public static TheoryData<decimal, decimal> MapToPlotAreaData() => new() {
+        { 50M, 300M },
+        { 200M, 200M },
+        { 350M, 100M }
+    };
 
     [Fact]
     public void AddDataSeries_With_Color() {
@@ -199,8 +203,8 @@ public class XYChartTests {
                 "Value 2"
             },
             DataSeries = {
-                new("Foo", "red") { 2.5, 3, 4 },
-                new("Bar", "blue") { 5.5, 6 },
+                new("Foo", "red") { 2.5M, 3M, 4M },
+                new("Bar", "blue") { 5.5M, 6M },
                 new("Baz", "green")
             }
         };
@@ -209,8 +213,8 @@ public class XYChartTests {
 
         Assert.Equal(3, subject.Labels.Count);
         Assert.Equal(new List<string> { "Value 1", "Value 2", "Value 3" }, subject.Labels);
-        Assert.Equal(new List<double?> { 2.5, 3, 4 }, subject.DataSeries[0]);
-        Assert.Equal(new List<double?> { 5.5, 6, null }, subject.DataSeries[1]);
-        Assert.Equal(new List<double?> { null, null, null }, subject.DataSeries[2]);
+        Assert.Equal(new List<decimal?> { 2.5M, 3M, 4M }, subject.DataSeries[0]);
+        Assert.Equal(new List<decimal?> { 5.5M, 6M, null }, subject.DataSeries[1]);
+        Assert.Equal(new List<decimal?> { null, null, null }, subject.DataSeries[2]);
     }
 }

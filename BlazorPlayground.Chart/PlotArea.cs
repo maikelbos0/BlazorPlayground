@@ -1,28 +1,41 @@
 ﻿namespace BlazorPlayground.Chart;
 
 public class PlotArea {
-    public static double DefaultMin { get; set; } = 0;
-    public static double DefaultMax { get; set; } = 5;
-    public static double DefaultGridLineInterval { get; set; } = 1;
+    public static decimal DefaultMin { get; set; } = 0M;
+    public static decimal DefaultMax { get; set; } = 5M;
+    public static decimal DefaultGridLineInterval { get; set; } = 1M;
 
-    public double Min { get; set; } = DefaultMin;
-    public double Max { get; set; } = DefaultMax;
-    public double GridLineInterval { get; set; } = DefaultGridLineInterval;
+    public decimal Min { get; set; } = DefaultMin;
+    public decimal Max { get; set; } = DefaultMax;
+    public decimal GridLineInterval { get; set; } = DefaultGridLineInterval;
 
-    public void AutoScale(IEnumerable<double> dataPoints) {
+    public void AutoScale(IEnumerable<decimal> dataPoints) {
         const int maxGridLineCount = 8;
-        double[] gridLineMultipliers = new[] { 2, 2.5, 2, 2 };
+        decimal[] gridLineMultipliers = new[] { 2M, 2.5M, 2M, 2M };
         var i = 0;
 
         Min = dataPoints.DefaultIfEmpty(DefaultMin).Min();
         Max = dataPoints.DefaultIfEmpty(DefaultMax).Max();
 
         if (Min == Max) {
-            Min -= (DefaultMax - DefaultMin) / 2;
-            Max += (DefaultMax - DefaultMin) / 2;
+            Min -= (DefaultMax - DefaultMin) / 2M;
+            Max += (DefaultMax - DefaultMin) / 2M;
         }
 
-        GridLineInterval = Math.Pow(10, Math.Floor(Math.Log10(Max - Min) - 1));
+        var gridLineIntervalDecimalShift = (int)Math.Log10((double)(Max - Min)) - 1;
+
+        GridLineInterval = 1;
+
+        if (gridLineIntervalDecimalShift > 0) {
+            for (var _ = 0; _ < gridLineIntervalDecimalShift; _++) {
+                GridLineInterval *= 10M;
+            }
+        }
+        else if (gridLineIntervalDecimalShift < 0) {
+            for (var _ = 0; _ > gridLineIntervalDecimalShift; _--) {
+                GridLineInterval *= 0.1M;
+            }
+        }
 
         while ((Max.CeilingToScale(GridLineInterval) - Min.FloorToScale(GridLineInterval)) / GridLineInterval > maxGridLineCount) {
             GridLineInterval *= gridLineMultipliers[i++];
@@ -32,7 +45,7 @@ public class PlotArea {
         Max = Max.CeilingToScale(GridLineInterval);
     }
 
-    public IEnumerable<double> GetGridLineDataPoints() {
+    public IEnumerable<decimal> GetGridLineDataPoints() {
         var dataPoint = Min.CeilingToScale(GridLineInterval);
 
         while (dataPoint <= Max) {

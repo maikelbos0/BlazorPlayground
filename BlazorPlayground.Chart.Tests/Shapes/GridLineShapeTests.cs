@@ -7,7 +7,7 @@ namespace BlazorPlayground.Chart.Tests.Shapes;
 public class GridLineShapeTests {
     [Fact]
     public void GetAttributes() {
-        var subject = new GridLineShape(20, 50, 80, 10);
+        var subject = new GridLineShape(20M, 50M, 80, 10M);
 
         var result = subject.GetAttributes();
 

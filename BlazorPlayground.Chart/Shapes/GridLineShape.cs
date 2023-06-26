@@ -3,12 +3,12 @@
 public class GridLineShape : ShapeBase {
     public override string CssClass => "grid-line";
     public override string ElementName => "line";
-    public double X { get; }
-    public double Y { get; }
+    public decimal X { get; }
+    public decimal Y { get; }
     public int Width { get; }
-    public double Value { get; }
+    public decimal Value { get; }
 
-    public GridLineShape(double x, double y, int width, double value) {
+    public GridLineShape(decimal x, decimal y, int width, decimal value) {
         X = x;
         Y = y;
         Width = width;
