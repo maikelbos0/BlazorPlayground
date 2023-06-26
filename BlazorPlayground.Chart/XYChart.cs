@@ -47,7 +47,7 @@ public class XYChart {
 
     public IEnumerable<YAxisLabelShape> GetYAxisLabelShapes() => PlotArea.GetGridLines().Select(y => new YAxisLabelShape(Canvas.PlotAreaX - Canvas.YAxisLabelClearance, Canvas.PlotAreaY + MapToPlotArea(y), y));
 
-    public double MapToPlotArea(double dataPoint) => (dataPoint - PlotArea.Min) / (PlotArea.Max - PlotArea.Min) * Canvas.PlotAreaHeight;
+    public double MapToPlotArea(double dataPoint) => (PlotArea.Max - dataPoint) / (PlotArea.Max - PlotArea.Min) * Canvas.PlotAreaHeight;
 
     public DataSeries AddDataSeries(string name) => AddDataSeries(name, null);
 

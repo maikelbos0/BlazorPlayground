@@ -129,8 +129,11 @@ public class XYChartTests {
         Assert.Single(result, shape => shape.Y == 25 + (400 - -100) / 600.0 * (500 - 25 - 25 - 50) && shape.Value == 0);
     }
 
-    [Fact]
-    public void MapToPlotArea() {
+    [Theory]
+    [InlineData(50, 300)]
+    [InlineData(200, 200)]
+    [InlineData(350, 100)]
+    public void MapToPlotArea(double dataPoint, double expectedValue) {
         var subject = new XYChart() {
             Canvas = {
                 Width = 1000,
@@ -147,7 +150,7 @@ public class XYChartTests {
             }
         };
 
-        Assert.Equal(100, subject.MapToPlotArea(50));
+        Assert.Equal(expectedValue, subject.MapToPlotArea(dataPoint));
     }
 
     [Fact]
