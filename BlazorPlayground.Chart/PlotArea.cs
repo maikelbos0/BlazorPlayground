@@ -36,11 +36,7 @@ public class PlotArea {
     public IEnumerable<double> GetGridLines() {
         var gridLine = Min.CeilingToScale(GridLineInterval);
 
-        if (gridLine == Min) {
-            gridLine += GridLineInterval;
-        }
-
-        while (gridLine < Max) {
+        while (gridLine <= Max) {
             yield return gridLine;
 
             gridLine += GridLineInterval;

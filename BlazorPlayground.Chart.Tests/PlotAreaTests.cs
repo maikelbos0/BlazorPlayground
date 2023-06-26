@@ -29,36 +29,16 @@ public class PlotAreaTests {
         Assert.Equal(expectedGridLineInterval, subject.GridLineInterval);
     }
 
-    [Fact]
-    public void GetGridLines() {
+    [Theory]
+    [InlineData(0, 100, 20, 0.0, 20.0, 40.0, 60.0, 80.0, 100.0)]
+    [InlineData(-10, 105, 20, 0.0, 20.0, 40.0, 60.0, 80.0, 100.0)]
+    public void GetGridLines(double min, double max, double gridLineInterval, params double[] expectedGridLines) {
         var subject = new PlotArea() {
-            Min = -10,
-            Max = 105,
-            GridLineInterval = 20
+            Min = min,
+            Max = max,
+            GridLineInterval = gridLineInterval
         };
 
-        Assert.Equal(new double[] { 0, 20, 40, 60, 80, 100 }, subject.GetGridLines());
-    }
-
-    [Fact]
-    public void GetGridLines_Skips_Min() {
-        var subject = new PlotArea() {
-            Min = -10,
-            Max = 105,
-            GridLineInterval = 5
-        };
-
-        Assert.DoesNotContain(-10.0, subject.GetGridLines());
-    }
-
-    [Fact]
-    public void GetGridLines_Skips_Max() {
-        var subject = new PlotArea() {
-            Min = -10,
-            Max = 105,
-            GridLineInterval = 5
-        };
-
-        Assert.DoesNotContain(105.0, subject.GetGridLines());
+        Assert.Equal(expectedGridLines, subject.GetGridLines());
     }
 }
