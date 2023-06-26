@@ -32,13 +32,13 @@ public class PlotArea {
         Max = Max.CeilingToScale(GridLineInterval);
     }
 
-    public IEnumerable<double> GetGridLines() {
-        var gridLine = Min.CeilingToScale(GridLineInterval);
+    public IEnumerable<double> GetGridLineDataPoints() {
+        var dataPoint = Min.CeilingToScale(GridLineInterval);
 
-        while (gridLine <= Max) {
-            yield return gridLine;
+        while (dataPoint <= Max) {
+            yield return dataPoint;
 
-            gridLine += GridLineInterval;
+            dataPoint += GridLineInterval;
         }
     }
 }

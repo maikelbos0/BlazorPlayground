@@ -32,13 +32,13 @@ public class PlotAreaTests {
     [Theory]
     [InlineData(0, 100, 20, 0.0, 20.0, 40.0, 60.0, 80.0, 100.0)]
     [InlineData(-10, 105, 20, 0.0, 20.0, 40.0, 60.0, 80.0, 100.0)]
-    public void GetGridLines(double min, double max, double gridLineInterval, params double[] expectedGridLines) {
+    public void GetGridLineDataPoints(double min, double max, double gridLineInterval, params double[] expectedDataPoints) {
         var subject = new PlotArea() {
             Min = min,
             Max = max,
             GridLineInterval = gridLineInterval
         };
 
-        Assert.Equal(expectedGridLines, subject.GetGridLines());
+        Assert.Equal(expectedDataPoints, subject.GetGridLineDataPoints());
     }
 }
