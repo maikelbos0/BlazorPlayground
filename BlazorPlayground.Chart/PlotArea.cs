@@ -1,26 +1,25 @@
 ﻿namespace BlazorPlayground.Chart;
 
 public class PlotArea {
-    private const double defaultMin = 0;
-    private const double defaultMax = 5;
-    private const double defaultMiddle = (defaultMax - defaultMin) / 2;
-    private const double defaultGridLineInterval = 1;
-    private const int maxGridLineCount = 8;
-    private readonly static double[] gridLineMultipliers = new[] { 2, 2.5, 2, 2 };
+    public static double DefaultMin { get; set; } = 0;
+    public static double DefaultMax { get; set; } = 5;
+    public static double DefaultGridLineInterval { get; set; } = 1;
 
-    public double Min { get; set; } = defaultMin;
-    public double Max { get; set; } = defaultMax;
-    public double GridLineInterval { get; set; } = defaultGridLineInterval;
+    public double Min { get; set; } = DefaultMin;
+    public double Max { get; set; } = DefaultMax;
+    public double GridLineInterval { get; set; } = DefaultGridLineInterval;
 
     public void AutoScale(IEnumerable<double> dataPoints) {
+        const int maxGridLineCount = 8;
+        double[] gridLineMultipliers = new[] { 2, 2.5, 2, 2 };
         var i = 0;
 
-        Min = dataPoints.DefaultIfEmpty(defaultMin).Min();
-        Max = dataPoints.DefaultIfEmpty(defaultMax).Max();
+        Min = dataPoints.DefaultIfEmpty(DefaultMin).Min();
+        Max = dataPoints.DefaultIfEmpty(DefaultMax).Max();
 
         if (Min == Max) {
-            Min -= defaultMiddle;
-            Max += defaultMiddle;
+            Min -= (DefaultMax - DefaultMin) / 2;
+            Max += (DefaultMax - DefaultMin) / 2;
         }
 
         GridLineInterval = Math.Pow(10, Math.Floor(Math.Log10(Max - Min) - 1));
