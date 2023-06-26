@@ -1,5 +1,6 @@
 ﻿namespace BlazorPlayground.Chart;
 
+[Obsolete]
 public static class DoubleExtensions {
     public static double FloorToScale(this double value, double scale)
         => Math.Floor(value / scale) * scale;

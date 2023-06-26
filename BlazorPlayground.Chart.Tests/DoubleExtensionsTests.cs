@@ -14,6 +14,7 @@ public class DoubleExtensionsTests {
     public void FloorToScale(double value, double scale, double expectedValue) {
         Assert.Equal(expectedValue, value.FloorToScale(scale));
     }
+
     [Theory]
     [InlineData(9, 1, 9)]
     [InlineData(9, 2, 10)]
@@ -25,7 +26,7 @@ public class DoubleExtensionsTests {
     public void CeilingToScale(double value, double scale, double expectedValue) {
         Assert.Equal(expectedValue, value.CeilingToScale(scale));
     }
-    
+
     [Theory]
     [InlineData(0.01, 0.79, 0.1)]
     [InlineData(0.1, 7.9, 1)]
