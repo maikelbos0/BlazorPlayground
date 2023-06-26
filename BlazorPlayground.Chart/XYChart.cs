@@ -43,9 +43,9 @@ public class XYChart {
         }
     }
 
-    public IEnumerable<GridLineShape> GetGridLineShapes() => PlotArea.GetGridLines().Select(y => new GridLineShape(Canvas.PlotAreaX, Canvas.PlotAreaY + MapToPlotArea(y), Canvas.PlotAreaWidth));
+    public IEnumerable<GridLineShape> GetGridLineShapes() => PlotArea.GetGridLines().Select(gridLine => new GridLineShape(Canvas.PlotAreaX, Canvas.PlotAreaY + MapToPlotArea(gridLine), Canvas.PlotAreaWidth, gridLine));
 
-    public IEnumerable<YAxisLabelShape> GetYAxisLabelShapes() => PlotArea.GetGridLines().Select(y => new YAxisLabelShape(Canvas.PlotAreaX - Canvas.YAxisLabelClearance, Canvas.PlotAreaY + MapToPlotArea(y), y));
+    public IEnumerable<YAxisLabelShape> GetYAxisLabelShapes() => PlotArea.GetGridLines().Select(gridLine => new YAxisLabelShape(Canvas.PlotAreaX - Canvas.YAxisLabelClearance, Canvas.PlotAreaY + MapToPlotArea(gridLine), gridLine));
 
     public double MapToPlotArea(double dataPoint) => (PlotArea.Max - dataPoint) / (PlotArea.Max - PlotArea.Min) * Canvas.PlotAreaHeight;
 

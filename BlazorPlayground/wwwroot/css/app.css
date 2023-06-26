@@ -193,6 +193,11 @@ fieldset:disabled label, fieldset:disabled .form-control:disabled, fieldset:disa
     stroke-width: 1px;
 }
 
+.chart-main .grid-line[value='0'] {
+    stroke: #adafb3;
+    stroke-dasharray: none;
+}
+
 .chart-main .y-axis-label {
     text-anchor: end;
     font-family: Courier New, Courier, monospace;
