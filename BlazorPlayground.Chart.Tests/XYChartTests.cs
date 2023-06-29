@@ -43,6 +43,33 @@ public class XYChartTests {
         Assert.Equal(5M, subject.PlotArea.GridLineInterval);
     }
 
+    [Theory]
+    [MemberData(nameof(AutoScaleData))]
+    public void AutoScale2(int? requestedGridLineCount, decimal expectedMin, decimal expectedMax, decimal expectedGridLineInterval) {
+        var subject = new XYChart() {
+            Canvas = {
+                Height = 800,
+                Padding = 25,
+                XAxisLabelHeight = 50
+            },
+            DataSeries = {
+                new("Foo", "red") { -9M, 0M },
+                new("Bar", "blue") {-5M, 19M }
+            }
+        };
+
+        subject.AutoScale(requestedGridLineCount);
+
+        Assert.Equal(expectedMin, subject.PlotArea.Min);
+        Assert.Equal(expectedMax, subject.PlotArea.Max);
+        Assert.Equal(expectedGridLineInterval, subject.PlotArea.GridLineInterval);
+    }
+
+    public static TheoryData<int?, decimal, decimal, decimal> AutoScaleData() => new() {
+        { null, -10M, 20M, 2M },
+        { 7, -10M, 20M, 5M },
+    };
+
     [Fact]
     public void GetShapes_PlotAreaShape() {
         var subject = new XYChart();
