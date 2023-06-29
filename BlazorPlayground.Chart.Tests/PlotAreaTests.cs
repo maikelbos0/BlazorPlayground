@@ -36,6 +36,46 @@ public class PlotAreaTests {
     };
 
     [Theory]
+    [MemberData(nameof(AutoScaleData2))]
+    public void AutoScale2(decimal[] dataPoints, int requestedGridLineCount, decimal expectedGridLineInterval, decimal expectedMin, decimal expectedMax) {
+        var subject = new PlotArea();
+
+        subject.AutoScale(dataPoints, requestedGridLineCount);
+
+        Assert.Equal(expectedMin, subject.Min);
+        Assert.Equal(expectedMax, subject.Max);
+        Assert.Equal(expectedGridLineInterval, subject.GridLineInterval);
+    }
+
+    public static TheoryData<decimal[], int, decimal, decimal, decimal> AutoScaleData2() => new() {
+        { Array.Empty<decimal>(), 1, 5M, 0M, 5M }, // 2
+        { Array.Empty<decimal>(), 2, 2M, 0M, 6M }, // 4
+        { Array.Empty<decimal>(), 3, 2M, 0M, 6M }, // 4
+        { Array.Empty<decimal>(), 4, 1M, 0M, 5M }, // 6
+        { Array.Empty<decimal>(), 5, 1M, 0M, 5M }, // 6
+        { Array.Empty<decimal>(), 6, 1M, 0M, 5M }, // 6
+        { Array.Empty<decimal>(), 7, 1M, 0M, 5M }, // 6
+        { Array.Empty<decimal>(), 8, 0.5M, 0M, 5M }, // 11
+        { Array.Empty<decimal>(), 9, 0.5M, 0M, 5M }, // 11
+        { Array.Empty<decimal>(), 10, 0.5M, 0M, 5M }, // 11
+        { Array.Empty<decimal>(), 11, 0.5M, 0M, 5M }, // 11
+        { Array.Empty<decimal>(), 12, 0.5M, 0M, 5M }, // 11
+        { Array.Empty<decimal>(), 13, 0.5M, 0M, 5M }, // 11
+        { Array.Empty<decimal>(), 14, 0.5M, 0M, 5M }, // 11
+        { Array.Empty<decimal>(), 15, 0.5M, 0M, 5M }, // 11
+        { Array.Empty<decimal>(), 16, 0.5M, 0M, 5M }, // 11
+        { Array.Empty<decimal>(), 17, 0.5M, 0M, 5M }, // 11
+        { Array.Empty<decimal>(), 18, 0.2M, 0M, 5M }, // 21
+        { Array.Empty<decimal>(), 19, 0.2M, 0M, 5M }, // 21
+        { Array.Empty<decimal>(), 20, 0.2M, 0M, 5M }, // 21
+        { Array.Empty<decimal>(), 21, 0.2M, 0M, 5M }, // 21
+        { Array.Empty<decimal>(), 22, 0.2M, 0M, 5M }, // 21
+        { Array.Empty<decimal>(), 23, 0.2M, 0M, 5M }, // 21
+        { Array.Empty<decimal>(), 24, 0.2M, 0M, 5M }, // 21
+        { Array.Empty<decimal>(), 25, 0.2M, 0M, 5M }, // 21
+    };
+
+    [Theory]
     [MemberData(nameof(GetGridLineDataPointsData))]
     public void GetGridLineDataPoints(decimal min, decimal max, decimal gridLineInterval, params decimal[] expectedDataPoints) {
         var subject = new PlotArea() {

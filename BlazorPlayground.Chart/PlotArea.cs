@@ -45,6 +45,34 @@ public class PlotArea {
         Max = DecimalMath.CeilingToScale(Max, GridLineInterval);
     }
 
+    public void AutoScale(IEnumerable<decimal> dataPoints, int requestedGridLineCount) {
+        var min = dataPoints.DefaultIfEmpty(DefaultMin).Min();
+        var max = dataPoints.DefaultIfEmpty(DefaultMax).Max();
+
+        if (min == max) {
+            min -= (DefaultMax - DefaultMin) / 2M;
+            max += (DefaultMax - DefaultMin) / 2M;
+        }
+
+        // TODO force 0 line?
+
+        var rawGridLineInterval = (max - min) / Math.Max(1, requestedGridLineCount - 1);
+        var baseMultiplier = DecimalMath.Pow(10M, (int)Math.Floor((decimal)Math.Log10((double)rawGridLineInterval)));
+        var scale = new[] { 1M, 2M, 5M, 10M }
+            .Select(baseGridLineInterval => baseGridLineInterval * baseMultiplier)
+            .Select(gridLineInterval => new {
+                GridLineInterval = gridLineInterval,
+                Min = DecimalMath.FloorToScale(min, gridLineInterval),
+                Max = DecimalMath.CeilingToScale(max, gridLineInterval)
+            })
+            .OrderBy(candidate => Math.Abs((candidate.Max - candidate.Min) / candidate.GridLineInterval - requestedGridLineCount))
+            .First();
+
+        Min = scale.Min;
+        Max = scale.Max;
+        GridLineInterval = scale.GridLineInterval;
+    }
+
     public IEnumerable<decimal> GetGridLineDataPoints() {
         var dataPoint = DecimalMath.CeilingToScale(Min, GridLineInterval);
 
