@@ -52,27 +52,26 @@ public class PlotAreaTests {
         { Array.Empty<decimal>(), 2, 2M, 0M, 6M }, // 4
         { Array.Empty<decimal>(), 3, 2M, 0M, 6M }, // 4
         { Array.Empty<decimal>(), 4, 1M, 0M, 5M }, // 6
-        { Array.Empty<decimal>(), 5, 1M, 0M, 5M }, // 6
-        { Array.Empty<decimal>(), 6, 1M, 0M, 5M }, // 6
         { Array.Empty<decimal>(), 7, 1M, 0M, 5M }, // 6
         { Array.Empty<decimal>(), 8, 0.5M, 0M, 5M }, // 11
-        { Array.Empty<decimal>(), 9, 0.5M, 0M, 5M }, // 11
-        { Array.Empty<decimal>(), 10, 0.5M, 0M, 5M }, // 11
-        { Array.Empty<decimal>(), 11, 0.5M, 0M, 5M }, // 11
-        { Array.Empty<decimal>(), 12, 0.5M, 0M, 5M }, // 11
-        { Array.Empty<decimal>(), 13, 0.5M, 0M, 5M }, // 11
-        { Array.Empty<decimal>(), 14, 0.5M, 0M, 5M }, // 11
-        { Array.Empty<decimal>(), 15, 0.5M, 0M, 5M }, // 11
-        { Array.Empty<decimal>(), 16, 0.5M, 0M, 5M }, // 11
         { Array.Empty<decimal>(), 17, 0.5M, 0M, 5M }, // 11
         { Array.Empty<decimal>(), 18, 0.2M, 0M, 5M }, // 21
-        { Array.Empty<decimal>(), 19, 0.2M, 0M, 5M }, // 21
-        { Array.Empty<decimal>(), 20, 0.2M, 0M, 5M }, // 21
-        { Array.Empty<decimal>(), 21, 0.2M, 0M, 5M }, // 21
-        { Array.Empty<decimal>(), 22, 0.2M, 0M, 5M }, // 21
-        { Array.Empty<decimal>(), 23, 0.2M, 0M, 5M }, // 21
-        { Array.Empty<decimal>(), 24, 0.2M, 0M, 5M }, // 21
         { Array.Empty<decimal>(), 25, 0.2M, 0M, 5M }, // 21
+        
+        { new[] { 0.1M, 4.9M }, 6, 1M, 0M, 5M }, // 6
+        { new[] { 0.1M, 4.9M }, 11, 0.5M, 0M, 5M }, // 11
+        { new[] { 0.6M, 4.4M }, 6, 1M, 0M, 5M }, // 6
+        { new[] { 0.6M, 4.4M }, 11, 0.5M, 0.5M, 4.5M }, // 9
+
+        { new[] { 0.1M, 4.9M }, 6, 1M, 0M, 5M }, // 6
+        { new[] { 0.1M, 4.9M }, 11, 0.5M, 0M, 5M }, // 11
+        { new[] { 0.6M, 4.4M }, 6, 1M, 0M, 5M }, // 6
+        { new[] { 0.6M, 4.4M }, 11, 0.5M, 0.5M, 4.5M }, // 9
+
+        { new[] { 0.001M, 0.049M }, 6, 0.01M, 0M, 0.05M }, // 6
+        { new[] { 0.001M, 0.049M }, 11, 0.005M, 0M, 0.05M }, // 11
+        { new[] { 0.006M, 0.044M }, 6, 0.01M, 0M, 0.05M }, // 6
+        { new[] { 0.006M, 0.044M }, 11, 0.005M, 0.005M, 0.045M }, // 9
     };
 
     [Theory]
