@@ -37,16 +37,16 @@ public class PlotArea {
             }
         }
 
-        while ((Max.CeilingToScale(GridLineInterval) - Min.FloorToScale(GridLineInterval)) / GridLineInterval > maxGridLineCount) {
+        while ((DecimalMath.CeilingToScale(Max, GridLineInterval) - DecimalMath.FloorToScale(Min, GridLineInterval)) / GridLineInterval > maxGridLineCount) {
             GridLineInterval *= gridLineMultipliers[i++];
         }
 
-        Min = Min.FloorToScale(GridLineInterval);
-        Max = Max.CeilingToScale(GridLineInterval);
+        Min = DecimalMath.FloorToScale(Min, GridLineInterval);
+        Max = DecimalMath.CeilingToScale(Max, GridLineInterval);
     }
 
     public IEnumerable<decimal> GetGridLineDataPoints() {
-        var dataPoint = Min.CeilingToScale(GridLineInterval);
+        var dataPoint = DecimalMath.CeilingToScale(Min, GridLineInterval);
 
         while (dataPoint <= Max) {
             yield return dataPoint;

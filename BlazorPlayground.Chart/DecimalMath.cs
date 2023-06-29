@@ -19,4 +19,10 @@ public static class DecimalMath {
 
         return result;
     }
+
+    public static decimal FloorToScale(decimal value, decimal scale)
+        => Math.Floor(value / scale) * scale;
+
+    public static decimal CeilingToScale(decimal value, decimal scale)
+        => Math.Ceiling(value / scale) * scale;
 }
