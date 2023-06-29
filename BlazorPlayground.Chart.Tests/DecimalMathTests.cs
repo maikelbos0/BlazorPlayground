@@ -10,6 +10,7 @@ public class DecimalMathTests {
     }
 
     public static TheoryData<decimal, int, decimal> PowData() => new() {
+        { 10M, -15, 0.000_000_000_000_001M },
         { 10M, -5, 0.000_01M },
         { 10M, -2, 0.01M },
         { 10M, -1, 0.1M },
@@ -17,6 +18,7 @@ public class DecimalMathTests {
         { 10M, 1, 10M },
         { 10M, 2, 100M },
         { 10M, 5, 100_000M },
+        { 10M, 15, 1_000_000_000_000_000M },
         { 2.5M, 2, 6.25M },
         { 2.5M, -2, 0.16M }
     };
