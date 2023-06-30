@@ -6,38 +6,7 @@ namespace BlazorPlayground.Chart.Tests;
 public class PlotAreaTests {
     [Theory]
     [MemberData(nameof(AutoScaleData))]
-    public void AutoScale(decimal expectedGridLineInterval, decimal expectedMin, decimal expectedMax, params decimal[] dataPoints) {
-        var subject = new PlotArea();
-
-        subject.AutoScale(dataPoints);
-
-        Assert.Equal(expectedMin, subject.Min);
-        Assert.Equal(expectedMax, subject.Max);
-        Assert.Equal(expectedGridLineInterval, subject.GridLineInterval);
-    }
-
-    public static TheoryData<decimal, decimal, decimal, decimal[]> AutoScaleData() => new() {
-        { 1M, 0M, 5M, Array.Empty<decimal>() },
-        { 1M, 100M, 106M, new decimal[] { 103M } },
-        { 1M, 0M, 5M, new decimal[] { 0.2M, 4.8M } },
-        { 2M, -2M, 10M, new decimal[] { -0.2M, 8.2M } },
-        { 0.1M, 0M, 0.8M, new decimal[] { 0.01M, 0.79M } },
-        { 1M, 0M, 8M, new decimal[] { 0.1M, 7.9M } },
-        { 1M, 0M, 8M, new decimal[] { 0M, 8M } },
-        { 2M, 0M, 10M, new decimal[] { 0M, 8.1M } },
-        { 2M, 0M, 16M, new decimal[] { 1M, 15M } },
-        { 2M, 0M, 16M, new decimal[] { 0M, 16M } },
-        { 5M, -5M, 20M, new decimal[] { -0.1M, 16M } },
-        { 5M, 0M, 40M, new decimal[] { 1M, 39M } },
-        { 5M, 0M, 40M, new decimal[] { 0M, 40M } },
-        { 10M, 0M, 50M, new decimal[] { 0M, 41M } },
-        { 20M, -20M, 80M, new decimal[] { -1M, 80M } },
-        { 0.2M, -0.6M, 0.6M, new decimal[] { -0.5M, 0.5M } }
-    };
-
-    [Theory]
-    [MemberData(nameof(AutoScaleData2))]
-    public void AutoScale2(decimal[] dataPoints, int requestedGridLineCount, decimal expectedGridLineInterval, decimal expectedMin, decimal expectedMax) {
+    public void AutoScale(decimal[] dataPoints, int requestedGridLineCount, decimal expectedGridLineInterval, decimal expectedMin, decimal expectedMax) {
         var subject = new PlotArea();
 
         subject.AutoScale(dataPoints, requestedGridLineCount);
@@ -47,7 +16,7 @@ public class PlotAreaTests {
         Assert.Equal(expectedGridLineInterval, subject.GridLineInterval);
     }
 
-    public static TheoryData<decimal[], int, decimal, decimal, decimal> AutoScaleData2() => new() {
+    public static TheoryData<decimal[], int, decimal, decimal, decimal> AutoScaleData() => new() {
         { Array.Empty<decimal>(), 1, 5M, 0M, 5M }, // 2
         { Array.Empty<decimal>(), 2, 2M, 0M, 6M }, // 4
         { Array.Empty<decimal>(), 3, 2M, 0M, 6M }, // 4

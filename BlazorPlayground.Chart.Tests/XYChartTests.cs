@@ -27,25 +27,9 @@ public class XYChartTests {
         Assert.Equal(XYChart.FallbackColor, XYChart.GetColor(index));
     }
 
-    [Fact]
-    public void AutoScale() {
-        var subject = new XYChart() {
-            DataSeries = {
-                new("Foo", "red") { -9M, 0M },
-                new("Bar", "blue") {-5M, 19M }
-            }
-        };
-
-        subject.AutoScale();
-
-        Assert.Equal(-10M, subject.PlotArea.Min);
-        Assert.Equal(20M, subject.PlotArea.Max);
-        Assert.Equal(5M, subject.PlotArea.GridLineInterval);
-    }
-
     [Theory]
     [MemberData(nameof(AutoScaleData))]
-    public void AutoScale2(int? requestedGridLineCount, decimal expectedMin, decimal expectedMax, decimal expectedGridLineInterval) {
+    public void AutoScale(int? requestedGridLineCount, decimal expectedMin, decimal expectedMax, decimal expectedGridLineInterval) {
         var subject = new XYChart() {
             Canvas = {
                 Height = 800,

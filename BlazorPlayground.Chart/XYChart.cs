@@ -30,8 +30,6 @@ public class XYChart {
     public List<string> Labels { get; set; } = new();
     public List<DataSeries> DataSeries { get; set; } = new();
 
-    public void AutoScale() => PlotArea.AutoScale(DataSeries.SelectMany(dataSeries => dataSeries.Where(dataPoint => dataPoint != null).Select(dataPoint => dataPoint!.Value)));
-
     public void AutoScale(int? requestedGridLineCount)
         => PlotArea.AutoScale(
             DataSeries.SelectMany(dataSeries => dataSeries.Where(dataPoint => dataPoint != null).Select(dataPoint => dataPoint!.Value)),
