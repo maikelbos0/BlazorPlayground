@@ -8,7 +8,7 @@
         <button type="button" class="btn btn-secondary" @onclick="AddDataSeries">Add data series</button>
         <button type="button" class="btn btn-secondary" @onclick="AddDataPoint">Add data point</button>
         <button type="button" class="btn btn-secondary" @onclick="GenerateData">Generate data</button>
-        <button type="button" class="btn btn-secondary" @onclick="XYChart.AutoScale">Auto scale plot area</button>
+        <button type="button" class="btn btn-secondary" @onclick="AutoScale">Auto scale plot area</button>
     </fieldset>
 
     <fieldset class="input-group mb-3 me-3">
@@ -142,5 +142,9 @@
                 }
             }
         }
+    }
+
+    private void AutoScale() {
+        XYChart.AutoScale(null);
     }
 }
