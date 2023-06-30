@@ -12,7 +12,8 @@ public class CanvasTests {
             XAxisLabelHeight = 50,
             XAxisLabelClearance = 5,
             YAxisLabelWidth = 75,
-            YAxisLabelClearance = 10
+            YAxisLabelClearance = 10,
+            GridLineIntervalHeight = 40
         };
 
         Assert.Equal(25 + 75, subject.PlotAreaX);
@@ -27,7 +28,8 @@ public class CanvasTests {
             XAxisLabelHeight = 50,
             XAxisLabelClearance = 5,
             YAxisLabelWidth = 75,
-            YAxisLabelClearance = 10
+            YAxisLabelClearance = 10,
+            GridLineIntervalHeight = 40
         };
 
         Assert.Equal(25, subject.PlotAreaY);
@@ -42,7 +44,8 @@ public class CanvasTests {
             XAxisLabelHeight = 50,
             XAxisLabelClearance = 5,
             YAxisLabelWidth = 75,
-            YAxisLabelClearance = 10
+            YAxisLabelClearance = 10,
+            GridLineIntervalHeight = 40
         };
 
         Assert.Equal(1000 - 25 - 25 - 75, subject.PlotAreaWidth);
@@ -57,10 +60,27 @@ public class CanvasTests {
             XAxisLabelHeight = 50,
             XAxisLabelClearance = 5,
             YAxisLabelWidth = 75,
-            YAxisLabelClearance = 10
+            YAxisLabelClearance = 10,
+            GridLineIntervalHeight = 40
         };
 
         Assert.Equal(500 - 25 - 25 - 50, subject.PlotAreaHeight);
+    }
+
+    [Fact]
+    public void RequestedGridLineCount() {
+        var subject = new Canvas() {
+            Width = 1000,
+            Height = 500,
+            Padding = 25,
+            XAxisLabelHeight = 50,
+            XAxisLabelClearance = 5,
+            YAxisLabelWidth = 75,
+            YAxisLabelClearance = 10,
+            GridLineIntervalHeight = 40
+        };
+
+        Assert.Equal((500 - 25 - 25 - 50) / 40, subject.RequestedGridLineCount);
     }
 
     [Fact]
@@ -72,7 +92,8 @@ public class CanvasTests {
             XAxisLabelHeight = 50,
             XAxisLabelClearance = 5,
             YAxisLabelWidth = 75,
-            YAxisLabelClearance = 10
+            YAxisLabelClearance = 10,
+            GridLineIntervalHeight = 40
         };
 
         var result = subject.GetPlotAreaShape();

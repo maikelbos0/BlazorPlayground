@@ -30,10 +30,10 @@ public class XYChart {
     public List<string> Labels { get; set; } = new();
     public List<DataSeries> DataSeries { get; set; } = new();
 
-    public void AutoScale(int? requestedGridLineCount)
+    public void AutoScale()
         => PlotArea.AutoScale(
             DataSeries.SelectMany(dataSeries => dataSeries.Where(dataPoint => dataPoint != null).Select(dataPoint => dataPoint!.Value)),
-            requestedGridLineCount ?? Canvas.PlotAreaHeight / FallbackGridLineIntervalHeight
+            Canvas.RequestedGridLineCount
         );
 
     public IEnumerable<ShapeBase> GetShapes() {
