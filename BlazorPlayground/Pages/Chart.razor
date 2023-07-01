@@ -8,7 +8,6 @@
         <button type="button" class="btn btn-secondary" @onclick="AddDataSeries">Add data series</button>
         <button type="button" class="btn btn-secondary" @onclick="AddDataPoint">Add data point</button>
         <button type="button" class="btn btn-secondary" @onclick="GenerateData">Generate data</button>
-        <button type="button" class="btn btn-secondary" @onclick="AutoScale">Auto scale plot area</button>
     </fieldset>
 
     <fieldset class="input-group mb-3 me-3">
@@ -83,6 +82,11 @@
         </div>
 
         <input type="text" class="form-control" id="yAxisGridLineInterval" @bind-value="XYChart.PlotArea.GridLineInterval" />
+
+        <div class="input-group-text">
+            <input class="form-check-input mt-0" type="checkbox" id="autoScale" @bind="XYChart.AutoScale" />
+            <label class="form-check-label ps-2" for="autoScale">Auto scale plot area</label>
+        </div>
     </fieldset>
 </div>
 
@@ -148,9 +152,8 @@
                 }
             }
         }
-    }
 
-    private void AutoScale() {
-        XYChart.AutoScale();
+        // TODO figure out why plot area isn't being updated after autoscale
+        // StateHasChanged();
     }
 }

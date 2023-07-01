@@ -5,6 +5,7 @@ namespace BlazorPlayground.Chart;
 public class XYChart {
     public const string FallbackColor = "#000000";
 
+    public static bool DefaultAutoScale { get; set; } = true;
     public static List<string> DefaultColors { get; set; } = new() {
         // https://coolors.co/550527-688e26-faa613-f44708-a10702
         "#550527", "#688e26", "#faa613", "#f44708", "#a10702"
@@ -28,14 +29,13 @@ public class XYChart {
     public PlotArea PlotArea { get; set; } = new();
     public List<string> Labels { get; set; } = new();
     public List<DataSeries> DataSeries { get; set; } = new();
-
-    public void AutoScale()
-        => PlotArea.AutoScale(
-            DataSeries.SelectMany(dataSeries => dataSeries.Where(dataPoint => dataPoint != null).Select(dataPoint => dataPoint!.Value)),
-            Canvas.RequestedGridLineCount
-        );
+    public bool AutoScale { get; set; } = DefaultAutoScale;
 
     public IEnumerable<ShapeBase> GetShapes() {
+        if (AutoScale) {
+            PlotArea.AutoScale(DataSeries.SelectMany(dataSeries => dataSeries.Where(dataPoint => dataPoint != null).Select(dataPoint => dataPoint!.Value)), Canvas.RequestedGridLineCount);
+        }
+
         yield return Canvas.GetPlotAreaShape();
 
         foreach (var shape in GetGridLineShapes()) {

@@ -27,10 +27,14 @@ public class XYChartTests {
         Assert.Equal(XYChart.FallbackColor, XYChart.GetColor(index));
     }
 
-    [Theory]
-    [MemberData(nameof(AutoScaleData))]
-    public void AutoScale(int? requestedGridLineCount, decimal expectedMin, decimal expectedMax, decimal expectedGridLineInterval) {
+    [Fact]
+    public void GetShapes_AutoScale() {
         var subject = new XYChart() {
+            PlotArea = {
+                Min = -4M,
+                Max = 10M,
+                GridLineInterval = 2M
+            },
             Canvas = {
                 Height = 800,
                 Padding = 25,
@@ -39,20 +43,43 @@ public class XYChartTests {
             DataSeries = {
                 new("Foo", "red") { -9M, 0M },
                 new("Bar", "blue") {-5M, 19M }
-            }
+            },
+            AutoScale = true
         };
 
-        subject.AutoScale(requestedGridLineCount);
+        subject.GetShapes().ToList();
 
-        Assert.Equal(expectedMin, subject.PlotArea.Min);
-        Assert.Equal(expectedMax, subject.PlotArea.Max);
-        Assert.Equal(expectedGridLineInterval, subject.PlotArea.GridLineInterval);
+        Assert.Equal(-10M, subject.PlotArea.Min);
+        Assert.Equal(20M, subject.PlotArea.Max);
+        Assert.Equal(2M, subject.PlotArea.GridLineInterval);
     }
 
-    public static TheoryData<int?, decimal, decimal, decimal> AutoScaleData() => new() {
-        { null, -10M, 20M, 2M },
-        { 7, -10M, 20M, 5M },
-    };
+    [Fact]
+    public void GetShapes_No_AutoScale() {
+        var subject = new XYChart() {
+            PlotArea = {
+                Min = -4M,
+                Max = 10M,
+                GridLineInterval = 2M
+            },
+            Canvas = {
+                Height = 800,
+                Padding = 25,
+                XAxisLabelHeight = 50
+            },
+            DataSeries = {
+                new("Foo", "red") { -9M, 0M },
+                new("Bar", "blue") {-5M, 19M }
+            },
+            AutoScale = false
+        };
+
+        subject.GetShapes().ToList();
+
+        Assert.Equal(-4M, subject.PlotArea.Min);
+        Assert.Equal(10M, subject.PlotArea.Max);
+        Assert.Equal(2M, subject.PlotArea.GridLineInterval);
+    }
 
     [Fact]
     public void GetShapes_PlotAreaShape() {
