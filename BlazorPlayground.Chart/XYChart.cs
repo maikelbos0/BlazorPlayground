@@ -4,7 +4,6 @@ namespace BlazorPlayground.Chart;
 
 public class XYChart {
     public const string FallbackColor = "#000000";
-    public const int FallbackGridLineIntervalHeight = 50;
 
     public static List<string> DefaultColors { get; set; } = new() {
         // https://coolors.co/550527-688e26-faa613-f44708-a10702

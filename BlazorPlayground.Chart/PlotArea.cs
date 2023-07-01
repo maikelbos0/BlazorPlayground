@@ -3,7 +3,7 @@
 public class PlotArea {
     public static decimal DefaultMin { get; set; } = 0M;
     public static decimal DefaultMax { get; set; } = 5M;
-    public static decimal DefaultGridLineInterval { get; set; } = 1M;
+    public static decimal DefaultGridLineInterval { get; set; } = 0.5M;
 
     public decimal Min { get; set; } = DefaultMin;
     public decimal Max { get; set; } = DefaultMax;
