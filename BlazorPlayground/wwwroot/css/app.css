@@ -204,3 +204,7 @@ fieldset:disabled label, fieldset:disabled .form-control:disabled, fieldset:disa
     font-size: 10pt;
     alignment-baseline: central;
 }
+
+.chart-main .bar-data {
+    stroke: #adafb3;
+}
