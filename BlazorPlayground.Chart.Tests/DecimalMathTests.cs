@@ -54,4 +54,19 @@ public class DecimalMathTests {
         { 100.1M, 20M, 120M },
         { -119.9M, 20M, -100M }
     };
+
+    [Theory]
+    [MemberData(nameof(TrimData))]
+    public void Trim(decimal value, decimal expectedValue) {
+        Assert.Equal(expectedValue, DecimalMath.Trim(value));
+    }
+
+    public static TheoryData<decimal, decimal> TrimData() => new() {
+        { 0.250_000_000_000_000_000_000_000_000_000M, 0.25M },
+        { 0.250_000M, 0.25M },
+        { 0.25M, 0.25M },
+        { 10.000_000_000_000_000_000_000_000_000_000M, 10M },
+        { 10.000_000M, 10M },
+        { 10M, 10M }
+    };
 }

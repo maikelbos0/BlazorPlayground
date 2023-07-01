@@ -32,9 +32,9 @@ public class PlotArea {
             .OrderBy(candidate => Math.Abs((candidate.Max - candidate.Min) / candidate.GridLineInterval - requestedGridLineCount))
             .First();
 
-        Min = scale.Min;
-        Max = scale.Max;
-        GridLineInterval = scale.GridLineInterval;
+        Min = DecimalMath.Trim(scale.Min);
+        Max = DecimalMath.Trim(scale.Max);
+        GridLineInterval = DecimalMath.Trim(scale.GridLineInterval);
     }
 
     public IEnumerable<decimal> GetGridLineDataPoints() {

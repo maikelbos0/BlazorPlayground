@@ -25,4 +25,7 @@ public static class DecimalMath {
 
     public static decimal CeilingToScale(decimal value, decimal scale)
         => Math.Ceiling(value / scale) * scale;
+
+    public static decimal Trim(decimal value)
+        => value / 1.000_000_000_000_000_000_000_000_000_000M;
 }

@@ -122,7 +122,7 @@
     }
 </table>
 
-<ChartRenderer Chart="XYChart"/>
+<ChartRenderer Chart="XYChart" />
 
 @code {
     private XYChart XYChart = new();
@@ -153,7 +153,6 @@
             }
         }
 
-        // TODO figure out why plot area isn't being updated after autoscale
-        // StateHasChanged();
+        // TODO fix state - plotarea values get recalculated during render, so we need to update rendered values for those after rendering the chart without going infinite
     }
 }
