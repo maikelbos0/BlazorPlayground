@@ -73,7 +73,7 @@ public class XYChart {
 
     public decimal MapDataPointToCanvas(decimal dataPoint) => Canvas.PlotAreaY + (PlotArea.Max - dataPoint) / (PlotArea.Max - PlotArea.Min) * Canvas.PlotAreaHeight;
 
-    public decimal MapDataIndexToCanvas(int index) => Canvas.PlotAreaX + (index + 0.5M) * Canvas.PlotAreaWidth / Labels.Count;
+    public decimal MapDataIndexToCanvas(int index) => Canvas.PlotAreaX + (Labels.Any() ? (index + 0.5M) * Canvas.PlotAreaWidth / Labels.Count : 0M);
 
     public DataSeries AddDataSeries(string name) => AddDataSeries(name, null);
 
