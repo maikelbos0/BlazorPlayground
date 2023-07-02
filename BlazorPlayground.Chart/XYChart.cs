@@ -8,13 +8,13 @@ public class XYChart {
     public static bool DefaultAutoScale { get; set; } = true;
     public static List<string> DefaultColors { get; set; } = new() {
         // https://coolors.co/550527-688e26-faa613-f44708-a10702
-        "#550527", "#688e26", "#faa613", "#f44708", "#a10702"
+        // "#550527", "#688e26", "#faa613", "#f44708", "#a10702"
 
         // https://coolors.co/264653-2a9d8f-e9c46a-f4a261-e76f51
         // "#264653", "#2a9d8f", "#e9c46a", "#f4a261", "#e76f51"
         
         // https://coolors.co/2274a5-f75c03-f1c40f-d90368-00cc66
-        // "#2274a5", "#f75c03", "#f1c40f", "#d90368", "#00cc66"
+        "#2274a5", "#f75c03", "#f1c40f", "#d90368", "#00cc66"
     };
 
     public static string GetColor(int index) {
@@ -45,11 +45,31 @@ public class XYChart {
         foreach (var shape in GetYAxisLabelShapes()) {
             yield return shape;
         }
+
+        foreach (var shape in GetDataSeriesShapes()) {
+            yield return shape;
+        }
     }
 
     public IEnumerable<GridLineShape> GetGridLineShapes() => PlotArea.GetGridLineDataPoints().Select(dataPoint => new GridLineShape(Canvas.PlotAreaX, Canvas.PlotAreaY + MapToPlotArea(dataPoint), Canvas.PlotAreaWidth, dataPoint));
 
     public IEnumerable<YAxisLabelShape> GetYAxisLabelShapes() => PlotArea.GetGridLineDataPoints().Select(dataPoint => new YAxisLabelShape(Canvas.PlotAreaX - Canvas.YAxisLabelClearance, Canvas.PlotAreaY + MapToPlotArea(dataPoint), dataPoint));
+
+    // Temporary - we'll need to abstract this out to DataSeries if we want different types of series rendered
+    public IEnumerable<BarDataShape> GetDataSeriesShapes() {
+
+
+        return DataSeries.SelectMany(dataSeries => dataSeries
+            .Select((dataPoint, index) => (DataPoint: dataPoint, Index: index))
+            .Where(value => value.DataPoint != null)
+            .Select(value => new BarDataShape(
+                x: 150 + value.Index * 25, // TODO
+                y: Canvas.PlotAreaY + (value.DataPoint < 0M ? MapToPlotArea(0M) : MapToPlotArea(value.DataPoint!.Value)), // TODO adjust for min/max of plotarea
+                width: 10, // TODO
+                height: Math.Abs(MapToPlotArea(value.DataPoint!.Value) - MapToPlotArea(0M)), // TODO adjust for min/max of plotarea
+                color: dataSeries.Color
+            )));
+    }
 
     public decimal MapToPlotArea(decimal dataPoint) => (PlotArea.Max - dataPoint) / (PlotArea.Max - PlotArea.Min) * Canvas.PlotAreaHeight;
 

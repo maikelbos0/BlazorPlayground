@@ -47,7 +47,7 @@ public class XYChartTests {
             AutoScale = true
         };
 
-        subject.GetShapes().ToList();
+        _ = subject.GetShapes().ToList();
 
         Assert.Equal(-10M, subject.PlotArea.Min);
         Assert.Equal(20M, subject.PlotArea.Max);
@@ -74,7 +74,7 @@ public class XYChartTests {
             AutoScale = false
         };
 
-        subject.GetShapes().ToList();
+        _ = subject.GetShapes().ToList();
 
         Assert.Equal(-4M, subject.PlotArea.Min);
         Assert.Equal(10M, subject.PlotArea.Max);
@@ -100,6 +100,17 @@ public class XYChartTests {
         var subject = new XYChart();
 
         Assert.Contains(subject.GetShapes(), shape => shape is YAxisLabelShape);
+    }
+
+    [Fact]
+    public void GetShapes_DataSeriesShapes() {
+        var subject = new XYChart() {
+            DataSeries = {
+                new("Foo", "red") { 5, 10 }
+            }
+        };
+
+        Assert.Contains(subject.GetShapes(), shape => shape is BarDataShape);
     }
 
     [Fact]
@@ -165,6 +176,43 @@ public class XYChartTests {
         Assert.Single(result, shape => shape.Y == 25 + (0M - -100M) / 600.0M * (500 - 25 - 25 - 50) && shape.Value == 400M);
         Assert.Single(result, shape => shape.Y == 25 + (200M - -100M) / 600.0M * (500 - 25 - 25 - 50) && shape.Value == 200M);
         Assert.Single(result, shape => shape.Y == 25 + (400M - -100M) / 600.0M * (500 - 25 - 25 - 50) && shape.Value == 0M);
+    }
+
+    [Fact]
+    public void GetDataSeriesShapes() {
+        var subject = new XYChart() {
+            Canvas = {
+                Width = 1000,
+                Height = 500,
+                Padding = 25,
+                XAxisLabelHeight = 50,
+                XAxisLabelClearance = 5,
+                YAxisLabelWidth = 75,
+                YAxisLabelClearance = 10
+            },
+            PlotArea = {
+                 Min = -10M,
+                 Max = 40M,
+                 GridLineInterval = 10M
+            },
+            DataSeries = {
+                new("Foo", "red") { -5M, 5M, null, 35M }
+            }
+        };
+
+        var result = subject.GetDataSeriesShapes();
+
+        Assert.Equal(3, result.Count());
+
+        Assert.All(result, shape => {
+            Assert.Equal("red", shape.Color);
+        });
+
+        // TODO move this around, add x axis tests, add min/max tests
+
+        Assert.Single(result, shape => shape.Y == 25M + 40M / 50M * 400M && shape.Height == 5M / 50M * 400M);
+        Assert.Single(result, shape => shape.Y == 25M + (40M - 5M) / 50M * 400M && shape.Height == 5M / 50M * 400M);
+        Assert.Single(result, shape => shape.Y == 25M + (40M - 35M) / 50M * 400M && shape.Height == 35M / 50M * 400M);
     }
 
     [Theory]
