@@ -243,6 +243,31 @@ public class XYChartTests {
         { 350M, 25 + 100M }
     };
 
+    [Theory]
+    [MemberData(nameof(MapDataIndexToCanvasData))]
+    public void MapDataIndexToCanvas(int index, decimal expectedValue) {
+        var subject = new XYChart() {
+            Canvas = {
+                Width = 1000,
+                Height = 500,
+                Padding = 25,
+                XAxisLabelHeight = 50,
+                XAxisLabelClearance = 5,
+                YAxisLabelWidth = 100,
+                YAxisLabelClearance = 10
+            },
+            Labels = { "Foo", "Bar", "Baz" }
+        };
+
+        Assert.Equal(expectedValue, subject.MapDataIndexToCanvas(index));
+    }
+
+    public static TheoryData<int, decimal> MapDataIndexToCanvasData() => new() {
+        { 0, 125 + 0.5M * 850M / 3M },
+        { 1, 125 + 1.5M * 850M / 3M },
+        { 2, 125 + 2.5M * 850M / 3M },
+    };
+
     [Fact]
     public void AddDataSeries_With_Color() {
         var subject = new XYChart() {
