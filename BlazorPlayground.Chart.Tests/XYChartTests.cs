@@ -216,8 +216,8 @@ public class XYChartTests {
     }
 
     [Theory]
-    [MemberData(nameof(MapToPlotAreaData))]
-    public void MapToPlotArea(decimal dataPoint, decimal expectedValue) {
+    [MemberData(nameof(MapDataPointToCanvasData))]
+    public void MapDataPointToCanvas(decimal dataPoint, decimal expectedValue) {
         var subject = new XYChart() {
             Canvas = {
                 Width = 1000,
@@ -234,13 +234,13 @@ public class XYChartTests {
             }
         };
 
-        Assert.Equal(expectedValue, subject.MapToPlotArea(dataPoint));
+        Assert.Equal(expectedValue, subject.MapDataPointToCanvas(dataPoint));
     }
 
-    public static TheoryData<decimal, decimal> MapToPlotAreaData() => new() {
-        { 50M, 300M },
-        { 200M, 200M },
-        { 350M, 100M }
+    public static TheoryData<decimal, decimal> MapDataPointToCanvasData() => new() {
+        { 50M, 25 + 300M },
+        { 200M, 25 + 200M },
+        { 350M, 25 + 100M }
     };
 
     [Fact]

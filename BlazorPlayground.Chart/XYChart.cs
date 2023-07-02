@@ -51,9 +51,9 @@ public class XYChart {
         }
     }
 
-    public IEnumerable<GridLineShape> GetGridLineShapes() => PlotArea.GetGridLineDataPoints().Select(dataPoint => new GridLineShape(Canvas.PlotAreaX, Canvas.PlotAreaY + MapToPlotArea(dataPoint), Canvas.PlotAreaWidth, dataPoint));
+    public IEnumerable<GridLineShape> GetGridLineShapes() => PlotArea.GetGridLineDataPoints().Select(dataPoint => new GridLineShape(Canvas.PlotAreaX, MapDataPointToCanvas(dataPoint), Canvas.PlotAreaWidth, dataPoint));
 
-    public IEnumerable<YAxisLabelShape> GetYAxisLabelShapes() => PlotArea.GetGridLineDataPoints().Select(dataPoint => new YAxisLabelShape(Canvas.PlotAreaX - Canvas.YAxisLabelClearance, Canvas.PlotAreaY + MapToPlotArea(dataPoint), dataPoint));
+    public IEnumerable<YAxisLabelShape> GetYAxisLabelShapes() => PlotArea.GetGridLineDataPoints().Select(dataPoint => new YAxisLabelShape(Canvas.PlotAreaX - Canvas.YAxisLabelClearance, MapDataPointToCanvas(dataPoint), dataPoint));
 
     // Temporary - we'll need to abstract this out to DataSeries if we want different types of series rendered
     public IEnumerable<BarDataShape> GetDataSeriesShapes() {
@@ -64,14 +64,14 @@ public class XYChart {
             .Where(value => value.DataPoint != null)
             .Select(value => new BarDataShape(
                 x: 150 + value.Index * 25, // TODO
-                y: Canvas.PlotAreaY + (value.DataPoint < 0M ? MapToPlotArea(0M) : MapToPlotArea(value.DataPoint!.Value)), // TODO adjust for min/max of plotarea
+                y: (value.DataPoint < 0M ? MapDataPointToCanvas(0M) : MapDataPointToCanvas(value.DataPoint!.Value)), // TODO adjust for min/max of plotarea
                 width: 10, // TODO
-                height: Math.Abs(MapToPlotArea(value.DataPoint!.Value) - MapToPlotArea(0M)), // TODO adjust for min/max of plotarea
+                height: Math.Abs(MapDataPointToCanvas(value.DataPoint!.Value) - MapDataPointToCanvas(0M)), // TODO adjust for min/max of plotarea
                 color: dataSeries.Color
             )));
     }
 
-    public decimal MapToPlotArea(decimal dataPoint) => (PlotArea.Max - dataPoint) / (PlotArea.Max - PlotArea.Min) * Canvas.PlotAreaHeight;
+    public decimal MapDataPointToCanvas(decimal dataPoint) => Canvas.PlotAreaY + (PlotArea.Max - dataPoint) / (PlotArea.Max - PlotArea.Min) * Canvas.PlotAreaHeight;
 
     public DataSeries AddDataSeries(string name) => AddDataSeries(name, null);
 
