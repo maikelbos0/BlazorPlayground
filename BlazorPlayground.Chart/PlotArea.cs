@@ -19,6 +19,7 @@ public class PlotArea {
         }
 
         // TODO force 0 line?
+        // TODO adjust so data points are always *in between* min and max, not exactly on either
 
         var rawGridLineInterval = (max - min) / Math.Max(1, requestedGridLineCount - 1);
         var baseMultiplier = DecimalMath.Pow(10M, (int)Math.Floor((decimal)Math.Log10((double)rawGridLineInterval)));
