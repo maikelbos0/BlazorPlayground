@@ -58,14 +58,14 @@ public class XYChart {
     // Temporary - we'll need to abstract this out to DataSeries if we want different types of series rendered
     public IEnumerable<BarDataShape> GetDataSeriesShapes() {
 
-
+        // TODO only select what we have labels for anyhow, then maybe we can remove the any check in index
         return DataSeries.SelectMany(dataSeries => dataSeries
             .Select((dataPoint, index) => (DataPoint: dataPoint, Index: index))
             .Where(value => value.DataPoint != null)
             .Select(value => new BarDataShape(
-                x: 150 + value.Index * 25, // TODO
+                x: MapDataIndexToCanvas(value.Index) - 5, // TODO width
                 y: (value.DataPoint < 0M ? MapDataPointToCanvas(0M) : MapDataPointToCanvas(value.DataPoint!.Value)), // TODO adjust for min/max of plotarea
-                width: 10, // TODO
+                width: 10, // TODO width
                 height: Math.Abs(MapDataPointToCanvas(value.DataPoint!.Value) - MapDataPointToCanvas(0M)), // TODO adjust for min/max of plotarea
                 color: dataSeries.Color
             )));

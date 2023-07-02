@@ -187,7 +187,7 @@ public class XYChartTests {
                 Padding = 25,
                 XAxisLabelHeight = 50,
                 XAxisLabelClearance = 5,
-                YAxisLabelWidth = 75,
+                YAxisLabelWidth = 100,
                 YAxisLabelClearance = 10
             },
             PlotArea = {
@@ -197,7 +197,8 @@ public class XYChartTests {
             },
             DataSeries = {
                 new("Foo", "red") { -5M, 5M, null, 35M }
-            }
+            },
+            Labels = { "Foo", "Bar", "Baz", "Quux" }
         };
 
         var result = subject.GetDataSeriesShapes();
@@ -210,9 +211,9 @@ public class XYChartTests {
 
         // TODO move this around, add x axis tests, add min/max tests
 
-        Assert.Single(result, shape => shape.Y == 25M + 40M / 50M * 400M && shape.Height == 5M / 50M * 400M);
-        Assert.Single(result, shape => shape.Y == 25M + (40M - 5M) / 50M * 400M && shape.Height == 5M / 50M * 400M);
-        Assert.Single(result, shape => shape.Y == 25M + (40M - 35M) / 50M * 400M && shape.Height == 35M / 50M * 400M);
+        Assert.Single(result, shape => shape.Y == 25M + 40M / 50M * 400M && shape.Height == 5M / 50M * 400M && shape.X == 25M + 100M + 0.5M * 850M / 4M - 5);
+        Assert.Single(result, shape => shape.Y == 25M + (40M - 5M) / 50M * 400M && shape.Height == 5M / 50M * 400M && shape.X == 25M + 100M + 1.5M * 850M / 4M - 5);
+        Assert.Single(result, shape => shape.Y == 25M + (40M - 35M) / 50M * 400M && shape.Height == 35M / 50M * 400M && shape.X == 25M + 100M + 3.5M * 850M / 4M - 5);
     }
 
     [Theory]
