@@ -107,7 +107,8 @@ public class XYChartTests {
         var subject = new XYChart() {
             DataSeries = {
                 new("Foo", "red") { 5, 10 }
-            }
+            },
+            Labels = { "Foo", "Bar" }
         };
 
         Assert.Contains(subject.GetShapes(), shape => shape is BarDataShape);
@@ -197,7 +198,7 @@ public class XYChartTests {
                  GridLineInterval = 10M
             },
             DataSeries = {
-                new("Foo", "red") { null,null,null,null }
+                new("Foo", "red") { null, null, null, null, 15M }
             },
             Labels = { "Foo", "Bar", "Baz", "Quux" }
         };

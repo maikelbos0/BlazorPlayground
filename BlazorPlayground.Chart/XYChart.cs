@@ -60,10 +60,9 @@ public class XYChart {
         var min = MapDataPointToCanvas(Math.Max(PlotArea.Min, 0M));
         var max = MapDataPointToCanvas(Math.Min(PlotArea.Max, 0M));
 
-        // TODO only select what we have labels for anyhow, then maybe we can remove the any check in index
         return DataSeries.SelectMany(dataSeries => dataSeries
             .Select((dataPoint, index) => (DataPoint: dataPoint, Index: index))
-            .Where(value => value.DataPoint != null)
+            .Where(value => value.DataPoint != null && value.Index < Labels.Count)
             .Select(value => {
                 // TODO correct for chart bounds if not autoscale
                 var y = MapDataPointToCanvas(value.DataPoint!.Value);
@@ -89,7 +88,7 @@ public class XYChart {
 
     public decimal MapDataPointToCanvas(decimal dataPoint) => Canvas.PlotAreaY + (PlotArea.Max - dataPoint) / (PlotArea.Max - PlotArea.Min) * Canvas.PlotAreaHeight;
 
-    public decimal MapDataIndexToCanvas(int index) => Canvas.PlotAreaX + (Labels.Any() ? (index + 0.5M) * Canvas.PlotAreaWidth / Labels.Count : 0M);
+    public decimal MapDataIndexToCanvas(int index) => Canvas.PlotAreaX + (index + 0.5M) * Canvas.PlotAreaWidth / Labels.Count;
 
     public DataSeries AddDataSeries(string name) => AddDataSeries(name, null);
 
