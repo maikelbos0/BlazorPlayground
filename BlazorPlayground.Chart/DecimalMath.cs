@@ -28,4 +28,7 @@ public static class DecimalMath {
 
     public static decimal Trim(decimal value)
         => value / 1.000_000_000_000_000_000_000_000_000_000M;
+
+    public static decimal AdjustToRange(decimal value, decimal min, decimal max)
+        => Math.Min(Math.Max(value, min), max);
 }

@@ -69,4 +69,20 @@ public class DecimalMathTests {
         { 10.000_000M, 10M },
         { 10M, 10M }
     };
+
+    [Theory]
+    [MemberData(nameof(AdjustToRangeData))]
+    public void AdjustToRange(decimal value, decimal min, decimal max, decimal expectedValue) {
+        Assert.Equal(expectedValue, DecimalMath.AdjustToRange(value, min, max));
+    }
+
+    public static TheoryData<decimal, decimal, decimal, decimal> AdjustToRangeData() => new() {
+        { -2M, -1M, 3M, -1M },
+        { -1M, -1M, 3M, -1M },
+        { 0M, -1M, 3M, 0M },
+        { 1M, -1M, 3M, 1M },
+        { 2M, -1M, 3M, 2M },
+        { 3M, -1M, 3M, 3M },
+        { 4M, -1M, 3M, 3M }
+    };
 }
