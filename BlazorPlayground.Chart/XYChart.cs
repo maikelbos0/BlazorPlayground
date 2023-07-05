@@ -64,11 +64,11 @@ public class XYChart {
             .Select((dataPoint, index) => (DataPoint: dataPoint, Index: index))
             .Where(value => value.DataPoint != null && value.Index < Labels.Count)
             .Select(value => {
-                // TODO correct for chart bounds if not autoscale
-                var y = MapDataPointToCanvas(value.DataPoint!.Value);
+                var dataPoint = DecimalMath.AdjustToRange(value.DataPoint!.Value, PlotArea.Min, PlotArea.Max);
+                var y = MapDataPointToCanvas(dataPoint);
                 decimal height;
-                
-                if (value.DataPoint > 0) {
+
+                if (dataPoint > 0) {
                     height = min - y;
                 }
                 else {
