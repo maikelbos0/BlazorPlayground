@@ -36,17 +36,17 @@ public class XYChart {
             PlotArea.AutoScale(DataSeries.SelectMany(dataSeries => dataSeries.Where(dataPoint => dataPoint != null).Select(dataPoint => dataPoint!.Value)), Canvas.RequestedGridLineCount);
         }
 
-        yield return Canvas.GetPlotAreaShape();
-
         foreach (var shape in GetGridLineShapes()) {
             yield return shape;
         }
 
-        foreach (var shape in GetYAxisLabelShapes()) {
+        foreach (var shape in GetDataSeriesShapes()) {
             yield return shape;
         }
 
-        foreach (var shape in GetDataSeriesShapes()) {
+        yield return Canvas.GetPlotAreaShape();
+
+        foreach (var shape in GetYAxisLabelShapes()) {
             yield return shape;
         }
     }
