@@ -181,7 +181,7 @@ public class XYChartTests {
 
     [Theory]
     [MemberData(nameof(GetDataSeriesShapesData))]
-    public void GetDataSeriesShapes(decimal min, decimal max, int index, decimal dataPoint, decimal expectedX, decimal expectedY, decimal expectedWidth, decimal expectedHeight) {
+    public void GetDataSeriesShapes(int index, decimal dataPoint, decimal expectedX, decimal expectedY, decimal expectedWidth, decimal expectedHeight) {
         var subject = new XYChart() {
             Canvas = {
                 Width = 1000,
@@ -193,8 +193,8 @@ public class XYChartTests {
                 YAxisLabelClearance = 10
             },
             PlotArea = {
-                 Min = min,
-                 Max = max,
+                 Min = -10M,
+                 Max = 40M,
                  GridLineInterval = 10M
             },
             DataSeries = {
@@ -217,21 +217,12 @@ public class XYChartTests {
 
         // TODO move this around
         // TODO fix x axis to include configurable width and offset for multiples
-        // TODO add min/max y axis bounds tests for dataPoint value
-
-        //Assert.Single(result, shape => shape.Y == 25M + 40M / 50M * 400M && shape.Height == 5M / 50M * 400M && shape.X == 25M + 100M + 0.5M * 850M / 4M - 5);
-        //Assert.Single(result, shape => shape.Y == 25M + (40M - 5M) / 50M * 400M && shape.Height == 5M / 50M * 400M && shape.X == 25M + 100M + 1.5M * 850M / 4M - 5);
-        //Assert.Single(result, shape => shape.Y == 25M + (40M - 35M) / 50M * 400M && shape.Height == 35M / 50M * 400M && shape.X == 25M + 100M + 3.5M * 850M / 4M - 5);
     }
 
-    public static TheoryData<decimal, decimal, int, decimal, decimal, decimal, decimal, decimal> GetDataSeriesShapesData() => new() {
-        { -10M, 40M, 0, -5M, 25M + 100M + 0.5M * 850M / 4M - 5M, 25M + 40M / 50M * 400M, 10M, 5M / 50M * 400M },
-        { -10M, 40M, 1, 5M, 25M + 100M + 1.5M * 850M / 4M - 5M, 25M + (40M - 5M) / 50M * 400M, 10M, 5M / 50M * 400M },
-        { -10M, 40M, 3, 35M, 25M + 100M + 3.5M * 850M / 4M - 5M, 25M + (40M - 35M) / 50M * 400M, 10M, 35M / 50M * 400M },
-        { 20M, 40M, 0, 35M, 25M + 100M + 0.5M * 850M / 4M - 5M, 25M + (40M - 35M) / 20M * 400M, 10M, (35M - 20M) / 20M * 400M },
-        { -40M, -20M, 0, -35M, 25M + 100M + 0.5M * 850M / 4M - 5M, 25M, 10M, (35M - 20M) / 20M * 400M },
-        { -10M, 40M, 0, 45M, 25M + 100M + 0.5M * 850M / 4M - 5M, 25M, 10M, 40M / 50M * 400M  },
-        { -10M, 40M, 0, -15M, 25M + 100M + 0.5M * 850M / 4M - 5M, 25M + 40M / 50M * 400M, 10M, 10M / 50M * 400M },
+    public static TheoryData<int, decimal, decimal, decimal, decimal, decimal> GetDataSeriesShapesData() => new() {
+        { 0, -5M, 25M + 100M + 0.5M * 850M / 4M - 5M, 25M + 40M / 50M * 400M, 10M, 5M / 50M * 400M },
+        { 1, 5M, 25M + 100M + 1.5M * 850M / 4M - 5M, 25M + (40M - 5M) / 50M * 400M, 10M, 5M / 50M * 400M },
+        { 3, 35M, 25M + 100M + 3.5M * 850M / 4M - 5M, 25M + (40M - 35M) / 50M * 400M, 10M, 35M / 50M * 400M },
     };
 
     [Theory]

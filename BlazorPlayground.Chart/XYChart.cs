@@ -57,23 +57,21 @@ public class XYChart {
 
     // Temporary - we'll need to abstract this out to DataSeries if we want different types of series rendered
     public IEnumerable<BarDataShape> GetDataSeriesShapes() {
-        var min = MapDataPointToCanvas(Math.Max(PlotArea.Min, 0M));
-        var max = MapDataPointToCanvas(Math.Min(PlotArea.Max, 0M));
+        var zeroY = MapDataPointToCanvas(0M);
 
         return DataSeries.SelectMany(dataSeries => dataSeries
             .Select((dataPoint, index) => (DataPoint: dataPoint, Index: index))
             .Where(value => value.DataPoint != null && value.Index < Labels.Count)
             .Select(value => {
-                var dataPoint = DecimalMath.AdjustToRange(value.DataPoint!.Value, PlotArea.Min, PlotArea.Max);
-                var y = MapDataPointToCanvas(dataPoint);
+                var y = MapDataPointToCanvas(value.DataPoint!.Value);
                 decimal height;
 
-                if (dataPoint > 0) {
-                    height = min - y;
+                if (y < zeroY) {
+                    height = zeroY - y;
                 }
                 else {
-                    height = y - max;
-                    y -= height;
+                    height = y - zeroY;
+                    y = zeroY;
                 }
 
                 return new BarDataShape(
