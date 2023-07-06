@@ -7,14 +7,12 @@ namespace BlazorPlayground.Chart.Tests.Shapes;
 public class PlotAreaShapeTests {
     [Fact]
     public void GetAttributes() {
-        var subject = new PlotAreaShape(20, 50, 80, 90);
+        var subject = new PlotAreaShape(300, 200, 20, 50, 130, 90);
 
         var result = subject.GetAttributes();
 
-        Assert.Equal(4, result.Count());
-        Assert.Equal("20", Assert.Single(result, attribute => attribute.Key == "x").Value);
-        Assert.Equal("50", Assert.Single(result, attribute => attribute.Key == "y").Value);
-        Assert.Equal("80", Assert.Single(result, attribute => attribute.Key == "width").Value);
-        Assert.Equal("90", Assert.Single(result, attribute => attribute.Key == "height").Value);
+        Assert.Equal(2, result.Count());
+        Assert.Equal("evenodd", Assert.Single(result, attribute => attribute.Key == "fill-rule").Value);
+        Assert.Equal("M-100 -100 l500 0 l0 400 l-500 0 Z M20 50 l130 0 l0 90 l-130 0 Z", Assert.Single(result, attribute => attribute.Key == "d").Value);
     }
 }

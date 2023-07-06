@@ -184,7 +184,7 @@ fieldset:disabled label, fieldset:disabled .form-control:disabled, fieldset:disa
 .chart-main .plot-area {
     stroke: #dee2e6;
     stroke-width: 1px;
-    fill: transparent;
+    fill: #ffffff;
 }
 
 .chart-main .grid-line {

@@ -24,5 +24,5 @@ public class Canvas {
     public int PlotAreaHeight => Height - Padding * 2 - XAxisLabelHeight;
     public int RequestedGridLineCount => PlotAreaHeight / GridLineIntervalHeight;
 
-    public Shapes.PlotAreaShape GetPlotAreaShape() => new(PlotAreaX, PlotAreaY, PlotAreaWidth, PlotAreaHeight);
+    public Shapes.PlotAreaShape GetPlotAreaShape() => new(Width, Height, PlotAreaX, PlotAreaY, PlotAreaWidth, PlotAreaHeight);
 }
