@@ -91,6 +91,10 @@
             <input class="form-check-input mt-0" type="checkbox" id="autoScaleIsEnabled" @bind="XYChart.AutoScaleSettings.IsEnabled" />
             <label class="form-check-label ps-2" for="autoScaleIsEnabled">Enabled</label>
         </div>
+
+        <div class="input-group-text">
+            <input class="form-check-input mt-0" type="checkbox" id="autoScaleIncludeZero" @bind="XYChart.AutoScaleSettings.IncludeZero" />
+            <label class="form-check-label ps-2" for="autoScaleIncludeZero">Always include zero</label>
         </div>
     </fieldset>
 </div>

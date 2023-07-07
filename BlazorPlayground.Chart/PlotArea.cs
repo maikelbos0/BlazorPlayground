@@ -22,7 +22,14 @@ public class PlotArea {
             max += (DefaultMax - DefaultMin) / 2M;
         }
 
-        // TODO force 0 line?
+        if (min > 0M && settings.IncludeZero) {
+            min = 0M;
+        }
+
+        if (max < 0M && settings.IncludeZero) {
+            max = 0M;
+        }
+
         // TODO adjust so data points are always *in between* min and max, not exactly on either
 
         var rawGridLineInterval = (max - min) / Math.Max(1, requestedGridLineCount - 1);

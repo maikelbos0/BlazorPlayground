@@ -16,7 +16,6 @@ public class PlotAreaTests {
         Assert.Equal(expectedGridLineInterval, subject.GridLineInterval);
     }
 
-    public static TheoryData<decimal[], int, decimal, decimal, decimal> AutoScaleData() => new() {
     public static TheoryData<AutoScaleSettings, decimal[], int, decimal, decimal, decimal> AutoScaleData() => new() {
         { new AutoScaleSettings() { IsEnabled = true }, Array.Empty<decimal>(), 1, 5M, 0M, 5M }, // 2
         { new AutoScaleSettings() { IsEnabled = true }, Array.Empty<decimal>(), 2, 2M, 0M, 6M }, // 4
@@ -44,8 +43,12 @@ public class PlotAreaTests {
         { new AutoScaleSettings() { IsEnabled = true }, new[] { 0.006M, 0.044M }, 11, 0.005M, 0.005M, 0.045M }, // 9
 
         { new AutoScaleSettings() { IsEnabled = false }, new[] { 0.006M, 0.044M }, 0, 0.5M, 0M, 5M }, // Disabled
+
+        { new AutoScaleSettings() { IsEnabled = true, IncludeZero = true }, new[] { 20M, 22M }, 5, 5M, 0M, 25M },
+        { new AutoScaleSettings() { IsEnabled = true, IncludeZero = true }, new[] { -20M, -22M }, 5, 5M, -25M, 0M },
+        { new AutoScaleSettings() { IsEnabled = true, IncludeZero = true }, new[] { 22M, -22M }, 5, 10M, -30M, 30M },
     };
-    
+
     [Theory]
     [MemberData(nameof(GetGridLineDataPointsData))]
     public void GetGridLineDataPoints(decimal min, decimal max, decimal gridLineInterval, params decimal[] expectedDataPoints) {
