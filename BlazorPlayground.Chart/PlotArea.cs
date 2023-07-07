@@ -9,7 +9,7 @@ public class PlotArea {
     public decimal Max { get; set; } = DefaultMax;
     public decimal GridLineInterval { get; set; } = DefaultGridLineInterval;
 
-    public void AutoScale(IEnumerable<decimal> dataPoints, int requestedGridLineCount) {
+    public void AutoScale(AutoScaleSettings settings, IEnumerable<decimal> dataPoints, int requestedGridLineCount) {
         var min = dataPoints.DefaultIfEmpty(DefaultMin).Min();
         var max = dataPoints.DefaultIfEmpty(DefaultMax).Max();
 

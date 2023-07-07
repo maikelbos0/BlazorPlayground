@@ -29,11 +29,11 @@ public class XYChart {
     public PlotArea PlotArea { get; set; } = new();
     public List<string> Labels { get; set; } = new();
     public List<DataSeries> DataSeries { get; set; } = new();
-    public bool AutoScale { get; set; } = DefaultAutoScale;
+    public AutoScaleSettings AutoScaleSettings { get; set; } = new();
 
     public IEnumerable<ShapeBase> GetShapes() {
-        if (AutoScale) {
-            PlotArea.AutoScale(DataSeries.SelectMany(dataSeries => dataSeries.Where(dataPoint => dataPoint != null).Select(dataPoint => dataPoint!.Value)), Canvas.RequestedGridLineCount);
+        if (AutoScaleSettings.IsEnabled) {
+            PlotArea.AutoScale(AutoScaleSettings, DataSeries.SelectMany(dataSeries => dataSeries.Where(dataPoint => dataPoint != null).Select(dataPoint => dataPoint!.Value)), Canvas.RequestedGridLineCount);
         }
 
         foreach (var shape in GetGridLineShapes()) {

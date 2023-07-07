@@ -8,8 +8,9 @@ public class PlotAreaTests {
     [MemberData(nameof(AutoScaleData))]
     public void AutoScale(decimal[] dataPoints, int requestedGridLineCount, decimal expectedGridLineInterval, decimal expectedMin, decimal expectedMax) {
         var subject = new PlotArea();
+        var settings = new AutoScaleSettings();
 
-        subject.AutoScale(dataPoints, requestedGridLineCount);
+        subject.AutoScale(settings, dataPoints, requestedGridLineCount);
 
         Assert.Equal(expectedMin, subject.Min);
         Assert.Equal(expectedMax, subject.Max);
@@ -42,7 +43,7 @@ public class PlotAreaTests {
         { new[] { 0.006M, 0.044M }, 6, 0.01M, 0M, 0.05M }, // 6
         { new[] { 0.006M, 0.044M }, 11, 0.005M, 0.005M, 0.045M }, // 9
     };
-
+    
     [Theory]
     [MemberData(nameof(GetGridLineDataPointsData))]
     public void GetGridLineDataPoints(decimal min, decimal max, decimal gridLineInterval, params decimal[] expectedDataPoints) {

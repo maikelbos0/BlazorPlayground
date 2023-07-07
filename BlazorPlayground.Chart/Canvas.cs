@@ -22,7 +22,7 @@ public class Canvas {
     public int PlotAreaY => Padding;
     public int PlotAreaWidth => Width - Padding * 2 - YAxisLabelWidth;
     public int PlotAreaHeight => Height - Padding * 2 - XAxisLabelHeight;
-    public int RequestedGridLineCount => PlotAreaHeight / GridLineIntervalHeight;
+    public int RequestedGridLineCount => PlotAreaHeight / GridLineIntervalHeight; // TODO move?
 
     public Shapes.PlotAreaShape GetPlotAreaShape() => new(Width, Height, PlotAreaX, PlotAreaY, PlotAreaWidth, PlotAreaHeight);
 }

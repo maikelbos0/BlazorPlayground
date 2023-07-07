@@ -44,7 +44,9 @@ public class XYChartTests {
                 new("Foo", "red") { -9M, 0M },
                 new("Bar", "blue") {-5M, 19M }
             },
-            AutoScale = true
+            AutoScaleSettings = {
+                IsEnabled = true
+            }
         };
 
         _ = subject.GetShapes().ToList();
@@ -71,7 +73,9 @@ public class XYChartTests {
                 new("Foo", "red") { -9M, 0M },
                 new("Bar", "blue") {-5M, 19M }
             },
-            AutoScale = false
+            AutoScaleSettings = {
+                IsEnabled = false
+            }
         };
 
         _ = subject.GetShapes().ToList();
