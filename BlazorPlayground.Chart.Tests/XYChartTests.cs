@@ -57,35 +57,6 @@ public class XYChartTests {
     }
 
     [Fact]
-    public void GetShapes_No_AutoScale() {
-        var subject = new XYChart() {
-            PlotArea = {
-                Min = -4M,
-                Max = 10M,
-                GridLineInterval = 2M
-            },
-            Canvas = {
-                Height = 800,
-                Padding = 25,
-                XAxisLabelHeight = 50
-            },
-            DataSeries = {
-                new("Foo", "red") { -9M, 0M },
-                new("Bar", "blue") {-5M, 19M }
-            },
-            AutoScaleSettings = {
-                IsEnabled = false
-            }
-        };
-
-        _ = subject.GetShapes().ToList();
-
-        Assert.Equal(-4M, subject.PlotArea.Min);
-        Assert.Equal(10M, subject.PlotArea.Max);
-        Assert.Equal(2M, subject.PlotArea.GridLineInterval);
-    }
-
-    [Fact]
     public void GetShapes_PlotAreaShape() {
         var subject = new XYChart();
 

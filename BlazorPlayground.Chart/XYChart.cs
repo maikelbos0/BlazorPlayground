@@ -32,9 +32,7 @@ public class XYChart {
     public AutoScaleSettings AutoScaleSettings { get; set; } = new();
 
     public IEnumerable<ShapeBase> GetShapes() {
-        if (AutoScaleSettings.IsEnabled) {
-            PlotArea.AutoScale(AutoScaleSettings, DataSeries.SelectMany(dataSeries => dataSeries.Where(dataPoint => dataPoint != null).Select(dataPoint => dataPoint!.Value)), Canvas.RequestedGridLineCount);
-        }
+        PlotArea.AutoScale(AutoScaleSettings, DataSeries.SelectMany(dataSeries => dataSeries.Where(dataPoint => dataPoint != null).Select(dataPoint => dataPoint!.Value)), Canvas.RequestedGridLineCount);
 
         foreach (var shape in GetGridLineShapes()) {
             yield return shape;
