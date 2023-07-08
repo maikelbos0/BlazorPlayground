@@ -14,23 +14,30 @@ public class PlotArea {
             return;
         }
 
-        var min = dataPoints.DefaultIfEmpty(DefaultMin).Min();
-        var max = dataPoints.DefaultIfEmpty(DefaultMax).Max();
+        var min = DefaultMin;
+        var max = DefaultMax;
 
-        if (min == max) {
-            min -= (DefaultMax - DefaultMin) / 2M;
-            max += (DefaultMax - DefaultMin) / 2M;
+        if (dataPoints.Any()) {
+            min = dataPoints.Min();
+            max = dataPoints.Max();
+
+            if (min == max) {
+                min -= (DefaultMax - DefaultMin) / 2M;
+                max += (DefaultMax - DefaultMin) / 2M;
+            }
+            else {
+                min *= min < 0 ? (1M + settings.ClearancePercentage / 100M) : (1M - settings.ClearancePercentage / 100M);
+                max *= max < 0 ? (1M - settings.ClearancePercentage / 100M) : (1M + settings.ClearancePercentage / 100M);
+            }
+
+            if (min > 0M && settings.IncludeZero) {
+                min = 0M;
+            }
+
+            if (max < 0M && settings.IncludeZero) {
+                max = 0M;
+            }
         }
-
-        if (min > 0M && settings.IncludeZero) {
-            min = 0M;
-        }
-
-        if (max < 0M && settings.IncludeZero) {
-            max = 0M;
-        }
-
-        // TODO adjust so data points are always *in between* min and max, not exactly on either
 
         var rawGridLineInterval = (max - min) / Math.Max(1, requestedGridLineCount - 1);
         var baseMultiplier = DecimalMath.Pow(10M, (int)Math.Floor((decimal)Math.Log10((double)rawGridLineInterval)));
