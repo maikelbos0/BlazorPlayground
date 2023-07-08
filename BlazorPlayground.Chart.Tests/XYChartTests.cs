@@ -45,7 +45,8 @@ public class XYChartTests {
                 new("Bar", "blue") {-5M, 19M }
             },
             AutoScaleSettings = {
-                IsEnabled = true
+                IsEnabled = true,
+                ClearancePercentage = 0M
             }
         };
 

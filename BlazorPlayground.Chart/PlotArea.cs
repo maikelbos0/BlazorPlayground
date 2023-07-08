@@ -26,8 +26,10 @@ public class PlotArea {
                 max += (DefaultMax - DefaultMin) / 2M;
             }
             else {
-                min *= min < 0 ? (1M + settings.ClearancePercentage / 100M) : (1M - settings.ClearancePercentage / 100M);
-                max *= max < 0 ? (1M - settings.ClearancePercentage / 100M) : (1M + settings.ClearancePercentage / 100M);
+                var clearance = (max - min) / (100M - settings.ClearancePercentage * 2) * settings.ClearancePercentage;
+
+                min -= clearance;
+                max += clearance;
             }
 
             if (min > 0M && settings.IncludeZero) {

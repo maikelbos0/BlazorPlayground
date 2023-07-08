@@ -89,9 +89,9 @@ public class PlotAreaTests {
     }
 
     public static TheoryData<decimal[], decimal, decimal, decimal> AutoScale_ClearancePercentageData() => new() {
-        { new[] { 0M, 20M }, 5M, 0M, 25M },
-        { new[] { 0M, -20M }, 5M, -25M, 0M },
-        { new[] { 20M, -20M }, 10M, -30M, 30M },
+        { new[] { 2M, 22M }, 5M, 0M, 25M },
+        { new[] { -2M, -22M }, 5M, -25M, 0M },
+        { new[] { 22M, -22M }, 10M, -30M, 30M },
     };
 
     [Fact]
