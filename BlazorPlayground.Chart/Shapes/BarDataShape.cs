@@ -17,6 +17,8 @@ public class BarDataShape : ShapeBase {
         Color = color;
     }
 
+    public override string GetKey() => $"{nameof(BarDataShape)}/{X}/{Y}/{Width}/{Height}/{Color}";
+
     public override ShapeAttributeCollection GetAttributes() => new() {
         { "x", X },
         { "y", Y },

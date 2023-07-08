@@ -6,6 +6,13 @@ namespace BlazorPlayground.Chart.Tests.Shapes;
 
 public class BarDataShapeTests {
     [Fact]
+    public void GetKey() {
+        var subject = new BarDataShape(20, 50, 80, 90, "red");
+
+        Assert.Equal("BarDataShape/20/50/80/90/red", subject.GetKey());
+    }
+
+    [Fact]
     public void GetAttributes() {
         var subject = new BarDataShape(20, 50, 80, 90, "red");
 

@@ -14,7 +14,9 @@ public class YAxisLabelShape : ShapeBase {
         Y = y;
         Value = value;
     }
-    
+
+    public override string GetKey() => $"{nameof(YAxisLabelShape)}/{X}/{Y}/{Value}";
+
     public override ShapeAttributeCollection GetAttributes() => new() {
         { "x", X },
         { "y", Y }

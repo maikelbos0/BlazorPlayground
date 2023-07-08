@@ -6,6 +6,13 @@ namespace BlazorPlayground.Chart.Tests.Shapes;
 
 public class GridLineShapeTests {
     [Fact]
+    public void GetKey() {
+        var subject = new GridLineShape(20M, 50M, 80, 10M);
+
+        Assert.Equal("GridLineShape/20/50/80/10", subject.GetKey());
+    }
+
+    [Fact]
     public void GetAttributes() {
         var subject = new GridLineShape(20M, 50M, 80, 10M);
 

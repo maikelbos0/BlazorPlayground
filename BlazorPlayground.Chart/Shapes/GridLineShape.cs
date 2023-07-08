@@ -15,6 +15,8 @@ public class GridLineShape : ShapeBase {
         Value = value;
     }
 
+    public override string GetKey() => $"{nameof(GridLineShape)}/{X}/{Y}/{Width}/{Value}";
+
     public override ShapeAttributeCollection GetAttributes() => new() {
         { "x1", X },
         { "y1", Y },

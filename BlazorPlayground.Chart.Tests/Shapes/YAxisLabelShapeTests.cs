@@ -6,6 +6,13 @@ namespace BlazorPlayground.Chart.Tests.Shapes;
 
 public class YAxisLabelShapeTests {
     [Fact]
+    public void GetKey() {
+        var subject = new YAxisLabelShape(100M, 50M, 150);
+
+        Assert.Equal("YAxisLabelShape/100/50/150", subject.GetKey());
+    }
+
+    [Fact]
     public void GetAttributes() {
         var subject = new YAxisLabelShape(100M, 50M, 150);
 

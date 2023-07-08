@@ -17,8 +17,8 @@ public class ChartRenderer : ComponentBase {
             builder.AddAttribute(5, "height", Chart.Canvas.Height);
 
             foreach (var shape in Chart.GetShapes()) {
-                // TODO add keys to shape elements; for now we have just the one so this is possible
                 builder.OpenElement(6, shape.ElementName);
+                builder.SetKey(shape.GetKey());
                 builder.AddAttribute(7, "class", shape.CssClass);
                 builder.AddMultipleAttributes(8, shape.GetAttributes());
                 builder.AddContent(9, shape.GetContent());
