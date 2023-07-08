@@ -6,7 +6,8 @@ namespace BlazorPlayground.Chart.Tests;
 public class PlotAreaTests {
     [Theory]
     [MemberData(nameof(AutoScaleData))]
-    public void AutoScale(AutoScaleSettings settings, decimal[] dataPoints, int requestedGridLineCount, decimal expectedGridLineInterval, decimal expectedMin, decimal expectedMax) {
+    public void AutoScale(decimal[] dataPoints, int requestedGridLineCount, decimal expectedGridLineInterval, decimal expectedMin, decimal expectedMax) {
+        var settings = new AutoScaleSettings() { IsEnabled = true, IncludeZero = false };
         var subject = new PlotArea();
 
         subject.AutoScale(settings, dataPoints, requestedGridLineCount);
@@ -16,38 +17,75 @@ public class PlotAreaTests {
         Assert.Equal(expectedGridLineInterval, subject.GridLineInterval);
     }
 
-    public static TheoryData<AutoScaleSettings, decimal[], int, decimal, decimal, decimal> AutoScaleData() => new() {
-        { new AutoScaleSettings() { IsEnabled = true }, Array.Empty<decimal>(), 1, 5M, 0M, 5M }, // 2
-        { new AutoScaleSettings() { IsEnabled = true }, Array.Empty<decimal>(), 2, 2M, 0M, 6M }, // 4
-        { new AutoScaleSettings() { IsEnabled = true }, Array.Empty<decimal>(), 3, 2M, 0M, 6M }, // 4
-        { new AutoScaleSettings() { IsEnabled = true }, Array.Empty<decimal>(), 4, 1M, 0M, 5M }, // 6
-        { new AutoScaleSettings() { IsEnabled = true }, Array.Empty<decimal>(), 7, 1M, 0M, 5M }, // 6
-        { new AutoScaleSettings() { IsEnabled = true }, Array.Empty<decimal>(), 8, 0.5M, 0M, 5M }, // 11
-        { new AutoScaleSettings() { IsEnabled = true }, Array.Empty<decimal>(), 17, 0.5M, 0M, 5M }, // 11
-        { new AutoScaleSettings() { IsEnabled = true }, Array.Empty<decimal>(), 18, 0.2M, 0M, 5M }, // 21
-        { new AutoScaleSettings() { IsEnabled = true }, Array.Empty<decimal>(), 25, 0.2M, 0M, 5M }, // 21
-        
-        { new AutoScaleSettings() { IsEnabled = true }, new[] { 0.1M, 4.9M }, 6, 1M, 0M, 5M }, // 6
-        { new AutoScaleSettings() { IsEnabled = true }, new[] { 0.1M, 4.9M }, 11, 0.5M, 0M, 5M }, // 11
-        { new AutoScaleSettings() { IsEnabled = true }, new[] { 0.6M, 4.4M }, 6, 1M, 0M, 5M }, // 6
-        { new AutoScaleSettings() { IsEnabled = true }, new[] { 0.6M, 4.4M }, 11, 0.5M, 0.5M, 4.5M }, // 9
+    public static TheoryData<decimal[], int, decimal, decimal, decimal> AutoScaleData() => new() {
+        { new[] { 1M, 49M }, 6, 10M, 0M, 50M }, // 6
+        { new[] { 1M, 49M }, 11, 5M, 0M, 50M }, // 11
+        { new[] { 50M, 100M }, 11, 5M, 50M, 100M }, // 11
 
-        { new AutoScaleSettings() { IsEnabled = true }, new[] { 0.1M, 4.9M }, 6, 1M, 0M, 5M }, // 6
-        { new AutoScaleSettings() { IsEnabled = true }, new[] { 0.1M, 4.9M }, 11, 0.5M, 0M, 5M }, // 11
-        { new AutoScaleSettings() { IsEnabled = true }, new[] { 0.6M, 4.4M }, 6, 1M, 0M, 5M }, // 6
-        { new AutoScaleSettings() { IsEnabled = true }, new[] { 0.6M, 4.4M }, 11, 0.5M, 0.5M, 4.5M }, // 9
+        { new[] { 0.1M, 4.9M }, 6, 1M, 0M, 5M }, // 6
+        { new[] { 0.1M, 4.9M }, 11, 0.5M, 0M, 5M }, // 11
+        { new[] { 5M, 10M }, 11, 0.5M, 5M, 10M }, // 11
 
-        { new AutoScaleSettings() { IsEnabled = true }, new[] { 0.001M, 0.049M }, 6, 0.01M, 0M, 0.05M }, // 6
-        { new AutoScaleSettings() { IsEnabled = true }, new[] { 0.001M, 0.049M }, 11, 0.005M, 0M, 0.05M }, // 11
-        { new AutoScaleSettings() { IsEnabled = true }, new[] { 0.006M, 0.044M }, 6, 0.01M, 0M, 0.05M }, // 6
-        { new AutoScaleSettings() { IsEnabled = true }, new[] { 0.006M, 0.044M }, 11, 0.005M, 0.005M, 0.045M }, // 9
-
-        { new AutoScaleSettings() { IsEnabled = false }, new[] { 0.006M, 0.044M }, 0, 0.5M, 0M, 5M }, // Disabled
-
-        { new AutoScaleSettings() { IsEnabled = true, IncludeZero = true }, new[] { 20M, 22M }, 5, 5M, 0M, 25M },
-        { new AutoScaleSettings() { IsEnabled = true, IncludeZero = true }, new[] { -20M, -22M }, 5, 5M, -25M, 0M },
-        { new AutoScaleSettings() { IsEnabled = true, IncludeZero = true }, new[] { 22M, -22M }, 5, 10M, -30M, 30M },
+        { new[] { 0.001M, 0.049M }, 6, 0.01M, 0M, 0.05M }, // 6
+        { new[] { 0.001M, 0.049M }, 11, 0.005M, 0M, 0.05M }, // 11
+        { new[] { 0.05M, 0.1M }, 11, 0.005M, 0.05M, 0.1M }, // 11
     };
+
+    [Theory]
+    [MemberData(nameof(AutoScale_No_DataPointsData))]
+    public void AutoScale_No_DataPoints(int requestedGridLineCount, decimal expectedGridLineInterval, decimal expectedMin, decimal expectedMax) {
+        var settings = new AutoScaleSettings() { IsEnabled = true, IncludeZero = true };
+        var subject = new PlotArea();
+
+        subject.AutoScale(settings, Array.Empty<decimal>(), requestedGridLineCount);
+
+        Assert.Equal(expectedMin, subject.Min);
+        Assert.Equal(expectedMax, subject.Max);
+        Assert.Equal(expectedGridLineInterval, subject.GridLineInterval);
+    }
+
+    public static TheoryData<int, decimal, decimal, decimal> AutoScale_No_DataPointsData() => new() {
+        { 1, 5M, 0M, 5M }, // 2
+        { 2, 2M, 0M, 6M }, // 4
+        { 3, 2M, 0M, 6M }, // 4
+        { 4, 1M, 0M, 5M }, // 6
+        { 7, 1M, 0M, 5M }, // 6
+        { 8, 0.5M, 0M, 5M }, // 11
+        { 17, 0.5M, 0M, 5M }, // 11
+        { 18, 0.2M, 0M, 5M }, // 21
+        { 25, 0.2M, 0M, 5M }, // 21
+    };
+
+    [Theory]
+    [MemberData(nameof(AutoScale_IncludeZeroData))]
+    public void AutoScale_IncludeZero(decimal[] dataPoints, int requestedGridLineCount, decimal expectedGridLineInterval, decimal expectedMin, decimal expectedMax) {
+        var settings = new AutoScaleSettings() { IsEnabled = true, IncludeZero = true };
+        var subject = new PlotArea();
+
+        subject.AutoScale(settings, dataPoints, requestedGridLineCount);
+
+        Assert.Equal(expectedMin, subject.Min);
+        Assert.Equal(expectedMax, subject.Max);
+        Assert.Equal(expectedGridLineInterval, subject.GridLineInterval);
+    }
+
+    public static TheoryData<decimal[], int, decimal, decimal, decimal> AutoScale_IncludeZeroData() => new() {
+        { new[] { 20M, 22M }, 5, 5M, 0M, 25M },
+        { new[] { -20M, -22M }, 5, 5M, -25M, 0M },
+        { new[] { 22M, -22M }, 5, 10M, -30M, 30M },
+    };
+
+    [Fact]
+    public void AutoScale_Disabled() {
+        var settings = new AutoScaleSettings() { IsEnabled = false, IncludeZero = true };
+        var subject = new PlotArea();
+
+        subject.AutoScale(settings, new[] { 0.006M, 0.044M }, 11);
+
+        Assert.Equal(PlotArea.DefaultMin, subject.Min);
+        Assert.Equal(PlotArea.DefaultMax, subject.Max);
+        Assert.Equal(PlotArea.DefaultGridLineInterval, subject.GridLineInterval);
+    }
 
     [Theory]
     [MemberData(nameof(GetGridLineDataPointsData))]
