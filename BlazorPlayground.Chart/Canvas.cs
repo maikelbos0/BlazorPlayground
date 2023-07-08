@@ -8,7 +8,6 @@ public class Canvas {
     public static int DefaultXAxisLabelClearance { get; set; } = 10;
     public static int DefaultYAxisLabelWidth { get; set; } = 100;
     public static int DefaultYAxisLabelClearance { get; set; } = 10;
-    public static int DefaultGridLineIntervalHeight { get; set; } = 50;
 
     public int Width { get; set; } = DefaultWidth;
     public int Height { get; set; } = DefaultHeight;
@@ -17,12 +16,10 @@ public class Canvas {
     public int XAxisLabelClearance { get; set; } = DefaultXAxisLabelClearance;
     public int YAxisLabelWidth { get; set; } = DefaultYAxisLabelWidth;
     public int YAxisLabelClearance { get; set; } = DefaultYAxisLabelClearance;
-    public int GridLineIntervalHeight { get; set; } = DefaultGridLineIntervalHeight;
     public int PlotAreaX => Padding + YAxisLabelWidth;
     public int PlotAreaY => Padding;
     public int PlotAreaWidth => Width - Padding * 2 - YAxisLabelWidth;
     public int PlotAreaHeight => Height - Padding * 2 - XAxisLabelHeight;
-    public int RequestedGridLineCount => PlotAreaHeight / GridLineIntervalHeight; // TODO move?
 
     public Shapes.PlotAreaShape GetPlotAreaShape() => new(Width, Height, PlotAreaX, PlotAreaY, PlotAreaWidth, PlotAreaHeight);
 }

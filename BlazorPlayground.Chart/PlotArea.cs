@@ -9,7 +9,7 @@ public class PlotArea {
     public decimal Max { get; set; } = DefaultMax;
     public decimal GridLineInterval { get; set; } = DefaultGridLineInterval;
 
-    public void AutoScale(AutoScaleSettings settings, IEnumerable<decimal> dataPoints, int requestedGridLineCount) {
+    public void AutoScale(AutoScaleSettings settings, IEnumerable<decimal> dataPoints) {
         if (!settings.IsEnabled) {
             return;
         }
@@ -39,7 +39,7 @@ public class PlotArea {
             }
         }
 
-        var rawGridLineInterval = (max - min) / Math.Max(1, requestedGridLineCount - 1);
+        var rawGridLineInterval = (max - min) / Math.Max(1, settings.RequestedGridLineCount - 1);
         var baseMultiplier = DecimalMath.Pow(10M, (int)Math.Floor((decimal)Math.Log10((double)rawGridLineInterval)));
         var scale = new[] { 1M, 2M, 5M, 10M }
             .Select(baseGridLineInterval => baseGridLineInterval * baseMultiplier)
@@ -48,7 +48,7 @@ public class PlotArea {
                 Min = DecimalMath.FloorToScale(min, gridLineInterval),
                 Max = DecimalMath.CeilingToScale(max, gridLineInterval)
             })
-            .OrderBy(candidate => Math.Abs((candidate.Max - candidate.Min) / candidate.GridLineInterval - requestedGridLineCount))
+            .OrderBy(candidate => Math.Abs((candidate.Max - candidate.Min) / candidate.GridLineInterval - settings.RequestedGridLineCount))
             .First();
 
         Min = DecimalMath.Trim(scale.Min);
