@@ -87,9 +87,21 @@
         </div>
 
         <div class="input-group-text">
+            <label for="autoScaleRequestedGridLineCount">Requested grid line count</label>
+        </div>
+
+        <input type="text" class="form-control" id="autoScaleRequestedGridLineCount" @bind-value="XYChart.AutoScaleSettings.RequestedGridLineCount" />
+        
+        <div class="input-group-text">
             <input class="form-check-input mt-0" type="checkbox" id="autoScaleIncludeZero" @bind="XYChart.AutoScaleSettings.IncludeZero" />
             <label class="form-check-label ps-2" for="autoScaleIncludeZero">Always include zero</label>
         </div>
+
+        <div class="input-group-text">
+            <label for="autoScaleClearancePercentage">Clearance percentage</label>
+        </div>
+
+        <input type="text" class="form-control" id="autoScaleClearancePercentage" @bind-value="XYChart.AutoScaleSettings.ClearancePercentage" />
     </fieldset>
 </div>
 
