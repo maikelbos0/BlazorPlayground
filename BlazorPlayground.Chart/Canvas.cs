@@ -9,6 +9,7 @@ public class Canvas {
     public static int DefaultYAxisLabelWidth { get; set; } = 100;
     public static int DefaultYAxisLabelClearance { get; set; } = 10;
     public static string DefaultYAxisLabelFormat { get; set; } = "N0";
+    public static string DefaultYAxisMultiplierFormat { get; set; } = "x #,##0.######";
 
     public int Width { get; set; } = DefaultWidth;
     public int Height { get; set; } = DefaultHeight;
@@ -18,6 +19,7 @@ public class Canvas {
     public int YAxisLabelWidth { get; set; } = DefaultYAxisLabelWidth;
     public int YAxisLabelClearance { get; set; } = DefaultYAxisLabelClearance;
     public string YAxisLabelFormat { get; set; } = DefaultYAxisLabelFormat;
+    public string YAxisMultiplierFormat { get; set; } = DefaultYAxisMultiplierFormat;
     public int PlotAreaX => Padding + YAxisLabelWidth;
     public int PlotAreaY => Padding;
     public int PlotAreaWidth => Width - Padding * 2 - YAxisLabelWidth;

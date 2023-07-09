@@ -79,6 +79,24 @@ public class XYChartTests {
     }
 
     [Fact]
+    public void GetShapes_YAxisMultiplierShape() {
+        var subject = new XYChart() {
+            PlotArea = {
+                Multiplier = 1000
+            }
+        };
+
+        Assert.Single(subject.GetShapes(), shape => shape is YAxisMultiplierShape);
+    }
+
+    [Fact]
+    public void GetShapes_YAxisMultiplierShape_Without_Multiplier() {
+        var subject = new XYChart();
+
+        Assert.DoesNotContain(subject.GetShapes(), shape => shape == null);
+    }
+
+    [Fact]
     public void GetShapes_DataSeriesShapes() {
         var subject = new XYChart() {
             DataSeries = {
@@ -155,6 +173,58 @@ public class XYChartTests {
         Assert.Single(result, shape => shape.Y == 25 + (0M - -100M) / 600.0M * (500 - 25 - 25 - 50) && shape.Value == "040");
         Assert.Single(result, shape => shape.Y == 25 + (200M - -100M) / 600.0M * (500 - 25 - 25 - 50) && shape.Value == "020");
         Assert.Single(result, shape => shape.Y == 25 + (400M - -100M) / 600.0M * (500 - 25 - 25 - 50) && shape.Value == "000");
+    }
+
+    [Fact]
+    public void GetYAxisMultiplierShape() {
+        var subject = new XYChart() {
+            Canvas = {
+                Width = 1000,
+                Height = 500,
+                Padding = 25,
+                XAxisLabelHeight = 50,
+                XAxisLabelClearance = 5,
+                YAxisLabelWidth = 75,
+                YAxisLabelClearance = 10,
+                YAxisMultiplierFormat = "x 0000"
+            },
+            PlotArea = {
+                 Min = -100M,
+                 Max = 500M,
+                 GridLineInterval = 200M,
+                 Multiplier = 1000
+            }
+        };
+
+        var result = subject.GetYAxisMultiplierShape();
+
+        Assert.NotNull(result);
+        Assert.Equal(25, result.X);
+        Assert.Equal(25 + (500 - 25 - 25 - 50) / 2, result.Y);
+        Assert.Equal("x 1000", result.Multiplier);
+    }
+
+    [Fact]
+    public void GetYAxisMultiplierShape_Without_Multiplier() {
+        var subject = new XYChart() {
+            Canvas = {
+                Width = 1000,
+                Height = 500,
+                Padding = 25,
+                XAxisLabelHeight = 50,
+                XAxisLabelClearance = 5,
+                YAxisLabelWidth = 75,
+                YAxisLabelClearance = 10,
+                YAxisMultiplierFormat = "x 0000"
+            },
+            PlotArea = {
+                 Min = -100M,
+                 Max = 500M,
+                 GridLineInterval = 200M
+            }
+        };
+
+
     }
 
     [Theory]

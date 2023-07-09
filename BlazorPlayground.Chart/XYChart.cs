@@ -47,6 +47,9 @@ public class XYChart {
         foreach (var shape in GetYAxisLabelShapes()) {
             yield return shape;
         }
+
+        if (GetYAxisMultiplierShape() is ShapeBase multiplierShape) 
+            yield return multiplierShape;
     }
 
     public IEnumerable<GridLineShape> GetGridLineShapes() 
@@ -54,6 +57,9 @@ public class XYChart {
 
     public IEnumerable<YAxisLabelShape> GetYAxisLabelShapes()
         => PlotArea.GetGridLineDataPoints().Select(dataPoint => new YAxisLabelShape(Canvas.PlotAreaX - Canvas.YAxisLabelClearance, MapDataPointToCanvas(dataPoint), (dataPoint / PlotArea.Multiplier).ToString(Canvas.YAxisLabelFormat)));
+
+    public YAxisMultiplierShape? GetYAxisMultiplierShape()
+        => PlotArea.Multiplier == 1M ? null : new YAxisMultiplierShape(Canvas.Padding, Canvas.PlotAreaY + Canvas.PlotAreaHeight / 2M, PlotArea.Multiplier.ToString(Canvas.YAxisMultiplierFormat));
 
     // Temporary - we'll need to abstract this out to DataSeries if we want different types of series rendered
     public IEnumerable<BarDataShape> GetDataSeriesShapes() {
