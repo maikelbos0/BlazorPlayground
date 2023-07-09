@@ -13,8 +13,6 @@ public class YAxisMultiplierShape : ShapeBase {
         Multiplier = multiplier;
     }
 
-    public override string GetKey() => $"{nameof(YAxisMultiplierShape)}/{X}/{Y}/{Multiplier}";
-
     public override ShapeAttributeCollection GetAttributes() => new() {
         { "x", X },
         { "y", Y }

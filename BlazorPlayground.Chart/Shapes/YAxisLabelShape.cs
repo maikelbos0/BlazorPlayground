@@ -7,13 +7,11 @@ public class YAxisLabelShape : ShapeBase {
     public decimal Y { get; }
     public string Value { get; }
 
-    public YAxisLabelShape(decimal x, decimal y, string value) {
+    public YAxisLabelShape(decimal x, decimal y, string value, int index) : base(index) {
         X = x;
         Y = y;
         Value = value;
     }
-
-    public override string GetKey() => $"{nameof(YAxisLabelShape)}/{X}/{Y}/{Value}";
 
     public override ShapeAttributeCollection GetAttributes() => new() {
         { "x", X },

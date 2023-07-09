@@ -21,8 +21,6 @@ public class PlotAreaShape : ShapeBase {
         Height = height;
     }
 
-    public override string GetKey() => $"{nameof(PlotAreaShape)}/{CanvasWidth}/{CanvasHeight}/{X}/{Y}/{Width}/{Height}";
-
     public override ShapeAttributeCollection GetAttributes() => new() {
         { "d", $"M{-bleed} {-bleed} l{CanvasWidth + bleed * 2} 0 l0 {CanvasHeight + bleed * 2} l{-CanvasWidth - bleed * 2} 0 Z M{X} {Y} l{Width} 0 l0 {Height} l{-Width} 0 Z" },
         { "fill-rule", "evenodd" }

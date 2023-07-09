@@ -136,9 +136,9 @@ public class XYChartTests {
             Assert.Equal(1000 - 25 - 25 - 75, shape.Width);
         });
 
-        Assert.Single(result, shape => shape.Y == 25 + (0M - -100M) / 600.0M * (500 - 25 - 25 - 50));
-        Assert.Single(result, shape => shape.Y == 25 + (200M - -100M) / 600.0M * (500 - 25 - 25 - 50));
-        Assert.Single(result, shape => shape.Y == 25 + (400M - -100M) / 600.0M * (500 - 25 - 25 - 50));
+        Assert.Single(result, shape => shape.Key.EndsWith("[0]") && shape.Y == 25 + (400M - -100M) / 600.0M * (500 - 25 - 25 - 50));
+        Assert.Single(result, shape => shape.Key.EndsWith("[1]") && shape.Y == 25 + (200M - -100M) / 600.0M * (500 - 25 - 25 - 50));
+        Assert.Single(result, shape => shape.Key.EndsWith("[2]") && shape.Y == 25 + (0M - -100M) / 600.0M * (500 - 25 - 25 - 50));
     }
 
     [Fact]
@@ -170,9 +170,9 @@ public class XYChartTests {
             Assert.Equal(25 + 75 - 10, shape.X);
         });
 
-        Assert.Single(result, shape => shape.Y == 25 + (0M - -100M) / 600.0M * (500 - 25 - 25 - 50) && shape.Value == "040");
-        Assert.Single(result, shape => shape.Y == 25 + (200M - -100M) / 600.0M * (500 - 25 - 25 - 50) && shape.Value == "020");
-        Assert.Single(result, shape => shape.Y == 25 + (400M - -100M) / 600.0M * (500 - 25 - 25 - 50) && shape.Value == "000");
+        Assert.Single(result, shape => shape.Key.EndsWith("[0]") && shape.Y == 25 + (400M - -100M) / 600.0M * (500 - 25 - 25 - 50) && shape.Value == "000");
+        Assert.Single(result, shape => shape.Key.EndsWith("[1]") && shape.Y == 25 + (200M - -100M) / 600.0M * (500 - 25 - 25 - 50) && shape.Value == "020");
+        Assert.Single(result, shape => shape.Key.EndsWith("[2]") && shape.Y == 25 + (0M - -100M) / 600.0M * (500 - 25 - 25 - 50) && shape.Value == "040");
     }
 
     [Fact]
@@ -264,6 +264,7 @@ public class XYChartTests {
         Assert.Equal(expectedY, shape.Y);
         Assert.Equal(expectedWidth, shape.Width);
         Assert.Equal(expectedHeight, shape.Height);
+        Assert.EndsWith($"[0,{index}]", shape.Key);
 
         // TODO move this around
         // TODO fix x axis to include configurable width and offset for multiples

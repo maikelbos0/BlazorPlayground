@@ -6,10 +6,10 @@ namespace BlazorPlayground.Chart.Tests.Shapes;
 
 public class PlotAreaShapeTests {
     [Fact]
-    public void GetKey() {
+    public void Key() {
         var subject = new PlotAreaShape(300, 200, 20, 50, 130, 90);
 
-        Assert.Equal("PlotAreaShape/300/200/20/50/130/90", subject.GetKey());
+        Assert.Equal("PlotAreaShape[]", subject.Key);
     }
 
     [Fact]

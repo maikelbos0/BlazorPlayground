@@ -6,10 +6,10 @@ namespace BlazorPlayground.Chart.Tests.Shapes;
 
 public class YAxisMultiplierShapeTests {
     [Fact]
-    public void GetKey() {
+    public void Key() {
         var subject = new YAxisMultiplierShape(100M, 50M, "x 1.000");
 
-        Assert.Equal("YAxisMultiplierShape/100/50/x 1.000", subject.GetKey());
+        Assert.Equal("YAxisMultiplierShape[]", subject.Key);
     }
 
     [Fact]

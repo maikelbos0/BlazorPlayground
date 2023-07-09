@@ -53,10 +53,10 @@ public class XYChart {
     }
 
     public IEnumerable<GridLineShape> GetGridLineShapes() 
-        => PlotArea.GetGridLineDataPoints().Select(dataPoint => new GridLineShape(Canvas.PlotAreaX, MapDataPointToCanvas(dataPoint), Canvas.PlotAreaWidth, dataPoint));
+        => PlotArea.GetGridLineDataPoints().Select((dataPoint, index) => new GridLineShape(Canvas.PlotAreaX, MapDataPointToCanvas(dataPoint), Canvas.PlotAreaWidth, dataPoint, index));
 
     public IEnumerable<YAxisLabelShape> GetYAxisLabelShapes()
-        => PlotArea.GetGridLineDataPoints().Select(dataPoint => new YAxisLabelShape(Canvas.PlotAreaX - Canvas.YAxisLabelClearance, MapDataPointToCanvas(dataPoint), (dataPoint / PlotArea.Multiplier).ToString(Canvas.YAxisLabelFormat)));
+        => PlotArea.GetGridLineDataPoints().Select((dataPoint, index) => new YAxisLabelShape(Canvas.PlotAreaX - Canvas.YAxisLabelClearance, MapDataPointToCanvas(dataPoint), (dataPoint / PlotArea.Multiplier).ToString(Canvas.YAxisLabelFormat), index));
 
     public YAxisMultiplierShape? GetYAxisMultiplierShape()
         => PlotArea.Multiplier == 1M ? null : new YAxisMultiplierShape(Canvas.Padding, Canvas.PlotAreaY + Canvas.PlotAreaHeight / 2M, PlotArea.Multiplier.ToString(Canvas.YAxisMultiplierFormat));
@@ -65,7 +65,7 @@ public class XYChart {
     public IEnumerable<BarDataShape> GetDataSeriesShapes() {
         var zeroY = MapDataPointToCanvas(0M);
 
-        return DataSeries.SelectMany(dataSeries => dataSeries
+        return DataSeries.SelectMany((dataSeries, dataSeriesIndex) => dataSeries
             .Select((dataPoint, index) => (DataPoint: dataPoint, Index: index))
             .Where(value => value.DataPoint != null && value.Index < Labels.Count)
             .Select(value => {
@@ -81,11 +81,13 @@ public class XYChart {
                 }
 
                 return new BarDataShape(
-                    x: MapDataIndexToCanvas(value.Index) - 5, // TODO width
-                    y: y,
-                    width: 10, // TODO width
-                    height: height,
-                    color: dataSeries.Color
+                    MapDataIndexToCanvas(value.Index) - 5, // TODO width
+                    y,
+                    10, // TODO width
+                    height,
+                    dataSeries.Color,
+                    dataSeriesIndex,
+                    value.Index
                 );
             }));
     }

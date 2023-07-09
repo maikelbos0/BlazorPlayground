@@ -6,15 +6,15 @@ namespace BlazorPlayground.Chart.Tests.Shapes;
 
 public class BarDataShapeTests {
     [Fact]
-    public void GetKey() {
-        var subject = new BarDataShape(20, 50, 80, 90, "red");
+    public void Key() {
+        var subject = new BarDataShape(20, 50, 80, 90, "red", 2, 5);
 
-        Assert.Equal("BarDataShape/20/50/80/90/red", subject.GetKey());
+        Assert.Equal("BarDataShape[2,5]", subject.Key);
     }
 
     [Fact]
     public void GetAttributes() {
-        var subject = new BarDataShape(20, 50, 80, 90, "red");
+        var subject = new BarDataShape(20, 50, 80, 90, "red", 2, 5);
 
         var result = subject.GetAttributes();
 

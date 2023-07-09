@@ -9,15 +9,13 @@ public class BarDataShape : ShapeBase {
     public decimal Height { get; }
     public string Color { get; }
 
-    public BarDataShape(decimal x, decimal y, decimal width, decimal height, string color) {
+    public BarDataShape(decimal x, decimal y, decimal width, decimal height, string color, int dataSeriesIndex, int dataPointIndex) : base(dataSeriesIndex, dataPointIndex) {
         X = x;
         Y = y;
         Width = width;
         Height = height;
         Color = color;
     }
-
-    public override string GetKey() => $"{nameof(BarDataShape)}/{X}/{Y}/{Width}/{Height}/{Color}";
 
     public override ShapeAttributeCollection GetAttributes() => new() {
         { "x", X },

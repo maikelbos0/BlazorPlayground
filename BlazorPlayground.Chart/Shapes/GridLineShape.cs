@@ -8,14 +8,12 @@ public class GridLineShape : ShapeBase {
     public int Width { get; }
     public decimal Value { get; }
 
-    public GridLineShape(decimal x, decimal y, int width, decimal value) {
+    public GridLineShape(decimal x, decimal y, int width, decimal value, int index) : base(index) {
         X = x;
         Y = y;
         Width = width;
         Value = value;
     }
-
-    public override string GetKey() => $"{nameof(GridLineShape)}/{X}/{Y}/{Width}/{Value}";
 
     public override ShapeAttributeCollection GetAttributes() => new() {
         { "x1", X },
