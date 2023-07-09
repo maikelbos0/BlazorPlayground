@@ -45,15 +45,15 @@ public class PlotAreaTests {
     }
 
     public static TheoryData<int, decimal, decimal, decimal> AutoScale_No_DataPointsData() => new() {
-        { 1, 5M, 0M, 5M }, // 2
-        { 2, 2M, 0M, 6M }, // 4
-        { 3, 2M, 0M, 6M }, // 4
-        { 4, 1M, 0M, 5M }, // 6
-        { 7, 1M, 0M, 5M }, // 6
-        { 8, 0.5M, 0M, 5M }, // 11
-        { 17, 0.5M, 0M, 5M }, // 11
-        { 18, 0.2M, 0M, 5M }, // 21
-        { 25, 0.2M, 0M, 5M }, // 21
+        { 1, 50M, 0M, 50M }, // 2
+        { 2, 20M, 0M, 60M }, // 4
+        { 3, 20M, 0M, 60M }, // 4
+        { 4, 10M, 0M, 50M }, // 6
+        { 7, 10M, 0M, 50M }, // 6
+        { 8, 5M, 0M, 50M }, // 11
+        { 17, 5M, 0M, 50M }, // 11
+        { 18, 2M, 0M, 50M }, // 21
+        { 25, 2M, 0M, 50M }, // 21
     };
 
     [Theory]

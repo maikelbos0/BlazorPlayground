@@ -8,6 +8,7 @@ public class Canvas {
     public static int DefaultXAxisLabelClearance { get; set; } = 10;
     public static int DefaultYAxisLabelWidth { get; set; } = 100;
     public static int DefaultYAxisLabelClearance { get; set; } = 10;
+    public static string DefaultYAxisLabelFormat { get; set; } = "N0";
 
     public int Width { get; set; } = DefaultWidth;
     public int Height { get; set; } = DefaultHeight;
@@ -16,6 +17,7 @@ public class Canvas {
     public int XAxisLabelClearance { get; set; } = DefaultXAxisLabelClearance;
     public int YAxisLabelWidth { get; set; } = DefaultYAxisLabelWidth;
     public int YAxisLabelClearance { get; set; } = DefaultYAxisLabelClearance;
+    public string YAxisLabelFormat { get; set; } = DefaultYAxisLabelFormat;
     public int PlotAreaX => Padding + YAxisLabelWidth;
     public int PlotAreaY => Padding;
     public int PlotAreaWidth => Width - Padding * 2 - YAxisLabelWidth;
