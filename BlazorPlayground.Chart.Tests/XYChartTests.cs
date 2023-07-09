@@ -224,7 +224,9 @@ public class XYChartTests {
             }
         };
 
+        var result = subject.GetYAxisMultiplierShape();
 
+        Assert.Null(result);
     }
 
     [Theory]
