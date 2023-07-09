@@ -8,7 +8,7 @@ public class Canvas {
     public static int DefaultXAxisLabelClearance { get; set; } = 10;
     public static int DefaultYAxisLabelWidth { get; set; } = 100;
     public static int DefaultYAxisLabelClearance { get; set; } = 10;
-    public static string DefaultYAxisLabelFormat { get; set; } = "N0";
+    public static string DefaultYAxisLabelFormat { get; set; } = "#,##0.######";
     public static string DefaultYAxisMultiplierFormat { get; set; } = "x #,##0.######";
 
     public int Width { get; set; } = DefaultWidth;
