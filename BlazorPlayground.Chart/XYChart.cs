@@ -49,9 +49,11 @@ public class XYChart {
         }
     }
 
-    public IEnumerable<GridLineShape> GetGridLineShapes() => PlotArea.GetGridLineDataPoints().Select(dataPoint => new GridLineShape(Canvas.PlotAreaX, MapDataPointToCanvas(dataPoint), Canvas.PlotAreaWidth, dataPoint));
+    public IEnumerable<GridLineShape> GetGridLineShapes() 
+        => PlotArea.GetGridLineDataPoints().Select(dataPoint => new GridLineShape(Canvas.PlotAreaX, MapDataPointToCanvas(dataPoint), Canvas.PlotAreaWidth, dataPoint));
 
-    public IEnumerable<YAxisLabelShape> GetYAxisLabelShapes() => PlotArea.GetGridLineDataPoints().Select(dataPoint => new YAxisLabelShape(Canvas.PlotAreaX - Canvas.YAxisLabelClearance, MapDataPointToCanvas(dataPoint), dataPoint.ToString(Canvas.YAxisLabelFormat)));
+    public IEnumerable<YAxisLabelShape> GetYAxisLabelShapes()
+        => PlotArea.GetGridLineDataPoints().Select(dataPoint => new YAxisLabelShape(Canvas.PlotAreaX - Canvas.YAxisLabelClearance, MapDataPointToCanvas(dataPoint), (dataPoint / PlotArea.Multiplier).ToString(Canvas.YAxisLabelFormat)));
 
     // Temporary - we'll need to abstract this out to DataSeries if we want different types of series rendered
     public IEnumerable<BarDataShape> GetDataSeriesShapes() {

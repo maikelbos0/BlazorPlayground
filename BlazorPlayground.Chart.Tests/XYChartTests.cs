@@ -133,12 +133,14 @@ public class XYChartTests {
                 XAxisLabelHeight = 50,
                 XAxisLabelClearance = 5,
                 YAxisLabelWidth = 75,
-                YAxisLabelClearance = 10
+                YAxisLabelClearance = 10,
+                YAxisLabelFormat = "#000"
             },
             PlotArea = {
                  Min = -100M,
                  Max = 500M,
-                 GridLineInterval = 200M
+                 GridLineInterval = 200M,
+                 Multiplier = 10M
             }
         };
 
@@ -150,9 +152,9 @@ public class XYChartTests {
             Assert.Equal(25 + 75 - 10, shape.X);
         });
 
-        Assert.Single(result, shape => shape.Y == 25 + (0M - -100M) / 600.0M * (500 - 25 - 25 - 50) && shape.Value == "400");
-        Assert.Single(result, shape => shape.Y == 25 + (200M - -100M) / 600.0M * (500 - 25 - 25 - 50) && shape.Value == "200");
-        Assert.Single(result, shape => shape.Y == 25 + (400M - -100M) / 600.0M * (500 - 25 - 25 - 50) && shape.Value == "0");
+        Assert.Single(result, shape => shape.Y == 25 + (0M - -100M) / 600.0M * (500 - 25 - 25 - 50) && shape.Value == "040");
+        Assert.Single(result, shape => shape.Y == 25 + (200M - -100M) / 600.0M * (500 - 25 - 25 - 50) && shape.Value == "020");
+        Assert.Single(result, shape => shape.Y == 25 + (400M - -100M) / 600.0M * (500 - 25 - 25 - 50) && shape.Value == "000");
     }
 
     [Theory]

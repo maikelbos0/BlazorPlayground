@@ -4,10 +4,12 @@ public class PlotArea {
     public static decimal DefaultMin { get; set; } = 0M;
     public static decimal DefaultMax { get; set; } = 50M;
     public static decimal DefaultGridLineInterval { get; set; } =  5M;
+    public static decimal DefaultMultiplier { get; set; } = 1M;
 
     public decimal Min { get; set; } = DefaultMin;
     public decimal Max { get; set; } = DefaultMax;
     public decimal GridLineInterval { get; set; } = DefaultGridLineInterval;
+    public decimal Multiplier { get; set; } = DefaultMultiplier;
 
     public void AutoScale(AutoScaleSettings settings, IEnumerable<decimal> dataPoints) {
         if (!settings.IsEnabled) {
