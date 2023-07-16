@@ -268,8 +268,8 @@ public class XYChartTests {
         });
 
         Assert.Single(result, shape => shape.Key.EndsWith("[0]") && shape.X == 25M + 100M + 0.5M * 850M / 3M && shape.Label == "Foo");
-        Assert.Single(result, shape => shape.Key.EndsWith("[1]") && shape.X == 25M + 100M + 1.5M * 850M / 3M && shape.Label == "Foo");
-        Assert.Single(result, shape => shape.Key.EndsWith("[2]") && shape.X == 25M + 100M + 2.5M * 850M / 3M && shape.Label == "Foo");
+        Assert.Single(result, shape => shape.Key.EndsWith("[1]") && shape.X == 25M + 100M + 1.5M * 850M / 3M && shape.Label == "Bar");
+        Assert.Single(result, shape => shape.Key.EndsWith("[2]") && shape.X == 25M + 100M + 2.5M * 850M / 3M && shape.Label == "Baz");
     }
 
     [Theory]
@@ -308,9 +308,6 @@ public class XYChartTests {
         Assert.Equal(expectedWidth, shape.Width);
         Assert.Equal(expectedHeight, shape.Height);
         Assert.EndsWith($"[0,{index}]", shape.Key);
-
-        // TODO move this around
-        // TODO fix x axis to include configurable width and offset for multiples
     }
 
     public static TheoryData<int, decimal, decimal, decimal, decimal, decimal> GetDataSeriesShapesData() => new() {
