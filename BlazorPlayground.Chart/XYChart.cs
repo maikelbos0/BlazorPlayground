@@ -48,8 +48,13 @@ public class XYChart {
             yield return shape;
         }
 
-        if (GetYAxisMultiplierShape() is ShapeBase multiplierShape) 
+        if (GetYAxisMultiplierShape() is ShapeBase multiplierShape) {
             yield return multiplierShape;
+        }
+
+        foreach (var shape in GetXAxisLabelShapes()) {
+            yield return shape;
+        }
     }
 
     public IEnumerable<GridLineShape> GetGridLineShapes() 

@@ -215,6 +215,15 @@ fieldset:disabled label, fieldset:disabled .form-control:disabled, fieldset:disa
     text-anchor: middle;
 }
 
+.chart-main .x-axis-label {
+    font-family: Courier New, Courier, monospace;
+    transform-box: fill-box;
+    transform-origin: 50% 50% 0;
+    transform: rotate(-90deg) translate(-50%, 0);
+    dominant-baseline: central;
+    text-anchor: middle;
+}
+
 .chart-main .bar-data {
     stroke: #adafb3;
 }

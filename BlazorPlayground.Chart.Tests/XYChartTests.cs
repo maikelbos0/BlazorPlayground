@@ -97,6 +97,15 @@ public class XYChartTests {
     }
 
     [Fact]
+    public void GetShapes_XAxisLabelShapes() {
+        var subject = new XYChart() {
+            Labels = { "Foo", "Bar" }
+        };
+
+        Assert.Contains(subject.GetShapes(), shape => shape is XAxisLabelShape);
+    }
+
+    [Fact]
     public void GetShapes_DataSeriesShapes() {
         var subject = new XYChart() {
             DataSeries = {
