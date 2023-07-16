@@ -61,6 +61,9 @@ public class XYChart {
     public YAxisMultiplierShape? GetYAxisMultiplierShape()
         => PlotArea.Multiplier == 1M ? null : new YAxisMultiplierShape(Canvas.Padding, Canvas.PlotAreaY + Canvas.PlotAreaHeight / 2M, PlotArea.Multiplier.ToString(Canvas.YAxisMultiplierFormat));
 
+    public IEnumerable<XAxisLabelShape> GetXAxisLabelShapes()
+        => Labels.Select((label, index) => new XAxisLabelShape(MapDataIndexToCanvas(index), Canvas.PlotAreaY + Canvas.PlotAreaHeight + Canvas.XAxisLabelClearance, label, index));
+
     // Temporary - we'll need to abstract this out to DataSeries if we want different types of series rendered
     public IEnumerable<BarDataShape> GetDataSeriesShapes() {
         var zeroY = MapDataPointToCanvas(0M);

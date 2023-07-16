@@ -229,6 +229,40 @@ public class XYChartTests {
         Assert.Null(result);
     }
 
+    [Fact]
+    public void GetXAxisLabelShapes() {
+        var subject = new XYChart() {
+            Canvas = {
+                Width = 1000,
+                Height = 500,
+                Padding = 25,
+                XAxisLabelHeight = 50,
+                XAxisLabelClearance = 5,
+                YAxisLabelWidth = 100,
+                YAxisLabelClearance = 10
+            },
+            PlotArea = {
+                 Min = -100M,
+                 Max = 500M,
+                 GridLineInterval = 200M,
+                 Multiplier = 1000
+            },
+            Labels = { "Foo", "Bar", "Baz" }
+        };
+
+        var result = subject.GetXAxisLabelShapes();
+
+        Assert.Equal(3, result.Count());
+
+        Assert.All(result, shape => {
+            Assert.Equal(500 - 25 - 50 + 5, shape.Y);
+        });
+
+        Assert.Single(result, shape => shape.Key.EndsWith("[0]") && shape.X == 25M + 100M + 0.5M * 850M / 3M && shape.Label == "Foo");
+        Assert.Single(result, shape => shape.Key.EndsWith("[1]") && shape.X == 25M + 100M + 1.5M * 850M / 3M && shape.Label == "Foo");
+        Assert.Single(result, shape => shape.Key.EndsWith("[2]") && shape.X == 25M + 100M + 2.5M * 850M / 3M && shape.Label == "Foo");
+    }
+
     [Theory]
     [MemberData(nameof(GetDataSeriesShapesData))]
     public void GetDataSeriesShapes(int index, decimal dataPoint, decimal expectedX, decimal expectedY, decimal expectedWidth, decimal expectedHeight) {
