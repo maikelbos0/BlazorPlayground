@@ -17,55 +17,55 @@
             <label for="width">Width</label>
         </div>
 
-        <input type="text" class="form-control" id="width" @bind-value="XYChart.Canvas.Width" />
+        <input type="text" class="form-control" id="width" @bind-value="xyChart.Canvas.Width" />
 
         <div class="input-group-text">
             <label for="height">Height</label>
         </div>
 
-        <input type="text" class="form-control" id="height" @bind-value="XYChart.Canvas.Height" />
+        <input type="text" class="form-control" id="height" @bind-value="xyChart.Canvas.Height" />
 
         <div class="input-group-text">
             <label for="padding">Padding</label>
         </div>
 
-        <input type="text" class="form-control" id="padding" @bind-value="XYChart.Canvas.Padding" />
+        <input type="text" class="form-control" id="padding" @bind-value="xyChart.Canvas.Padding" />
 
         <div class="input-group-text">
             <label for="yAxisLabelWidth">Y-axis label width</label>
         </div>
 
-        <input type="text" class="form-control" id="yAxisLabelWidth" @bind-value="XYChart.Canvas.YAxisLabelWidth" />
+        <input type="text" class="form-control" id="yAxisLabelWidth" @bind-value="xyChart.Canvas.YAxisLabelWidth" />
 
         <div class="input-group-text">
             <label for="yAxisLabelClearance">Y-axis label clearance</label>
         </div>
 
-        <input type="text" class="form-control" id="yAxisLabelClearance" @bind-value="XYChart.Canvas.YAxisLabelClearance" />
+        <input type="text" class="form-control" id="yAxisLabelClearance" @bind-value="xyChart.Canvas.YAxisLabelClearance" />
 
         <div class="input-group-text">
             <label for="yAxisLabelFormat">Y-axis label format</label>
         </div>
 
-        <input type="text" class="form-control" id="yAxisLabelFormat" @bind-value="XYChart.Canvas.YAxisLabelFormat" />
+        <input type="text" class="form-control" id="yAxisLabelFormat" @bind-value="xyChart.Canvas.YAxisLabelFormat" />
 
         <div class="input-group-text">
             <label for="yAxisMultiplierFormat">Y-axis multiplier format</label>
         </div>
 
-        <input type="text" class="form-control" id="yAxisMultiplierFormat" @bind-value="XYChart.Canvas.YAxisMultiplierFormat" />
+        <input type="text" class="form-control" id="yAxisMultiplierFormat" @bind-value="xyChart.Canvas.YAxisMultiplierFormat" />
 
         <div class="input-group-text">
             <label for="xAxisLabelHeight">X-axis label height</label>
         </div>
 
-        <input type="text" class="form-control" id="xAxisLabelHeight" @bind-value="XYChart.Canvas.XAxisLabelHeight" />
+        <input type="text" class="form-control" id="xAxisLabelHeight" @bind-value="xyChart.Canvas.XAxisLabelHeight" />
 
         <div class="input-group-text">
             <label for="xAxisLabelClearance">X-axis label clearance</label>
         </div>
 
-        <input type="text" class="form-control" id="xAxisLabelClearance" @bind-value="XYChart.Canvas.XAxisLabelClearance" />
+        <input type="text" class="form-control" id="xAxisLabelClearance" @bind-value="xyChart.Canvas.XAxisLabelClearance" />
     </fieldset>
 
     <fieldset class="input-group mb-3 me-3">
@@ -75,32 +75,32 @@
             <label for="plotAreaMin">Min</label>
         </div>
 
-        <input type="text" class="form-control" id="plotAreaMin" @bind-value="XYChart.PlotArea.Min" />
+        <input type="text" class="form-control" id="plotAreaMin" @bind-value="xyChart.PlotArea.Min" />
 
         <div class="input-group-text">
             <label for="plotAreaMax">Max</label>
         </div>
 
-        <input type="text" class="form-control" id="plotAreaMax" @bind-value="XYChart.PlotArea.Max" />
+        <input type="text" class="form-control" id="plotAreaMax" @bind-value="xyChart.PlotArea.Max" />
 
         <div class="input-group-text">
             <label for="plotAreaGridLineInterval">Grid line interval</label>
         </div>
 
-        <input type="text" class="form-control" id="plotAreaGridLineInterval" @bind-value="XYChart.PlotArea.GridLineInterval" />
+        <input type="text" class="form-control" id="plotAreaGridLineInterval" @bind-value="xyChart.PlotArea.GridLineInterval" />
 
         <div class="input-group-text">
             <label for="plotAreaMultiplier">Multiplier</label>
         </div>
 
-        <input type="text" class="form-control" id="plotAreaMultiplier" @bind-value="XYChart.PlotArea.Multiplier" />
+        <input type="text" class="form-control" id="plotAreaMultiplier" @bind-value="xyChart.PlotArea.Multiplier" />
     </fieldset>
 
     <fieldset class="input-group mb-3 me-3">
         <div class="input-group-text">Auto scale plot area</div>
 
         <div class="input-group-text">
-            <input class="form-check-input mt-0" type="checkbox" id="autoScaleIsEnabled" @bind="XYChart.AutoScaleSettings.IsEnabled" />
+            <input class="form-check-input mt-0" type="checkbox" id="autoScaleIsEnabled" @bind="xyChart.AutoScaleSettings.IsEnabled" />
             <label class="form-check-label ps-2" for="autoScaleIsEnabled">Enabled</label>
         </div>
 
@@ -108,10 +108,10 @@
             <label for="autoScaleRequestedGridLineCount">Requested grid line count</label>
         </div>
 
-        <input type="text" class="form-control" id="autoScaleRequestedGridLineCount" @bind-value="XYChart.AutoScaleSettings.RequestedGridLineCount" />
+        <input type="text" class="form-control" id="autoScaleRequestedGridLineCount" @bind-value="xyChart.AutoScaleSettings.RequestedGridLineCount" />
         
         <div class="input-group-text">
-            <input class="form-check-input mt-0" type="checkbox" id="autoScaleIncludeZero" @bind="XYChart.AutoScaleSettings.IncludeZero" />
+            <input class="form-check-input mt-0" type="checkbox" id="autoScaleIncludeZero" @bind="xyChart.AutoScaleSettings.IncludeZero" />
             <label class="form-check-label ps-2" for="autoScaleIncludeZero">Always include zero</label>
         </div>
 
@@ -119,7 +119,7 @@
             <label for="autoScaleClearancePercentage">Clearance percentage</label>
         </div>
 
-        <input type="text" class="form-control" id="autoScaleClearancePercentage" @bind-value="XYChart.AutoScaleSettings.ClearancePercentage" />
+        <input type="text" class="form-control" id="autoScaleClearancePercentage" @bind-value="xyChart.AutoScaleSettings.ClearancePercentage" />
     </fieldset>
 </div>
 
@@ -127,38 +127,45 @@
     <tr>
         <th></th>
 
-        @for (var y0 = 0; y0 < XYChart.DataSeries.Count; y0++) {
+        @for (var y0 = 0; y0 < barLayer.DataSeries.Count; y0++) {
             var y = y0;
 
             <th>
-                <input type="text" class="form-control" @bind-value="XYChart.DataSeries[y].Name" />
+                <input type="text" class="form-control" @bind-value="barLayer.DataSeries[y].Name" />
             </th>
         }
     </tr>
 
-    @for (var x0 = 0; x0 < XYChart.Labels.Count; x0++) {
+    @for (var x0 = 0; x0 < xyChart.Labels.Count; x0++) {
         var x = x0;
 
         <tr>
             <th>
-                <input type="text" class="form-control" @bind-value="XYChart.Labels[x]" />
+                <input type="text" class="form-control" @bind-value="xyChart.Labels[x]" />
             </th>
 
-            @for (var y0 = 0; y0 < XYChart.DataSeries.Count; y0++) {
+            @for (var y0 = 0; y0 < barLayer.DataSeries.Count; y0++) {
                 var y = y0;
 
                 <td>
-                    <input type="text" class="form-control" @bind-value="XYChart.DataSeries[y][x]" />
+                    <input type="text" class="form-control" @bind-value="barLayer.DataSeries[y][x]" />
                 </td>
             }
         </tr>
     }
 </table>
 
-<ChartRenderer Chart="XYChart" />
+<ChartRenderer Chart="xyChart" />
 
 @code {
-    private XYChart XYChart = new();
+    private XYChart xyChart = new();
+
+    // TODO set up interface to allow multiple layers
+    private BarDataSeriesLayer barLayer;
+
+    public Chart() {
+        barLayer = xyChart.AddBarLayer();
+    }
 
     protected override void OnInitialized() {
         base.OnInitialized();
@@ -168,20 +175,20 @@
     }
 
     private void AddDataSeries() {
-        XYChart.AddDataSeries($"Series {XYChart.DataSeries.Count + 1}");
+        barLayer.AddDataSeries($"Series {barLayer.DataSeries.Count + 1}");
     }
 
     private void AddDataPoint() {
-        XYChart.AddDataPoint($"Value {XYChart.Labels.Count + 1}");
+        xyChart.AddDataPoint($"Value {xyChart.Labels.Count + 1}");
     }
 
     private void GenerateData() {
         var random = new Random();
 
-        for (var y = 0; y < XYChart.DataSeries.Count; y++) {
-            for (var x = 0; x < XYChart.DataSeries[y].Count; x++) {
-                if (XYChart.DataSeries[y][x] == null) {
-                    XYChart.DataSeries[y][x] = random.Next(-100, 900);
+        for (var y = 0; y < barLayer.DataSeries.Count; y++) {
+            for (var x = 0; x < barLayer.DataSeries[y].Count; x++) {
+                if (barLayer.DataSeries[y][x] == null) {
+                    barLayer.DataSeries[y][x] = random.Next(-100, 900);
                 }
             }
         }

@@ -6,27 +6,6 @@ using Xunit;
 namespace BlazorPlayground.Chart.Tests;
 
 public class XYChartTests {
-    [Theory]
-    [InlineData(0, "red")]
-    [InlineData(1, "blue")]
-    [InlineData(2, "green")]
-    [InlineData(3, "red")]
-    public void GetColor(int index, string expectedColor) {
-        XYChart.DefaultColors = new List<string>() { "red", "blue", "green" };
-
-        Assert.Equal(expectedColor, XYChart.GetColor(index));
-    }
-
-    [Theory]
-    [InlineData(0)]
-    [InlineData(1)]
-    [InlineData(-1, "red", "red", "blue", "green")]
-    public void GetColor_Fallback(int index, params string[] defaultColors) {
-        XYChart.DefaultColors = defaultColors.ToList();
-
-        Assert.Equal(XYChart.FallbackColor, XYChart.GetColor(index));
-    }
-
     [Fact]
     public void GetShapes_AutoScale() {
         var subject = new XYChart() {
@@ -40,15 +19,18 @@ public class XYChartTests {
                 Padding = 25,
                 XAxisLabelHeight = 50
             },
-            DataSeries = {
-                new("Foo", "red") { -9M, 0M },
-                new("Bar", "blue") {-5M, 19M }
-            },
             AutoScaleSettings = {
                 IsEnabled = true,
                 ClearancePercentage = 0M
             }
         };
+
+        subject.DataSeriesLayers.Add(new BarDataSeriesLayer(subject) {
+            DataSeries = {
+                new("Foo", "red") { -9M, 0M },
+                new("Bar", "blue") {-5M, 19M }
+            }
+        });
 
         _ = subject.GetShapes().ToList();
 
@@ -108,11 +90,14 @@ public class XYChartTests {
     [Fact]
     public void GetShapes_DataSeriesShapes() {
         var subject = new XYChart() {
-            DataSeries = {
-                new("Foo", "red") { 5, 10 }
-            },
             Labels = { "Foo", "Bar" }
         };
+
+        subject.DataSeriesLayers.Add(new BarDataSeriesLayer(subject) {
+            DataSeries = {
+                new("Foo", "red") { 5M, 10M }
+            }
+        });
 
         Assert.Contains(subject.GetShapes(), shape => shape is BarDataShape);
     }
@@ -272,49 +257,10 @@ public class XYChartTests {
         Assert.Single(result, shape => shape.Key.EndsWith("[2]") && shape.X == 25M + 100M + 2.5M * 850M / 3M && shape.Label == "Baz");
     }
 
-    [Theory]
-    [MemberData(nameof(GetDataSeriesShapesData))]
-    public void GetDataSeriesShapes(int index, decimal dataPoint, decimal expectedX, decimal expectedY, decimal expectedWidth, decimal expectedHeight) {
-        var subject = new XYChart() {
-            Canvas = {
-                Width = 1000,
-                Height = 500,
-                Padding = 25,
-                XAxisLabelHeight = 50,
-                XAxisLabelClearance = 5,
-                YAxisLabelWidth = 100,
-                YAxisLabelClearance = 10
-            },
-            PlotArea = {
-                 Min = -10M,
-                 Max = 40M,
-                 GridLineInterval = 10M
-            },
-            DataSeries = {
-                new("Foo", "red") { null, null, null, null, 15M }
-            },
-            Labels = { "Foo", "Bar", "Baz", "Quux" }
-        };
-
-        subject.DataSeries[0][index] = dataPoint;
-
-        var result = subject.GetDataSeriesShapes();
-
-        var shape = Assert.Single(result);
-
-        Assert.Equal("red", shape.Color);
-        Assert.Equal(expectedX, shape.X);
-        Assert.Equal(expectedY, shape.Y);
-        Assert.Equal(expectedWidth, shape.Width);
-        Assert.Equal(expectedHeight, shape.Height);
-        Assert.EndsWith($"[0,{index}]", shape.Key);
+    [Fact]
+    public void GetDataSeriesShapes() {
+        Assert.Fail("TODO");
     }
-
-    public static TheoryData<int, decimal, decimal, decimal, decimal, decimal> GetDataSeriesShapesData() => new() {
-        { 0, -5M, 25M + 100M + 0.5M * 850M / 4M - 5M, 25M + 40M / 50M * 400M, 10M, 5M / 50M * 400M },
-        { 1, 5M, 25M + 100M + 1.5M * 850M / 4M - 5M, 25M + (40M - 5M) / 50M * 400M, 10M, 5M / 50M * 400M },
-        { 3, 35M, 25M + 100M + 3.5M * 850M / 4M - 5M, 25M + (40M - 35M) / 50M * 400M, 10M, 35M / 50M * 400M },
-    };
 
     [Theory]
     [MemberData(nameof(MapDataPointToCanvasData))]
@@ -370,41 +316,8 @@ public class XYChartTests {
     };
 
     [Fact]
-    public void AddDataSeries_With_Color() {
-        var subject = new XYChart() {
-            Labels = {
-                "Foo",
-                "Bar",
-                "Baz"
-            }
-        };
-
-        var result = subject.AddDataSeries("Data", "red");
-
-        Assert.Same(result, Assert.Single(subject.DataSeries));
-        Assert.Equal("Data", result.Name);
-        Assert.Equal("red", result.Color);
-        Assert.Equal(3, result.Count);
-    }
-
-    [Fact]
-    public void AddDataSeries_Without_Color() {
-        XYChart.DefaultColors = new List<string>() { "red", "blue", "green" };
-
-        var subject = new XYChart() {
-            Labels = {
-                "Foo",
-                "Bar",
-                "Baz"
-            }
-        };
-
-        var result = subject.AddDataSeries("Data");
-
-        Assert.Same(result, Assert.Single(subject.DataSeries));
-        Assert.Equal("Data", result.Name);
-        Assert.Equal("red", result.Color);
-        Assert.Equal(3, result.Count);
+    public void AddBarLayer() {
+        Assert.Fail("TODO");
     }
 
     [Fact]
@@ -413,7 +326,10 @@ public class XYChartTests {
             Labels = {
                 "Value 1",
                 "Value 2"
-            },
+            }
+        };
+
+        var layer = new BarDataSeriesLayer(subject) {
             DataSeries = {
                 new("Foo", "red") { 2.5M, 3M, 4M },
                 new("Bar", "blue") { 5.5M, 6M },
@@ -421,12 +337,14 @@ public class XYChartTests {
             }
         };
 
+        subject.DataSeriesLayers.Add(layer);
+
         subject.AddDataPoint("Value 3");
 
         Assert.Equal(3, subject.Labels.Count);
         Assert.Equal(new List<string> { "Value 1", "Value 2", "Value 3" }, subject.Labels);
-        Assert.Equal(new List<decimal?> { 2.5M, 3M, 4M }, subject.DataSeries[0]);
-        Assert.Equal(new List<decimal?> { 5.5M, 6M, null }, subject.DataSeries[1]);
-        Assert.Equal(new List<decimal?> { null, null, null }, subject.DataSeries[2]);
+        Assert.Equal(new List<decimal?> { 2.5M, 3M, 4M }, layer.DataSeries[0]);
+        Assert.Equal(new List<decimal?> { 5.5M, 6M, null }, layer.DataSeries[1]);
+        Assert.Equal(new List<decimal?> { null, null, null }, layer.DataSeries[2]);
     }
 }

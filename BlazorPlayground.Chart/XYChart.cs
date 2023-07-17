@@ -3,36 +3,14 @@
 namespace BlazorPlayground.Chart;
 
 public class XYChart {
-    public const string FallbackColor = "#000000";
-
-    public static bool DefaultAutoScale { get; set; } = true;
-    public static List<string> DefaultColors { get; set; } = new() {
-        // https://coolors.co/550527-688e26-faa613-f44708-a10702
-        // "#550527", "#688e26", "#faa613", "#f44708", "#a10702"
-
-        // https://coolors.co/264653-2a9d8f-e9c46a-f4a261-e76f51
-        // "#264653", "#2a9d8f", "#e9c46a", "#f4a261", "#e76f51"
-        
-        // https://coolors.co/2274a5-f75c03-f1c40f-d90368-00cc66
-        "#2274a5", "#f75c03", "#f1c40f", "#d90368", "#00cc66"
-    };
-
-    public static string GetColor(int index) {
-        if (DefaultColors.Any() && index >= 0) {
-            return DefaultColors[index % DefaultColors.Count];
-        }
-
-        return FallbackColor;
-    }
-
-    public Canvas Canvas = new();
+        public Canvas Canvas = new();
     public PlotArea PlotArea { get; set; } = new();
     public List<string> Labels { get; set; } = new();
-    public List<DataSeries> DataSeries { get; set; } = new();
+    public List<DataSeriesLayer> DataSeriesLayers { get; set; } = new();
     public AutoScaleSettings AutoScaleSettings { get; set; } = new();
 
     public IEnumerable<ShapeBase> GetShapes() {
-        PlotArea.AutoScale(AutoScaleSettings, DataSeries.SelectMany(dataSeries => dataSeries.Where(dataPoint => dataPoint != null).Select(dataPoint => dataPoint!.Value)));
+        PlotArea.AutoScale(AutoScaleSettings, DataSeriesLayers.SelectMany(layer => layer.DataSeries.SelectMany(dataSeries => dataSeries.Where(dataPoint => dataPoint != null).Select(dataPoint => dataPoint!.Value))));
 
         foreach (var shape in GetGridLineShapes()) {
             yield return shape;
@@ -57,7 +35,7 @@ public class XYChart {
         }
     }
 
-    public IEnumerable<GridLineShape> GetGridLineShapes() 
+    public IEnumerable<GridLineShape> GetGridLineShapes()
         => PlotArea.GetGridLineDataPoints().Select((dataPoint, index) => new GridLineShape(Canvas.PlotAreaX, MapDataPointToCanvas(dataPoint), Canvas.PlotAreaWidth, dataPoint, index));
 
     public IEnumerable<YAxisLabelShape> GetYAxisLabelShapes()
@@ -69,56 +47,25 @@ public class XYChart {
     public IEnumerable<XAxisLabelShape> GetXAxisLabelShapes()
         => Labels.Select((label, index) => new XAxisLabelShape(MapDataIndexToCanvas(index), Canvas.PlotAreaY + Canvas.PlotAreaHeight + Canvas.XAxisLabelClearance, label, index));
 
-    // Temporary - we'll need to abstract this out to DataSeries if we want different types of series rendered
-    public IEnumerable<BarDataShape> GetDataSeriesShapes() {
-        var zeroY = MapDataPointToCanvas(0M);
-
-        return DataSeries.SelectMany((dataSeries, dataSeriesIndex) => dataSeries
-            .Select((dataPoint, index) => (DataPoint: dataPoint, Index: index))
-            .Where(value => value.DataPoint != null && value.Index < Labels.Count)
-            .Select(value => {
-                var y = MapDataPointToCanvas(value.DataPoint!.Value);
-                decimal height;
-
-                if (y < zeroY) {
-                    height = zeroY - y;
-                }
-                else {
-                    height = y - zeroY;
-                    y = zeroY;
-                }
-
-                return new BarDataShape(
-                    MapDataIndexToCanvas(value.Index) - 5, // TODO width
-                    y,
-                    10, // TODO width
-                    height,
-                    dataSeries.Color,
-                    dataSeriesIndex,
-                    value.Index
-                );
-            }));
-    }
+    public IEnumerable<ShapeBase> GetDataSeriesShapes()
+        => DataSeriesLayers.SelectMany(layer => layer.GetDataSeriesShapes());
 
     public decimal MapDataPointToCanvas(decimal dataPoint) => Canvas.PlotAreaY + (PlotArea.Max - dataPoint) / (PlotArea.Max - PlotArea.Min) * Canvas.PlotAreaHeight;
 
     public decimal MapDataIndexToCanvas(int index) => Canvas.PlotAreaX + (index + 0.5M) * Canvas.PlotAreaWidth / Labels.Count;
 
-    public DataSeries AddDataSeries(string name) => AddDataSeries(name, null);
+    public BarDataSeriesLayer AddBarLayer() {
+        var layer = new BarDataSeriesLayer(this);
 
-    public DataSeries AddDataSeries(string name, string? color) {
-        var dataSeries = new DataSeries(name, color ?? GetColor(DataSeries.Count));
+        DataSeriesLayers.Add(layer);
 
-        dataSeries.AddRange(Enumerable.Range(0, Labels.Count).Select<int, decimal?>(i => null));
-        DataSeries.Add(dataSeries);
-
-        return dataSeries;
+        return layer;
     }
 
     public void AddDataPoint(string label) {
         Labels.Add(label);
 
-        foreach (var dataSeries in DataSeries) {
+        foreach (var dataSeries in DataSeriesLayers.SelectMany(layer => layer.DataSeries)) {
             dataSeries.AddRange(Enumerable.Range(0, Labels.Count - dataSeries.Count).Select<int, decimal?>(i => null));
         }
     }
