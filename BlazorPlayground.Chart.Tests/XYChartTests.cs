@@ -259,7 +259,42 @@ public class XYChartTests {
 
     [Fact]
     public void GetDataSeriesShapes() {
-        Assert.Fail("TODO");
+
+        var subject = new XYChart() {
+            Canvas = {
+                Width = 1000,
+                Height = 500,
+                Padding = 25,
+                XAxisLabelHeight = 50,
+                XAxisLabelClearance = 5,
+                YAxisLabelWidth = 100,
+                YAxisLabelClearance = 10
+            },
+            PlotArea = {
+                    Min = -10M,
+                    Max = 40M,
+                    GridLineInterval = 10M
+            },
+            Labels = { "Foo", "Bar", "Baz" }
+        };
+
+        subject.DataSeriesLayers.Add(new BarDataSeriesLayer(subject) { 
+            DataSeries = {
+                new("Foo", "red") { 5M, null, 15M }
+            }
+        });
+
+        subject.DataSeriesLayers.Add(new BarDataSeriesLayer(subject) { 
+            DataSeries = {
+                new("Bar", "blue") { 11M, 8M, null }
+            }
+        });
+
+        var result = subject.GetDataSeriesShapes();
+
+        Assert.Equal(4, result.Count());
+
+        Assert.All(result, shape => Assert.IsType<BarDataShape>(shape));
     }
 
     [Theory]
@@ -317,7 +352,12 @@ public class XYChartTests {
 
     [Fact]
     public void AddBarLayer() {
-        Assert.Fail("TODO");
+        var subject = new XYChart();
+
+        var result = subject.AddBarLayer();
+
+        Assert.Same(subject, result.Chart);
+        Assert.Contains(result, subject.DataSeriesLayers);
     }
 
     [Fact]
