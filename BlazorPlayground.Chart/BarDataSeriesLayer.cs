@@ -4,7 +4,7 @@ namespace BlazorPlayground.Chart;
 
 public class BarDataSeriesLayer : DataSeriesLayer {
     // TODO fix x axis to include configurable width and offset
-    public static decimal DefaultClearancePercentage { get; set; } = 25M;
+    public static decimal DefaultClearancePercentage { get; set; } = 10M;
     
     public decimal ClearancePercentage { get; set; } = DefaultClearancePercentage;
 
@@ -12,7 +12,7 @@ public class BarDataSeriesLayer : DataSeriesLayer {
 
     public override IEnumerable<ShapeBase> GetDataSeriesShapes() {
         var zeroY = Chart.MapDataPointToCanvas(0M);
-        var totalWidth = Chart.DataPointWidth / 100M * (100M - ClearancePercentage);
+        var totalWidth = Chart.DataPointWidth / 100M * (100M - ClearancePercentage * 2);
         var dataSeriesWidth = totalWidth / DataSeries.Count;
 
         return DataSeries.SelectMany((dataSeries, dataSeriesIndex) => dataSeries

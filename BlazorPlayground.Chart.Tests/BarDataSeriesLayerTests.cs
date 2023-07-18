@@ -30,7 +30,7 @@ public class BarDataSeriesLayerTests {
                 new("Foo", "red") { null, null, null, null, 15M },
                 new("Bar", "red") { null, null, null, null, 15M }
             },
-            ClearancePercentage = 50M
+            ClearancePercentage = 25M
         };
 
         subject.DataSeries[dataSeriesIndex][index] = dataPoint;
