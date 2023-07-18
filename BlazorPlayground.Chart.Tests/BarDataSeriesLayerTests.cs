@@ -6,7 +6,7 @@ namespace BlazorPlayground.Chart.Tests;
 public class BarDataSeriesLayerTests {
     [Theory]
     [MemberData(nameof(GetDataSeriesShapesData))]
-    public void GetDataSeriesShapes(int index, decimal dataPoint, decimal expectedX, decimal expectedY, decimal expectedWidth, decimal expectedHeight) {
+    public void GetDataSeriesShapes(int dataSeriesIndex, int index, decimal dataPoint, decimal expectedX, decimal expectedY, decimal expectedWidth, decimal expectedHeight) {
         var subject = new BarDataSeriesLayer(
             new XYChart() {
                 Canvas = {
@@ -27,11 +27,13 @@ public class BarDataSeriesLayerTests {
             }
         ) {
             DataSeries = {
-                new("Foo", "red") { null, null, null, null, 15M }
-            }
+                new("Foo", "red") { null, null, null, null, 15M },
+                new("Bar", "red") { null, null, null, null, 15M }
+            },
+            ClearancePercentage = 50M
         };
 
-        subject.DataSeries[0][index] = dataPoint;
+        subject.DataSeries[dataSeriesIndex][index] = dataPoint;
 
         var result = subject.GetDataSeriesShapes();
 
@@ -42,12 +44,12 @@ public class BarDataSeriesLayerTests {
         Assert.Equal(expectedY, shape.Y);
         Assert.Equal(expectedWidth, shape.Width);
         Assert.Equal(expectedHeight, shape.Height);
-        Assert.EndsWith($"[0,{index}]", shape.Key);
+        Assert.EndsWith($"[{dataSeriesIndex},{index}]", shape.Key);
     }
 
-    public static TheoryData<int, decimal, decimal, decimal, decimal, decimal> GetDataSeriesShapesData() => new() {
-        { 0, -5M, 25M + 100M + 0.5M * 850M / 4M - 5M, 25M + 40M / 50M * 400M, 10M, 5M / 50M * 400M },
-        { 1, 5M, 25M + 100M + 1.5M * 850M / 4M - 5M, 25M + (40M - 5M) / 50M * 400M, 10M, 5M / 50M * 400M },
-        { 3, 35M, 25M + 100M + 3.5M * 850M / 4M - 5M, 25M + (40M - 35M) / 50M * 400M, 10M, 35M / 50M * 400M },
+    public static TheoryData<int, int, decimal, decimal, decimal, decimal, decimal> GetDataSeriesShapesData() => new() {
+        { 0, 0, -5M, 25M + 100M + (0.5M - 0.5M / 2) * 850M / 4M, 25M + 40M / 50M * 400M, 850M / 4M * 0.5M / 2, 5M / 50M * 400M },
+        { 1, 1, 5M, 25M + 100M + 1.5M * 850M / 4M, 25M + (40M - 5M) / 50M * 400M, 850M / 4M * 0.5M / 2, 5M / 50M * 400M },
+        { 0, 3, 35M, 25M + 100M + (3.5M - 0.5M / 2) * 850M / 4M, 25M + (40M - 35M) / 50M * 400M, 850M / 4M * 0.5M / 2, 35M / 50M * 400M },
     };
 }
