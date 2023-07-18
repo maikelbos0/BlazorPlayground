@@ -3,17 +3,19 @@
 namespace BlazorPlayground.Chart;
 
 public class BarDataSeriesLayer : DataSeriesLayer {
-    // TODO fix x axis to include configurable width and offset
     public static decimal DefaultClearancePercentage { get; set; } = 10M;
-    
+    public static decimal DefaultGapPercentage { get; set; } = 5M;
+
     public decimal ClearancePercentage { get; set; } = DefaultClearancePercentage;
+    public decimal GapPercentage { get; set; } = DefaultGapPercentage;
 
     public BarDataSeriesLayer(XYChart chart) : base(chart) { }
 
     public override IEnumerable<ShapeBase> GetDataSeriesShapes() {
         var zeroY = Chart.MapDataPointToCanvas(0M);
         var totalWidth = Chart.DataPointWidth / 100M * (100M - ClearancePercentage * 2);
-        var dataSeriesWidth = totalWidth / DataSeries.Count;
+        var gapWidth = Chart.DataPointWidth / 100M * GapPercentage;
+        var dataSeriesWidth = (totalWidth - gapWidth * (DataSeries.Count - 1)) / DataSeries.Count;
 
         return DataSeries.SelectMany((dataSeries, dataSeriesIndex) => dataSeries
             .Select((dataPoint, index) => (DataPoint: dataPoint, Index: index))
@@ -31,9 +33,11 @@ public class BarDataSeriesLayer : DataSeriesLayer {
                 }
 
                 return new BarDataShape(
-                    Chart.MapDataIndexToCanvas(value.Index) + (dataSeriesIndex - DataSeries.Count / 2M) * dataSeriesWidth, // TODO gap
+                    Chart.MapDataIndexToCanvas(value.Index)
+                        + (dataSeriesIndex - DataSeries.Count / 2M) * dataSeriesWidth
+                        + (dataSeriesIndex - (DataSeries.Count - 1) / 2M) * gapWidth,
                     y,
-                    dataSeriesWidth, // TODO gap
+                    dataSeriesWidth,
                     height,
                     dataSeries.Color,
                     dataSeriesIndex,

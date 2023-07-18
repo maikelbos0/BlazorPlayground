@@ -30,9 +30,10 @@ public class BarDataSeriesLayerTests {
                 new("Foo", "red") { null, null, null, null, 15M },
                 new("Bar", "red") { null, null, null, null, 15M }
             },
-            ClearancePercentage = 25M
+            ClearancePercentage = 25M,
+            GapPercentage = 10M
         };
-
+        
         subject.DataSeries[dataSeriesIndex][index] = dataPoint;
 
         var result = subject.GetDataSeriesShapes();
@@ -48,8 +49,8 @@ public class BarDataSeriesLayerTests {
     }
 
     public static TheoryData<int, int, decimal, decimal, decimal, decimal, decimal> GetDataSeriesShapesData() => new() {
-        { 0, 0, -5M, 25M + 100M + (0.5M - 0.5M / 2) * 850M / 4M, 25M + 40M / 50M * 400M, 850M / 4M * 0.5M / 2, 5M / 50M * 400M },
-        { 1, 1, 5M, 25M + 100M + 1.5M * 850M / 4M, 25M + (40M - 5M) / 50M * 400M, 850M / 4M * 0.5M / 2, 5M / 50M * 400M },
-        { 0, 3, 35M, 25M + 100M + (3.5M - 0.5M / 2) * 850M / 4M, 25M + (40M - 35M) / 50M * 400M, 850M / 4M * 0.5M / 2, 35M / 50M * 400M },
+        { 0, 0, -5M, 25M + 100M + (0.5M - 0.25M) * 850M / 4M, 25M + 40M / 50M * 400M, 850M / 4M * 0.2M, 5M / 50M * 400M },
+        { 1, 1, 5M, 25M + 100M + (1.5M + 0.1M / 2) * 850M / 4M, 25M + (40M - 5M) / 50M * 400M, 850M / 4M * 0.2M, 5M / 50M * 400M },
+        { 0, 3, 35M, 25M + 100M + (3.5M - 0.25M) * 850M / 4M, 25M + (40M - 35M) / 50M * 400M, 850M / 4M * 0.2M, 35M / 50M * 400M },
     };
 }
