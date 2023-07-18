@@ -30,7 +30,7 @@ public class XYChartTests {
             PlotArea = {
                 Min = -4M,
                 Max = 10M,
-                GridLineInterval = 2M
+                GridLineInterval = 1M
             },
             Canvas = {
                 Height = 800,
@@ -40,7 +40,8 @@ public class XYChartTests {
             AutoScaleSettings = {
                 IsEnabled = true,
                 ClearancePercentage = 0M
-            }
+            },
+            Labels = { "Foo", "Bar", "Baz" }
         };
 
         subject.DataSeriesLayers.Add(new BarDataSeriesLayer(subject) {
@@ -55,6 +56,39 @@ public class XYChartTests {
         Assert.Equal(-10M, subject.PlotArea.Min);
         Assert.Equal(20M, subject.PlotArea.Max);
         Assert.Equal(2M, subject.PlotArea.GridLineInterval);
+    }
+
+    [Fact]
+    public void GetShapes_No_AutoScale() {
+        var subject = new XYChart() {
+            PlotArea = {
+                Min = -4M,
+                Max = 10M,
+                GridLineInterval = 1M
+            },
+            Canvas = {
+                Height = 800,
+                Padding = 25,
+                XAxisLabelHeight = 50
+            },
+            AutoScaleSettings = {
+                IsEnabled = false
+            },
+            Labels = { "Foo", "Bar", "Baz" }
+        };
+
+        subject.DataSeriesLayers.Add(new BarDataSeriesLayer(subject) {
+            DataSeries = {
+                new("Foo", "red") { -9M, 0M },
+                new("Bar", "blue") {-5M, 19M }
+            }
+        });
+
+        _ = subject.GetShapes().ToList();
+
+        Assert.Equal(-4M, subject.PlotArea.Min);
+        Assert.Equal(10M, subject.PlotArea.Max);
+        Assert.Equal(1M, subject.PlotArea.GridLineInterval);
     }
 
     [Fact]
