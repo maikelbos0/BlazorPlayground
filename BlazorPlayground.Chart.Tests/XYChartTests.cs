@@ -7,6 +7,24 @@ namespace BlazorPlayground.Chart.Tests;
 
 public class XYChartTests {
     [Fact]
+    public void DataPointWidth() {
+        var subject = new XYChart() {
+            Canvas = {
+                Width = 1000,
+                Height = 500,
+                Padding = 25,
+                XAxisLabelHeight = 50,
+                XAxisLabelClearance = 5,
+                YAxisLabelWidth = 80,
+                YAxisLabelClearance = 10
+            },
+            Labels = { "Foo", "Bar", "Baz" }
+        };
+
+        Assert.Equal(870M / 3M, subject.DataPointWidth);
+    }
+
+    [Fact]
     public void GetShapes_AutoScale() {
         var subject = new XYChart() {
             PlotArea = {
@@ -252,9 +270,9 @@ public class XYChartTests {
             Assert.Equal(500 - 25 - 50 + 5, shape.Y);
         });
 
-        Assert.Single(result, shape => shape.Key.EndsWith("[0]") && shape.X == 25M + 100M + 0.5M * 850M / 3M && shape.Label == "Foo");
-        Assert.Single(result, shape => shape.Key.EndsWith("[1]") && shape.X == 25M + 100M + 1.5M * 850M / 3M && shape.Label == "Bar");
-        Assert.Single(result, shape => shape.Key.EndsWith("[2]") && shape.X == 25M + 100M + 2.5M * 850M / 3M && shape.Label == "Baz");
+        Assert.Single(result, shape => shape.Key.EndsWith("[0]") && shape.X == 25 + 100 + 0.5M * (850M / 3M) && shape.Label == "Foo");
+        Assert.Single(result, shape => shape.Key.EndsWith("[1]") && shape.X == 25 + 100 + 1.5M * (850M / 3M) && shape.Label == "Bar");
+        Assert.Single(result, shape => shape.Key.EndsWith("[2]") && shape.X == 25 + 100 + 2.5M * (850M / 3M) && shape.Label == "Baz");
     }
 
     [Fact]
@@ -278,13 +296,13 @@ public class XYChartTests {
             Labels = { "Foo", "Bar", "Baz" }
         };
 
-        subject.DataSeriesLayers.Add(new BarDataSeriesLayer(subject) { 
+        subject.DataSeriesLayers.Add(new BarDataSeriesLayer(subject) {
             DataSeries = {
                 new("Foo", "red") { 5M, null, 15M }
             }
         });
 
-        subject.DataSeriesLayers.Add(new BarDataSeriesLayer(subject) { 
+        subject.DataSeriesLayers.Add(new BarDataSeriesLayer(subject) {
             DataSeries = {
                 new("Bar", "blue") { 11M, 8M, null }
             }
@@ -345,9 +363,9 @@ public class XYChartTests {
     }
 
     public static TheoryData<int, decimal> MapDataIndexToCanvasData() => new() {
-        { 0, 125 + 0.5M * 850M / 3M },
-        { 1, 125 + 1.5M * 850M / 3M },
-        { 2, 125 + 2.5M * 850M / 3M },
+        { 0, 25 + 100 + 0.5M * (850M / 3M) },
+        { 1, 25 + 100 + 1.5M * (850M / 3M) },
+        { 2, 25 + 100 + 2.5M * (850M / 3M) },
     };
 
     [Fact]

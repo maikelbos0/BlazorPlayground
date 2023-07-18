@@ -8,6 +8,7 @@ public class XYChart {
     public List<string> Labels { get; set; } = new();
     public List<DataSeriesLayer> DataSeriesLayers { get; set; } = new();
     public AutoScaleSettings AutoScaleSettings { get; set; } = new();
+    public decimal DataPointWidth => ((decimal)Canvas.PlotAreaWidth) / Labels.Count;
 
     public IEnumerable<ShapeBase> GetShapes() {
         PlotArea.AutoScale(AutoScaleSettings, DataSeriesLayers.SelectMany(layer => layer.DataSeries.SelectMany(dataSeries => dataSeries.Where(dataPoint => dataPoint != null).Select(dataPoint => dataPoint!.Value))));
@@ -52,7 +53,7 @@ public class XYChart {
 
     public decimal MapDataPointToCanvas(decimal dataPoint) => Canvas.PlotAreaY + (PlotArea.Max - dataPoint) / (PlotArea.Max - PlotArea.Min) * Canvas.PlotAreaHeight;
 
-    public decimal MapDataIndexToCanvas(int index) => Canvas.PlotAreaX + (index + 0.5M) * Canvas.PlotAreaWidth / Labels.Count;
+    public decimal MapDataIndexToCanvas(int index) => Canvas.PlotAreaX + (index + 0.5M) * DataPointWidth;
 
     public BarDataSeriesLayer AddBarLayer() {
         var layer = new BarDataSeriesLayer(this);
