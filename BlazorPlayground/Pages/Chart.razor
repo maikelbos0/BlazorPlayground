@@ -121,6 +121,16 @@
 
         <input type="text" class="form-control" id="autoScaleClearancePercentage" @bind-value="xyChart.AutoScaleSettings.ClearancePercentage" />
     </fieldset>
+
+    <fieldset class="input-group mb-3 me-3">
+        <div class="input-group-text">Bar layer</div>
+
+        <div class="input-group-text">
+            <label for="barLayerClearancePercentage">Clearance percentage</label>
+        </div>
+
+        <input type="text" class="form-control" id="barLayerClearancePercentage" @bind-value="barLayer.ClearancePercentage" />
+    </fieldset>
 </div>
 
 <table class="mb-3">
