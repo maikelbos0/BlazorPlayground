@@ -182,9 +182,11 @@ public class XYChartTests {
             Assert.Equal(1000 - 25 - 25 - 75, shape.Width);
         });
 
-        Assert.Single(result, shape => shape.Key.EndsWith("[0]") && shape.Y == 25 + (400M - -100M) / 600.0M * (500 - 25 - 25 - 50));
-        Assert.Single(result, shape => shape.Key.EndsWith("[1]") && shape.Y == 25 + (200M - -100M) / 600.0M * (500 - 25 - 25 - 50));
-        Assert.Single(result, shape => shape.Key.EndsWith("[2]") && shape.Y == 25 + (0M - -100M) / 600.0M * (500 - 25 - 25 - 50));
+        var plotAreaRange = subject.PlotArea.Max - subject.PlotArea.Min;
+
+        Assert.Single(result, shape => shape.Key.EndsWith("[0]") && shape.Y == subject.Canvas.PlotAreaY + (400M - subject.PlotArea.Min) / plotAreaRange * subject.Canvas.PlotAreaHeight);
+        Assert.Single(result, shape => shape.Key.EndsWith("[1]") && shape.Y == subject.Canvas.PlotAreaY + (200M - subject.PlotArea.Min) / plotAreaRange * subject.Canvas.PlotAreaHeight);
+        Assert.Single(result, shape => shape.Key.EndsWith("[2]") && shape.Y == subject.Canvas.PlotAreaY + (0M - subject.PlotArea.Min) / plotAreaRange * subject.Canvas.PlotAreaHeight);
     }
 
     [Fact]
@@ -216,9 +218,11 @@ public class XYChartTests {
             Assert.Equal(25 + 75 - 10, shape.X);
         });
 
-        Assert.Single(result, shape => shape.Key.EndsWith("[0]") && shape.Y == 25 + (400M - -100M) / 600.0M * (500 - 25 - 25 - 50) && shape.Value == "000");
-        Assert.Single(result, shape => shape.Key.EndsWith("[1]") && shape.Y == 25 + (200M - -100M) / 600.0M * (500 - 25 - 25 - 50) && shape.Value == "020");
-        Assert.Single(result, shape => shape.Key.EndsWith("[2]") && shape.Y == 25 + (0M - -100M) / 600.0M * (500 - 25 - 25 - 50) && shape.Value == "040");
+        var plotAreaRange = subject.PlotArea.Max - subject.PlotArea.Min;
+
+        Assert.Single(result, shape => shape.Key.EndsWith("[0]") && shape.Y == subject.Canvas.PlotAreaY + (400M - subject.PlotArea.Min) / plotAreaRange * subject.Canvas.PlotAreaHeight && shape.Value == "000");
+        Assert.Single(result, shape => shape.Key.EndsWith("[1]") && shape.Y == subject.Canvas.PlotAreaY + (200M - subject.PlotArea.Min) / plotAreaRange * subject.Canvas.PlotAreaHeight && shape.Value == "020");
+        Assert.Single(result, shape => shape.Key.EndsWith("[2]") && shape.Y == subject.Canvas.PlotAreaY + (0M - subject.PlotArea.Min) / plotAreaRange * subject.Canvas.PlotAreaHeight && shape.Value == "040");
     }
 
     [Fact]
@@ -304,9 +308,11 @@ public class XYChartTests {
             Assert.Equal(500 - 25 - 50 + 5, shape.Y);
         });
 
-        Assert.Single(result, shape => shape.Key.EndsWith("[0]") && shape.X == 25 + 100 + 0.5M * (850M / 3M) && shape.Label == "Foo");
-        Assert.Single(result, shape => shape.Key.EndsWith("[1]") && shape.X == 25 + 100 + 1.5M * (850M / 3M) && shape.Label == "Bar");
-        Assert.Single(result, shape => shape.Key.EndsWith("[2]") && shape.X == 25 + 100 + 2.5M * (850M / 3M) && shape.Label == "Baz");
+        var dataPointWidth = subject.Canvas.PlotAreaWidth / 3M;
+
+        Assert.Single(result, shape => shape.Key.EndsWith("[0]") && shape.X == subject.Canvas.PlotAreaX + 0.5M * dataPointWidth && shape.Label == "Foo");
+        Assert.Single(result, shape => shape.Key.EndsWith("[1]") && shape.X == subject.Canvas.PlotAreaX + 1.5M * dataPointWidth && shape.Label == "Bar");
+        Assert.Single(result, shape => shape.Key.EndsWith("[2]") && shape.X == subject.Canvas.PlotAreaX + 2.5M * dataPointWidth && shape.Label == "Baz");
     }
 
     [Fact]
@@ -363,19 +369,26 @@ public class XYChartTests {
                 YAxisLabelClearance = 10
             },
             PlotArea = {
-                 Min = -100,
-                 Max = 500
+                 Min = -100M,
+                 Max = 500M
             }
         };
 
         Assert.Equal(expectedValue, subject.MapDataPointToCanvas(dataPoint));
     }
 
-    public static TheoryData<decimal, decimal> MapDataPointToCanvasData() => new() {
-        { 50M, 25 + 300M },
-        { 200M, 25 + 200M },
-        { 350M, 25 + 100M }
-    };
+    public static TheoryData<decimal, decimal> MapDataPointToCanvasData() {
+        var plotAreaY = 25;
+        var plotAreaHeight = 500 - 25 - 25 - 50;
+        var plotAreaMax = 500M;
+        var plotAreaRange = plotAreaMax - -100M;
+
+        return new() {
+            { 50M, plotAreaY + (plotAreaMax - 50M) / plotAreaRange * plotAreaHeight },
+            { 200M, plotAreaY + (plotAreaMax - 200M) / plotAreaRange * plotAreaHeight },
+            { 350M, plotAreaY + (plotAreaMax - 350M) / plotAreaRange * plotAreaHeight }
+        };
+    }
 
     [Theory]
     [MemberData(nameof(MapDataIndexToCanvasData))]
@@ -396,11 +409,16 @@ public class XYChartTests {
         Assert.Equal(expectedValue, subject.MapDataIndexToCanvas(index));
     }
 
-    public static TheoryData<int, decimal> MapDataIndexToCanvasData() => new() {
-        { 0, 25 + 100 + 0.5M * (850M / 3M) },
-        { 1, 25 + 100 + 1.5M * (850M / 3M) },
-        { 2, 25 + 100 + 2.5M * (850M / 3M) },
-    };
+    public static TheoryData<int, decimal> MapDataIndexToCanvasData() {
+        var plotAreaX = 25 + 100;
+        var dataPointWidth = (1000 - 25 - 25 - 100) / 3M;
+
+        return new() {
+            { 0, plotAreaX + 0.5M * dataPointWidth },
+            { 1, plotAreaX + 1.5M * dataPointWidth },
+            { 2, plotAreaX + 2.5M * dataPointWidth },
+        };
+    }
 
     [Fact]
     public void AddBarLayer() {

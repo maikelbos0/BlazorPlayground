@@ -33,7 +33,7 @@ public class BarDataSeriesLayerTests {
             ClearancePercentage = 25M,
             GapPercentage = 10M
         };
-        
+
         subject.DataSeries[dataSeriesIndex][index] = dataPoint;
 
         var result = subject.GetDataSeriesShapes();
@@ -48,9 +48,18 @@ public class BarDataSeriesLayerTests {
         Assert.EndsWith($"[{dataSeriesIndex},{index}]", shape.Key);
     }
 
-    public static TheoryData<int, int, decimal, decimal, decimal, decimal, decimal> GetDataSeriesShapesData() => new() {
-        { 0, 0, -5M, 25M + 100M + (0.5M - 0.25M) * 850M / 4M, 25M + 40M / 50M * 400M, 850M / 4M * 0.2M, 5M / 50M * 400M },
-        { 1, 1, 5M, 25M + 100M + (1.5M + 0.1M / 2) * 850M / 4M, 25M + (40M - 5M) / 50M * 400M, 850M / 4M * 0.2M, 5M / 50M * 400M },
-        { 0, 3, 35M, 25M + 100M + (3.5M - 0.25M) * 850M / 4M, 25M + (40M - 35M) / 50M * 400M, 850M / 4M * 0.2M, 35M / 50M * 400M },
-    };
+    public static TheoryData<int, int, decimal, decimal, decimal, decimal, decimal> GetDataSeriesShapesData() {
+        var plotAreaX = 25 + 100;
+        var plotAreaY = 25;
+        var dataPointWidth = (1000 - 25 - 25 - 100) / 4M;
+        var plotAreaHeight = 500 - 25 - 25 - 50;
+        var plotAreaMax = 40M;
+        var plotAreaRange = plotAreaMax - -10M;
+
+        return new() {
+            { 0, 0, -5M, plotAreaX + (0.5M - 0.25M) * dataPointWidth, plotAreaY + plotAreaMax / plotAreaRange * plotAreaHeight, 0.2M * dataPointWidth, 5M / plotAreaRange * plotAreaHeight },
+            { 1, 1, 5M, plotAreaX + (1.5M + 0.1M / 2) * dataPointWidth, plotAreaY + (plotAreaMax - 5M) / plotAreaRange * plotAreaHeight, 0.2M * dataPointWidth, 5M / plotAreaRange * plotAreaHeight },
+            { 0, 3, 35M, plotAreaX + (3.5M - 0.25M) * dataPointWidth, plotAreaY + (plotAreaMax - 35M) / plotAreaRange * plotAreaHeight, 0.2M * dataPointWidth, 35M / plotAreaRange * plotAreaHeight },
+        };
+    }
 }
