@@ -391,6 +391,40 @@ public class XYChartTests {
     }
 
     [Theory]
+    [MemberData(nameof(MapDataValueToPlotAreaData))]
+    public void MapDataValueToPlotArea(decimal dataPoint, decimal expectedValue) {
+        var subject = new XYChart() {
+            Canvas = {
+                Width = 1000,
+                Height = 500,
+                Padding = 25,
+                XAxisLabelHeight = 50,
+                XAxisLabelClearance = 5,
+                YAxisLabelWidth = 75,
+                YAxisLabelClearance = 10
+            },
+            PlotArea = {
+                 Min = -100M,
+                 Max = 500M
+            }
+        };
+
+        Assert.Equal(expectedValue, subject.MapDataValueToPlotArea(dataPoint));
+    }
+
+    public static TheoryData<decimal, decimal> MapDataValueToPlotAreaData() {
+        var plotAreaHeight = 500 - 25 - 25 - 50;
+        var plotAreaMax = 500M;
+        var plotAreaRange = plotAreaMax - -100M;
+
+        return new() {
+            { 50M, 50M / plotAreaRange * plotAreaHeight },
+            { 200M, 200M / plotAreaRange * plotAreaHeight },
+            { 350M, 350M / plotAreaRange * plotAreaHeight }
+        };
+    }
+
+    [Theory]
     [MemberData(nameof(MapDataIndexToCanvasData))]
     public void MapDataIndexToCanvas(int index, decimal expectedValue) {
         var subject = new XYChart() {

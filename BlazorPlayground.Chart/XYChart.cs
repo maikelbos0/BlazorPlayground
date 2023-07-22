@@ -3,7 +3,7 @@
 namespace BlazorPlayground.Chart;
 
 public class XYChart {
-        public Canvas Canvas = new();
+    public Canvas Canvas = new();
     public PlotArea PlotArea { get; set; } = new();
     public List<string> Labels { get; set; } = new();
     public List<DataSeriesLayer> DataSeriesLayers { get; set; } = new();
@@ -51,7 +51,9 @@ public class XYChart {
     public IEnumerable<ShapeBase> GetDataSeriesShapes()
         => DataSeriesLayers.SelectMany(layer => layer.GetDataSeriesShapes());
 
-    public decimal MapDataPointToCanvas(decimal dataPoint) => Canvas.PlotAreaY + (PlotArea.Max - dataPoint) / (PlotArea.Max - PlotArea.Min) * Canvas.PlotAreaHeight;
+    public decimal MapDataPointToCanvas(decimal dataPoint) => Canvas.PlotAreaY + MapDataValueToPlotArea(PlotArea.Max - dataPoint);
+
+    public decimal MapDataValueToPlotArea(decimal dataPoint) => dataPoint / (PlotArea.Max - PlotArea.Min) * Canvas.PlotAreaHeight;
 
     public decimal MapDataIndexToCanvas(int index) => Canvas.PlotAreaX + (index + 0.5M) * DataPointWidth;
 
