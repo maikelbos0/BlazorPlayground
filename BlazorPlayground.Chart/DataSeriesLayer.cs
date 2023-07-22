@@ -5,6 +5,7 @@ namespace BlazorPlayground.Chart;
 public abstract class DataSeriesLayer {
     public const string FallbackColor = "#000000";
 
+    public static bool DefaultIsStacked { get; set; } = false;
     public static List<string> DefaultColors { get; set; } = new() {
         // https://coolors.co/550527-688e26-faa613-f44708-a10702
         // "#550527", "#688e26", "#faa613", "#f44708", "#a10702"
@@ -25,6 +26,7 @@ public abstract class DataSeriesLayer {
     }
 
     public XYChart Chart { get; }
+    public bool IsStacked { get; set; } = DefaultIsStacked;
     public List<DataSeries> DataSeries { get; set; } = new();
 
     public DataSeriesLayer(XYChart chart) {
