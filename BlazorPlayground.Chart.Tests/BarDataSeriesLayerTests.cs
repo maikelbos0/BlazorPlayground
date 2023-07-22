@@ -5,7 +5,7 @@ namespace BlazorPlayground.Chart.Tests;
 
 public class BarDataSeriesLayerTests {
     [Theory]
-    [MemberData(nameof(GetUnstackedDataSeriesShapesData))]
+    [MemberData(nameof(GetUnstackedDataSeriesShapes_Data))]
     public void GetUnstackedDataSeriesShapes(int dataSeriesIndex, int index, decimal dataPoint, decimal expectedX, decimal expectedY, decimal expectedWidth, decimal expectedHeight) {
         var subject = new BarDataSeriesLayer(
             new XYChart() {
@@ -49,7 +49,7 @@ public class BarDataSeriesLayerTests {
         Assert.EndsWith($"[{dataSeriesIndex},{index}]", shape.Key);
     }
 
-    public static TheoryData<int, int, decimal, decimal, decimal, decimal, decimal> GetUnstackedDataSeriesShapesData() {
+    public static TheoryData<int, int, decimal, decimal, decimal, decimal, decimal> GetUnstackedDataSeriesShapes_Data() {
         var plotAreaX = 25 + 100;
         var plotAreaY = 25;
         var dataPointWidth = (1000 - 25 - 25 - 100) / 4M;
@@ -65,7 +65,7 @@ public class BarDataSeriesLayerTests {
     }
 
     [Theory]
-    [MemberData(nameof(GetStackedDataSeriesShapesData))]
+    [MemberData(nameof(GetStackedDataSeriesShapes_Data))]
     public void GetStackedDataSeriesShapes(int index, decimal dataPoint, decimal expectedX, decimal expectedY, decimal expectedWidth, decimal expectedHeight) {
         var subject = new BarDataSeriesLayer(
             new XYChart() {
@@ -109,7 +109,7 @@ public class BarDataSeriesLayerTests {
         Assert.EndsWith($"[1,{index}]", shape.Key);
     }
 
-    public static TheoryData<int, decimal, decimal, decimal, decimal, decimal> GetStackedDataSeriesShapesData() {
+    public static TheoryData<int, decimal, decimal, decimal, decimal, decimal> GetStackedDataSeriesShapes_Data() {
         var plotAreaX = 25 + 100;
         var plotAreaY = 25;
         var dataPointWidth = (1000 - 25 - 25 - 100) / 4M;

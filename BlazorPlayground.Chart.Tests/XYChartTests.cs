@@ -356,7 +356,7 @@ public class XYChartTests {
     }
 
     [Theory]
-    [MemberData(nameof(MapDataPointToCanvasData))]
+    [MemberData(nameof(MapDataPointToCanvas_Data))]
     public void MapDataPointToCanvas(decimal dataPoint, decimal expectedValue) {
         var subject = new XYChart() {
             Canvas = {
@@ -377,7 +377,7 @@ public class XYChartTests {
         Assert.Equal(expectedValue, subject.MapDataPointToCanvas(dataPoint));
     }
 
-    public static TheoryData<decimal, decimal> MapDataPointToCanvasData() {
+    public static TheoryData<decimal, decimal> MapDataPointToCanvas_Data() {
         var plotAreaY = 25;
         var plotAreaHeight = 500 - 25 - 25 - 50;
         var plotAreaMax = 500M;
@@ -391,7 +391,7 @@ public class XYChartTests {
     }
 
     [Theory]
-    [MemberData(nameof(MapDataValueToPlotAreaData))]
+    [MemberData(nameof(MapDataValueToPlotArea_Data))]
     public void MapDataValueToPlotArea(decimal dataPoint, decimal expectedValue) {
         var subject = new XYChart() {
             Canvas = {
@@ -412,7 +412,7 @@ public class XYChartTests {
         Assert.Equal(expectedValue, subject.MapDataValueToPlotArea(dataPoint));
     }
 
-    public static TheoryData<decimal, decimal> MapDataValueToPlotAreaData() {
+    public static TheoryData<decimal, decimal> MapDataValueToPlotArea_Data() {
         var plotAreaHeight = 500 - 25 - 25 - 50;
         var plotAreaMax = 500M;
         var plotAreaRange = plotAreaMax - -100M;
@@ -425,7 +425,7 @@ public class XYChartTests {
     }
 
     [Theory]
-    [MemberData(nameof(MapDataIndexToCanvasData))]
+    [MemberData(nameof(MapDataIndexToCanvas_Data))]
     public void MapDataIndexToCanvas(int index, decimal expectedValue) {
         var subject = new XYChart() {
             Canvas = {
@@ -443,7 +443,7 @@ public class XYChartTests {
         Assert.Equal(expectedValue, subject.MapDataIndexToCanvas(index));
     }
 
-    public static TheoryData<int, decimal> MapDataIndexToCanvasData() {
+    public static TheoryData<int, decimal> MapDataIndexToCanvas_Data() {
         var plotAreaX = 25 + 100;
         var dataPointWidth = (1000 - 25 - 25 - 100) / 3M;
 

@@ -5,7 +5,7 @@ namespace BlazorPlayground.Chart.Tests;
 
 public class PlotAreaTests {
     [Theory]
-    [MemberData(nameof(AutoScaleData))]
+    [MemberData(nameof(AutoScale_Data))]
     public void AutoScale(decimal[] dataPoints, int requestedGridLineCount, decimal expectedGridLineInterval, decimal expectedMin, decimal expectedMax) {
         var settings = new AutoScaleSettings() { IsEnabled = true, IncludeZero = false, ClearancePercentage = 0M, RequestedGridLineCount = requestedGridLineCount };
         var subject = new PlotArea();
@@ -17,7 +17,7 @@ public class PlotAreaTests {
         Assert.Equal(expectedGridLineInterval, subject.GridLineInterval);
     }
 
-    public static TheoryData<decimal[], int, decimal, decimal, decimal> AutoScaleData() => new() {
+    public static TheoryData<decimal[], int, decimal, decimal, decimal> AutoScale_Data() => new() {
         { new[] { 1M, 49M }, 6, 10M, 0M, 50M }, // 6
         { new[] { 1M, 49M }, 11, 5M, 0M, 50M }, // 11
         { new[] { 50M, 100M }, 11, 5M, 50M, 100M }, // 11
@@ -32,7 +32,7 @@ public class PlotAreaTests {
     };
 
     [Theory]
-    [MemberData(nameof(AutoScale_No_DataPointsData))]
+    [MemberData(nameof(AutoScale_No_DataPoints_Data))]
     public void AutoScale_No_DataPoints(int requestedGridLineCount, decimal expectedGridLineInterval, decimal expectedMin, decimal expectedMax) {
         var settings = new AutoScaleSettings() { IsEnabled = true, IncludeZero = false, ClearancePercentage = 0M, RequestedGridLineCount = requestedGridLineCount };
         var subject = new PlotArea();
@@ -44,7 +44,7 @@ public class PlotAreaTests {
         Assert.Equal(expectedGridLineInterval, subject.GridLineInterval);
     }
 
-    public static TheoryData<int, decimal, decimal, decimal> AutoScale_No_DataPointsData() => new() {
+    public static TheoryData<int, decimal, decimal, decimal> AutoScale_No_DataPoints_Data() => new() {
         { 1, 50M, 0M, 50M }, // 2
         { 2, 20M, 0M, 60M }, // 4
         { 3, 20M, 0M, 60M }, // 4
@@ -57,7 +57,7 @@ public class PlotAreaTests {
     };
 
     [Theory]
-    [MemberData(nameof(AutoScale_IncludeZeroData))]
+    [MemberData(nameof(AutoScale_IncludeZero_Data))]
     public void AutoScale_IncludeZero(decimal[] dataPoints, decimal expectedGridLineInterval, decimal expectedMin, decimal expectedMax) {
         var settings = new AutoScaleSettings() { IsEnabled = true, IncludeZero = true, ClearancePercentage = 0M, RequestedGridLineCount = 5 };
         var subject = new PlotArea();
@@ -69,14 +69,14 @@ public class PlotAreaTests {
         Assert.Equal(expectedGridLineInterval, subject.GridLineInterval);
     }
 
-    public static TheoryData<decimal[], decimal, decimal, decimal> AutoScale_IncludeZeroData() => new() {
+    public static TheoryData<decimal[], decimal, decimal, decimal> AutoScale_IncludeZero_Data() => new() {
         { new[] { 20M, 22M }, 5M, 0M, 25M },
         { new[] { -20M, -22M }, 5M, -25M, 0M },
         { new[] { 22M, -22M }, 10M, -30M, 30M },
     };
 
     [Theory]
-    [MemberData(nameof(AutoScale_ClearancePercentageData))]
+    [MemberData(nameof(AutoScale_ClearancePercentage_Data))]
     public void AutoScale_ClearancePercentage(decimal[] dataPoints, decimal expectedGridLineInterval, decimal expectedMin, decimal expectedMax) {
         var settings = new AutoScaleSettings() { IsEnabled = true, IncludeZero = false, ClearancePercentage = 5M, RequestedGridLineCount = 5 };
         var subject = new PlotArea();
@@ -88,7 +88,7 @@ public class PlotAreaTests {
         Assert.Equal(expectedGridLineInterval, subject.GridLineInterval);
     }
 
-    public static TheoryData<decimal[], decimal, decimal, decimal> AutoScale_ClearancePercentageData() => new() {
+    public static TheoryData<decimal[], decimal, decimal, decimal> AutoScale_ClearancePercentage_Data() => new() {
         { new[] { 2M, 22M }, 5M, 0M, 25M },
         { new[] { -2M, -22M }, 5M, -25M, 0M },
         { new[] { 22M, -22M }, 10M, -30M, 30M },
@@ -107,7 +107,7 @@ public class PlotAreaTests {
     }
 
     [Theory]
-    [MemberData(nameof(GetGridLineDataPointsData))]
+    [MemberData(nameof(GetGridLineDataPoints_Data))]
     public void GetGridLineDataPoints(decimal min, decimal max, decimal gridLineInterval, params decimal[] expectedDataPoints) {
         var subject = new PlotArea() {
             Min = min,
@@ -118,7 +118,7 @@ public class PlotAreaTests {
         Assert.Equal(expectedDataPoints, subject.GetGridLineDataPoints());
     }
 
-    public static TheoryData<decimal, decimal, decimal, decimal[]> GetGridLineDataPointsData() => new() {
+    public static TheoryData<decimal, decimal, decimal, decimal[]> GetGridLineDataPoints_Data() => new() {
         { 0M, 100M, 20M,  new decimal[] { 0M, 20M, 40M, 60M, 80M, 100M } },
         { -10M, 105M, 20M,  new decimal[] { 0M, 20M, 40M, 60M, 80M, 100.0M } },
         { -1M, 0.2M, 0.2M, new decimal[] { -1M, -0.8M, -0.6M, -0.4M, -0.2M, 0M, 0.2M } }

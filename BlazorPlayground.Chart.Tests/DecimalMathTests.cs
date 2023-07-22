@@ -4,12 +4,12 @@ namespace BlazorPlayground.Chart.Tests;
 
 public class DecimalMathTests {
     [Theory]
-    [MemberData(nameof(PowData))]
+    [MemberData(nameof(Pow_Data))]
     public void Pow(decimal x, int y, decimal expectedResult) {
         Assert.Equal(expectedResult, DecimalMath.Pow(x, y));
     }
 
-    public static TheoryData<decimal, int, decimal> PowData() => new() {
+    public static TheoryData<decimal, int, decimal> Pow_Data() => new() {
         { 10M, -15, 0.000_000_000_000_001M },
         { 10M, -5, 0.000_01M },
         { 10M, -2, 0.01M },
@@ -24,12 +24,12 @@ public class DecimalMathTests {
     };
 
     [Theory]
-    [MemberData(nameof(FloorToScaleData))]
+    [MemberData(nameof(FloorToScale_Data))]
     public void FloorToScale(decimal value, decimal scale, decimal expectedValue) {
         Assert.Equal(expectedValue, DecimalMath.FloorToScale(value, scale));
     }
 
-    public static TheoryData<decimal, decimal, decimal> FloorToScaleData() => new() {
+    public static TheoryData<decimal, decimal, decimal> FloorToScale_Data() => new() {
         { 9M, 1M, 9M },
         { 9M, 2M, 8M },
         { -9M, 2M, -10M },
@@ -40,12 +40,12 @@ public class DecimalMathTests {
     };
 
     [Theory]
-    [MemberData(nameof(CeilingToScaleData))]
+    [MemberData(nameof(CeilingToScale_Data))]
     public void CeilingToScale(decimal value, decimal scale, decimal expectedValue) {
         Assert.Equal(expectedValue, DecimalMath.CeilingToScale(value, scale));
     }
 
-    public static TheoryData<decimal, decimal, decimal> CeilingToScaleData() => new() {
+    public static TheoryData<decimal, decimal, decimal> CeilingToScale_Data() => new() {
         { 9M, 1M, 9M },
         { 9M, 2M, 10M },
         { -9M, 2M, -8M },
@@ -56,12 +56,12 @@ public class DecimalMathTests {
     };
 
     [Theory]
-    [MemberData(nameof(TrimData))]
+    [MemberData(nameof(Trim_Data))]
     public void Trim(decimal value, decimal expectedValue) {
         Assert.Equal(expectedValue, DecimalMath.Trim(value));
     }
 
-    public static TheoryData<decimal, decimal> TrimData() => new() {
+    public static TheoryData<decimal, decimal> Trim_Data() => new() {
         { 0.250_000_000_000_000_000_000_000_000_000M, 0.25M },
         { 0.250_000M, 0.25M },
         { 0.25M, 0.25M },
@@ -71,12 +71,12 @@ public class DecimalMathTests {
     };
 
     [Theory]
-    [MemberData(nameof(AdjustToRangeData))]
+    [MemberData(nameof(AdjustToRange_Data))]
     public void AdjustToRange(decimal value, decimal min, decimal max, decimal expectedValue) {
         Assert.Equal(expectedValue, DecimalMath.AdjustToRange(value, min, max));
     }
 
-    public static TheoryData<decimal, decimal, decimal, decimal> AdjustToRangeData() => new() {
+    public static TheoryData<decimal, decimal, decimal, decimal> AdjustToRange_Data() => new() {
         { -2M, -1M, 3M, -1M },
         { -1M, -1M, 3M, -1M },
         { 0M, -1M, 3M, 0M },
