@@ -12,6 +12,50 @@ public class BarDataSeriesLayer : DataSeriesLayer {
     public BarDataSeriesLayer(XYChart chart) : base(chart) { }
 
     public override IEnumerable<ShapeBase> GetDataSeriesShapes() {
+        if (IsStacked) {
+            return GetStackedDataSeriesShapes();
+        }
+        else {
+            return GetUnstackedDataSeriesShapes();
+        }
+    }
+
+    public IEnumerable<ShapeBase> GetStackedDataSeriesShapes() {
+        var width = Chart.DataPointWidth / 100M * (100M - ClearancePercentage * 2);
+        var offset = width / 2M;
+        var minimums = Enumerable.Repeat(0M, Chart.Labels.Count).ToList();
+        var maximums = Enumerable.Repeat(0M, Chart.Labels.Count).ToList();
+
+        return DataSeries.SelectMany((dataSeries, dataSeriesIndex) => dataSeries
+            .Select((dataPoint, index) => (DataPoint: dataPoint, Index: index))
+            .Where(value => value.DataPoint != null && value.Index < Chart.Labels.Count)
+            .Select(value => {
+                var dataPoint = value.DataPoint!.Value;
+                var dataHeight = Math.Abs(dataPoint);
+                decimal y;
+
+                if (dataPoint < 0) {
+                    y = Chart.MapDataPointToCanvas(minimums[value.Index]);
+                    minimums[value.Index] -= dataHeight;
+                }
+                else {
+                    y = Chart.MapDataPointToCanvas(maximums[value.Index] + dataHeight);
+                    maximums[value.Index] += dataHeight;
+                }
+
+                return new BarDataShape(
+                    Chart.MapDataIndexToCanvas(value.Index) - offset,
+                    y,
+                    width,
+                    Chart.MapDataValueToPlotArea(dataHeight),
+                    dataSeries.Color,
+                    dataSeriesIndex,
+                    value.Index
+                );
+            }));
+    }
+
+    public IEnumerable<ShapeBase> GetUnstackedDataSeriesShapes() {
         var zeroY = Chart.MapDataPointToCanvas(0M);
         var totalWidth = Chart.DataPointWidth / 100M * (100M - ClearancePercentage * 2);
         var gapWidth = Chart.DataPointWidth / 100M * GapPercentage;
