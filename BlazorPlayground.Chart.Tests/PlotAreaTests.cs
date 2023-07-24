@@ -7,10 +7,16 @@ public class PlotAreaTests {
     [Theory]
     [MemberData(nameof(AutoScale_Data))]
     public void AutoScale(decimal[] dataPoints, int requestedGridLineCount, decimal expectedGridLineInterval, decimal expectedMin, decimal expectedMax) {
-        var settings = new AutoScaleSettings() { IsEnabled = true, IncludeZero = false, ClearancePercentage = 0M, RequestedGridLineCount = requestedGridLineCount };
-        var subject = new PlotArea();
+        var subject = new PlotArea() {
+            AutoScaleSettings = {
+                IsEnabled = true,
+                IncludeZero = false,
+                ClearancePercentage = 0M,
+                RequestedGridLineCount = requestedGridLineCount
+            }
+        };
 
-        subject.AutoScale(settings, dataPoints);
+        subject.AutoScale(dataPoints);
 
         Assert.Equal(expectedMin, subject.Min);
         Assert.Equal(expectedMax, subject.Max);
@@ -34,10 +40,16 @@ public class PlotAreaTests {
     [Theory]
     [MemberData(nameof(AutoScale_No_DataPoints_Data))]
     public void AutoScale_No_DataPoints(int requestedGridLineCount, decimal expectedGridLineInterval, decimal expectedMin, decimal expectedMax) {
-        var settings = new AutoScaleSettings() { IsEnabled = true, IncludeZero = false, ClearancePercentage = 0M, RequestedGridLineCount = requestedGridLineCount };
-        var subject = new PlotArea();
+        var subject = new PlotArea() {
+            AutoScaleSettings = {
+                IsEnabled = true,
+                IncludeZero = false,
+                ClearancePercentage = 0M,
+                RequestedGridLineCount = requestedGridLineCount
+            }
+        };
 
-        subject.AutoScale(settings, Array.Empty<decimal>());
+        subject.AutoScale(Array.Empty<decimal>());
 
         Assert.Equal(expectedMin, subject.Min);
         Assert.Equal(expectedMax, subject.Max);
@@ -59,10 +71,16 @@ public class PlotAreaTests {
     [Theory]
     [MemberData(nameof(AutoScale_IncludeZero_Data))]
     public void AutoScale_IncludeZero(decimal[] dataPoints, decimal expectedGridLineInterval, decimal expectedMin, decimal expectedMax) {
-        var settings = new AutoScaleSettings() { IsEnabled = true, IncludeZero = true, ClearancePercentage = 0M, RequestedGridLineCount = 5 };
-        var subject = new PlotArea();
+        var subject = new PlotArea() {
+            AutoScaleSettings = {
+                IsEnabled = true,
+                IncludeZero = true,
+                ClearancePercentage = 0M,
+                RequestedGridLineCount = 5
+            }
+        };
 
-        subject.AutoScale(settings, dataPoints);
+        subject.AutoScale(dataPoints);
 
         Assert.Equal(expectedMin, subject.Min);
         Assert.Equal(expectedMax, subject.Max);
@@ -78,10 +96,16 @@ public class PlotAreaTests {
     [Theory]
     [MemberData(nameof(AutoScale_ClearancePercentage_Data))]
     public void AutoScale_ClearancePercentage(decimal[] dataPoints, decimal expectedGridLineInterval, decimal expectedMin, decimal expectedMax) {
-        var settings = new AutoScaleSettings() { IsEnabled = true, IncludeZero = false, ClearancePercentage = 5M, RequestedGridLineCount = 5 };
-        var subject = new PlotArea();
+        var subject = new PlotArea() {
+            AutoScaleSettings = {
+                IsEnabled = true,
+                IncludeZero = false,
+                ClearancePercentage = 5M,
+                RequestedGridLineCount = 5
+            }
+        };
 
-        subject.AutoScale(settings, dataPoints);
+        subject.AutoScale(dataPoints);
 
         Assert.Equal(expectedMin, subject.Min);
         Assert.Equal(expectedMax, subject.Max);
@@ -96,10 +120,16 @@ public class PlotAreaTests {
 
     [Fact]
     public void AutoScale_Disabled() {
-        var settings = new AutoScaleSettings() { IsEnabled = false, IncludeZero = false, ClearancePercentage = 0M, RequestedGridLineCount = 9 };
-        var subject = new PlotArea();
+        var subject = new PlotArea() {
+            AutoScaleSettings = {
+                IsEnabled = false, 
+                IncludeZero = false, 
+                ClearancePercentage = 0M, 
+                RequestedGridLineCount = 9 
+            }
+        };
 
-        subject.AutoScale(settings, new[] { 0.006M, 0.044M });
+        subject.AutoScale(new[] { 0.006M, 0.044M });
 
         Assert.Equal(PlotArea.DefaultMin, subject.Min);
         Assert.Equal(PlotArea.DefaultMax, subject.Max);

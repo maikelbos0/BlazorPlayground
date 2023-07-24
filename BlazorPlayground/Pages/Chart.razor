@@ -100,7 +100,7 @@
         <div class="input-group-text">Auto scale plot area</div>
 
         <div class="input-group-text">
-            <input class="form-check-input mt-0" type="checkbox" id="autoScaleIsEnabled" @bind="xyChart.AutoScaleSettings.IsEnabled" />
+            <input class="form-check-input mt-0" type="checkbox" id="autoScaleIsEnabled" @bind="xyChart.PlotArea.AutoScaleSettings.IsEnabled" />
             <label class="form-check-label ps-2" for="autoScaleIsEnabled">Enabled</label>
         </div>
 
@@ -108,10 +108,10 @@
             <label for="autoScaleRequestedGridLineCount">Requested grid line count</label>
         </div>
 
-        <input type="text" class="form-control" id="autoScaleRequestedGridLineCount" @bind-value="xyChart.AutoScaleSettings.RequestedGridLineCount" />
+        <input type="text" class="form-control" id="autoScaleRequestedGridLineCount" @bind-value="xyChart.PlotArea.AutoScaleSettings.RequestedGridLineCount" />
         
         <div class="input-group-text">
-            <input class="form-check-input mt-0" type="checkbox" id="autoScaleIncludeZero" @bind="xyChart.AutoScaleSettings.IncludeZero" />
+            <input class="form-check-input mt-0" type="checkbox" id="autoScaleIncludeZero" @bind="xyChart.PlotArea.AutoScaleSettings.IncludeZero" />
             <label class="form-check-label ps-2" for="autoScaleIncludeZero">Always include zero</label>
         </div>
 
@@ -119,7 +119,7 @@
             <label for="autoScaleClearancePercentage">Clearance percentage</label>
         </div>
 
-        <input type="text" class="form-control" id="autoScaleClearancePercentage" @bind-value="xyChart.AutoScaleSettings.ClearancePercentage" />
+        <input type="text" class="form-control" id="autoScaleClearancePercentage" @bind-value="xyChart.PlotArea.AutoScaleSettings.ClearancePercentage" />
     </fieldset>
 
     <fieldset class="input-group mb-3 me-3">

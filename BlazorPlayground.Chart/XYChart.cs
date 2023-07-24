@@ -7,11 +7,10 @@ public class XYChart {
     public PlotArea PlotArea { get; set; } = new();
     public List<string> Labels { get; set; } = new();
     public List<DataSeriesLayer> DataSeriesLayers { get; set; } = new();
-    public AutoScaleSettings AutoScaleSettings { get; set; } = new();
     public decimal DataPointWidth => ((decimal)Canvas.PlotAreaWidth) / Labels.Count;
 
     public IEnumerable<ShapeBase> GetShapes() {
-        PlotArea.AutoScale(AutoScaleSettings, DataSeriesLayers.SelectMany(layer => layer.DataSeries.SelectMany(dataSeries => dataSeries.Where(dataPoint => dataPoint != null).Select(dataPoint => dataPoint!.Value))));
+        PlotArea.AutoScale(DataSeriesLayers.SelectMany(layer => layer.DataSeries.SelectMany(dataSeries => dataSeries.Where(dataPoint => dataPoint != null).Select(dataPoint => dataPoint!.Value))));
 
         foreach (var shape in GetGridLineShapes()) {
             yield return shape;

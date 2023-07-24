@@ -30,16 +30,16 @@ public class XYChartTests {
             PlotArea = {
                 Min = -4M,
                 Max = 10M,
-                GridLineInterval = 1M
+                GridLineInterval = 1M,
+                AutoScaleSettings = {
+                    IsEnabled = true,
+                    ClearancePercentage = 0M
+                }
             },
             Canvas = {
                 Height = 800,
                 Padding = 25,
                 XAxisLabelHeight = 50
-            },
-            AutoScaleSettings = {
-                IsEnabled = true,
-                ClearancePercentage = 0M
             },
             Labels = { "Foo", "Bar", "Baz" }
         };
@@ -64,15 +64,15 @@ public class XYChartTests {
             PlotArea = {
                 Min = -4M,
                 Max = 10M,
-                GridLineInterval = 1M
+                GridLineInterval = 1M,
+                AutoScaleSettings = {
+                    IsEnabled = false
+                }
             },
             Canvas = {
                 Height = 800,
                 Padding = 25,
                 XAxisLabelHeight = 50
-            },
-            AutoScaleSettings = {
-                IsEnabled = false
             },
             Labels = { "Foo", "Bar", "Baz" }
         };
