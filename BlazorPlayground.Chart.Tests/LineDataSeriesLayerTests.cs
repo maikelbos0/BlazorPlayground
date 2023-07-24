@@ -4,7 +4,6 @@ using Xunit;
 namespace BlazorPlayground.Chart.Tests;
 
 public class LineDataSeriesLayerTests {
-    // TODO revise tests to not depend on finding a single shape
     [Theory]
     [MemberData(nameof(GetUnstackedDataSeriesShapes_Data))]
     public void GetUnstackedDataSeriesShapes(int dataSeriesIndex, int index, decimal dataPoint, decimal expectedX, decimal expectedY, decimal expectedRadius) {
@@ -28,7 +27,7 @@ public class LineDataSeriesLayerTests {
             }
         ) {
             DataSeries = {
-                new("Foo", "red") { null, null, null, null, 15M },
+                new("Foo", "blue") { null, null, null, null, 15M },
                 new("Bar", "red") { null, null, null, null, 15M }
             },
             IsStacked = false
@@ -38,13 +37,12 @@ public class LineDataSeriesLayerTests {
 
         var result = subject.GetDataSeriesShapes();
 
-        var shape = Assert.IsType<RoundDataMarkerShape>(Assert.Single(result));
+        var shape = Assert.IsType<RoundDataMarkerShape>(Assert.Single(result, shape => shape.Key == $"{nameof(RoundDataMarkerShape)}[{dataSeriesIndex},{index}]"));
 
-        Assert.Equal("red", shape.Color);
         Assert.Equal(expectedX, shape.X);
         Assert.Equal(expectedY, shape.Y);
         Assert.Equal(expectedRadius, shape.Radius);
-        Assert.EndsWith($"[{dataSeriesIndex},{index}]", shape.Key);
+        Assert.Equal(subject.DataSeries[dataSeriesIndex].Color, shape.Color);
     }
 
     public static TheoryData<int, int, decimal, decimal, decimal, decimal> GetUnstackedDataSeriesShapes_Data() {
@@ -64,7 +62,7 @@ public class LineDataSeriesLayerTests {
 
     [Theory]
     [MemberData(nameof(GetStackedDataSeriesShapes_Data))]
-    public void GetStackedDataSeriesShapes(int index, decimal dataPoint, decimal expectedX, decimal expectedY, decimal expectedRadius) {
+    public void GetStackedDataSeriesShapes(int dataSeriesIndex, int index, decimal dataPoint, decimal expectedX, decimal expectedY, decimal expectedRadius) {
         var subject = new LineDataSeriesLayer(
             new XYChart() {
                 Canvas = {
@@ -91,20 +89,20 @@ public class LineDataSeriesLayerTests {
             IsStacked = true
         };
 
-        subject.DataSeries[1][index] = dataPoint;
+        subject.DataSeries[dataSeriesIndex][index] = dataPoint;
 
         var result = subject.GetDataSeriesShapes();
 
-        var shape = Assert.IsType<RoundDataMarkerShape>(Assert.Single(result, shape => shape is RoundDataMarkerShape { Color: "red" }));
+        var shape = Assert.IsType<RoundDataMarkerShape>(Assert.Single(result, shape => shape.Key == $"{nameof(RoundDataMarkerShape)}[{dataSeriesIndex},{index}]"));
 
         Assert.Equal(expectedX, shape.X);
         Assert.Equal(expectedY, shape.Y);
         Assert.Equal(expectedRadius, shape.Radius);
-        Assert.EndsWith($"[1,{index}]", shape.Key);
+        Assert.Equal(subject.DataSeries[dataSeriesIndex].Color, shape.Color);
     }
 
     // TODO add first series test case?
-    public static TheoryData<int, decimal, decimal, decimal, decimal> GetStackedDataSeriesShapes_Data() {
+    public static TheoryData<int, int, decimal, decimal, decimal, decimal> GetStackedDataSeriesShapes_Data() {
         var plotAreaX = 25 + 100;
         var plotAreaY = 25;
         var dataPointWidth = (1000 - 25 - 25 - 100) / 4M;
@@ -113,10 +111,10 @@ public class LineDataSeriesLayerTests {
         var plotAreaRange = plotAreaMax - -20M;
 
         return new() {
-            { 0, -5M, plotAreaX + 0.5M * dataPointWidth, plotAreaY + (plotAreaMax + 15M) / plotAreaRange * plotAreaHeight, 10M },
-            { 0, 5M, plotAreaX + 0.5M * dataPointWidth, plotAreaY + (plotAreaMax - 5M) / plotAreaRange * plotAreaHeight, 10M },
-            { 2, -5M, plotAreaX + 2.5M * dataPointWidth, plotAreaY + (plotAreaMax + 5M) / plotAreaRange * plotAreaHeight, 10M },
-            { 2, 5M, plotAreaX + 2.5M * dataPointWidth, plotAreaY + (plotAreaMax - 15M) / plotAreaRange * plotAreaHeight, 10M }
+            { 1, 0, -5M, plotAreaX + 0.5M * dataPointWidth, plotAreaY + (plotAreaMax + 15M) / plotAreaRange * plotAreaHeight, 10M },
+            { 1, 0, 5M, plotAreaX + 0.5M * dataPointWidth, plotAreaY + (plotAreaMax - 5M) / plotAreaRange * plotAreaHeight, 10M },
+            { 1, 2, -5M, plotAreaX + 2.5M * dataPointWidth, plotAreaY + (plotAreaMax + 5M) / plotAreaRange * plotAreaHeight, 10M },
+            { 1, 2, 5M, plotAreaX + 2.5M * dataPointWidth, plotAreaY + (plotAreaMax - 15M) / plotAreaRange * plotAreaHeight, 10M }
         };
     }
 }
