@@ -6,11 +6,12 @@ public class XYChart {
     public Canvas Canvas = new();
     public PlotArea PlotArea { get; set; } = new();
     public List<string> Labels { get; set; } = new();
+    // TODO rename to layer/layers
     public List<DataSeriesLayer> DataSeriesLayers { get; set; } = new();
     public decimal DataPointWidth => ((decimal)Canvas.PlotAreaWidth) / Labels.Count;
 
     public IEnumerable<ShapeBase> GetShapes() {
-        PlotArea.AutoScale(DataSeriesLayers.SelectMany(layer => layer.DataSeries.SelectMany(dataSeries => dataSeries.Where(dataPoint => dataPoint != null).Select(dataPoint => dataPoint!.Value))));
+        PlotArea.AutoScale(GetScaleDataPoints());
 
         foreach (var shape in GetGridLineShapes()) {
             yield return shape;
@@ -33,6 +34,28 @@ public class XYChart {
         foreach (var shape in GetXAxisLabelShapes()) {
             yield return shape;
         }
+    }
+
+    public IEnumerable<decimal> GetScaleDataPoints() {
+        var dataPoints = new List<decimal>();
+
+        foreach (var dataSeriesLayer in DataSeriesLayers) {
+            dataPoints.AddRange(dataSeriesLayer.DataSeries.SelectMany(dataSeries => dataSeries.Where(dataPoint => dataPoint != null).Select(dataPoint => dataPoint!.Value)));
+
+            if (dataSeriesLayer.IsStacked) {
+                for (var i = 0; i < Labels.Count; i++) {
+                    if (dataSeriesLayer.DataSeries.Any(dataSeries => dataSeries.Count > i && dataSeries[i] < 0)) {
+                        dataPoints.Add(dataSeriesLayer.DataSeries.Where(dataSeries => dataSeries.Count > i && dataSeries[i] < 0).Sum(dataSeries => dataSeries[i]!.Value));
+                    }
+
+                    if (dataSeriesLayer.DataSeries.Any(dataSeries => dataSeries.Count > i && dataSeries[i] > 0)) {
+                        dataPoints.Add(dataSeriesLayer.DataSeries.Where(dataSeries => dataSeries.Count > i && dataSeries[i] > 0).Sum(dataSeries => dataSeries[i]!.Value));
+                    }
+                }
+            }
+        }
+
+        return dataPoints;
     }
 
     public IEnumerable<GridLineShape> GetGridLineShapes()

@@ -45,6 +45,7 @@ public class XYChartTests {
         };
 
         subject.DataSeriesLayers.Add(new BarDataSeriesLayer(subject) {
+            IsStacked = false,
             DataSeries = {
                 new("Foo", "red") { -9M, 0M },
                 new("Bar", "blue") {-5M, 19M }
@@ -78,6 +79,7 @@ public class XYChartTests {
         };
 
         subject.DataSeriesLayers.Add(new BarDataSeriesLayer(subject) {
+            IsStacked = false,
             DataSeries = {
                 new("Foo", "red") { -9M, 0M },
                 new("Bar", "blue") {-5M, 19M }
@@ -152,6 +154,46 @@ public class XYChartTests {
         });
 
         Assert.Contains(subject.GetShapes(), shape => shape is BarDataShape);
+    }
+
+    [Fact]
+    public void GetScaleDataPoints_Unstacked() {
+        var subject = new XYChart() {
+            Labels = { "Foo", "Bar", "Baz", "Quux" }
+        };
+
+        subject.DataSeriesLayers.Add(new BarDataSeriesLayer(subject) {
+            IsStacked = false,
+            DataSeries = {
+                new("Foo", "red") { -5M, -3M, null, null },
+                new("Bar", "green") { -7M, -3M, null, null },
+                new("Baz", "blue") { 7M, null, 3M },
+                new("Quux", "pink") { 5M, null, 3M },
+            }
+        });
+
+        Assert.Equal(new[] { -5M, -3M, -7M, -3M, 7M, 3M, 5M, 3M }, subject.GetScaleDataPoints());
+    }
+
+    [Fact]
+    public void GetScaleDataPoints_Stacked() {
+        var subject = new XYChart() {
+            Labels = { "Foo", "Bar", "Baz", "Quux" }
+        };
+
+        subject.DataSeriesLayers.Add(new BarDataSeriesLayer(subject) {
+            IsStacked = true,
+            DataSeries = {
+                new("Foo", "red") { -5M, -3M, null, null },
+                new("Bar", "green") { -7M, -3M, null, null },
+                new("Baz", "blue") { 7M, null, 3M },
+                new("Quux", "pink") { 5M, null, 3M },
+            }
+        });
+
+        var x = subject.GetScaleDataPoints().ToList();
+
+        Assert.Equal(new[] { -5M, -3M, -7M, -3M, 7M, 3M, 5M, 3M, -12M, 12M, -6M, 6M }, subject.GetScaleDataPoints());
     }
 
     [Fact]
