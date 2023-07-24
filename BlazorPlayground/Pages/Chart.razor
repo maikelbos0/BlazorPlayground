@@ -143,6 +143,15 @@
 
         <input type="text" class="form-control" id="barLayerGapPercentage" @bind-value="barLayer.GapPercentage" />
     </fieldset>
+
+    <fieldset class="input-group mb-3 me-3">
+        <div class="input-group-text">Line layer</div>
+
+        <div class="input-group-text">
+            <input class="form-check-input mt-0" type="checkbox" id="lineLayerIsStacked" @bind="lineLayer.IsStacked" />
+            <label class="form-check-label ps-2" for="lineLayerIsStacked">Stack lines</label>
+        </div>
+    </fieldset>
 </div>
 
 <table class="mb-3">
