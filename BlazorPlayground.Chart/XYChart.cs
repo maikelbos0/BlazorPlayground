@@ -87,6 +87,14 @@ public class XYChart {
         return layer;
     }
 
+    public LineDataSeriesLayer AddLineLayer() {
+        var layer = new LineDataSeriesLayer(this);
+
+        DataSeriesLayers.Add(layer);
+
+        return layer;
+    }
+
     public void AddDataPoint(string label) {
         Labels.Add(label);
 

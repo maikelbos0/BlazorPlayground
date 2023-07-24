@@ -5,7 +5,8 @@
 
 <div class="btn-toolbar">
     <fieldset class="btn-group mb-3 me-3">
-        <button type="button" class="btn btn-secondary" @onclick="AddDataSeries">Add data series</button>
+        <button type="button" class="btn btn-secondary" @onclick="AddBarDataSeries">Add bar data series</button>
+        <button type="button" class="btn btn-secondary" @onclick="AddLineDataSeries">Add line data series</button>
         <button type="button" class="btn btn-secondary" @onclick="AddDataPoint">Add data point</button>
         <button type="button" class="btn btn-secondary" @onclick="GenerateData">Generate data</button>
     </fieldset>
@@ -109,7 +110,7 @@
         </div>
 
         <input type="text" class="form-control" id="autoScaleRequestedGridLineCount" @bind-value="xyChart.PlotArea.AutoScaleSettings.RequestedGridLineCount" />
-        
+
         <div class="input-group-text">
             <input class="form-check-input mt-0" type="checkbox" id="autoScaleIncludeZero" @bind="xyChart.PlotArea.AutoScaleSettings.IncludeZero" />
             <label class="form-check-label ps-2" for="autoScaleIncludeZero">Always include zero</label>
@@ -148,28 +149,44 @@
     <tr>
         <th></th>
 
-        @for (var y0 = 0; y0 < barLayer.DataSeries.Count; y0++) {
-            var y = y0;
+        @for (var x0 = 0; x0 < xyChart.Labels.Count; x0++) {
+            var x = x0;
 
             <th>
-                <input type="text" class="form-control" @bind-value="barLayer.DataSeries[y].Name" />
+                <input type="text" class="form-control" @bind-value="xyChart.Labels[x]" />
             </th>
         }
     </tr>
 
-    @for (var x0 = 0; x0 < xyChart.Labels.Count; x0++) {
-        var x = x0;
+    @for (var y0 = 0; y0 < barLayer.DataSeries.Count; y0++) {
+        var y = y0;
 
         <tr>
             <th>
-                <input type="text" class="form-control" @bind-value="xyChart.Labels[x]" />
+                <input type="text" class="form-control" @bind-value="barLayer.DataSeries[y].Name" />
             </th>
 
-            @for (var y0 = 0; y0 < barLayer.DataSeries.Count; y0++) {
-                var y = y0;
-
+            @for (var x0 = 0; x0 < xyChart.Labels.Count; x0++) {
+                var x = x0;
                 <td>
                     <input type="text" class="form-control" @bind-value="barLayer.DataSeries[y][x]" />
+                </td>
+            }
+        </tr>
+    }
+
+    @for (var y0 = 0; y0 < lineLayer.DataSeries.Count; y0++) {
+        var y = y0;
+
+        <tr>
+            <th>
+                <input type="text" class="form-control" @bind-value="lineLayer.DataSeries[y].Name" />
+            </th>
+
+            @for (var x0 = 0; x0 < xyChart.Labels.Count; x0++) {
+                var x = x0;
+                <td>
+                    <input type="text" class="form-control" @bind-value="lineLayer.DataSeries[y][x]" />
                 </td>
             }
         </tr>
@@ -179,24 +196,32 @@
 <ChartRenderer Chart="xyChart" />
 
 @code {
+    // TODO make the whole thing declarative?
     private XYChart xyChart = new();
 
     // TODO set up interface to allow multiple layers
     private BarDataSeriesLayer barLayer;
+    private LineDataSeriesLayer lineLayer;
 
     public Chart() {
         barLayer = xyChart.AddBarLayer();
+        lineLayer = xyChart.AddLineLayer();
     }
 
     protected override void OnInitialized() {
         base.OnInitialized();
 
         AddDataPoint();
-        AddDataSeries();
+        AddBarDataSeries();
+        AddLineDataSeries();
     }
 
-    private void AddDataSeries() {
-        barLayer.AddDataSeries($"Series {barLayer.DataSeries.Count + 1}");
+    private void AddBarDataSeries() {
+        barLayer.AddDataSeries($"Bar series {barLayer.DataSeries.Count + 1}");
+    }
+
+    private void AddLineDataSeries() {
+        lineLayer.AddDataSeries($"Line series {lineLayer.DataSeries.Count + 1}");
     }
 
     private void AddDataPoint() {
@@ -206,10 +231,10 @@
     private void GenerateData() {
         var random = new Random();
 
-        for (var y = 0; y < barLayer.DataSeries.Count; y++) {
-            for (var x = 0; x < barLayer.DataSeries[y].Count; x++) {
-                if (barLayer.DataSeries[y][x] == null) {
-                    barLayer.DataSeries[y][x] = random.Next(-100, 900);
+        foreach (var dataSeries in xyChart.DataSeriesLayers.SelectMany(layer => layer.DataSeries)) {
+            for (var x = 0; x < dataSeries.Count; x++) {
+                if (dataSeries[x] == null) {
+                    dataSeries[x] = random.Next(-100, 900);
                 }
             }
         }

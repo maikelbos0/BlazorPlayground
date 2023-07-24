@@ -191,8 +191,6 @@ public class XYChartTests {
             }
         });
 
-        var x = subject.GetScaleDataPoints().ToList();
-
         Assert.Equal(new[] { -5M, -3M, -7M, -3M, 7M, 3M, 5M, 3M, -12M, 12M, -6M, 6M }, subject.GetScaleDataPoints());
     }
 
@@ -501,6 +499,16 @@ public class XYChartTests {
         var subject = new XYChart();
 
         var result = subject.AddBarLayer();
+
+        Assert.Same(subject, result.Chart);
+        Assert.Contains(result, subject.DataSeriesLayers);
+    }
+
+    [Fact]
+    public void AddLineLayer() {
+        var subject = new XYChart();
+
+        var result = subject.AddLineLayer();
 
         Assert.Same(subject, result.Chart);
         Assert.Contains(result, subject.DataSeriesLayers);

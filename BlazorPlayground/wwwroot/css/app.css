@@ -224,6 +224,6 @@ fieldset:disabled label, fieldset:disabled .form-control:disabled, fieldset:disa
     text-anchor: middle;
 }
 
-.chart-main .bar-data {
+.chart-main .bar-data, .chart-main .data-marker {
     stroke: #adafb3;
 }
