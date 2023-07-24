@@ -3,12 +3,12 @@ using Xunit;
 
 namespace BlazorPlayground.Chart.Tests;
 
-public class BarDataSeriesLayerTests {
+public class LineDataSeriesLayerTests {
     // TODO revise tests to not depend on finding a single shape
     [Theory]
     [MemberData(nameof(GetUnstackedDataSeriesShapes_Data))]
-    public void GetUnstackedDataSeriesShapes(int dataSeriesIndex, int index, decimal dataPoint, decimal expectedX, decimal expectedY, decimal expectedWidth, decimal expectedHeight) {
-        var subject = new BarDataSeriesLayer(
+    public void GetUnstackedDataSeriesShapes(int dataSeriesIndex, int index, decimal dataPoint, decimal expectedX, decimal expectedY, decimal expectedRadius) {
+        var subject = new LineDataSeriesLayer(
             new XYChart() {
                 Canvas = {
                     Width = 1000,
@@ -31,8 +31,6 @@ public class BarDataSeriesLayerTests {
                 new("Foo", "red") { null, null, null, null, 15M },
                 new("Bar", "red") { null, null, null, null, 15M }
             },
-            ClearancePercentage = 25M,
-            GapPercentage = 10M,
             IsStacked = false
         };
 
@@ -40,17 +38,16 @@ public class BarDataSeriesLayerTests {
 
         var result = subject.GetDataSeriesShapes();
 
-        var shape = Assert.IsType<BarDataShape>(Assert.Single(result));
+        var shape = Assert.IsType<RoundDataMarkerShape>(Assert.Single(result));
 
         Assert.Equal("red", shape.Color);
         Assert.Equal(expectedX, shape.X);
         Assert.Equal(expectedY, shape.Y);
-        Assert.Equal(expectedWidth, shape.Width);
-        Assert.Equal(expectedHeight, shape.Height);
+        Assert.Equal(expectedRadius, shape.Radius);
         Assert.EndsWith($"[{dataSeriesIndex},{index}]", shape.Key);
     }
 
-    public static TheoryData<int, int, decimal, decimal, decimal, decimal, decimal> GetUnstackedDataSeriesShapes_Data() {
+    public static TheoryData<int, int, decimal, decimal, decimal, decimal> GetUnstackedDataSeriesShapes_Data() {
         var plotAreaX = 25 + 100;
         var plotAreaY = 25;
         var dataPointWidth = (1000 - 25 - 25 - 100) / 4M;
@@ -59,16 +56,16 @@ public class BarDataSeriesLayerTests {
         var plotAreaRange = plotAreaMax - -10M;
 
         return new() {
-            { 0, 0, -5M, plotAreaX + (0.5M - 0.25M) * dataPointWidth, plotAreaY + plotAreaMax / plotAreaRange * plotAreaHeight, 0.2M * dataPointWidth, 5M / plotAreaRange * plotAreaHeight },
-            { 1, 1, 5M, plotAreaX + (1.5M + 0.1M / 2) * dataPointWidth, plotAreaY + (plotAreaMax - 5M) / plotAreaRange * plotAreaHeight, 0.2M * dataPointWidth, 5M / plotAreaRange * plotAreaHeight },
-            { 0, 3, 35M, plotAreaX + (3.5M - 0.25M) * dataPointWidth, plotAreaY + (plotAreaMax - 35M) / plotAreaRange * plotAreaHeight, 0.2M * dataPointWidth, 35M / plotAreaRange * plotAreaHeight },
+            { 0, 0, -5M, plotAreaX + 0.5M * dataPointWidth, plotAreaY + (plotAreaMax + 5M) / plotAreaRange * plotAreaHeight, 10M },
+            { 1, 1, 5M, plotAreaX + 1.5M * dataPointWidth, plotAreaY + (plotAreaMax - 5M) / plotAreaRange * plotAreaHeight, 10M },
+            { 0, 3, 35M, plotAreaX + 3.5M * dataPointWidth, plotAreaY + (plotAreaMax - 35M) / plotAreaRange * plotAreaHeight, 10M },
         };
     }
 
     [Theory]
     [MemberData(nameof(GetStackedDataSeriesShapes_Data))]
-    public void GetStackedDataSeriesShapes(int index, decimal dataPoint, decimal expectedX, decimal expectedY, decimal expectedWidth, decimal expectedHeight) {
-        var subject = new BarDataSeriesLayer(
+    public void GetStackedDataSeriesShapes(int index, decimal dataPoint, decimal expectedX, decimal expectedY, decimal expectedRadius) {
+        var subject = new LineDataSeriesLayer(
             new XYChart() {
                 Canvas = {
                     Width = 1000,
@@ -91,8 +88,6 @@ public class BarDataSeriesLayerTests {
                 new("Foo", "blue") { -10M, -10M, 10M, 10M, 15M },
                 new("Bar", "red") { null, null, null, null, 15M }
             },
-            ClearancePercentage = 25M,
-            GapPercentage = 10M,
             IsStacked = true
         };
 
@@ -100,17 +95,16 @@ public class BarDataSeriesLayerTests {
 
         var result = subject.GetDataSeriesShapes();
 
-        var shape = Assert.IsType<BarDataShape>(Assert.Single(result, shape => shape is BarDataShape { Color: "red" }));
+        var shape = Assert.IsType<RoundDataMarkerShape>(Assert.Single(result, shape => shape is RoundDataMarkerShape { Color: "red" }));
 
         Assert.Equal(expectedX, shape.X);
         Assert.Equal(expectedY, shape.Y);
-        Assert.Equal(expectedWidth, shape.Width);
-        Assert.Equal(expectedHeight, shape.Height);
+        Assert.Equal(expectedRadius, shape.Radius);
         Assert.EndsWith($"[1,{index}]", shape.Key);
     }
 
     // TODO add first series test case?
-    public static TheoryData<int, decimal, decimal, decimal, decimal, decimal> GetStackedDataSeriesShapes_Data() {
+    public static TheoryData<int, decimal, decimal, decimal, decimal> GetStackedDataSeriesShapes_Data() {
         var plotAreaX = 25 + 100;
         var plotAreaY = 25;
         var dataPointWidth = (1000 - 25 - 25 - 100) / 4M;
@@ -119,10 +113,10 @@ public class BarDataSeriesLayerTests {
         var plotAreaRange = plotAreaMax - -20M;
 
         return new() {
-            { 0, -5M, plotAreaX + (0.5M - 0.25M) * dataPointWidth, plotAreaY + (plotAreaMax + 10M) / plotAreaRange * plotAreaHeight, 0.5M * dataPointWidth, 5M / plotAreaRange * plotAreaHeight },
-            { 0, 5M, plotAreaX + (0.5M - 0.25M) * dataPointWidth, plotAreaY + (plotAreaMax - 5M) / plotAreaRange * plotAreaHeight, 0.5M * dataPointWidth, 5M / plotAreaRange * plotAreaHeight },
-            { 2, -5M, plotAreaX + (2.5M - 0.25M) * dataPointWidth, plotAreaY + plotAreaMax / plotAreaRange * plotAreaHeight, 0.5M * dataPointWidth, 5M / plotAreaRange * plotAreaHeight },
-            { 2, 5M, plotAreaX + (2.5M - 0.25M) * dataPointWidth, plotAreaY + (plotAreaMax - 15M) / plotAreaRange * plotAreaHeight, 0.5M * dataPointWidth, 5M / plotAreaRange * plotAreaHeight }
+            { 0, -5M, plotAreaX + 0.5M * dataPointWidth, plotAreaY + (plotAreaMax + 10M) / plotAreaRange * plotAreaHeight, 10M },
+            { 0, 5M, plotAreaX + 0.5M * dataPointWidth, plotAreaY + (plotAreaMax - 5M) / plotAreaRange * plotAreaHeight, 10M },
+            { 2, -5M, plotAreaX + 2.5M * dataPointWidth, plotAreaY + plotAreaMax / plotAreaRange * plotAreaHeight, 10M },
+            { 2, 5M, plotAreaX + 2.5M * dataPointWidth, plotAreaY + (plotAreaMax - 15M) / plotAreaRange * plotAreaHeight, 10M }
         };
     }
 }
