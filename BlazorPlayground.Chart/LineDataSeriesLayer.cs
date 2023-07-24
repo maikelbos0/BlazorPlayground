@@ -34,12 +34,12 @@ public class LineDataSeriesLayer : DataSeriesLayer {
                 decimal y;
 
                 if (dataPoint < 0) {
-                    y = Chart.MapDataPointToCanvas(minimums[value.Index]);
                     minimums[value.Index] -= dataHeight;
+                    y = Chart.MapDataPointToCanvas(minimums[value.Index]);
                 }
                 else {
-                    y = Chart.MapDataPointToCanvas(maximums[value.Index] + dataHeight);
                     maximums[value.Index] += dataHeight;
+                    y = Chart.MapDataPointToCanvas(maximums[value.Index]);
                 }
 
                 return new RoundDataMarkerShape(

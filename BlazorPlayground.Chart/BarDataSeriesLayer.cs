@@ -39,8 +39,8 @@ public class BarDataSeriesLayer : DataSeriesLayer {
                     minimums[value.Index] -= dataHeight;
                 }
                 else {
-                    y = Chart.MapDataPointToCanvas(maximums[value.Index] + dataHeight);
                     maximums[value.Index] += dataHeight;
+                    y = Chart.MapDataPointToCanvas(maximums[value.Index]);
                 }
 
                 return new BarDataShape(
