@@ -10,18 +10,18 @@ public class BarDataShape : ShapeBase {
     public string Color { get; }
 
     public BarDataShape(decimal x, decimal y, decimal width, decimal height, string color, int dataSeriesIndex, int dataPointIndex) : base(dataSeriesIndex, dataPointIndex) {
-        X = x;
         Y = y;
-        Width = width;
+        X = x;
         Height = height;
+        Width = width;
         Color = color;
     }
 
     public override ShapeAttributeCollection GetAttributes() => new() {
         { "x", X },
-        { "y", Y },
+        { "y", Height < 0 ? Y + Height : Y },
         { "width", Width },
-        { "height", Height },
+        { "height", Math.Abs(Height) },
         { "fill", Color }
     };
 }

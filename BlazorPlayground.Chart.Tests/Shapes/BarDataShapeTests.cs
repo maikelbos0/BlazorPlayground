@@ -25,4 +25,14 @@ public class BarDataShapeTests {
         Assert.Equal("90", Assert.Single(result, attribute => attribute.Key == "height").Value);
         Assert.Equal("red", Assert.Single(result, attribute => attribute.Key == "fill").Value);
     }
+
+    [Fact]
+    public void GetAttributes_Negative_Height() {
+        var subject = new BarDataShape(20, 140, 80, -90, "red", 2, 5);
+
+        var result = subject.GetAttributes();
+
+        Assert.Equal("50", Assert.Single(result, attribute => attribute.Key == "y").Value);
+        Assert.Equal("90", Assert.Single(result, attribute => attribute.Key == "height").Value);
+    }
 }

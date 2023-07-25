@@ -22,29 +22,21 @@ public class LineLayer : LayerBase {
     }
 
     public IEnumerable<ShapeBase> GetStackedDataSeriesShapes() {
-        var minimums = Enumerable.Repeat(0M, Chart.Labels.Count).ToList();
-        var maximums = Enumerable.Repeat(0M, Chart.Labels.Count).ToList();
+        var negativeOffsets = Enumerable.Repeat(0M, Chart.Labels.Count).ToList();
+        var positiveOffsets = Enumerable.Repeat(0M, Chart.Labels.Count).ToList();
 
         return DataSeries.SelectMany((dataSeries, dataSeriesIndex) => dataSeries
             .Select((dataPoint, index) => (DataPoint: dataPoint, Index: index))
             .Where(value => value.DataPoint != null && value.Index < Chart.Labels.Count)
             .Select(value => {
                 var dataPoint = value.DataPoint!.Value;
-                var dataHeight = Math.Abs(dataPoint);
-                decimal y;
+                var offsets = dataPoint < 0 ? negativeOffsets : positiveOffsets;
 
-                if (dataPoint < 0) {
-                    minimums[value.Index] -= dataHeight;
-                    y = Chart.MapDataPointToCanvas(minimums[value.Index]);
-                }
-                else {
-                    maximums[value.Index] += dataHeight;
-                    y = Chart.MapDataPointToCanvas(maximums[value.Index]);
-                }
+                offsets[value.Index] += dataPoint;
 
                 return new RoundDataMarkerShape(
                     Chart.MapDataIndexToCanvas(value.Index),
-                    y,
+                    Chart.MapDataPointToCanvas(offsets[value.Index]),
                     10M,
                     dataSeries.Color,
                     dataSeriesIndex,

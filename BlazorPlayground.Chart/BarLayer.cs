@@ -22,32 +22,24 @@ public class BarLayer : LayerBase {
 
     public IEnumerable<ShapeBase> GetStackedDataSeriesShapes() {
         var width = Chart.DataPointWidth / 100M * (100M - ClearancePercentage * 2);
-        var offset = width / 2M;
-        var minimums = Enumerable.Repeat(0M, Chart.Labels.Count).ToList();
-        var maximums = Enumerable.Repeat(0M, Chart.Labels.Count).ToList();
+        var xOffset = width / 2M;
+        var negativeOffsets = Enumerable.Repeat(0M, Chart.Labels.Count).ToList();
+        var positiveOffsets = Enumerable.Repeat(0M, Chart.Labels.Count).ToList();
 
         return DataSeries.SelectMany((dataSeries, dataSeriesIndex) => dataSeries
             .Select((dataPoint, index) => (DataPoint: dataPoint, Index: index))
             .Where(value => value.DataPoint != null && value.Index < Chart.Labels.Count)
             .Select(value => {
                 var dataPoint = value.DataPoint!.Value;
-                var dataHeight = Math.Abs(dataPoint);
-                decimal y;
+                var offsets = dataPoint < 0 ? negativeOffsets : positiveOffsets;
 
-                if (dataPoint < 0) {
-                    y = Chart.MapDataPointToCanvas(minimums[value.Index]);
-                    minimums[value.Index] -= dataHeight;
-                }
-                else {
-                    maximums[value.Index] += dataHeight;
-                    y = Chart.MapDataPointToCanvas(maximums[value.Index]);
-                }
+                offsets[value.Index] += dataPoint;
 
                 return new BarDataShape(
-                    Chart.MapDataIndexToCanvas(value.Index) - offset,
-                    y,
+                    Chart.MapDataIndexToCanvas(value.Index) - xOffset,
+                    Chart.MapDataPointToCanvas(offsets[value.Index]),
                     width,
-                    Chart.MapDataValueToPlotArea(dataHeight),
+                    Chart.MapDataValueToPlotArea(dataPoint),
                     dataSeries.Color,
                     dataSeriesIndex,
                     value.Index
@@ -65,24 +57,13 @@ public class BarLayer : LayerBase {
             .Select((dataPoint, index) => (DataPoint: dataPoint, Index: index))
             .Where(value => value.DataPoint != null && value.Index < Chart.Labels.Count)
             .Select(value => {
-                var y = Chart.MapDataPointToCanvas(value.DataPoint!.Value);
-                decimal height;
-
-                if (y < zeroY) {
-                    height = zeroY - y;
-                }
-                else {
-                    height = y - zeroY;
-                    y = zeroY;
-                }
-
                 return new BarDataShape(
                     Chart.MapDataIndexToCanvas(value.Index)
                         + (dataSeriesIndex - DataSeries.Count / 2M) * dataSeriesWidth
                         + (dataSeriesIndex - (DataSeries.Count - 1) / 2M) * gapWidth,
-                    y,
+                    Chart.MapDataPointToCanvas(value.DataPoint!.Value),
                     dataSeriesWidth,
-                    height,
+                    Chart.MapDataValueToPlotArea(value.DataPoint!.Value),
                     dataSeries.Color,
                     dataSeriesIndex,
                     value.Index
