@@ -44,7 +44,7 @@ public class XYChartTests {
             Labels = { "Foo", "Bar", "Baz" }
         };
 
-        subject.DataSeriesLayers.Add(new BarDataSeriesLayer(subject) {
+        subject.Layers.Add(new BarLayer(subject) {
             IsStacked = false,
             DataSeries = {
                 new("Foo", "red") { -9M, 0M },
@@ -78,7 +78,7 @@ public class XYChartTests {
             Labels = { "Foo", "Bar", "Baz" }
         };
 
-        subject.DataSeriesLayers.Add(new BarDataSeriesLayer(subject) {
+        subject.Layers.Add(new BarLayer(subject) {
             IsStacked = false,
             DataSeries = {
                 new("Foo", "red") { -9M, 0M },
@@ -147,7 +147,7 @@ public class XYChartTests {
             Labels = { "Foo", "Bar" }
         };
 
-        subject.DataSeriesLayers.Add(new BarDataSeriesLayer(subject) {
+        subject.Layers.Add(new BarLayer(subject) {
             DataSeries = {
                 new("Foo", "red") { 5M, 10M }
             }
@@ -162,7 +162,7 @@ public class XYChartTests {
             Labels = { "Foo", "Bar", "Baz", "Quux" }
         };
 
-        subject.DataSeriesLayers.Add(new BarDataSeriesLayer(subject) {
+        subject.Layers.Add(new BarLayer(subject) {
             IsStacked = false,
             DataSeries = {
                 new("Foo", "red") { -5M, -3M, null, null },
@@ -181,7 +181,7 @@ public class XYChartTests {
             Labels = { "Foo", "Bar", "Baz", "Quux" }
         };
 
-        subject.DataSeriesLayers.Add(new BarDataSeriesLayer(subject) {
+        subject.Layers.Add(new BarLayer(subject) {
             IsStacked = true,
             DataSeries = {
                 new("Foo", "red") { -5M, -3M, null, null },
@@ -376,13 +376,13 @@ public class XYChartTests {
             Labels = { "Foo", "Bar", "Baz" }
         };
 
-        subject.DataSeriesLayers.Add(new BarDataSeriesLayer(subject) {
+        subject.Layers.Add(new BarLayer(subject) {
             DataSeries = {
                 new("Foo", "red") { 5M, null, 15M }
             }
         });
 
-        subject.DataSeriesLayers.Add(new BarDataSeriesLayer(subject) {
+        subject.Layers.Add(new BarLayer(subject) {
             DataSeries = {
                 new("Bar", "blue") { 11M, 8M, null }
             }
@@ -501,7 +501,7 @@ public class XYChartTests {
         var result = subject.AddBarLayer();
 
         Assert.Same(subject, result.Chart);
-        Assert.Contains(result, subject.DataSeriesLayers);
+        Assert.Contains(result, subject.Layers);
     }
 
     [Fact]
@@ -511,7 +511,7 @@ public class XYChartTests {
         var result = subject.AddLineLayer();
 
         Assert.Same(subject, result.Chart);
-        Assert.Contains(result, subject.DataSeriesLayers);
+        Assert.Contains(result, subject.Layers);
     }
 
     [Fact]
@@ -523,7 +523,7 @@ public class XYChartTests {
             }
         };
 
-        var layer = new BarDataSeriesLayer(subject) {
+        var layer = new BarLayer(subject) {
             DataSeries = {
                 new("Foo", "red") { 2.5M, 3M, 4M },
                 new("Bar", "blue") { 5.5M, 6M },
@@ -531,7 +531,7 @@ public class XYChartTests {
             }
         };
 
-        subject.DataSeriesLayers.Add(layer);
+        subject.Layers.Add(layer);
 
         subject.AddDataPoint("Value 3");
 

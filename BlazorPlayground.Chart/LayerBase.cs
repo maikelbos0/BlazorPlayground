@@ -2,7 +2,7 @@
 
 namespace BlazorPlayground.Chart;
 
-public abstract class DataSeriesLayer {
+public abstract class LayerBase {
     public const string FallbackColor = "#000000";
 
     public static bool DefaultIsStacked { get; set; } = false;
@@ -29,7 +29,7 @@ public abstract class DataSeriesLayer {
     public bool IsStacked { get; set; } = DefaultIsStacked;
     public List<DataSeries> DataSeries { get; set; } = new();
 
-    public DataSeriesLayer(XYChart chart) {
+    public LayerBase(XYChart chart) {
         Chart = chart;
     }
 

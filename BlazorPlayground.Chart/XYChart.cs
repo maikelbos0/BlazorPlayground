@@ -6,8 +6,7 @@ public class XYChart {
     public Canvas Canvas = new();
     public PlotArea PlotArea { get; set; } = new();
     public List<string> Labels { get; set; } = new();
-    // TODO rename to layer/layers
-    public List<DataSeriesLayer> DataSeriesLayers { get; set; } = new();
+    public List<LayerBase> Layers { get; set; } = new();
     public decimal DataPointWidth => ((decimal)Canvas.PlotAreaWidth) / Labels.Count;
 
     public IEnumerable<ShapeBase> GetShapes() {
@@ -39,17 +38,17 @@ public class XYChart {
     public IEnumerable<decimal> GetScaleDataPoints() {
         var dataPoints = new List<decimal>();
 
-        foreach (var dataSeriesLayer in DataSeriesLayers) {
-            dataPoints.AddRange(dataSeriesLayer.DataSeries.SelectMany(dataSeries => dataSeries.Where(dataPoint => dataPoint != null).Select(dataPoint => dataPoint!.Value)));
+        foreach (var layer in Layers) {
+            dataPoints.AddRange(layer.DataSeries.SelectMany(dataSeries => dataSeries.Where(dataPoint => dataPoint != null).Select(dataPoint => dataPoint!.Value)));
 
-            if (dataSeriesLayer.IsStacked) {
+            if (layer.IsStacked) {
                 for (var i = 0; i < Labels.Count; i++) {
-                    if (dataSeriesLayer.DataSeries.Any(dataSeries => dataSeries.Count > i && dataSeries[i] < 0)) {
-                        dataPoints.Add(dataSeriesLayer.DataSeries.Where(dataSeries => dataSeries.Count > i && dataSeries[i] < 0).Sum(dataSeries => dataSeries[i]!.Value));
+                    if (layer.DataSeries.Any(dataSeries => dataSeries.Count > i && dataSeries[i] < 0)) {
+                        dataPoints.Add(layer.DataSeries.Where(dataSeries => dataSeries.Count > i && dataSeries[i] < 0).Sum(dataSeries => dataSeries[i]!.Value));
                     }
 
-                    if (dataSeriesLayer.DataSeries.Any(dataSeries => dataSeries.Count > i && dataSeries[i] > 0)) {
-                        dataPoints.Add(dataSeriesLayer.DataSeries.Where(dataSeries => dataSeries.Count > i && dataSeries[i] > 0).Sum(dataSeries => dataSeries[i]!.Value));
+                    if (layer.DataSeries.Any(dataSeries => dataSeries.Count > i && dataSeries[i] > 0)) {
+                        dataPoints.Add(layer.DataSeries.Where(dataSeries => dataSeries.Count > i && dataSeries[i] > 0).Sum(dataSeries => dataSeries[i]!.Value));
                     }
                 }
             }
@@ -71,7 +70,7 @@ public class XYChart {
         => Labels.Select((label, index) => new XAxisLabelShape(MapDataIndexToCanvas(index), Canvas.PlotAreaY + Canvas.PlotAreaHeight + Canvas.XAxisLabelClearance, label, index));
 
     public IEnumerable<ShapeBase> GetDataSeriesShapes()
-        => DataSeriesLayers.SelectMany(layer => layer.GetDataSeriesShapes());
+        => Layers.SelectMany(layer => layer.GetDataSeriesShapes());
 
     public decimal MapDataPointToCanvas(decimal dataPoint) => Canvas.PlotAreaY + MapDataValueToPlotArea(PlotArea.Max - dataPoint);
 
@@ -79,18 +78,18 @@ public class XYChart {
 
     public decimal MapDataIndexToCanvas(int index) => Canvas.PlotAreaX + (index + 0.5M) * DataPointWidth;
 
-    public BarDataSeriesLayer AddBarLayer() {
-        var layer = new BarDataSeriesLayer(this);
+    public BarLayer AddBarLayer() {
+        var layer = new BarLayer(this);
 
-        DataSeriesLayers.Add(layer);
+        Layers.Add(layer);
 
         return layer;
     }
 
-    public LineDataSeriesLayer AddLineLayer() {
-        var layer = new LineDataSeriesLayer(this);
+    public LineLayer AddLineLayer() {
+        var layer = new LineLayer(this);
 
-        DataSeriesLayers.Add(layer);
+        Layers.Add(layer);
 
         return layer;
     }
@@ -98,7 +97,7 @@ public class XYChart {
     public void AddDataPoint(string label) {
         Labels.Add(label);
 
-        foreach (var dataSeries in DataSeriesLayers.SelectMany(layer => layer.DataSeries)) {
+        foreach (var dataSeries in Layers.SelectMany(layer => layer.DataSeries)) {
             dataSeries.AddRange(Enumerable.Range(0, Labels.Count - dataSeries.Count).Select<int, decimal?>(i => null));
         }
     }

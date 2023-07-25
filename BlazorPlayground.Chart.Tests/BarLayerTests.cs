@@ -3,11 +3,11 @@ using Xunit;
 
 namespace BlazorPlayground.Chart.Tests;
 
-public class BarDataSeriesLayerTests {
+public class BarLayerTests {
     [Theory]
     [MemberData(nameof(GetUnstackedDataSeriesShapes_Data))]
     public void GetUnstackedDataSeriesShapes(int dataSeriesIndex, int index, decimal dataPoint, decimal expectedX, decimal expectedY, decimal expectedWidth, decimal expectedHeight) {
-        var subject = new BarDataSeriesLayer(
+        var subject = new BarLayer(
             new XYChart() {
                 Canvas = {
                     Width = 1000,
@@ -66,7 +66,7 @@ public class BarDataSeriesLayerTests {
     [Theory]
     [MemberData(nameof(GetStackedDataSeriesShapes_Data))]
     public void GetStackedDataSeriesShapes(int dataSeriesIndex, int index, decimal dataPoint, decimal expectedX, decimal expectedY, decimal expectedWidth, decimal expectedHeight) {
-        var subject = new BarDataSeriesLayer(
+        var subject = new BarLayer(
             new XYChart() {
                 Canvas = {
                     Width = 1000,

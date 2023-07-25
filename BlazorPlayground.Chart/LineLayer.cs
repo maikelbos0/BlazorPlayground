@@ -2,14 +2,14 @@
 
 namespace BlazorPlayground.Chart;
 
-public class LineDataSeriesLayer : DataSeriesLayer {
+public class LineLayer : LayerBase {
     // TODO setting for show marker
     // TODO setting for marker type
     // TODO setting for marker size
     // TODO setting for show line
     // TODO setting for what do do for null in line
 
-    public LineDataSeriesLayer(XYChart chart) : base(chart) { }
+    public LineLayer(XYChart chart) : base(chart) { }
 
     public override IEnumerable<ShapeBase> GetDataSeriesShapes() {
         // TODO add actual lines

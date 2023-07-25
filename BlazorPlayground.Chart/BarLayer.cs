@@ -2,14 +2,14 @@
 
 namespace BlazorPlayground.Chart;
 
-public class BarDataSeriesLayer : DataSeriesLayer {
+public class BarLayer : LayerBase {
     public static decimal DefaultClearancePercentage { get; set; } = 10M;
     public static decimal DefaultGapPercentage { get; set; } = 5M;
 
     public decimal ClearancePercentage { get; set; } = DefaultClearancePercentage;
     public decimal GapPercentage { get; set; } = DefaultGapPercentage;
 
-    public BarDataSeriesLayer(XYChart chart) : base(chart) { }
+    public BarLayer(XYChart chart) : base(chart) { }
 
     public override IEnumerable<ShapeBase> GetDataSeriesShapes() {
         if (IsStacked) {

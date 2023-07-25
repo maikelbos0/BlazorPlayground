@@ -209,8 +209,8 @@
     private XYChart xyChart = new();
 
     // TODO set up interface to allow multiple layers
-    private BarDataSeriesLayer barLayer;
-    private LineDataSeriesLayer lineLayer;
+    private BarLayer barLayer;
+    private LineLayer lineLayer;
 
     public Chart() {
         barLayer = xyChart.AddBarLayer();
@@ -240,7 +240,7 @@
     private void GenerateData() {
         var random = new Random();
 
-        foreach (var dataSeries in xyChart.DataSeriesLayers.SelectMany(layer => layer.DataSeries)) {
+        foreach (var dataSeries in xyChart.Layers.SelectMany(layer => layer.DataSeries)) {
             for (var x = 0; x < dataSeries.Count; x++) {
                 if (dataSeries[x] == null) {
                     dataSeries[x] = random.Next(-100, 900);

@@ -5,9 +5,9 @@ using Xunit;
 
 namespace BlazorPlayground.Chart.Tests;
 
-public class DataSeriesLayerTests {
-    public class TestDataSeriesLayer : DataSeriesLayer {
-        public TestDataSeriesLayer(XYChart chart) : base(chart) { }
+public class LayerBaseTests {
+    public class TestLayer : LayerBase {
+        public TestLayer(XYChart chart) : base(chart) { }
 
         public override IEnumerable<ShapeBase> GetDataSeriesShapes() => throw new System.NotImplementedException();
     }
@@ -18,9 +18,9 @@ public class DataSeriesLayerTests {
     [InlineData(2, "green")]
     [InlineData(3, "red")]
     public void GetColor(int index, string expectedColor) {
-        DataSeriesLayer.DefaultColors = new List<string>() { "red", "blue", "green" };
+        LayerBase.DefaultColors = new List<string>() { "red", "blue", "green" };
 
-        Assert.Equal(expectedColor, DataSeriesLayer.GetColor(index));
+        Assert.Equal(expectedColor, LayerBase.GetColor(index));
     }
 
     [Theory]
@@ -28,14 +28,14 @@ public class DataSeriesLayerTests {
     [InlineData(1)]
     [InlineData(-1, "red", "red", "blue", "green")]
     public void GetColor_Fallback(int index, params string[] defaultColors) {
-        DataSeriesLayer.DefaultColors = defaultColors.ToList();
+        LayerBase.DefaultColors = defaultColors.ToList();
 
-        Assert.Equal(DataSeriesLayer.FallbackColor, DataSeriesLayer.GetColor(index));
+        Assert.Equal(LayerBase.FallbackColor, LayerBase.GetColor(index));
     }
 
     [Fact]
     public void AddDataSeries_With_Color() {
-        var subject = new TestDataSeriesLayer(
+        var subject = new TestLayer(
             new XYChart() {
                 Labels = {
                     "Foo",
@@ -55,9 +55,9 @@ public class DataSeriesLayerTests {
 
     [Fact]
     public void AddDataSeries_Without_Color() {
-        DataSeriesLayer.DefaultColors = new List<string>() { "red", "blue", "green" };
+        LayerBase.DefaultColors = new List<string>() { "red", "blue", "green" };
 
-        var subject = new TestDataSeriesLayer(
+        var subject = new TestLayer(
             new XYChart() {
                 Labels = {
                     "Foo",
