@@ -107,7 +107,6 @@ public class BarDataSeriesLayerTests {
         Assert.Equal(subject.DataSeries[dataSeriesIndex].Color, shape.Color);
     }
 
-    // TODO add first series test case?
     public static TheoryData<int, int, decimal, decimal, decimal, decimal, decimal> GetStackedDataSeriesShapes_Data() {
         var plotAreaX = 25 + 100;
         var plotAreaY = 25;
@@ -117,6 +116,8 @@ public class BarDataSeriesLayerTests {
         var plotAreaRange = plotAreaMax - -20M;
 
         return new() {
+            { 0, 0, -5M, plotAreaX + (0.5M - 0.25M) * dataPointWidth, plotAreaY + plotAreaMax / plotAreaRange * plotAreaHeight, 0.5M * dataPointWidth, 5M / plotAreaRange * plotAreaHeight },
+            { 0, 2, 5M, plotAreaX + (2.5M - 0.25M) * dataPointWidth, plotAreaY + (plotAreaMax - 5M) / plotAreaRange * plotAreaHeight, 0.5M * dataPointWidth, 5M / plotAreaRange * plotAreaHeight },
             { 1, 0, -5M, plotAreaX + (0.5M - 0.25M) * dataPointWidth, plotAreaY + (plotAreaMax + 10M) / plotAreaRange * plotAreaHeight, 0.5M * dataPointWidth, 5M / plotAreaRange * plotAreaHeight },
             { 1, 0, 5M, plotAreaX + (0.5M - 0.25M) * dataPointWidth, plotAreaY + (plotAreaMax - 5M) / plotAreaRange * plotAreaHeight, 0.5M * dataPointWidth, 5M / plotAreaRange * plotAreaHeight },
             { 1, 2, -5M, plotAreaX + (2.5M - 0.25M) * dataPointWidth, plotAreaY + plotAreaMax / plotAreaRange * plotAreaHeight, 0.5M * dataPointWidth, 5M / plotAreaRange * plotAreaHeight },

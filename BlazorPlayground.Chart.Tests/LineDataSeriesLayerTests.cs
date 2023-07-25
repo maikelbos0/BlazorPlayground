@@ -101,7 +101,6 @@ public class LineDataSeriesLayerTests {
         Assert.Equal(subject.DataSeries[dataSeriesIndex].Color, shape.Color);
     }
 
-    // TODO add first series test case?
     public static TheoryData<int, int, decimal, decimal, decimal, decimal> GetStackedDataSeriesShapes_Data() {
         var plotAreaX = 25 + 100;
         var plotAreaY = 25;
@@ -111,6 +110,8 @@ public class LineDataSeriesLayerTests {
         var plotAreaRange = plotAreaMax - -20M;
 
         return new() {
+            { 0, 0, -5M, plotAreaX + 0.5M * dataPointWidth, plotAreaY + (plotAreaMax + 5M) / plotAreaRange * plotAreaHeight, 10M },
+            { 0, 2, 5M, plotAreaX + 2.5M * dataPointWidth, plotAreaY + (plotAreaMax - 5M) / plotAreaRange * plotAreaHeight, 10M },
             { 1, 0, -5M, plotAreaX + 0.5M * dataPointWidth, plotAreaY + (plotAreaMax + 15M) / plotAreaRange * plotAreaHeight, 10M },
             { 1, 0, 5M, plotAreaX + 0.5M * dataPointWidth, plotAreaY + (plotAreaMax - 5M) / plotAreaRange * plotAreaHeight, 10M },
             { 1, 2, -5M, plotAreaX + 2.5M * dataPointWidth, plotAreaY + (plotAreaMax + 5M) / plotAreaRange * plotAreaHeight, 10M },
