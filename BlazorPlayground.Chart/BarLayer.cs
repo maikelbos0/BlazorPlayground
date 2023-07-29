@@ -12,40 +12,21 @@ public class BarLayer : LayerBase {
     public BarLayer(XYChart chart) : base(chart) { }
 
     public override IEnumerable<ShapeBase> GetDataSeriesShapes() {
-        if (IsStacked) {
-            return GetStackedDataSeriesShapes();
-        }
-        else {
-            return GetUnstackedDataSeriesShapes();
-        }
-    }
-
-    public IEnumerable<ShapeBase> GetStackedDataSeriesShapes() {
         var width = Chart.DataPointWidth / 100M * (100M - ClearancePercentage * 2);
-        var xOffset = width / 2M;
+        Func<int, decimal> offsetProvider = dataSeriesIndex => -width / 2M;
+
+        if (!IsStacked) {
+            var gapWidth = Chart.DataPointWidth / 100M * GapPercentage;
+            var dataSeriesWidth = (width - gapWidth * (DataSeries.Count - 1)) / DataSeries.Count;
+
+            width = (width - gapWidth * (DataSeries.Count - 1)) / DataSeries.Count;
+            offsetProvider = dataSeriesIndex => (dataSeriesIndex - DataSeries.Count / 2M) * dataSeriesWidth + (dataSeriesIndex - (DataSeries.Count - 1) / 2M) * gapWidth;
+        }
 
         return GetDataSeriesPoints().Select(point => new BarDataShape(
-            point.X - xOffset,
+            point.X + offsetProvider(point.DataSeriesIndex),
             point.Y,
             width,
-            point.Height,
-            point.Color,
-            point.DataSeriesIndex,
-            point.Index
-        ));
-    }
-
-    public IEnumerable<ShapeBase> GetUnstackedDataSeriesShapes() {
-        var totalWidth = Chart.DataPointWidth / 100M * (100M - ClearancePercentage * 2);
-        var gapWidth = Chart.DataPointWidth / 100M * GapPercentage;
-        var dataSeriesWidth = (totalWidth - gapWidth * (DataSeries.Count - 1)) / DataSeries.Count;
-
-        return GetDataSeriesPoints().Select(point => new BarDataShape(
-            point.X
-                + (point.DataSeriesIndex - DataSeries.Count / 2M) * dataSeriesWidth
-                + (point.DataSeriesIndex - (DataSeries.Count - 1) / 2M) * gapWidth,
-            point.Y,
-            dataSeriesWidth,
             point.Height,
             point.Color,
             point.DataSeriesIndex,
