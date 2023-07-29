@@ -48,7 +48,6 @@ public class BarLayer : LayerBase {
     }
 
     public IEnumerable<ShapeBase> GetUnstackedDataSeriesShapes() {
-        var zeroY = Chart.MapDataPointToCanvas(0M);
         var totalWidth = Chart.DataPointWidth / 100M * (100M - ClearancePercentage * 2);
         var gapWidth = Chart.DataPointWidth / 100M * GapPercentage;
         var dataSeriesWidth = (totalWidth - gapWidth * (DataSeries.Count - 1)) / DataSeries.Count;

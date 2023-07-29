@@ -46,8 +46,6 @@ public class LineLayer : LayerBase {
     }
 
     public IEnumerable<ShapeBase> GetUnstackedDataSeriesShapes() {
-        var zeroY = Chart.MapDataPointToCanvas(0M);
-
         return DataSeries.SelectMany((dataSeries, dataSeriesIndex) => dataSeries
             .Select((dataPoint, index) => (DataPoint: dataPoint, Index: index))
             .Where(value => value.DataPoint != null && value.Index < Chart.Labels.Count)
