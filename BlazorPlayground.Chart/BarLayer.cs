@@ -23,28 +23,16 @@ public class BarLayer : LayerBase {
     public IEnumerable<ShapeBase> GetStackedDataSeriesShapes() {
         var width = Chart.DataPointWidth / 100M * (100M - ClearancePercentage * 2);
         var xOffset = width / 2M;
-        var negativeOffsets = Enumerable.Repeat(0M, Chart.Labels.Count).ToList();
-        var positiveOffsets = Enumerable.Repeat(0M, Chart.Labels.Count).ToList();
 
-        return DataSeries.SelectMany((dataSeries, dataSeriesIndex) => dataSeries
-            .Select((dataPoint, index) => (DataPoint: dataPoint, Index: index))
-            .Where(value => value.DataPoint != null && value.Index < Chart.Labels.Count)
-            .Select(value => {
-                var dataPoint = value.DataPoint!.Value;
-                var offsets = dataPoint < 0 ? negativeOffsets : positiveOffsets;
-
-                offsets[value.Index] += dataPoint;
-
-                return new BarDataShape(
-                    Chart.MapDataIndexToCanvas(value.Index) - xOffset,
-                    Chart.MapDataPointToCanvas(offsets[value.Index]),
-                    width,
-                    Chart.MapDataValueToPlotArea(dataPoint),
-                    dataSeries.Color,
-                    dataSeriesIndex,
-                    value.Index
-                );
-            }));
+        return GetDataSeriesPoints().Select(point => new BarDataShape(
+            point.X - xOffset,
+            point.Y,
+            width,
+            point.Height,
+            point.Color,
+            point.DataSeriesIndex,
+            point.Index
+        ));
     }
 
     public IEnumerable<ShapeBase> GetUnstackedDataSeriesShapes() {
@@ -52,21 +40,16 @@ public class BarLayer : LayerBase {
         var gapWidth = Chart.DataPointWidth / 100M * GapPercentage;
         var dataSeriesWidth = (totalWidth - gapWidth * (DataSeries.Count - 1)) / DataSeries.Count;
 
-        return DataSeries.SelectMany((dataSeries, dataSeriesIndex) => dataSeries
-            .Select((dataPoint, index) => (DataPoint: dataPoint, Index: index))
-            .Where(value => value.DataPoint != null && value.Index < Chart.Labels.Count)
-            .Select(value => {
-                return new BarDataShape(
-                    Chart.MapDataIndexToCanvas(value.Index)
-                        + (dataSeriesIndex - DataSeries.Count / 2M) * dataSeriesWidth
-                        + (dataSeriesIndex - (DataSeries.Count - 1) / 2M) * gapWidth,
-                    Chart.MapDataPointToCanvas(value.DataPoint!.Value),
-                    dataSeriesWidth,
-                    Chart.MapDataValueToPlotArea(value.DataPoint!.Value),
-                    dataSeries.Color,
-                    dataSeriesIndex,
-                    value.Index
-                );
-            }));
+        return GetDataSeriesPoints().Select(point => new BarDataShape(
+            point.X
+                + (point.DataSeriesIndex - DataSeries.Count / 2M) * dataSeriesWidth
+                + (point.DataSeriesIndex - (DataSeries.Count - 1) / 2M) * gapWidth,
+            point.Y,
+            dataSeriesWidth,
+            point.Height,
+            point.Color,
+            point.DataSeriesIndex,
+            point.Index
+        ));
     }
 }

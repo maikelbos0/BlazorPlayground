@@ -45,4 +45,28 @@ public abstract class LayerBase {
     }
 
     public abstract IEnumerable<ShapeBase> GetDataSeriesShapes();
+
+    public IEnumerable<DataSeriesPoint> GetDataSeriesPoints() {
+        Func<decimal, int, decimal> transformer = (dataPoint, index) => dataPoint;
+
+        if (IsStacked) {
+            var negativeOffsets = new decimal[Chart.Labels.Count];
+            var positiveOffsets = new decimal[Chart.Labels.Count];
+
+            transformer = (dataPoint, index) => (dataPoint < 0 ? negativeOffsets : positiveOffsets)[index] += dataPoint;
+        }
+
+        return DataSeries.SelectMany((dataSeries, dataSeriesIndex) => dataSeries
+            .Select((dataPoint, index) => (DataPoint: dataPoint, Index: index))
+            .Where(value => value.DataPoint != null && value.Index < Chart.Labels.Count)
+            .Select(value => new DataSeriesPoint(
+                Chart.MapDataIndexToCanvas(value.Index),
+                Chart.MapDataPointToCanvas(transformer(value.DataPoint!.Value, value.Index)),
+                Chart.MapDataValueToPlotArea(value.DataPoint!.Value),
+                dataSeries.Color,
+                dataSeriesIndex,
+                value.Index
+            )))
+            .ToList();
+    }
 }
