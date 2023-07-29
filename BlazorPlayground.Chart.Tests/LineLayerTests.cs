@@ -6,7 +6,7 @@ namespace BlazorPlayground.Chart.Tests;
 public class LineLayerTests {
     [Theory]
     [MemberData(nameof(GetUnstackedDataSeriesShapes_Data))]
-    public void GetUnstackedDataSeriesShapes(int dataSeriesIndex, int index, decimal dataPoint, decimal expectedX, decimal expectedY, decimal expectedRadius) {
+    public void GetUnstackedDataSeriesShapes(int dataSeriesIndex, int index, decimal dataPoint, decimal expectedX, decimal expectedY, decimal expectedSize) {
         var subject = new LineLayer(
             new XYChart() {
                 Canvas = {
@@ -41,7 +41,7 @@ public class LineLayerTests {
 
         Assert.Equal(expectedX, shape.X);
         Assert.Equal(expectedY, shape.Y);
-        Assert.Equal(expectedRadius, shape.Radius);
+        Assert.Equal(expectedSize, shape.Size);
         Assert.Equal(subject.DataSeries[dataSeriesIndex].Color, shape.Color);
     }
 
@@ -62,7 +62,7 @@ public class LineLayerTests {
 
     [Theory]
     [MemberData(nameof(GetStackedDataSeriesShapes_Data))]
-    public void GetStackedDataSeriesShapes(int dataSeriesIndex, int index, decimal dataPoint, decimal expectedX, decimal expectedY, decimal expectedRadius) {
+    public void GetStackedDataSeriesShapes(int dataSeriesIndex, int index, decimal dataPoint, decimal expectedX, decimal expectedY, decimal expectedSize) {
         var subject = new LineLayer(
             new XYChart() {
                 Canvas = {
@@ -97,7 +97,7 @@ public class LineLayerTests {
 
         Assert.Equal(expectedX, shape.X);
         Assert.Equal(expectedY, shape.Y);
-        Assert.Equal(expectedRadius, shape.Radius);
+        Assert.Equal(expectedSize, shape.Size);
         Assert.Equal(subject.DataSeries[dataSeriesIndex].Color, shape.Color);
     }
 

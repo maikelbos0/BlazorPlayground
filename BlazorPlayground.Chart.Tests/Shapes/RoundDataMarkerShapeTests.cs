@@ -21,7 +21,7 @@ public class RoundDataMarkerShapeTests {
         Assert.Equal(4, result.Count());
         Assert.Equal("150", Assert.Single(result, attribute => attribute.Key == "cx").Value);
         Assert.Equal("50", Assert.Single(result, attribute => attribute.Key == "cy").Value);
-        Assert.Equal("20", Assert.Single(result, attribute => attribute.Key == "r").Value);
+        Assert.Equal("10", Assert.Single(result, attribute => attribute.Key == "r").Value);
         Assert.Equal("red", Assert.Single(result, attribute => attribute.Key == "fill").Value);
     }
 }

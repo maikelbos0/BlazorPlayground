@@ -5,23 +5,21 @@ public class SquareDataMarkerShape : ShapeBase {
     public override string ElementName => "rect";
     public decimal X { get; }
     public decimal Y { get; }
-    public decimal Width { get; }
-    public decimal Height { get; }
+    public decimal Size { get; }
     public string Color { get; }
 
-    public SquareDataMarkerShape(decimal x, decimal y, decimal width, decimal height, string color, int dataSeriesIndex, int dataPointIndex) : base(dataSeriesIndex, dataPointIndex) {
+    public SquareDataMarkerShape(decimal x, decimal y, decimal size, string color, int dataSeriesIndex, int dataPointIndex) : base(dataSeriesIndex, dataPointIndex) {
         X = x;
         Y = y;
-        Width = width;
-        Height = height;
+        Size = size;
         Color = color;
     }
 
     public override ShapeAttributeCollection GetAttributes() => new() {
-        { "x", X },
-        { "y", Y },
-        { "width", Width },
-        { "height", Height },
+        { "x", X - Size / 2M },
+        { "y", Y - Size / 2M },
+        { "width", Size },
+        { "height", Size },
         { "fill", Color }
     };
 }
