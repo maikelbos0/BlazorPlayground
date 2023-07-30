@@ -32,7 +32,8 @@ public class LineLayerTests {
                 new("Bar", "red") { null, null, null, null, 15M }
             },
             IsStacked = false,
-            DataMarkerType = (decimal x, decimal y, decimal size, string color, int dataSeriesIndex, int dataPointIndex) => new RoundDataMarkerShape(x, y, size, color, dataSeriesIndex, dataPointIndex)
+            ShowDataMarkers = true,
+            DataMarkerType = DefaultDataMarkerTypes.Round
         };
 
         subject.DataSeries[dataSeriesIndex][index] = dataPoint;
@@ -89,7 +90,8 @@ public class LineLayerTests {
                 new("Bar", "red") { null, null, null, null, 15M }
             },
             IsStacked = true,
-            DataMarkerType = (decimal x, decimal y, decimal size, string color, int dataSeriesIndex, int dataPointIndex) => new RoundDataMarkerShape(x, y, size, color, dataSeriesIndex, dataPointIndex)
+            ShowDataMarkers = true,
+            DataMarkerType = DefaultDataMarkerTypes.Round
         };
 
         subject.DataSeries[dataSeriesIndex][index] = dataPoint;
@@ -122,9 +124,8 @@ public class LineLayerTests {
         };
     }
 
-    [Theory]
-    [MemberData(nameof(DataMarkerType_Data))]
-    public void DataMarkerType(DataMarkerDelegate dataMarker, Type expectedType) {
+    [Fact]
+    public void HideDataMarkers() {
         var subject = new LineLayer(
            new XYChart() {
                Labels = { "Foo" }
@@ -133,14 +134,12 @@ public class LineLayerTests {
             DataSeries = {
                 new("Bar", "red") { 15M }
             },
-            DataMarkerType = dataMarker
+            ShowDataMarkers = false,
+            DataMarkerType = DefaultDataMarkerTypes.Round
         };
 
-        Assert.IsType(expectedType, Assert.Single(subject.GetDataSeriesShapes()));
-    }
+        var result = subject.GetDataSeriesShapes();
 
-    public static TheoryData<DataMarkerDelegate, Type> DataMarkerType_Data() => new() {
-        { DefaultDataMarkerTypes.Round, typeof(RoundDataMarkerShape) },
-        { DefaultDataMarkerTypes.Square, typeof(SquareDataMarkerShape) },
-    };
+        Assert.DoesNotContain(result, shape => shape is RoundDataMarkerShape);
+    }
 }
