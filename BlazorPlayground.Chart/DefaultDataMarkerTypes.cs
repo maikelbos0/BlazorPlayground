@@ -2,7 +2,7 @@
 
 namespace BlazorPlayground.Chart;
 
-public static class DefaultDataMarkers {
+public static class DefaultDataMarkerTypes {
     public static ShapeBase Round(decimal x, decimal y, decimal size, string color, int dataSeriesIndex, int dataPointIndex)
         => new RoundDataMarkerShape(x, y, size, color, dataSeriesIndex, dataPointIndex);
 

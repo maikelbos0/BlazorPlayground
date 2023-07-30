@@ -156,7 +156,7 @@
             <label for="lineLayerDataMarkerType">Data marker type</label>
         </div>
 
-        <select class="form-select" id="lineLayerDataMarkerType" @onchange="SetDataMarker">
+        <select class="form-select" id="lineLayerDataMarkerType" @onchange="SetDataMarkerType">
             <option value="Round">Round</option>
             <option value="Square">Square</option>
         </select>
@@ -246,10 +246,10 @@
         xyChart.AddDataPoint($"Value {xyChart.Labels.Count + 1}");
     }
 
-    private void SetDataMarker(ChangeEventArgs args) {
-        lineLayer.DataMarker = args.Value switch {
-            "Round" => DefaultDataMarkers.Round,
-            "Square" => DefaultDataMarkers.Square,
+    private void SetDataMarkerType(ChangeEventArgs args) {
+        lineLayer.DataMarkerType = args.Value switch {
+            "Round" => DefaultDataMarkerTypes.Round,
+            "Square" => DefaultDataMarkerTypes.Square,
             _ => throw new NotImplementedException()
         };
     }

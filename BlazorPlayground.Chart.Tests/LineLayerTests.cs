@@ -32,7 +32,7 @@ public class LineLayerTests {
                 new("Bar", "red") { null, null, null, null, 15M }
             },
             IsStacked = false,
-            DataMarker = (decimal x, decimal y, decimal size, string color, int dataSeriesIndex, int dataPointIndex) => new RoundDataMarkerShape(x, y, size, color, dataSeriesIndex, dataPointIndex)
+            DataMarkerType = (decimal x, decimal y, decimal size, string color, int dataSeriesIndex, int dataPointIndex) => new RoundDataMarkerShape(x, y, size, color, dataSeriesIndex, dataPointIndex)
         };
 
         subject.DataSeries[dataSeriesIndex][index] = dataPoint;
@@ -89,7 +89,7 @@ public class LineLayerTests {
                 new("Bar", "red") { null, null, null, null, 15M }
             },
             IsStacked = true,
-            DataMarker = (decimal x, decimal y, decimal size, string color, int dataSeriesIndex, int dataPointIndex) => new RoundDataMarkerShape(x, y, size, color, dataSeriesIndex, dataPointIndex)
+            DataMarkerType = (decimal x, decimal y, decimal size, string color, int dataSeriesIndex, int dataPointIndex) => new RoundDataMarkerShape(x, y, size, color, dataSeriesIndex, dataPointIndex)
         };
 
         subject.DataSeries[dataSeriesIndex][index] = dataPoint;
@@ -123,8 +123,8 @@ public class LineLayerTests {
     }
 
     [Theory]
-    [MemberData(nameof(DataMarker_Data))]
-    public void DataMarker(DataMarkerDelegate dataMarker, Type expectedType) {
+    [MemberData(nameof(DataMarkerType_Data))]
+    public void DataMarkerType(DataMarkerDelegate dataMarker, Type expectedType) {
         var subject = new LineLayer(
            new XYChart() {
                Labels = { "Foo" }
@@ -133,14 +133,14 @@ public class LineLayerTests {
             DataSeries = {
                 new("Bar", "red") { 15M }
             },
-            DataMarker = dataMarker
+            DataMarkerType = dataMarker
         };
 
         Assert.IsType(expectedType, Assert.Single(subject.GetDataSeriesShapes()));
     }
 
-    public static TheoryData<DataMarkerDelegate, Type> DataMarker_Data() => new() {
-        { DefaultDataMarkers.Round, typeof(RoundDataMarkerShape) },
-        { DefaultDataMarkers.Square, typeof(SquareDataMarkerShape) },
+    public static TheoryData<DataMarkerDelegate, Type> DataMarkerType_Data() => new() {
+        { DefaultDataMarkerTypes.Round, typeof(RoundDataMarkerShape) },
+        { DefaultDataMarkerTypes.Square, typeof(SquareDataMarkerShape) },
     };
 }

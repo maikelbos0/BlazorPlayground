@@ -3,10 +3,10 @@ using Xunit;
 
 namespace BlazorPlayground.Chart.Tests;
 
-public class DefaultDataMarkersTests {
+public class DefaultDataMarkerTypesTests {
     [Fact]
     public void Round() {
-        var result = DefaultDataMarkers.Round(50M, 150M, 10M, "red", 1, 5);
+        var result = DefaultDataMarkerTypes.Round(50M, 150M, 10M, "red", 1, 5);
 
         var shape = Assert.IsType<RoundDataMarkerShape>(result);
 
@@ -19,7 +19,7 @@ public class DefaultDataMarkersTests {
 
     [Fact]
     public void Square() {
-        var result = DefaultDataMarkers.Square(50M, 150M, 10M, "red", 1, 5);
+        var result = DefaultDataMarkerTypes.Square(50M, 150M, 10M, "red", 1, 5);
 
         var shape = Assert.IsType<SquareDataMarkerShape>(result);
 
