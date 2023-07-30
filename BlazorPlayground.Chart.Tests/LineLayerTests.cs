@@ -1,4 +1,5 @@
 ﻿using BlazorPlayground.Chart.Shapes;
+using System;
 using Xunit;
 
 namespace BlazorPlayground.Chart.Tests;
@@ -30,7 +31,8 @@ public class LineLayerTests {
                 new("Foo", "blue") { null, null, null, null, 15M },
                 new("Bar", "red") { null, null, null, null, 15M }
             },
-            IsStacked = false
+            IsStacked = false,
+            DataMarker = (decimal x, decimal y, decimal size, string color, int dataSeriesIndex, int dataPointIndex) => new RoundDataMarkerShape(x, y, size, color, dataSeriesIndex, dataPointIndex)
         };
 
         subject.DataSeries[dataSeriesIndex][index] = dataPoint;
@@ -86,7 +88,8 @@ public class LineLayerTests {
                 new("Foo", "blue") { -10M, -10M, 10M, 10M, 15M },
                 new("Bar", "red") { null, null, null, null, 15M }
             },
-            IsStacked = true
+            IsStacked = true,
+            DataMarker = (decimal x, decimal y, decimal size, string color, int dataSeriesIndex, int dataPointIndex) => new RoundDataMarkerShape(x, y, size, color, dataSeriesIndex, dataPointIndex)
         };
 
         subject.DataSeries[dataSeriesIndex][index] = dataPoint;
@@ -118,4 +121,26 @@ public class LineLayerTests {
             { 1, 2, 5M, plotAreaX + 2.5M * dataPointWidth, plotAreaY + (plotAreaMax - 15M) / plotAreaRange * plotAreaHeight, 10M }
         };
     }
+
+    [Theory]
+    [MemberData(nameof(DataMarker_Data))]
+    public void DataMarker(DataMarkerDelegate dataMarker, Type expectedType) {
+        var subject = new LineLayer(
+           new XYChart() {
+               Labels = { "Foo" }
+           }
+        ) {
+            DataSeries = {
+                new("Bar", "red") { 15M }
+            },
+            DataMarker = dataMarker
+        };
+
+        Assert.IsType(expectedType, Assert.Single(subject.GetDataSeriesShapes()));
+    }
+
+    public static TheoryData<DataMarkerDelegate, Type> DataMarker_Data() => new() {
+        { DefaultDataMarkers.Round, typeof(RoundDataMarkerShape) },
+        { DefaultDataMarkers.Square, typeof(SquareDataMarkerShape) },
+    };
 }

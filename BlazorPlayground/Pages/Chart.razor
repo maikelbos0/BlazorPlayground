@@ -151,6 +151,15 @@
             <input class="form-check-input mt-0" type="checkbox" id="lineLayerIsStacked" @bind="lineLayer.IsStacked" />
             <label class="form-check-label ps-2" for="lineLayerIsStacked">Stack lines</label>
         </div>
+
+        <div class="input-group-text">
+            <label for="lineLayerDataMarkerType">Data marker type</label>
+        </div>
+
+        <select class="form-select" id="lineLayerDataMarkerType" @onchange="SetDataMarker">
+            <option value="Round">Round</option>
+            <option value="Square">Square</option>
+        </select>
     </fieldset>
 </div>
 
@@ -235,6 +244,14 @@
 
     private void AddDataPoint() {
         xyChart.AddDataPoint($"Value {xyChart.Labels.Count + 1}");
+    }
+
+    private void SetDataMarker(ChangeEventArgs args) {
+        lineLayer.DataMarker = args.Value switch {
+            "Round" => DefaultDataMarkers.Round,
+            "Square" => DefaultDataMarkers.Square,
+            _ => throw new NotImplementedException()
+        };
     }
 
     private void GenerateData() {
