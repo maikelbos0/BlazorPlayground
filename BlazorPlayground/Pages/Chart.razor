@@ -158,7 +158,13 @@
         </div>
 
         <div class="input-group-text">
-            <label for="lineLayerDataMarkerType">Data marker type</label>
+            <label for="lineLayerDataMarkerSize">Size</label>
+        </div>
+
+        <input type="text" class="form-control" id="lineLayerDataMarkerSize" @bind-value="lineLayer.DataMarkerSize" />
+
+        <div class="input-group-text">
+            <label for="lineLayerDataMarkerType">Type</label>
         </div>
 
         <select class="form-select" id="lineLayerDataMarkerType" @onchange="SetDataMarkerType">

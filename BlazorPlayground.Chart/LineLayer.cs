@@ -4,12 +4,13 @@ namespace BlazorPlayground.Chart;
 
 public class LineLayer : LayerBase {
     public static bool DefaultShowDataMarkers { get; set; } = true;
+    public static decimal DefaultDataMarkerSize { get; set; } = 10M;
     public static DataMarkerDelegate DefaultDataMarkerType { get; set; } = DefaultDataMarkerTypes.Round;
 
-    public DataMarkerDelegate DataMarkerType { get; set; } = DefaultDataMarkerType;
     public bool ShowDataMarkers { get; set; } = DefaultShowDataMarkers;
+    public decimal DataMarkerSize { get; set; } = DefaultDataMarkerSize;
+    public DataMarkerDelegate DataMarkerType { get; set; } = DefaultDataMarkerType;
 
-    // TODO setting for marker size
     // TODO setting for show line
     // TODO setting for what do do for null in line
 
@@ -24,7 +25,7 @@ public class LineLayer : LayerBase {
                 yield return DataMarkerType(
                     dataSeriesPoint.X,
                     dataSeriesPoint.Y,
-                    10M,
+                    DataMarkerSize,
                     dataSeriesPoint.Color,
                     dataSeriesPoint.DataSeriesIndex,
                     dataSeriesPoint.Index
