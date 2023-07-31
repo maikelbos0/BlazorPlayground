@@ -18,7 +18,7 @@ public class LineLayer : LayerBase {
 
     // TODO add actual lines
     public override IEnumerable<ShapeBase> GetDataSeriesShapes() {
-        var dataSeriesPoints = GetDataSeriesPoints();
+        var dataSeriesPoints = GetDataPoints();
 
         if (ShowDataMarkers) {
             foreach (var dataSeriesPoint in dataSeriesPoints) {

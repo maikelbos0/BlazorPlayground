@@ -46,7 +46,7 @@ public abstract class LayerBase {
 
     public abstract IEnumerable<ShapeBase> GetDataSeriesShapes();
 
-    public IEnumerable<DataSeriesPoint> GetDataSeriesPoints() {
+    public IEnumerable<DataPoint> GetDataPoints() {
         Func<decimal, int, decimal> transformer = (dataPoint, index) => dataPoint;
 
         if (IsStacked) {
@@ -59,7 +59,7 @@ public abstract class LayerBase {
         return DataSeries.SelectMany((dataSeries, dataSeriesIndex) => dataSeries
             .Select((dataPoint, index) => (DataPoint: dataPoint, Index: index))
             .Where(value => value.DataPoint != null && value.Index < Chart.Labels.Count)
-            .Select(value => new DataSeriesPoint(
+            .Select(value => new DataPoint(
                 Chart.MapDataIndexToCanvas(value.Index),
                 Chart.MapDataPointToCanvas(transformer(value.DataPoint!.Value, value.Index)),
                 Chart.MapDataValueToPlotArea(value.DataPoint!.Value),
