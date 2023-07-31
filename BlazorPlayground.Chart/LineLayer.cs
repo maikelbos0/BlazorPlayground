@@ -11,24 +11,47 @@ public class LineLayer : LayerBase {
     public decimal DataMarkerSize { get; set; } = DefaultDataMarkerSize;
     public DataMarkerDelegate DataMarkerType { get; set; } = DefaultDataMarkerType;
 
+    // TODO stacking works differently for lines than bars since we can add negatives and positives
     // TODO setting for show line
+    // TODO setting for line width
     // TODO setting for what do do for null in line
+    // TODO fluent lines?
 
     public LineLayer(XYChart chart) : base(chart) { }
 
-    // TODO add actual lines
     public override IEnumerable<ShapeBase> GetDataSeriesShapes() {
-        var dataSeriesPoints = GetDataPoints();
+        var dataPoints = GetDataPoints();
 
         if (ShowDataMarkers) {
-            foreach (var dataSeriesPoint in dataSeriesPoints) {
+            foreach (var dataPoint in dataPoints) {
                 yield return DataMarkerType(
-                    dataSeriesPoint.X,
-                    dataSeriesPoint.Y,
+                    dataPoint.X,
+                    dataPoint.Y,
                     DataMarkerSize,
-                    dataSeriesPoint.Color,
-                    dataSeriesPoint.DataSeriesIndex,
-                    dataSeriesPoint.Index
+                    dataPoint.Color,
+                    dataPoint.DataSeriesIndex,
+                    dataPoint.Index
+                );
+            }
+        }
+
+        var dataSeries = dataPoints.ToLookup(dataSeriesPoint => dataSeriesPoint.DataSeriesIndex);
+
+        for (var dataSeriesIndex = 0; dataSeriesIndex < DataSeries.Count; dataSeriesIndex++) {
+            var dataSeriesPoints = dataSeries[dataSeriesIndex].OrderBy(dataPoint => dataPoint.Index).ToList();
+
+            for (var index = 0; index < dataSeriesPoints.Count - 1; index++) {
+                var startPoint = dataSeriesPoints[index];
+                var endPoint = dataSeriesPoints[index + 1];
+
+                yield return new LineDataShape(
+                    startPoint.X,
+                    startPoint.Y,
+                    endPoint.X,
+                    endPoint.Y,
+                    startPoint.Color,
+                    dataSeriesIndex,
+                    startPoint.Index
                 );
             }
         }
