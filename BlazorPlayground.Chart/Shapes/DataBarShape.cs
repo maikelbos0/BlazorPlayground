@@ -1,6 +1,6 @@
 ﻿namespace BlazorPlayground.Chart.Shapes;
 
-public class BarDataShape : ShapeBase {
+public class DataBarShape : ShapeBase {
     public override string CssClass => "bar-data";
     public override string ElementName => "rect";
     public decimal X { get; }
@@ -9,7 +9,7 @@ public class BarDataShape : ShapeBase {
     public decimal Height { get; }
     public string Color { get; }
 
-    public BarDataShape(decimal x, decimal y, decimal width, decimal height, string color, int dataSeriesIndex, int dataPointIndex) : base(dataSeriesIndex, dataPointIndex) {
+    public DataBarShape(decimal x, decimal y, decimal width, decimal height, string color, int dataSeriesIndex, int dataPointIndex) : base(dataSeriesIndex, dataPointIndex) {
         Y = y;
         X = x;
         Height = height;

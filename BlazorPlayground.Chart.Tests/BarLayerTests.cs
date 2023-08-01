@@ -39,7 +39,7 @@ public class BarLayerTests {
 
         var result = subject.GetDataSeriesShapes();
 
-        var shape = Assert.IsType<BarDataShape>(Assert.Single(result, shape => shape.Key == $"{nameof(BarDataShape)}[{dataSeriesIndex},{index}]"));
+        var shape = Assert.IsType<DataBarShape>(Assert.Single(result, shape => shape.Key == $"{nameof(DataBarShape)}[{dataSeriesIndex},{index}]"));
 
         Assert.Equal(expectedX, shape.X);
         Assert.Equal(expectedY, shape.Y);
@@ -98,7 +98,7 @@ public class BarLayerTests {
 
         var result = subject.GetDataSeriesShapes();
 
-        var shape = Assert.IsType<BarDataShape>(Assert.Single(result, shape => shape.Key == $"{nameof(BarDataShape)}[{dataSeriesIndex},{index}]"));
+        var shape = Assert.IsType<DataBarShape>(Assert.Single(result, shape => shape.Key == $"{nameof(DataBarShape)}[{dataSeriesIndex},{index}]"));
 
         Assert.Equal(expectedX, shape.X);
         Assert.Equal(expectedY, shape.Y);

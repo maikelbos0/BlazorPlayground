@@ -4,17 +4,17 @@ using Xunit;
 
 namespace BlazorPlayground.Chart.Tests.Shapes;
 
-public class LineDataShapeTests {
+public class DataLineShapeTests {
     [Fact]
     public void Key() {
-        var subject = new LineDataShape(20, 50, 80, 90, "red", 2, 5);
+        var subject = new DataLineShape(20, 50, 80, 90, "red", 2, 5);
 
-        Assert.Equal("LineDataShape[2,5]", subject.Key);
+        Assert.Equal("DataLineShape[2,5]", subject.Key);
     }
 
     [Fact]
     public void GetAttributes() {
-        var subject = new LineDataShape(20, 50, 80, 90, "red", 2, 5);
+        var subject = new DataLineShape(20, 50, 80, 90, "red", 2, 5);
 
         var result = subject.GetAttributes();
 

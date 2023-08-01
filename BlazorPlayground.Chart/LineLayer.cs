@@ -46,7 +46,7 @@ public class LineLayer : LayerBase {
                     var startPoint = dataSeriesPoints[index];
                     var endPoint = dataSeriesPoints[index + 1];
 
-                    yield return new LineDataShape(
+                    yield return new DataLineShape(
                         startPoint.X,
                         startPoint.Y,
                         endPoint.X,
