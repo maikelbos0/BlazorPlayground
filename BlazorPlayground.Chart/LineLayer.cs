@@ -7,14 +7,17 @@ public class LineLayer : LayerBase {
     public static decimal DefaultDataMarkerSize { get; set; } = 10M;
     public static DataMarkerDelegate DefaultDataMarkerType { get; set; } = DefaultDataMarkerTypes.Round;
     public static bool DefaultShowDataLines { get; set; } = true;
+    public static decimal DefaultDataLineWidth { get; set; } = 2M;
 
     public bool ShowDataMarkers { get; set; } = DefaultShowDataMarkers;
     public decimal DataMarkerSize { get; set; } = DefaultDataMarkerSize;
     public DataMarkerDelegate DataMarkerType { get; set; } = DefaultDataMarkerType;
     public bool ShowDataLines { get; set; } = DefaultShowDataLines;
+    public decimal DataLineWidth { get; set; } = DefaultDataLineWidth;
     public override StackMode StackMode => StackMode.Single;
 
-    // TODO setting for line width
+    // TODO refactor lines to be continuous to not have gaps
+    // TODO refactor so each data series is fully rendered in turn
     // TODO setting for what do do for null in line
     // TODO fluent lines?
 
@@ -51,6 +54,7 @@ public class LineLayer : LayerBase {
                         startPoint.Y,
                         endPoint.X,
                         endPoint.Y,
+                        DataLineWidth,
                         startPoint.Color,
                         dataSeriesIndex,
                         startPoint.Index

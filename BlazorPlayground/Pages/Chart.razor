@@ -176,6 +176,12 @@
             <input class="form-check-input mt-0" type="checkbox" id="lineLayerShowDataLines" @bind="lineLayer.ShowDataLines" />
             <label class="form-check-label ps-2" for="lineLayerShowDataLines">Show data lines</label>
         </div>
+
+        <div class="input-group-text">
+            <label for="lineLayerDataLineWidth">Width</label>
+        </div>
+
+        <input type="text" class="form-control" id="lineLayerDataLineWidth" @bind-value="lineLayer.DataLineWidth" />
     </fieldset>
 </div>
 
