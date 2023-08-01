@@ -7,6 +7,8 @@ namespace BlazorPlayground.Chart.Tests;
 
 public class LayerBaseTests {
     public class TestLayer : LayerBase {
+        public override StackMode StackMode => throw new System.NotImplementedException();
+
         public TestLayer(XYChart chart) : base(chart) { }
 
         public override IEnumerable<ShapeBase> GetDataSeriesShapes() => throw new System.NotImplementedException();

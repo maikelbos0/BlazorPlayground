@@ -10,8 +10,8 @@ public class LineLayer : LayerBase {
     public bool ShowDataMarkers { get; set; } = DefaultShowDataMarkers;
     public decimal DataMarkerSize { get; set; } = DefaultDataMarkerSize;
     public DataMarkerDelegate DataMarkerType { get; set; } = DefaultDataMarkerType;
+    public override StackMode StackMode => StackMode.Single;
 
-    // TODO stacking works differently for lines than bars since we can add negatives and positives
     // TODO setting for show line
     // TODO setting for line width
     // TODO setting for what do do for null in line

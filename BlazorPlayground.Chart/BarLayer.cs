@@ -8,6 +8,7 @@ public class BarLayer : LayerBase {
 
     public decimal ClearancePercentage { get; set; } = DefaultClearancePercentage;
     public decimal GapPercentage { get; set; } = DefaultGapPercentage;
+    public override StackMode StackMode => StackMode.Split;
 
     public BarLayer(XYChart chart) : base(chart) { }
 

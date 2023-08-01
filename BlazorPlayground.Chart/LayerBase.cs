@@ -28,6 +28,7 @@ public abstract class LayerBase {
     public XYChart Chart { get; }
     public bool IsStacked { get; set; } = DefaultIsStacked;
     public List<DataSeries> DataSeries { get; set; } = new();
+    public abstract StackMode StackMode { get; }
 
     public LayerBase(XYChart chart) {
         Chart = chart;
@@ -47,26 +48,40 @@ public abstract class LayerBase {
     public abstract IEnumerable<ShapeBase> GetDataSeriesShapes();
 
     public IEnumerable<DataPoint> GetDataPoints() {
-        Func<decimal, int, decimal> transformer = (dataPoint, index) => dataPoint;
-
-        if (IsStacked) {
-            var negativeOffsets = new decimal[Chart.Labels.Count];
-            var positiveOffsets = new decimal[Chart.Labels.Count];
-
-            transformer = (dataPoint, index) => (dataPoint < 0 ? negativeOffsets : positiveOffsets)[index] += dataPoint;
-        }
+        var dataPointTransformer = GetDataPointTransformer();
 
         return DataSeries.SelectMany((dataSeries, dataSeriesIndex) => dataSeries
             .Select((dataPoint, index) => (DataPoint: dataPoint, Index: index))
             .Where(value => value.DataPoint != null && value.Index < Chart.Labels.Count)
             .Select(value => new DataPoint(
                 Chart.MapDataIndexToCanvas(value.Index),
-                Chart.MapDataPointToCanvas(transformer(value.DataPoint!.Value, value.Index)),
+                Chart.MapDataPointToCanvas(dataPointTransformer(value.DataPoint!.Value, value.Index)),
                 Chart.MapDataValueToPlotArea(value.DataPoint!.Value),
                 dataSeries.Color,
                 dataSeriesIndex,
                 value.Index
             )))
             .ToList();
+    }
+
+    private Func<decimal, int, decimal> GetDataPointTransformer() {
+        if (IsStacked) {
+            switch (StackMode) {
+                case StackMode.Single:
+                    var offsets = new decimal[Chart.Labels.Count];
+
+                    return (dataPoint, index) => offsets[index] += dataPoint;
+                case StackMode.Split:
+                    var negativeOffsets = new decimal[Chart.Labels.Count];
+                    var positiveOffsets = new decimal[Chart.Labels.Count];
+
+                    return (dataPoint, index) => (dataPoint < 0 ? negativeOffsets : positiveOffsets)[index] += dataPoint;
+                default:
+                    throw new NotImplementedException($"Missing stacked transformer implementation for {nameof(StackMode)}{StackMode}");
+            }
+        }
+        else {
+            return (dataPoint, index) => dataPoint;
+        }
     }
 }
