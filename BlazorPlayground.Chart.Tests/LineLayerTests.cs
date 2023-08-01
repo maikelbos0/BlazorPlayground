@@ -264,4 +264,22 @@ public class LineLayerTests {
             { 1, 2, -5M, 3, 5M, plotAreaX + 2.5M * dataPointWidth, plotAreaY + (plotAreaMax - 5M) / plotAreaRange * plotAreaHeight, plotAreaX + 3.5M * dataPointWidth, plotAreaY + (plotAreaMax - 15M) / plotAreaRange * plotAreaHeight },
         };
     }
+
+    [Fact]
+    public void GetStackedDataSeriesShapes_HideDataLines() {
+        var subject = new LineLayer(
+           new XYChart() {
+               Labels = { "Foo", "Bar" }
+           }
+        ) {
+            DataSeries = {
+                new("Bar", "red") { 15M, 15M }
+            },
+            ShowDataLines = false
+        };
+
+        var result = subject.GetDataSeriesShapes();
+
+        Assert.DoesNotContain(result, shape => shape is LineDataShape);
+    }
 }
