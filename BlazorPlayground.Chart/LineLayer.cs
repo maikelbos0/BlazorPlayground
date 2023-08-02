@@ -17,47 +17,44 @@ public class LineLayer : LayerBase {
     public override StackMode StackMode => StackMode.Single;
 
     // TODO refactor lines to be continuous to not have gaps
-    // TODO refactor so each data series is fully rendered in turn
     // TODO setting for what do do for null in line
     // TODO fluent lines?
 
     public LineLayer(XYChart chart) : base(chart) { }
 
     public override IEnumerable<ShapeBase> GetDataSeriesShapes() {
-        var dataPoints = GetDataPoints();
+        var dataPointsByDataSeries = GetDataPoints().ToLookup(dataSeriesPoint => dataSeriesPoint.DataSeriesIndex);
 
-        if (ShowDataMarkers) {
-            foreach (var dataPoint in dataPoints) {
-                yield return DataMarkerType(
-                    dataPoint.X,
-                    dataPoint.Y,
-                    DataMarkerSize,
-                    dataPoint.Color,
-                    dataPoint.DataSeriesIndex,
-                    dataPoint.Index
-                );
+        for (var dataSeriesIndex = 0; dataSeriesIndex < DataSeries.Count; dataSeriesIndex++) {
+            var dataPoints = dataPointsByDataSeries[dataSeriesIndex].OrderBy(dataPoint => dataPoint.Index).ToList();
+
+            if (ShowDataMarkers) {
+                foreach (var dataPoint in dataPoints) {
+                    yield return DataMarkerType(
+                        dataPoint.X,
+                        dataPoint.Y,
+                        DataMarkerSize,
+                        dataPoint.Color,
+                        dataPoint.DataSeriesIndex,
+                        dataPoint.Index
+                    );
+                }
             }
-        }
 
-        if (ShowDataLines) {
-            var dataSeries = dataPoints.ToLookup(dataSeriesPoint => dataSeriesPoint.DataSeriesIndex);
-
-            for (var dataSeriesIndex = 0; dataSeriesIndex < DataSeries.Count; dataSeriesIndex++) {
-                var dataSeriesPoints = dataSeries[dataSeriesIndex].OrderBy(dataPoint => dataPoint.Index).ToList();
-
-                for (var index = 0; index < dataSeriesPoints.Count - 1; index++) {
-                    var startPoint = dataSeriesPoints[index];
-                    var endPoint = dataSeriesPoints[index + 1];
+            if (ShowDataLines) {
+                for (var index = 0; index < dataPoints.Count - 1; index++) {
+                    var startDataPoint = dataPoints[index];
+                    var endDataPoint = dataPoints[index + 1];
 
                     yield return new DataLineShape(
-                        startPoint.X,
-                        startPoint.Y,
-                        endPoint.X,
-                        endPoint.Y,
+                        startDataPoint.X,
+                        startDataPoint.Y,
+                        endDataPoint.X,
+                        endDataPoint.Y,
                         DataLineWidth,
-                        startPoint.Color,
+                        startDataPoint.Color,
                         dataSeriesIndex,
-                        startPoint.Index
+                        startDataPoint.Index
                     );
                 }
             }
