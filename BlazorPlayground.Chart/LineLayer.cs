@@ -40,23 +40,22 @@ public class LineLayer : LayerBase {
                 }
             }
 
-            //if (ShowDataLines) {
-            //    for (var index = 0; index < dataPoints.Count - 1; index++) {
-            //        var startDataPoint = dataPoints[index];
-            //        var endDataPoint = dataPoints[index + 1];
+            if (ShowDataLines && dataPoints.Any()) {
+                var commands = new List<string>() {
+                    PathCommandFactory.MoveTo(dataPoints[0].X, dataPoints[0].Y)
+                };
 
-            //        yield return new DataLineShape(
-            //            startDataPoint.X,
-            //            startDataPoint.Y,
-            //            endDataPoint.X,
-            //            endDataPoint.Y,
-            //            DataLineWidth,
-            //            startDataPoint.Color,
-            //            dataSeriesIndex,
-            //            startDataPoint.Index
-            //        );
-            //    }
-            //}
+                foreach (var dataPoint in dataPoints.Skip(1)) {
+                    commands.Add(PathCommandFactory.LineTo(dataPoint.X, dataPoint.Y));
+                }
+
+                yield return new DataLineShape(
+                    commands,
+                    DataLineWidth,
+                    dataPoints[0].Color,
+                    dataSeriesIndex
+                );
+            }
         }
     }
 }

@@ -223,3 +223,7 @@ fieldset:disabled label, fieldset:disabled .form-control:disabled, fieldset:disa
     dominant-baseline: central;
     text-anchor: middle;
 }
+
+.chart-main .line-data {
+    fill: none;
+}

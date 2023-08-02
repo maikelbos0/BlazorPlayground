@@ -1,4 +1,5 @@
 ﻿using BlazorPlayground.Chart.Shapes;
+using System;
 using Xunit;
 
 namespace BlazorPlayground.Chart.Tests;
@@ -143,10 +144,10 @@ public class LineLayerTests {
 
         Assert.DoesNotContain(result, shape => shape is RoundDataMarkerShape);
     }
-    /*
+    
     [Theory]
     [MemberData(nameof(GetUnstackedDataSeriesShapes_Lines_Data))]
-    public void GetUnstackedDataSeriesShapes_Lines(int startIndex, decimal startDataPoint, int endIndex, decimal endDataPoint, decimal expectedX1, decimal expectedY1, decimal expectedX2, decimal expectedY2) {
+    public void GetUnstackedDataSeriesShapes_Lines(int startIndex, decimal startDataPoint, int endIndex, decimal endDataPoint, string expectedPath) {
         var subject = new LineLayer(
             new XYChart() {
                 Canvas = {
@@ -178,16 +179,13 @@ public class LineLayerTests {
 
         var result = subject.GetDataSeriesShapes();
 
-        var shape = Assert.IsType<DataLineShape>(Assert.Single(result, shape => shape.Key == $"{nameof(DataLineShape)}[1,{startIndex}]"));
+        var shape = Assert.IsType<DataLineShape>(Assert.Single(result, shape => shape.Key == $"{nameof(DataLineShape)}[1]"));
 
-        Assert.Equal(expectedX1, shape.X1);
-        Assert.Equal(expectedY1, shape.Y1);
-        Assert.Equal(expectedX2, shape.X2);
-        Assert.Equal(expectedY2, shape.Y2);
+        Assert.Equal(expectedPath, shape.Path);
         Assert.Equal("red", shape.Color);
     }
 
-    public static TheoryData<int, decimal, int, decimal, decimal, decimal, decimal, decimal> GetUnstackedDataSeriesShapes_Lines_Data() {
+    public static TheoryData<int, decimal, int, decimal, string> GetUnstackedDataSeriesShapes_Lines_Data() {
         var plotAreaX = 25 + 100;
         var plotAreaY = 25;
         var dataPointWidth = (1000 - 25 - 25 - 100) / 4M;
@@ -196,15 +194,15 @@ public class LineLayerTests {
         var plotAreaRange = plotAreaMax - -10M;
 
         return new() {
-            { 0, 5M, 1, -5M, plotAreaX + 0.5M * dataPointWidth, plotAreaY + (plotAreaMax - 5M) / plotAreaRange * plotAreaHeight, plotAreaX + 1.5M * dataPointWidth, plotAreaY + (plotAreaMax + 5M) / plotAreaRange * plotAreaHeight },
-            { 1, -5M, 2, 5M, plotAreaX + 1.5M * dataPointWidth, plotAreaY + (plotAreaMax + 5M) / plotAreaRange * plotAreaHeight, plotAreaX + 2.5M * dataPointWidth, plotAreaY + (plotAreaMax - 5M) / plotAreaRange * plotAreaHeight },
-            { 1, 10M, 3, 35M, plotAreaX + 1.5M * dataPointWidth, plotAreaY + (plotAreaMax - 10M) / plotAreaRange * plotAreaHeight, plotAreaX + 3.5M * dataPointWidth, plotAreaY + (plotAreaMax - 35M) / plotAreaRange * plotAreaHeight },
+            { 0, 5M, 1, -5M, FormattableString.Invariant($"M {plotAreaX + 0.5M * dataPointWidth} {plotAreaY + (plotAreaMax - 5M) / plotAreaRange * plotAreaHeight} L {plotAreaX + 1.5M * dataPointWidth} {plotAreaY + (plotAreaMax + 5M) / plotAreaRange * plotAreaHeight}") },
+            { 1, -5M, 2, 5M, FormattableString.Invariant($"M {plotAreaX + 1.5M * dataPointWidth} {plotAreaY + (plotAreaMax + 5M) / plotAreaRange * plotAreaHeight} L {plotAreaX + 2.5M * dataPointWidth} {plotAreaY + (plotAreaMax - 5M) / plotAreaRange * plotAreaHeight}") },
+            { 1, 10M, 3, 35M, FormattableString.Invariant($"M {plotAreaX + 1.5M * dataPointWidth} {plotAreaY + (plotAreaMax - 10M) / plotAreaRange * plotAreaHeight} L {plotAreaX + 3.5M * dataPointWidth} {plotAreaY + (plotAreaMax - 35M) / plotAreaRange * plotAreaHeight}") },
         };
     }
 
     [Theory]
     [MemberData(nameof(GetStackedDataSeriesShapes_Lines_Data))]
-    public void GetStackedDataSeriesShapes_Lines(int dataSeriesIndex, int startIndex, decimal startDataPoint, int endIndex, decimal endDataPoint, decimal expectedX1, decimal expectedY1, decimal expectedX2, decimal expectedY2) {
+    public void GetStackedDataSeriesShapes_Lines(int dataSeriesIndex, int startIndex, decimal startDataPoint, int endIndex, decimal endDataPoint, string expectedPath) {
         var subject = new LineLayer(
             new XYChart() {
                 Canvas = {
@@ -239,16 +237,13 @@ public class LineLayerTests {
 
         var result = subject.GetDataSeriesShapes();
 
-        var shape = Assert.IsType<DataLineShape>(Assert.Single(result, shape => shape.Key == $"{nameof(DataLineShape)}[{dataSeriesIndex},{startIndex}]"));
+        var shape = Assert.IsType<DataLineShape>(Assert.Single(result, shape => shape.Key == $"{nameof(DataLineShape)}[{dataSeriesIndex}]"));
 
-        Assert.Equal(expectedX1, shape.X1);
-        Assert.Equal(expectedY1, shape.Y1);
-        Assert.Equal(expectedX2, shape.X2);
-        Assert.Equal(expectedY2, shape.Y2);
+        Assert.Equal(expectedPath, shape.Path);
         Assert.Equal(subject.DataSeries[dataSeriesIndex].Color, shape.Color);
     }
 
-    public static TheoryData<int, int, decimal, int, decimal, decimal, decimal, decimal, decimal> GetStackedDataSeriesShapes_Lines_Data() {
+    public static TheoryData<int, int, decimal, int, decimal, string> GetStackedDataSeriesShapes_Lines_Data() {
         var plotAreaX = 25 + 100;
         var plotAreaY = 25;
         var dataPointWidth = (1000 - 25 - 25 - 100) / 4M;
@@ -257,11 +252,11 @@ public class LineLayerTests {
         var plotAreaRange = plotAreaMax - -20M;
 
         return new() {
-            { 0, 0, 5M, 1, 5M, plotAreaX + 0.5M * dataPointWidth, plotAreaY + (plotAreaMax - 5M) / plotAreaRange * plotAreaHeight, plotAreaX + 1.5M * dataPointWidth, plotAreaY + (plotAreaMax - 5M) / plotAreaRange * plotAreaHeight },
-            { 1, 0, 5M, 1, -5M, plotAreaX + 0.5M * dataPointWidth, plotAreaY + (plotAreaMax + 5M) / plotAreaRange * plotAreaHeight, plotAreaX + 1.5M * dataPointWidth, plotAreaY + (plotAreaMax + 15M) / plotAreaRange * plotAreaHeight },
-            { 1, 0, -5M, 1, 5M, plotAreaX + 0.5M * dataPointWidth, plotAreaY + (plotAreaMax + 15M) / plotAreaRange * plotAreaHeight, plotAreaX + 1.5M * dataPointWidth, plotAreaY + (plotAreaMax + 5M) / plotAreaRange * plotAreaHeight },
-            { 1, 2, 5M, 3, -5M, plotAreaX + 2.5M * dataPointWidth, plotAreaY + (plotAreaMax - 15M) / plotAreaRange * plotAreaHeight, plotAreaX + 3.5M * dataPointWidth, plotAreaY + (plotAreaMax - 5M) / plotAreaRange * plotAreaHeight },
-            { 1, 2, -5M, 3, 5M, plotAreaX + 2.5M * dataPointWidth, plotAreaY + (plotAreaMax - 5M) / plotAreaRange * plotAreaHeight, plotAreaX + 3.5M * dataPointWidth, plotAreaY + (plotAreaMax - 15M) / plotAreaRange * plotAreaHeight },
+            { 0, 0, 5M, 1, 5M, FormattableString.Invariant($"M {plotAreaX + 0.5M * dataPointWidth} {plotAreaY + (plotAreaMax - 5M) / plotAreaRange * plotAreaHeight} L {plotAreaX + 1.5M * dataPointWidth} {plotAreaY + (plotAreaMax - 5M) / plotAreaRange * plotAreaHeight} L 656.25 185.0 L 868.75 185.0") },
+            { 1, 0, 5M, 1, -5M, FormattableString.Invariant($"M {plotAreaX + 0.5M * dataPointWidth} {plotAreaY + (plotAreaMax + 5M) / plotAreaRange * plotAreaHeight} L {plotAreaX + 1.5M * dataPointWidth} {plotAreaY + (plotAreaMax + 15M) / plotAreaRange * plotAreaHeight}") },
+            { 1, 0, -5M, 1, 5M, FormattableString.Invariant($"M {plotAreaX + 0.5M * dataPointWidth} {plotAreaY + (plotAreaMax + 15M) / plotAreaRange * plotAreaHeight} L {plotAreaX + 1.5M * dataPointWidth} {plotAreaY + (plotAreaMax + 5M) / plotAreaRange * plotAreaHeight}") },
+            { 1, 2, 5M, 3, -5M, FormattableString.Invariant($"M {plotAreaX + 2.5M * dataPointWidth} {plotAreaY + (plotAreaMax - 15M) / plotAreaRange * plotAreaHeight} L {plotAreaX + 3.5M * dataPointWidth} {plotAreaY + (plotAreaMax - 5M) / plotAreaRange * plotAreaHeight}") },
+            { 1, 2, -5M, 3, 5M, FormattableString.Invariant($"M {plotAreaX + 2.5M * dataPointWidth} {plotAreaY + (plotAreaMax - 5M) / plotAreaRange * plotAreaHeight} L {plotAreaX + 3.5M * dataPointWidth} {plotAreaY + (plotAreaMax - 15M) / plotAreaRange * plotAreaHeight}") },
         };
     }
 
@@ -282,5 +277,4 @@ public class LineLayerTests {
 
         Assert.DoesNotContain(result, shape => shape is DataLineShape);
     }
-    */
 }
