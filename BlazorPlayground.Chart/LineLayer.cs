@@ -16,7 +16,6 @@ public class LineLayer : LayerBase {
     public decimal DataLineWidth { get; set; } = DefaultDataLineWidth;
     public override StackMode StackMode => StackMode.Single;
 
-    // TODO refactor lines to be continuous to not have gaps
     // TODO setting for what do do for null in line
     // TODO fluent lines?
 
@@ -41,23 +40,23 @@ public class LineLayer : LayerBase {
                 }
             }
 
-            if (ShowDataLines) {
-                for (var index = 0; index < dataPoints.Count - 1; index++) {
-                    var startDataPoint = dataPoints[index];
-                    var endDataPoint = dataPoints[index + 1];
+            //if (ShowDataLines) {
+            //    for (var index = 0; index < dataPoints.Count - 1; index++) {
+            //        var startDataPoint = dataPoints[index];
+            //        var endDataPoint = dataPoints[index + 1];
 
-                    yield return new DataLineShape(
-                        startDataPoint.X,
-                        startDataPoint.Y,
-                        endDataPoint.X,
-                        endDataPoint.Y,
-                        DataLineWidth,
-                        startDataPoint.Color,
-                        dataSeriesIndex,
-                        startDataPoint.Index
-                    );
-                }
-            }
+            //        yield return new DataLineShape(
+            //            startDataPoint.X,
+            //            startDataPoint.Y,
+            //            endDataPoint.X,
+            //            endDataPoint.Y,
+            //            DataLineWidth,
+            //            startDataPoint.Color,
+            //            dataSeriesIndex,
+            //            startDataPoint.Index
+            //        );
+            //    }
+            //}
         }
     }
 }

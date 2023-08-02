@@ -143,7 +143,7 @@ public class LineLayerTests {
 
         Assert.DoesNotContain(result, shape => shape is RoundDataMarkerShape);
     }
-
+    /*
     [Theory]
     [MemberData(nameof(GetUnstackedDataSeriesShapes_Lines_Data))]
     public void GetUnstackedDataSeriesShapes_Lines(int startIndex, decimal startDataPoint, int endIndex, decimal endDataPoint, decimal expectedX1, decimal expectedY1, decimal expectedX2, decimal expectedY2) {
@@ -282,4 +282,5 @@ public class LineLayerTests {
 
         Assert.DoesNotContain(result, shape => shape is DataLineShape);
     }
+    */
 }
