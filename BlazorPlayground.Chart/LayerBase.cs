@@ -57,7 +57,6 @@ public abstract class LayerBase {
                 Chart.MapDataIndexToCanvas(value.Index),
                 Chart.MapDataPointToCanvas(dataPointTransformer(value.DataPoint!.Value, value.Index)),
                 Chart.MapDataValueToPlotArea(value.DataPoint!.Value),
-                dataSeries.Color,
                 dataSeriesIndex,
                 value.Index
             )))

@@ -29,7 +29,7 @@ public class BarLayer : LayerBase {
             point.Y,
             width,
             point.Height,
-            point.Color,
+            DataSeries[point.DataSeriesIndex].Color,
             point.DataSeriesIndex,
             point.Index
         ));
