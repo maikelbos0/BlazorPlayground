@@ -8,15 +8,16 @@ public class LineLayer : LayerBase {
     public static DataMarkerDelegate DefaultDataMarkerType { get; set; } = DefaultDataMarkerTypes.Round;
     public static bool DefaultShowDataLines { get; set; } = true;
     public static decimal DefaultDataLineWidth { get; set; } = 2M;
+    public static LineGapMode DefaultLineGapMode { get; set; } = LineGapMode.Skip;
 
     public bool ShowDataMarkers { get; set; } = DefaultShowDataMarkers;
     public decimal DataMarkerSize { get; set; } = DefaultDataMarkerSize;
     public DataMarkerDelegate DataMarkerType { get; set; } = DefaultDataMarkerType;
     public bool ShowDataLines { get; set; } = DefaultShowDataLines;
     public decimal DataLineWidth { get; set; } = DefaultDataLineWidth;
+    public LineGapMode LineGapMode { get; set; } = DefaultLineGapMode;
     public override StackMode StackMode => StackMode.Single;
 
-    // TODO setting for what do do for null in line
     // TODO fluent lines?
 
     public LineLayer(XYChart chart) : base(chart) { }
@@ -40,14 +41,18 @@ public class LineLayer : LayerBase {
                 }
             }
 
-            if (ShowDataLines && dataPoints.Any()) {
-                var commands = new List<string>() {
-                    PathCommandFactory.MoveTo(dataPoints[0].X, dataPoints[0].Y)
-                };
-
-                foreach (var dataPoint in dataPoints.Skip(1)) {
-                    commands.Add(PathCommandFactory.LineTo(dataPoint.X, dataPoint.Y));
-                }
+            if (ShowDataLines) {
+                var commands = dataPoints.Select((dataPoint, index) => {
+                    if (index == 0) {
+                        return PathCommandFactory.MoveTo(dataPoint.X, dataPoint.Y);
+                    }
+                    else if (dataPoints[index - 1].Index < dataPoint.Index - 1 && LineGapMode == LineGapMode.Skip) {
+                        return PathCommandFactory.MoveTo(dataPoint.X, dataPoint.Y);
+                    }
+                    else {
+                        return PathCommandFactory.LineTo(dataPoint.X, dataPoint.Y);
+                    }
+                });
 
                 yield return new DataLineShape(
                     commands,

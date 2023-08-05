@@ -144,7 +144,7 @@ public class LineLayerTests {
 
         Assert.DoesNotContain(result, shape => shape is RoundDataMarkerShape);
     }
-    
+
     [Theory]
     [MemberData(nameof(GetUnstackedDataSeriesShapes_Lines_Data))]
     public void GetUnstackedDataSeriesShapes_Lines(int startIndex, decimal startDataPoint, int endIndex, decimal endDataPoint, string expectedPath) {
@@ -172,6 +172,8 @@ public class LineLayerTests {
                 new("Bar", "red") { null, null, null, null, 15M }
             },
             IsStacked = false,
+            ShowDataLines = true,
+            LineGapMode = LineGapMode.Join
         };
 
         subject.DataSeries[1][startIndex] = startDataPoint;
@@ -227,9 +229,8 @@ public class LineLayerTests {
                 new("Bar", "red") { null, null, null, null, 15M }
             },
             IsStacked = true,
-            ShowDataMarkers = true,
-            DataMarkerSize = 20M,
-            DataMarkerType = DefaultDataMarkerTypes.Round
+            ShowDataLines = true,
+            LineGapMode = LineGapMode.Join
         };
 
         subject.DataSeries[dataSeriesIndex][startIndex] = startDataPoint;
@@ -276,5 +277,43 @@ public class LineLayerTests {
         var result = subject.GetDataSeriesShapes();
 
         Assert.DoesNotContain(result, shape => shape is DataLineShape);
+    }
+
+    [Theory]
+    [InlineData(LineGapMode.Skip, "M 210.0 325.00 L 380.0 325.00 M 720.0 325.00 L 890.0 325.00")]
+    [InlineData(LineGapMode.Join, "M 210.0 325.00 L 380.0 325.00 L 720.0 325.00 L 890.0 325.00")]
+    public void GetDataSeriesShapes_LineGapMode(LineGapMode lineGapMode, string expectedPath) {
+        var subject = new LineLayer(
+            new XYChart() {
+                Canvas = {
+                    Width = 1000,
+                    Height = 500,
+                    Padding = 25,
+                    XAxisLabelHeight = 50,
+                    XAxisLabelClearance = 5,
+                    YAxisLabelWidth = 100,
+                    YAxisLabelClearance = 10
+                },
+                PlotArea = {
+                     Min = 00M,
+                     Max = 40M,
+                     GridLineInterval = 10M
+                },
+                Labels = { "Foo", "Bar", "Baz", "Quux", "Quuux" }
+            }
+        ) {
+            DataSeries = {
+                new("Foo", "blue") { 10M, 10M, null, 10M, 10M },
+            },
+            IsStacked = true,
+            ShowDataLines = true,
+            LineGapMode = lineGapMode
+        };
+
+        var result = subject.GetDataSeriesShapes();
+
+        var shape = Assert.IsType<DataLineShape>(Assert.Single(result, shape => shape.Key == $"{nameof(DataLineShape)}[0]"));
+
+        Assert.Equal(expectedPath, shape.Path);
     }
 }
