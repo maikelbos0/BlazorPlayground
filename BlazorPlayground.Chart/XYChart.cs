@@ -3,7 +3,7 @@
 namespace BlazorPlayground.Chart;
 
 public class XYChart {
-    public Canvas Canvas = new();
+    public Canvas Canvas { get; set; } = new();
     public PlotArea PlotArea { get; set; } = new();
     public List<string> Labels { get; set; } = new();
     public List<LayerBase> Layers { get; set; } = new();
