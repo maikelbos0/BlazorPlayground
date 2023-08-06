@@ -10,4 +10,8 @@
 		<PackageReference Include="Microsoft.AspNetCore.Components" Version="7.0.7" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<InternalsVisibleTo Include="$(AssemblyName).Tests" />
+	</ItemGroup>
+
 </Project>
