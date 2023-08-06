@@ -10,11 +10,8 @@ public class PlotArea2 : ComponentBase {
     public static decimal DefaultMultiplier { get; set; } = 1M;
 
     [CascadingParameter] internal XYChart2 Chart { get; set; } = null!;
-
     [Parameter] public RenderFragment? ChildContent { get; set; }
-
     public AutoScaleSettings2 AutoScaleSettings { get; set; } = new();
-
     public decimal Min { get; set; } = DefaultMin;
     public decimal Max { get; set; } = DefaultMax;
     public decimal GridLineInterval { get; set; } = DefaultGridLineInterval;
