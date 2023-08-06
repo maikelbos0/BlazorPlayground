@@ -5,8 +5,6 @@ using Microsoft.AspNetCore.Components.Rendering;
 namespace BlazorPlayground.Chart;
 
 public abstract class LayerBase2 : ComponentBase {
-    [CascadingParameter] internal XYChart2 Chart { get; set; } = null!;
-
     public static bool DefaultIsStacked { get; set; } = false;
     
     [CascadingParameter] internal XYChart2 Chart { get; set; } = null!;

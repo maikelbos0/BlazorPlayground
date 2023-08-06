@@ -31,7 +31,7 @@ public class LineLayer2 : LayerBase2 {
                         dataPoint.X,
                         dataPoint.Y,
                         DataMarkerSize,
-                        DataSeries[dataSeriesIndex].Color,
+                        DataSeries[dataSeriesIndex].GetColor(),
                         dataSeriesIndex,
                         dataPoint.Index
                     );
@@ -54,7 +54,7 @@ public class LineLayer2 : LayerBase2 {
                 yield return new DataLineShape(
                     commands,
                     DataLineWidth,
-                    DataSeries[dataSeriesIndex].Color,
+                    DataSeries[dataSeriesIndex].GetColor(),
                     dataSeriesIndex
                 );
             }

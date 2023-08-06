@@ -27,7 +27,7 @@ public class BarLayer2 : LayerBase2 {
             point.Y,
             width,
             point.Height,
-            DataSeries[point.DataSeriesIndex].Color,
+            DataSeries[point.DataSeriesIndex].GetColor(),
             point.DataSeriesIndex,
             point.Index
         ));
