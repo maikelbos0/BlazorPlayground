@@ -10,7 +10,7 @@ public class BarLayer2 : LayerBase2 {
     public decimal GapPercentage { get; set; } = DefaultGapPercentage;
     public override StackMode StackMode => StackMode.Split;
 
-    public IEnumerable<ShapeBase> GetDataSeriesShapes() {
+    public override IEnumerable<ShapeBase> GetDataSeriesShapes() {
         var width = Chart.DataPointWidth / 100M * (100M - ClearancePercentage * 2);
         Func<int, decimal> offsetProvider = dataSeriesIndex => -width / 2M;
 

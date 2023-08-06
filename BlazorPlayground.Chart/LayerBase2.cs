@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using BlazorPlayground.Chart.Shapes;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
 namespace BlazorPlayground.Chart;
@@ -28,7 +29,7 @@ public abstract class LayerBase2 : ComponentBase {
         builder.CloseComponent();
     }
 
-    //public abstract IEnumerable<ShapeBase> GetDataSeriesShapes();
+    public abstract IEnumerable<ShapeBase> GetDataSeriesShapes();
 
     public IEnumerable<DataPoint> GetDataPoints() {
         var dataPointTransformer = GetDataPointTransformer();
