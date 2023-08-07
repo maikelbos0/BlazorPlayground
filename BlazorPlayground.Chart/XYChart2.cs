@@ -1,15 +1,16 @@
 ﻿using BlazorPlayground.Chart.Shapes;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
+using System.Linq;
 
 namespace BlazorPlayground.Chart;
 
 public class XYChart2 : ComponentBase {
     [Parameter] public RenderFragment? ChildContent { get; set; }
     [Parameter] public List<string> Labels { get; set; } = new();
-    public Canvas2 Canvas { get; set; } = new();
-    public PlotArea2 PlotArea { get; set; } = new();
-    public List<LayerBase2> Layers { get; set; } = new();    
+    internal Canvas2 Canvas { get; set; } = new(); // TODO private?
+    internal PlotArea2 PlotArea { get; set; } = new(); // TODO private?
+    public List<LayerBase2> Layers { get; set; } = new(); // TODO private?
     public decimal DataPointWidth => ((decimal)Canvas.PlotAreaWidth) / Labels.Count;
 
     protected override void BuildRenderTree(RenderTreeBuilder builder) {
@@ -35,6 +36,42 @@ public class XYChart2 : ComponentBase {
 
         builder.CloseElement();
     }
+
+    internal void SetCanvas(Canvas2 canvas) {
+        Canvas = canvas;
+        StateHasChanged();
+    }
+
+    internal void ResetCanvas() {
+        Canvas = new();
+        StateHasChanged();
+    }
+
+    internal void SetPlotArea(PlotArea2 plotArea) {
+        PlotArea = plotArea;
+        StateHasChanged();
+    }
+
+    internal void ResetPlotArea() {
+        PlotArea = new();
+        StateHasChanged();
+    }
+
+    internal void AddLayer(LayerBase2 layer) {
+        // TODO the ordering might not make sense when adding/removing layers
+        if (!Layers.Contains(layer)) {
+            Layers.Add(layer);
+        }
+        StateHasChanged();
+    }
+
+    internal void RemoveLayer(LayerBase2 layer) {
+        Layers.Remove(layer);
+        StateHasChanged();
+    }
+
+    // TODO enable testing for calling methods
+    internal new void StateHasChanged() => base.StateHasChanged();
 
     public IEnumerable<ShapeBase> GetShapes() {
         PlotArea.AutoScale(GetScaleDataPoints());
@@ -67,6 +104,7 @@ public class XYChart2 : ComponentBase {
 
         foreach (var layer in Layers) {
             // TODO add take label count here
+            // TODO make dataseries private and move logic to layer
             dataPoints.AddRange(layer.DataSeries.SelectMany(dataSeries => dataSeries.DataPoints.Where(dataPoint => dataPoint != null).Select(dataPoint => dataPoint!.Value)));
 
             if (layer.IsStacked) {

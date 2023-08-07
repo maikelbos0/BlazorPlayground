@@ -4,19 +4,30 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace BlazorPlayground.Chart;
 
-public abstract class LayerBase2 : ComponentBase {
+public abstract class LayerBase2 : ComponentBase, IDisposable {
     public static bool DefaultIsStacked { get; set; } = false;
-    
+
     [CascadingParameter] internal XYChart2 Chart { get; set; } = null!;
     [Parameter] public RenderFragment? ChildContent { get; set; }
     [Parameter] public bool IsStacked { get; set; } = DefaultIsStacked;
-    public List<DataSeries2> DataSeries { get; set; } = new();
+    internal List<DataSeries2> DataSeries { get; set; } = new(); // TODO private?
     public abstract StackMode StackMode { get; }
 
-    protected override void OnInitialized() {
-        if (!Chart.Layers.Contains(this)) {
-            Chart.Layers.Add(this);
+    protected override void OnInitialized() => Chart.AddLayer(this);
+
+    public void Dispose() => Chart.RemoveLayer(this);
+
+    internal void AddDataSeries(DataSeries2 dataSeries) {
+        // TODO the ordering might not make sense when adding/removing data series
+        if (!DataSeries.Contains(dataSeries)) {
+            DataSeries.Add(dataSeries);
         }
+        Chart.StateHasChanged();
+    }
+
+    internal void RemoveDataSeries(DataSeries2 dataSeries) {
+        DataSeries.Remove(dataSeries);
+        Chart.StateHasChanged();
     }
 
     protected override void BuildRenderTree(RenderTreeBuilder builder) {

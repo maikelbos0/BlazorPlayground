@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace BlazorPlayground.Chart;
 
-public class DataSeries2 : ComponentBase {
+public class DataSeries2 : ComponentBase, IDisposable {
     public const string FallbackColor = "#000000";
 
     public static List<string> DefaultColors { get; set; } = new() {
@@ -22,11 +22,9 @@ public class DataSeries2 : ComponentBase {
     [Parameter] public string? Color { get; set; }
     [Parameter] public List<decimal?> DataPoints { get; set; } = new();
 
-    protected override void OnInitialized() {
-        if (!Layer.DataSeries.Contains(this)) {
-            Layer.DataSeries.Add(this);
-        }
-    }
+    protected override void OnInitialized() => Layer.AddDataSeries(this);
+
+    public void Dispose() => Layer.RemoveDataSeries(this);
 
     protected override void BuildRenderTree(RenderTreeBuilder builder) => builder.AddContent(1, nameof(DataSeries2));
 

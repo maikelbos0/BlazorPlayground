@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace BlazorPlayground.Chart;
 
-public class PlotArea2 : ComponentBase {
+public class PlotArea2 : ComponentBase, IDisposable {
     public static decimal DefaultMin { get; set; } = 0M;
     public static decimal DefaultMax { get; set; } = 50M;
     public static decimal DefaultGridLineInterval { get; set; } = 5M;
@@ -15,10 +15,20 @@ public class PlotArea2 : ComponentBase {
     [Parameter] public decimal Max { get; set; } = DefaultMax;
     [Parameter] public decimal GridLineInterval { get; set; } = DefaultGridLineInterval;
     [Parameter] public decimal Multiplier { get; set; } = DefaultMultiplier;
-    public AutoScaleSettings2 AutoScaleSettings { get; set; } = new();
+    public AutoScaleSettings2 AutoScaleSettings { get; set; } = new();  // TODO private?
 
-    protected override void OnInitialized() {
-        Chart.PlotArea = this;
+    protected override void OnInitialized() => Chart.SetPlotArea(this);
+
+    public void Dispose() => Chart.ResetPlotArea();
+
+    internal void SetAutoScaleSettings(AutoScaleSettings2 autoScaleSettings) {
+        AutoScaleSettings = autoScaleSettings;
+        Chart.StateHasChanged();
+    }
+
+    internal void ResetAutoScaleSettings() {
+        AutoScaleSettings = new();
+        Chart.StateHasChanged();
     }
 
     protected override void BuildRenderTree(RenderTreeBuilder builder) {

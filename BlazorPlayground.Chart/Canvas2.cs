@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace BlazorPlayground.Chart;
 
-public class Canvas2 : ComponentBase {
+public class Canvas2 : ComponentBase, IDisposable {
     public static int DefaultWidth { get; set; } = 1200;
     public static int DefaultHeight { get; set; } = 600;
     public static int DefaultPadding { get; set; } = 25;
@@ -29,9 +29,9 @@ public class Canvas2 : ComponentBase {
     public int PlotAreaWidth => Width - Padding * 2 - YAxisLabelWidth;
     public int PlotAreaHeight => Height - Padding * 2 - XAxisLabelHeight;
 
-    protected override void OnInitialized() {
-        Chart.Canvas = this;
-    }
+    protected override void OnInitialized() => Chart.SetCanvas(this);
+
+    public void Dispose() => Chart.ResetCanvas();
 
     protected override void BuildRenderTree(RenderTreeBuilder builder) => builder.AddContent(1, nameof(Canvas2));
 
