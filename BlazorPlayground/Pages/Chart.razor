@@ -244,18 +244,18 @@
 
 <ChartRenderer Chart="xyChart" />
 
-<XYChart2 Labels="@(new List<string>() { "Foo", "Bar", "Baz" })">
+<XYChart2 Labels="@(new List<string>() { "Foo", "Bar", "Baz", "Quux", "Quuux" })">
     <Canvas2 Height="500" Width="1000" XAxisLabelHeight="50" YAxisLabelWidth="50" />
     <PlotArea2 Multiplier="1000">
-        <AutoScaleSettings2 IsEnabled="true" IncludeZero="true" />
+        <AutoScaleSettings2 IsEnabled="true" IncludeZero="true" ClearancePercentage="20" RequestedGridLineCount="8" />
     </PlotArea2>
-    <BarLayer2 IsStacked="true">
-        <DataSeries2 DataPoints="new List<decimal?> { 11000, 19000, 31500 }" Color="#f1c40f" />
-        <DataSeries2 DataPoints="new List<decimal?> { 21000, -22000, 15500 }" Color="#00cc66" />
+    <BarLayer2 IsStacked="true" ClearancePercentage="25" GapPercentage="10">
+        <DataSeries2 DataPoints="new List<decimal?> { 11000, 19000, 31500, null, 9500 }" Color="#f1c40f" />
+        <DataSeries2 DataPoints="new List<decimal?> { 21000, -22000, 15500, 12000, 3500 }" Color="#00cc66" />
     </BarLayer2>
-    <LineLayer2 DataLineWidth="3">
-        <DataSeries2 DataPoints="new List<decimal?> { 12500, 20500, 32500 }" Color="#2274a5" />
-        <DataSeries2 DataPoints="new List<decimal?> { 20500, -19000, 14000 }" Color="#d90368" />
+    <LineLayer2 DataLineWidth="3" DataMarkerType="DefaultDataMarkerTypes.Square" LineGapMode="LineGapMode.Skip">
+        <DataSeries2 DataPoints="new List<decimal?> { 12500, 20500, 32500, -5500, -17000 }" Color="#2274a5" />
+        <DataSeries2 DataPoints="new List<decimal?> { 20500, -19000, null, -12500, -11000 }" Color="#d90368" />
     </LineLayer2>
 </XYChart2>
 
