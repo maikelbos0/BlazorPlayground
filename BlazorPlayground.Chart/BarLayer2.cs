@@ -1,4 +1,5 @@
 ﻿using BlazorPlayground.Chart.Shapes;
+using Microsoft.AspNetCore.Components;
 
 namespace BlazorPlayground.Chart;
 
@@ -6,8 +7,8 @@ public class BarLayer2 : LayerBase2 {
     public static decimal DefaultClearancePercentage { get; set; } = 10M;
     public static decimal DefaultGapPercentage { get; set; } = 5M;
 
-    public decimal ClearancePercentage { get; set; } = DefaultClearancePercentage;
-    public decimal GapPercentage { get; set; } = DefaultGapPercentage;
+    [Parameter] public decimal ClearancePercentage { get; set; } = DefaultClearancePercentage;
+    [Parameter] public decimal GapPercentage { get; set; } = DefaultGapPercentage;
     public override StackMode StackMode => StackMode.Split;
 
     public override IEnumerable<ShapeBase> GetDataSeriesShapes() {

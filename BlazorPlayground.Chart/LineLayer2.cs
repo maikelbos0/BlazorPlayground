@@ -1,4 +1,5 @@
 ﻿using BlazorPlayground.Chart.Shapes;
+using Microsoft.AspNetCore.Components;
 
 namespace BlazorPlayground.Chart;
 
@@ -10,12 +11,12 @@ public class LineLayer2 : LayerBase2 {
     public static decimal DefaultDataLineWidth { get; set; } = 2M;
     public static LineGapMode DefaultLineGapMode { get; set; } = LineGapMode.Skip;
 
-    public bool ShowDataMarkers { get; set; } = DefaultShowDataMarkers;
-    public decimal DataMarkerSize { get; set; } = DefaultDataMarkerSize;
-    public DataMarkerDelegate DataMarkerType { get; set; } = DefaultDataMarkerType;
-    public bool ShowDataLines { get; set; } = DefaultShowDataLines;
-    public decimal DataLineWidth { get; set; } = DefaultDataLineWidth;
-    public LineGapMode LineGapMode { get; set; } = DefaultLineGapMode;
+    [Parameter] public bool ShowDataMarkers { get; set; } = DefaultShowDataMarkers;
+    [Parameter] public decimal DataMarkerSize { get; set; } = DefaultDataMarkerSize;
+    [Parameter] public DataMarkerDelegate DataMarkerType { get; set; } = DefaultDataMarkerType;
+    [Parameter] public bool ShowDataLines { get; set; } = DefaultShowDataLines;
+    [Parameter] public decimal DataLineWidth { get; set; } = DefaultDataLineWidth;
+    [Parameter] public LineGapMode LineGapMode { get; set; } = DefaultLineGapMode;
     public override StackMode StackMode => StackMode.Single;
 
     // TODO fluent lines?

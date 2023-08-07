@@ -5,10 +5,10 @@ namespace BlazorPlayground.Chart;
 
 public class XYChart2 : ComponentBase {
     [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public List<string> Labels { get; set; } = new();
     public Canvas2 Canvas { get; set; } = new();
     public PlotArea2 PlotArea { get; set; } = new();
-    public List<LayerBase2> Layers { get; set; } = new();
-    public List<string> Labels { get; set; } = new();
+    public List<LayerBase2> Layers { get; set; } = new();    
     public decimal DataPointWidth => ((decimal)Canvas.PlotAreaWidth) / Labels.Count;
 
     protected override void BuildRenderTree(RenderTreeBuilder builder) {

@@ -11,11 +11,11 @@ public class PlotArea2 : ComponentBase {
 
     [CascadingParameter] internal XYChart2 Chart { get; set; } = null!;
     [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public decimal Min { get; set; } = DefaultMin;
+    [Parameter] public decimal Max { get; set; } = DefaultMax;
+    [Parameter] public decimal GridLineInterval { get; set; } = DefaultGridLineInterval;
+    [Parameter] public decimal Multiplier { get; set; } = DefaultMultiplier;
     public AutoScaleSettings2 AutoScaleSettings { get; set; } = new();
-    public decimal Min { get; set; } = DefaultMin;
-    public decimal Max { get; set; } = DefaultMax;
-    public decimal GridLineInterval { get; set; } = DefaultGridLineInterval;
-    public decimal Multiplier { get; set; } = DefaultMultiplier;
 
     protected override void OnInitialized() {
         Chart.PlotArea = this;

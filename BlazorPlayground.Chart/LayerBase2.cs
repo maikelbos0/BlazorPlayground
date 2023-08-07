@@ -9,7 +9,7 @@ public abstract class LayerBase2 : ComponentBase {
     
     [CascadingParameter] internal XYChart2 Chart { get; set; } = null!;
     [Parameter] public RenderFragment? ChildContent { get; set; }
-    public bool IsStacked { get; set; } = DefaultIsStacked;
+    [Parameter] public bool IsStacked { get; set; } = DefaultIsStacked;
     public List<DataSeries2> DataSeries { get; set; } = new();
     public abstract StackMode StackMode { get; }
 
