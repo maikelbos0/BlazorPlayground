@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Rendering;
 
 namespace BlazorPlayground.Chart;
 
@@ -25,8 +24,6 @@ public class DataSeries2 : ComponentBase, IDisposable {
     protected override void OnInitialized() => Layer.AddDataSeries(this);
 
     public void Dispose() => Layer.RemoveDataSeries(this);
-
-    protected override void BuildRenderTree(RenderTreeBuilder builder) => builder.AddContent(1, nameof(DataSeries2));
 
     public string GetColor() {
         if (Color != null) {

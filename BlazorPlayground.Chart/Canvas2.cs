@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Rendering;
 
 namespace BlazorPlayground.Chart;
 
@@ -32,8 +31,6 @@ public class Canvas2 : ComponentBase, IDisposable {
     protected override void OnInitialized() => Chart.SetCanvas(this);
 
     public void Dispose() => Chart.ResetCanvas();
-
-    protected override void BuildRenderTree(RenderTreeBuilder builder) => builder.AddContent(1, nameof(Canvas2));
 
     public Shapes.PlotAreaShape GetPlotAreaShape() => new(Width, Height, PlotAreaX, PlotAreaY, PlotAreaWidth, PlotAreaHeight);
 }

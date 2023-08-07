@@ -31,7 +31,6 @@ public abstract class LayerBase2 : ComponentBase, IDisposable {
     }
 
     protected override void BuildRenderTree(RenderTreeBuilder builder) {
-        builder.AddContent(1, GetType().Name);
         builder.OpenComponent<CascadingValue<LayerBase2>>(1);
         builder.AddAttribute(2, "Value", this);
         builder.AddAttribute(3, "ChildContent", ChildContent);

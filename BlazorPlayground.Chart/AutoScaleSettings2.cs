@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Rendering;
 
 namespace BlazorPlayground.Chart;
 
@@ -19,6 +18,4 @@ public class AutoScaleSettings2 : ComponentBase, IDisposable {
     protected override void OnInitialized() => PlotArea.SetAutoScaleSettings(this);
 
     public void Dispose() => PlotArea.ResetAutoScaleSettings();
-
-    protected override void BuildRenderTree(RenderTreeBuilder builder) => builder.AddContent(1, nameof(AutoScaleSettings2));
 }

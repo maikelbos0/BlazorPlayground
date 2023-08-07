@@ -32,7 +32,6 @@ public class PlotArea2 : ComponentBase, IDisposable {
     }
 
     protected override void BuildRenderTree(RenderTreeBuilder builder) {
-        builder.AddContent(1, nameof(PlotArea2));
         builder.OpenComponent<CascadingValue<PlotArea2>>(1);
         builder.AddAttribute(2, "Value", this);
         builder.AddAttribute(3, "ChildContent", ChildContent);
