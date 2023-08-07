@@ -17,6 +17,23 @@ public class XYChart2 : ComponentBase {
         builder.AddAttribute(2, "Value", this);
         builder.AddAttribute(3, "ChildContent", ChildContent);
         builder.CloseComponent();
+
+        builder.OpenElement(1, "svg");
+        builder.AddAttribute(2, "class", "chart-main");
+        builder.AddAttribute(3, "viewbox", $"0 0 {Canvas.Width} {Canvas.Height}");
+        builder.AddAttribute(4, "width", Canvas.Width);
+        builder.AddAttribute(5, "height", Canvas.Height);
+
+        foreach (var shape in GetShapes()) {
+            builder.OpenElement(6, shape.ElementName);
+            builder.SetKey(shape.Key);
+            builder.AddAttribute(7, "class", shape.CssClass);
+            builder.AddMultipleAttributes(8, shape.GetAttributes());
+            builder.AddContent(9, shape.GetContent());
+            builder.CloseElement();
+        }
+
+        builder.CloseElement();
     }
 
     public IEnumerable<ShapeBase> GetShapes() {
