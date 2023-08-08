@@ -16,6 +16,40 @@ public class LayerBaseTests {
         public override IEnumerable<ShapeBase> GetDataSeriesShapes() => throw new NotImplementedException();
     }
 
+    [Fact]
+    public void AddDataSeries() {
+        var stateHasChangedInvoked = false;
+        var dataSeries = new DataSeries();
+        var subject = new TestLayer(StackMode.Single) {
+            Chart = new() {
+                StateHasChangedHandler = () => stateHasChangedInvoked = true
+            }
+        };
+
+        subject.AddDataSeries(dataSeries);
+
+        Assert.Same(dataSeries, Assert.Single(subject.DataSeries));
+        Assert.True(stateHasChangedInvoked);
+    }
+
+    [Fact]
+    public void RemoveDataSeries() {
+        var stateHasChangedInvoked = false;
+        var dataSeries = new DataSeries();
+        var subject = new TestLayer(StackMode.Single) {
+            Chart = new() {
+                StateHasChangedHandler = () => stateHasChangedInvoked = true
+            },
+            DataSeries = {
+                dataSeries
+            }
+        };
+
+        subject.RemoveDataSeries(dataSeries);
+
+        Assert.Empty(subject.DataSeries);
+        Assert.True(stateHasChangedInvoked);
+    }
 
     [Theory]
     [MemberData(nameof(GetScaleDataPoints_Data))]

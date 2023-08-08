@@ -4,6 +4,39 @@ using Xunit;
 namespace BlazorPlayground.Chart.Tests;
 
 public class PlotAreaTests {
+    [Fact]
+    public void SetAutoScaleSettings() {
+        var stateHasChangedInvoked = false;
+        var autoScaleSettings = new AutoScaleSettings();
+        var subject = new PlotArea() {
+            Chart = new() {
+                StateHasChangedHandler = () => stateHasChangedInvoked = true
+            }
+        };
+
+        subject.SetAutoScaleSettings(autoScaleSettings);
+
+        Assert.Same(autoScaleSettings, subject.AutoScaleSettings);
+        Assert.True(stateHasChangedInvoked);
+    }
+
+    [Fact]
+    public void ResetAutoScaleSettings() {
+        var stateHasChangedInvoked = false;
+        var autoScaleSettings = new AutoScaleSettings();
+        var subject = new PlotArea() {
+            Chart = new() {
+                StateHasChangedHandler = () => stateHasChangedInvoked = true
+            },
+            AutoScaleSettings = autoScaleSettings
+        };
+
+        subject.ResetAutoScaleSettings();
+
+        Assert.NotSame(autoScaleSettings, subject.AutoScaleSettings);
+        Assert.True(stateHasChangedInvoked);
+    }
+
     [Theory]
     [MemberData(nameof(AutoScale_Data))]
     public void AutoScale(decimal[] dataPoints, int requestedGridLineCount, decimal expectedGridLineInterval, decimal expectedMin, decimal expectedMax) {
