@@ -1,9 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using BlazorPlayground.Chart.Shapes;
+using System;
+using System.Collections.Generic;
 using Xunit;
 
 namespace BlazorPlayground.Chart.Tests;
 
 public class DataSeriesTests {
+    private class TestLayer : LayerBase {
+        public override StackMode StackMode => throw new NotImplementedException();
+
+        public override IEnumerable<ShapeBase> GetDataSeriesShapes() => throw new NotImplementedException();
+    }
+
     [Fact]
     public void GetColor() {
         var subject = new DataSeries() {

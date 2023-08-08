@@ -74,7 +74,7 @@ public class XYChart : ComponentBase {
     internal new void StateHasChanged() => base.StateHasChanged();
 
     public IEnumerable<ShapeBase> GetShapes() {
-        PlotArea.AutoScale(GetScaleDataPoints());
+        PlotArea.AutoScale(Layers.SelectMany(layer => layer.GetScaleDataPoints()));
 
         foreach (var shape in GetGridLineShapes()) {
             yield return shape;
@@ -97,31 +97,6 @@ public class XYChart : ComponentBase {
         foreach (var shape in GetXAxisLabelShapes()) {
             yield return shape;
         }
-    }
-
-    public IEnumerable<decimal> GetScaleDataPoints() {
-        var dataPoints = new List<decimal>();
-
-        foreach (var layer in Layers) {
-            // TODO add take label count here
-            // TODO make dataseries private and move logic to layer
-            dataPoints.AddRange(layer.DataSeries.SelectMany(dataSeries => dataSeries.DataPoints.Where(dataPoint => dataPoint != null).Select(dataPoint => dataPoint!.Value)));
-
-            if (layer.IsStacked) {
-                for (var i = 0; i < Labels.Count; i++) {
-                    // TODO take stack mode into account
-                    if (layer.DataSeries.Any(dataSeries => dataSeries.DataPoints.Count > i && dataSeries.DataPoints[i] < 0)) {
-                        dataPoints.Add(layer.DataSeries.Where(dataSeries => dataSeries.DataPoints.Count > i && dataSeries.DataPoints[i] < 0).Sum(dataSeries => dataSeries.DataPoints[i]!.Value));
-                    }
-
-                    if (layer.DataSeries.Any(dataSeries => dataSeries.DataPoints.Count > i && dataSeries.DataPoints[i] > 0)) {
-                        dataPoints.Add(layer.DataSeries.Where(dataSeries => dataSeries.DataPoints.Count > i && dataSeries.DataPoints[i] > 0).Sum(dataSeries => dataSeries.DataPoints[i]!.Value));
-                    }
-                }
-            }
-        }
-
-        return dataPoints;
     }
 
     public IEnumerable<GridLineShape> GetGridLineShapes()

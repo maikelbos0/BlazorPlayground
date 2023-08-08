@@ -23,8 +23,6 @@ public class XYChartTests {
         Assert.Equal(870M / 3M, subject.DataPointWidth);
     }
 
-
-
     [Fact]
     public void GetShapes_AutoScale() {
         var subject = new XYChart() {
@@ -174,71 +172,7 @@ public class XYChartTests {
 
         Assert.Contains(subject.GetShapes(), shape => shape is DataBarShape);
     }
-    
-    [Fact]
-    public void GetScaleDataPoints_Unstacked() {
-        var subject = new XYChart() {
-            Labels = { "Foo", "Bar", "Baz", "Quux" }
-        };
-
-        subject.Layers.Add(new BarLayer() {
-            Chart = subject,
-            IsStacked = false,
-            DataSeries = {
-                new() {
-                    Color = "red",
-                    DataPoints = { -5M, -3M, null, null }
-                },
-                new() {
-                    Color = "green",
-                    DataPoints = { -7M, -3M, null, null }
-                },
-                new() {
-                    Color = "blue",
-                    DataPoints = { 7M, null, 3M }
-                },
-                new() {
-                    Color = "pink",
-                    DataPoints = { 5M, null, 3M }
-                }
-            }
-        });
-
-        Assert.Equal(new[] { -5M, -3M, -7M, -3M, 7M, 3M, 5M, 3M }, subject.GetScaleDataPoints());
-    }
-
-    [Fact]
-    public void GetScaleDataPoints_Stacked() {
-        var subject = new XYChart() {
-            Labels = { "Foo", "Bar", "Baz", "Quux" }
-        };
-
-        subject.Layers.Add(new BarLayer() {
-            Chart = subject,
-            IsStacked = true,
-            DataSeries = {
-                new() {
-                    Color = "red",
-                    DataPoints = { -5M, -3M, null, null }
-                },
-                new() {
-                    Color = "green",
-                    DataPoints = { -7M, -3M, null, null }
-                },
-                new() {
-                    Color = "blue",
-                    DataPoints = { 7M, null, 3M }
-                },
-                new() {
-                    Color = "pink",
-                    DataPoints = { 5M, null, 3M }
-                }
-            }
-        });
-
-        Assert.Equal(new[] { -5M, -3M, -7M, -3M, 7M, 3M, 5M, 3M, -12M, 12M, -6M, 6M }, subject.GetScaleDataPoints());
-    }
-    
+        
     [Fact]
     public void GetGridLineShapes() {
         var subject = new XYChart() {

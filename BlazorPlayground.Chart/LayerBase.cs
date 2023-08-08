@@ -55,6 +55,15 @@ public abstract class LayerBase : ComponentBase, IDisposable {
             .ToList();
     }
 
+    public IEnumerable<decimal> GetScaleDataPoints() {
+        var dataPointTransformer = GetDataPointTransformer();
+
+        return DataSeries.SelectMany(dataSeries => dataSeries.DataPoints
+            .Select((dataPoint, index) => (DataPoint: dataPoint, Index: index))
+            .Where(value => value.DataPoint != null && value.Index < Chart.Labels.Count)
+            .Select(value => dataPointTransformer(value.DataPoint!.Value, value.Index)));
+    }
+
     private Func<decimal, int, decimal> GetDataPointTransformer() {
         if (IsStacked) {
             switch (StackMode) {
