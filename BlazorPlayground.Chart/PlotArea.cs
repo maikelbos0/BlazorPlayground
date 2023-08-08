@@ -3,25 +3,25 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace BlazorPlayground.Chart;
 
-public class PlotArea2 : ComponentBase, IDisposable {
+public class PlotArea : ComponentBase, IDisposable {
     public static decimal DefaultMin { get; set; } = 0M;
     public static decimal DefaultMax { get; set; } = 50M;
     public static decimal DefaultGridLineInterval { get; set; } = 5M;
     public static decimal DefaultMultiplier { get; set; } = 1M;
 
-    [CascadingParameter] internal XYChart2 Chart { get; set; } = null!;
+    [CascadingParameter] internal XYChart Chart { get; set; } = null!;
     [Parameter] public RenderFragment? ChildContent { get; set; }
     [Parameter] public decimal Min { get; set; } = DefaultMin;
     [Parameter] public decimal Max { get; set; } = DefaultMax;
     [Parameter] public decimal GridLineInterval { get; set; } = DefaultGridLineInterval;
     [Parameter] public decimal Multiplier { get; set; } = DefaultMultiplier;
-    public AutoScaleSettings2 AutoScaleSettings { get; set; } = new();  // TODO private?
+    public AutoScaleSettings AutoScaleSettings { get; set; } = new();  // TODO private?
 
     protected override void OnInitialized() => Chart.SetPlotArea(this);
 
     public void Dispose() => Chart.ResetPlotArea();
 
-    internal void SetAutoScaleSettings(AutoScaleSettings2 autoScaleSettings) {
+    internal void SetAutoScaleSettings(AutoScaleSettings autoScaleSettings) {
         AutoScaleSettings = autoScaleSettings;
         Chart.StateHasChanged();
     }
@@ -32,7 +32,7 @@ public class PlotArea2 : ComponentBase, IDisposable {
     }
 
     protected override void BuildRenderTree(RenderTreeBuilder builder) {
-        builder.OpenComponent<CascadingValue<PlotArea2>>(1);
+        builder.OpenComponent<CascadingValue<PlotArea>>(1);
         builder.AddAttribute(2, "Value", this);
         builder.AddAttribute(3, "ChildContent", ChildContent);
         builder.CloseComponent();

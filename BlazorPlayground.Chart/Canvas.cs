@@ -2,7 +2,7 @@
 
 namespace BlazorPlayground.Chart;
 
-public class Canvas2 : ComponentBase, IDisposable {
+public class Canvas : ComponentBase, IDisposable {
     public static int DefaultWidth { get; set; } = 1200;
     public static int DefaultHeight { get; set; } = 600;
     public static int DefaultPadding { get; set; } = 25;
@@ -13,7 +13,7 @@ public class Canvas2 : ComponentBase, IDisposable {
     public static string DefaultYAxisLabelFormat { get; set; } = "#,##0.######";
     public static string DefaultYAxisMultiplierFormat { get; set; } = "x #,##0.######";
 
-    [CascadingParameter] internal XYChart2 Chart { get; set; } = null!;
+    [CascadingParameter] internal XYChart Chart { get; set; } = null!;
     [Parameter] public int Width { get; set; } = DefaultWidth;
     [Parameter] public int Height { get; set; } = DefaultHeight;
     [Parameter] public int Padding { get; set; } = DefaultPadding;

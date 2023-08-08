@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace BlazorPlayground.Chart;
 
-public class BarLayer2 : LayerBase2 {
+public class BarLayer : LayerBase {
     public static decimal DefaultClearancePercentage { get; set; } = 10M;
     public static decimal DefaultGapPercentage { get; set; } = 5M;
 

@@ -4,10 +4,10 @@ using Xunit;
 
 namespace BlazorPlayground.Chart.Tests;
 
-public class XYChart2Tests {
+public class XYChartTests {
     [Fact]
     public void DataPointWidth() {
-        var subject = new XYChart2() {
+        var subject = new XYChart() {
             Canvas = {
                 Width = 1000,
                 Height = 500,
@@ -27,7 +27,7 @@ public class XYChart2Tests {
 
     [Fact]
     public void GetShapes_AutoScale() {
-        var subject = new XYChart2() {
+        var subject = new XYChart() {
             PlotArea = {
                 Min = -4M,
                 Max = 10M,
@@ -45,7 +45,7 @@ public class XYChart2Tests {
             Labels = { "Foo", "Bar", "Baz" },
         };
 
-        subject.Layers.Add(new BarLayer2() {
+        subject.Layers.Add(new BarLayer() {
             Chart = subject,
             IsStacked = false,
             DataSeries = {
@@ -69,7 +69,7 @@ public class XYChart2Tests {
 
     [Fact]
     public void GetShapes_No_AutoScale() {
-        var subject = new XYChart2() {
+        var subject = new XYChart() {
             PlotArea = {
                 Min = -4M,
                 Max = 10M,
@@ -86,7 +86,7 @@ public class XYChart2Tests {
             Labels = { "Foo", "Bar", "Baz" }
         };
 
-        subject.Layers.Add(new BarLayer2() {
+        subject.Layers.Add(new BarLayer() {
             Chart = subject,
             IsStacked = false,
             DataSeries = {
@@ -110,28 +110,28 @@ public class XYChart2Tests {
     
     [Fact]
     public void GetShapes_PlotAreaShape() {
-        var subject = new XYChart2();
+        var subject = new XYChart();
 
         Assert.Single(subject.GetShapes(), shape => shape is PlotAreaShape);
     }
 
     [Fact]
     public void GetShapes_GridLineShapes() {
-        var subject = new XYChart2();
+        var subject = new XYChart();
 
         Assert.Contains(subject.GetShapes(), shape => shape is GridLineShape);
     }
 
     [Fact]
     public void GetShapes_YAxisLabelShapes() {
-        var subject = new XYChart2();
+        var subject = new XYChart();
 
         Assert.Contains(subject.GetShapes(), shape => shape is YAxisLabelShape);
     }
 
     [Fact]
     public void GetShapes_YAxisMultiplierShape() {
-        var subject = new XYChart2() {
+        var subject = new XYChart() {
             PlotArea = {
                 Multiplier = 1000
             }
@@ -142,14 +142,14 @@ public class XYChart2Tests {
 
     [Fact]
     public void GetShapes_YAxisMultiplierShape_Without_Multiplier() {
-        var subject = new XYChart2();
+        var subject = new XYChart();
 
         Assert.DoesNotContain(subject.GetShapes(), shape => shape == null);
     }
 
     [Fact]
     public void GetShapes_XAxisLabelShapes() {
-        var subject = new XYChart2() {
+        var subject = new XYChart() {
             Labels = { "Foo", "Bar" }
         };
 
@@ -158,11 +158,11 @@ public class XYChart2Tests {
     
     [Fact]
     public void GetShapes_DataSeriesShapes() {
-        var subject = new XYChart2() {
+        var subject = new XYChart() {
             Labels = { "Foo", "Bar" }
         };
 
-        subject.Layers.Add(new BarLayer2() {
+        subject.Layers.Add(new BarLayer() {
             Chart = subject,
             DataSeries = {
                 new() {
@@ -177,11 +177,11 @@ public class XYChart2Tests {
     
     [Fact]
     public void GetScaleDataPoints_Unstacked() {
-        var subject = new XYChart2() {
+        var subject = new XYChart() {
             Labels = { "Foo", "Bar", "Baz", "Quux" }
         };
 
-        subject.Layers.Add(new BarLayer2() {
+        subject.Layers.Add(new BarLayer() {
             Chart = subject,
             IsStacked = false,
             DataSeries = {
@@ -209,11 +209,11 @@ public class XYChart2Tests {
 
     [Fact]
     public void GetScaleDataPoints_Stacked() {
-        var subject = new XYChart2() {
+        var subject = new XYChart() {
             Labels = { "Foo", "Bar", "Baz", "Quux" }
         };
 
-        subject.Layers.Add(new BarLayer2() {
+        subject.Layers.Add(new BarLayer() {
             Chart = subject,
             IsStacked = true,
             DataSeries = {
@@ -241,7 +241,7 @@ public class XYChart2Tests {
     
     [Fact]
     public void GetGridLineShapes() {
-        var subject = new XYChart2() {
+        var subject = new XYChart() {
             Canvas = {
                 Width = 1000,
                 Height = 500,
@@ -276,7 +276,7 @@ public class XYChart2Tests {
     
     [Fact]
     public void GetYAxisLabelShapes() {
-        var subject = new XYChart2() {
+        var subject = new XYChart() {
             Canvas = {
                 Width = 1000,
                 Height = 500,
@@ -312,7 +312,7 @@ public class XYChart2Tests {
 
     [Fact]
     public void GetYAxisMultiplierShape() {
-        var subject = new XYChart2() {
+        var subject = new XYChart() {
             Canvas = {
                 Width = 1000,
                 Height = 500,
@@ -341,7 +341,7 @@ public class XYChart2Tests {
 
     [Fact]
     public void GetYAxisMultiplierShape_Without_Multiplier() {
-        var subject = new XYChart2() {
+        var subject = new XYChart() {
             Canvas = {
                 Width = 1000,
                 Height = 500,
@@ -366,7 +366,7 @@ public class XYChart2Tests {
 
     [Fact]
     public void GetXAxisLabelShapes() {
-        var subject = new XYChart2() {
+        var subject = new XYChart() {
             Canvas = {
                 Width = 1000,
                 Height = 500,
@@ -403,7 +403,7 @@ public class XYChart2Tests {
     [Fact]
     public void GetDataSeriesShapes() {
 
-        var subject = new XYChart2() {
+        var subject = new XYChart() {
             Canvas = {
                 Width = 1000,
                 Height = 500,
@@ -421,7 +421,7 @@ public class XYChart2Tests {
             Labels = { "Foo", "Bar", "Baz" }
         };
 
-        subject.Layers.Add(new BarLayer2() {
+        subject.Layers.Add(new BarLayer() {
             Chart = subject,
             DataSeries = {
                 new() {
@@ -431,7 +431,7 @@ public class XYChart2Tests {
             }
         });
 
-        subject.Layers.Add(new BarLayer2() {
+        subject.Layers.Add(new BarLayer() {
             Chart = subject,
             DataSeries = {
                 new() {
@@ -451,7 +451,7 @@ public class XYChart2Tests {
     [Theory]
     [MemberData(nameof(MapDataPointToCanvas_Data))]
     public void MapDataPointToCanvas(decimal dataPoint, decimal expectedValue) {
-        var subject = new XYChart2() {
+        var subject = new XYChart() {
             Canvas = {
                 Width = 1000,
                 Height = 500,
@@ -486,7 +486,7 @@ public class XYChart2Tests {
     [Theory]
     [MemberData(nameof(MapDataValueToPlotArea_Data))]
     public void MapDataValueToPlotArea(decimal dataPoint, decimal expectedValue) {
-        var subject = new XYChart2() {
+        var subject = new XYChart() {
             Canvas = {
                 Width = 1000,
                 Height = 500,
@@ -520,7 +520,7 @@ public class XYChart2Tests {
     [Theory]
     [MemberData(nameof(MapDataIndexToCanvas_Data))]
     public void MapDataIndexToCanvas(int index, decimal expectedValue) {
-        var subject = new XYChart2() {
+        var subject = new XYChart() {
             Canvas = {
                 Width = 1000,
                 Height = 500,

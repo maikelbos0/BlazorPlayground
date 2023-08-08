@@ -5,16 +5,16 @@ using System.Linq;
 
 namespace BlazorPlayground.Chart;
 
-public class XYChart2 : ComponentBase {
+public class XYChart : ComponentBase {
     [Parameter] public RenderFragment? ChildContent { get; set; }
     [Parameter] public List<string> Labels { get; set; } = new();
-    internal Canvas2 Canvas { get; set; } = new(); // TODO private?
-    internal PlotArea2 PlotArea { get; set; } = new(); // TODO private?
-    public List<LayerBase2> Layers { get; set; } = new(); // TODO private?
+    internal Canvas Canvas { get; set; } = new(); // TODO private?
+    internal PlotArea PlotArea { get; set; } = new(); // TODO private?
+    public List<LayerBase> Layers { get; set; } = new(); // TODO private?
     public decimal DataPointWidth => ((decimal)Canvas.PlotAreaWidth) / Labels.Count;
 
     protected override void BuildRenderTree(RenderTreeBuilder builder) {
-        builder.OpenComponent<CascadingValue<XYChart2>>(1);
+        builder.OpenComponent<CascadingValue<XYChart>>(1);
         builder.AddAttribute(2, "Value", this);
         builder.AddAttribute(3, "ChildContent", ChildContent);
         builder.CloseComponent();
@@ -37,7 +37,7 @@ public class XYChart2 : ComponentBase {
         builder.CloseElement();
     }
 
-    internal void SetCanvas(Canvas2 canvas) {
+    internal void SetCanvas(Canvas canvas) {
         Canvas = canvas;
         StateHasChanged();
     }
@@ -47,7 +47,7 @@ public class XYChart2 : ComponentBase {
         StateHasChanged();
     }
 
-    internal void SetPlotArea(PlotArea2 plotArea) {
+    internal void SetPlotArea(PlotArea plotArea) {
         PlotArea = plotArea;
         StateHasChanged();
     }
@@ -57,7 +57,7 @@ public class XYChart2 : ComponentBase {
         StateHasChanged();
     }
 
-    internal void AddLayer(LayerBase2 layer) {
+    internal void AddLayer(LayerBase layer) {
         // TODO the ordering might not make sense when adding/removing layers
         if (!Layers.Contains(layer)) {
             Layers.Add(layer);
@@ -65,7 +65,7 @@ public class XYChart2 : ComponentBase {
         StateHasChanged();
     }
 
-    internal void RemoveLayer(LayerBase2 layer) {
+    internal void RemoveLayer(LayerBase layer) {
         Layers.Remove(layer);
         StateHasChanged();
     }

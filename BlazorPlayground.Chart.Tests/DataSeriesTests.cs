@@ -3,10 +3,10 @@ using Xunit;
 
 namespace BlazorPlayground.Chart.Tests;
 
-public class DataSeries2Tests {
+public class DataSeriesTests {
     [Fact]
     public void GetColor() {
-        var subject = new DataSeries2() {
+        var subject = new DataSeries() {
             Color = "magenta"
         };
 
@@ -19,13 +19,13 @@ public class DataSeries2Tests {
     [InlineData(2, "green")]
     [InlineData(3, "red")]
     public void GetColor_Default(int index, string expectedColor) {
-        DataSeries2.DefaultColors = new List<string>() { "red", "blue", "green" };
+        DataSeries.DefaultColors = new List<string>() { "red", "blue", "green" };
 
         var layer = new TestLayer();
-        layer.DataSeries.Add(new DataSeries2() { Layer = layer });
-        layer.DataSeries.Add(new DataSeries2() { Layer = layer });
-        layer.DataSeries.Add(new DataSeries2() { Layer = layer });
-        layer.DataSeries.Add(new DataSeries2() { Layer = layer });
+        layer.DataSeries.Add(new DataSeries() { Layer = layer });
+        layer.DataSeries.Add(new DataSeries() { Layer = layer });
+        layer.DataSeries.Add(new DataSeries() { Layer = layer });
+        layer.DataSeries.Add(new DataSeries() { Layer = layer });
 
         var subject = layer.DataSeries[index];
 
@@ -34,13 +34,13 @@ public class DataSeries2Tests {
 
     [Fact]
     public void GetColor_Fallback() {
-        DataSeries2.DefaultColors = new();
+        DataSeries.DefaultColors = new();
 
         var layer = new TestLayer();
-        var subject = new DataSeries2() { Layer = layer };
+        var subject = new DataSeries() { Layer = layer };
 
         layer.DataSeries.Add(subject);
 
-        Assert.Equal(DataSeries2.FallbackColor, subject.GetColor());
+        Assert.Equal(DataSeries.FallbackColor, subject.GetColor());
     }
 }

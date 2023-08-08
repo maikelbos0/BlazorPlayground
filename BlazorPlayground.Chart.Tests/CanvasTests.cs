@@ -2,10 +2,10 @@
 
 namespace BlazorPlayground.Chart.Tests;
 
-public class Canvas2Tests {
+public class CanvasTests {
     [Fact]
     public void PlotAreaX() {
-        var subject = new Canvas2() {
+        var subject = new Canvas() {
             Width = 1000,
             Height = 500,
             Padding = 25,
@@ -20,7 +20,7 @@ public class Canvas2Tests {
 
     [Fact]
     public void PlotAreaY() {
-        var subject = new Canvas2() {
+        var subject = new Canvas() {
             Width = 1000,
             Height = 500,
             Padding = 25,
@@ -35,7 +35,7 @@ public class Canvas2Tests {
 
     [Fact]
     public void PlotAreaWidth() {
-        var subject = new Canvas2() {
+        var subject = new Canvas() {
             Width = 1000,
             Height = 500,
             Padding = 25,
@@ -50,7 +50,7 @@ public class Canvas2Tests {
 
     [Fact]
     public void PlotAreaHeight() {
-        var subject = new Canvas2() {
+        var subject = new Canvas() {
             Width = 1000,
             Height = 500,
             Padding = 25,
@@ -65,7 +65,7 @@ public class Canvas2Tests {
 
     [Fact]
     public void GetPlotAreaShape() {
-        var subject = new Canvas2() {
+        var subject = new Canvas() {
             Width = 1000,
             Height = 500,
             Padding = 25,

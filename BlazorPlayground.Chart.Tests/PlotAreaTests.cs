@@ -3,11 +3,11 @@ using Xunit;
 
 namespace BlazorPlayground.Chart.Tests;
 
-public class PlotArea2Tests {
+public class PlotAreaTests {
     [Theory]
     [MemberData(nameof(AutoScale_Data))]
     public void AutoScale(decimal[] dataPoints, int requestedGridLineCount, decimal expectedGridLineInterval, decimal expectedMin, decimal expectedMax) {
-        var subject = new PlotArea2() {
+        var subject = new PlotArea() {
             AutoScaleSettings = {
                 IsEnabled = true,
                 IncludeZero = false,
@@ -40,7 +40,7 @@ public class PlotArea2Tests {
     [Theory]
     [MemberData(nameof(AutoScale_No_DataPoints_Data))]
     public void AutoScale_No_DataPoints(int requestedGridLineCount, decimal expectedGridLineInterval, decimal expectedMin, decimal expectedMax) {
-        var subject = new PlotArea2() {
+        var subject = new PlotArea() {
             AutoScaleSettings = {
                 IsEnabled = true,
                 IncludeZero = false,
@@ -71,7 +71,7 @@ public class PlotArea2Tests {
     [Theory]
     [MemberData(nameof(AutoScale_IncludeZero_Data))]
     public void AutoScale_IncludeZero(decimal[] dataPoints, decimal expectedGridLineInterval, decimal expectedMin, decimal expectedMax) {
-        var subject = new PlotArea2() {
+        var subject = new PlotArea() {
             AutoScaleSettings = {
                 IsEnabled = true,
                 IncludeZero = true,
@@ -96,7 +96,7 @@ public class PlotArea2Tests {
     [Theory]
     [MemberData(nameof(AutoScale_ClearancePercentage_Data))]
     public void AutoScale_ClearancePercentage(decimal[] dataPoints, decimal expectedGridLineInterval, decimal expectedMin, decimal expectedMax) {
-        var subject = new PlotArea2() {
+        var subject = new PlotArea() {
             AutoScaleSettings = {
                 IsEnabled = true,
                 IncludeZero = false,
@@ -120,7 +120,7 @@ public class PlotArea2Tests {
 
     [Fact]
     public void AutoScale_Disabled() {
-        var subject = new PlotArea2() {
+        var subject = new PlotArea() {
             AutoScaleSettings = {
                 IsEnabled = false, 
                 IncludeZero = false, 
@@ -131,15 +131,15 @@ public class PlotArea2Tests {
 
         subject.AutoScale(new[] { 0.006M, 0.044M });
 
-        Assert.Equal(PlotArea2.DefaultMin, subject.Min);
-        Assert.Equal(PlotArea2.DefaultMax, subject.Max);
-        Assert.Equal(PlotArea2.DefaultGridLineInterval, subject.GridLineInterval);
+        Assert.Equal(PlotArea.DefaultMin, subject.Min);
+        Assert.Equal(PlotArea.DefaultMax, subject.Max);
+        Assert.Equal(PlotArea.DefaultGridLineInterval, subject.GridLineInterval);
     }
 
     [Theory]
     [MemberData(nameof(GetGridLineDataPoints_Data))]
     public void GetGridLineDataPoints(decimal min, decimal max, decimal gridLineInterval, params decimal[] expectedDataPoints) {
-        var subject = new PlotArea2() {
+        var subject = new PlotArea() {
             Min = min,
             Max = max,
             GridLineInterval = gridLineInterval

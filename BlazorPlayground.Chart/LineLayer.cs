@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace BlazorPlayground.Chart;
 
-public class LineLayer2 : LayerBase2 {
+public class LineLayer : LayerBase {
     public static bool DefaultShowDataMarkers { get; set; } = true;
     public static decimal DefaultDataMarkerSize { get; set; } = 10M;
     public static DataMarkerDelegate DefaultDataMarkerType { get; set; } = DefaultDataMarkerTypes.Round;

@@ -2,7 +2,7 @@
 
 namespace BlazorPlayground.Chart;
 
-public class DataSeries2 : ComponentBase, IDisposable {
+public class DataSeries : ComponentBase, IDisposable {
     public const string FallbackColor = "#000000";
 
     public static List<string> DefaultColors { get; set; } = new() {
@@ -16,7 +16,7 @@ public class DataSeries2 : ComponentBase, IDisposable {
         "#2274a5", "#f75c03", "#f1c40f", "#d90368", "#00cc66"
     };
 
-    [CascadingParameter] internal LayerBase2 Layer { get; set; } = null!;
+    [CascadingParameter] internal LayerBase Layer { get; set; } = null!;
     [Parameter] public string? Name { get; set; }
     [Parameter] public string? Color { get; set; }
     [Parameter] public List<decimal?> DataPoints { get; set; } = new();

@@ -4,11 +4,11 @@ using Xunit;
 
 namespace BlazorPlayground.Chart.Tests;
 
-public class LineLayer2Tests {
+public class LineLayerTests {
     [Theory]
     [MemberData(nameof(GetUnstackedDataSeriesShapes_Markers_Data))]
     public void GetUnstackedDataSeriesShapes_Markers(int index, decimal dataPoint, decimal expectedX, decimal expectedY, decimal expectedSize) {
-        var subject = new LineLayer2() {
+        var subject = new LineLayer() {
             Chart = new() {
                 Canvas = {
                     Width = 1000,
@@ -72,7 +72,7 @@ public class LineLayer2Tests {
     [Theory]
     [MemberData(nameof(GetStackedDataSeriesShapes_Markers_Data))]
     public void GetStackedDataSeriesShapes_Markers(int dataSeriesIndex, int index, decimal dataPoint, decimal expectedX, decimal expectedY, decimal expectedSize) {
-        var subject = new LineLayer2() {
+        var subject = new LineLayer() {
             Chart = new() {
                 Canvas = {
                     Width = 1000,
@@ -138,7 +138,7 @@ public class LineLayer2Tests {
 
     [Fact]
     public void GetStackedDataSeriesShapes_HideDataMarkers() {
-        var subject = new LineLayer2() {
+        var subject = new LineLayer() {
             Chart = new() {
                 Labels = { "Foo" }
             },
@@ -160,7 +160,7 @@ public class LineLayer2Tests {
     [Theory]
     [MemberData(nameof(GetUnstackedDataSeriesShapes_Lines_Data))]
     public void GetUnstackedDataSeriesShapes_Lines(int startIndex, decimal startDataPoint, int endIndex, decimal endDataPoint, string expectedPath) {
-        var subject = new LineLayer2() {
+        var subject = new LineLayer() {
             Chart = new() {
                 Canvas = {
                     Width = 1000,
@@ -222,7 +222,7 @@ public class LineLayer2Tests {
     [Theory]
     [MemberData(nameof(GetStackedDataSeriesShapes_Lines_Data))]
     public void GetStackedDataSeriesShapes_Lines(int dataSeriesIndex, int startIndex, decimal startDataPoint, int endIndex, decimal endDataPoint, string expectedPath) {
-        var subject = new LineLayer2() {
+        var subject = new LineLayer() {
             Chart = new() {
                 Canvas = {
                     Width = 1000,
@@ -285,7 +285,7 @@ public class LineLayer2Tests {
 
     [Fact]
     public void GetStackedDataSeriesShapes_HideDataLines() {
-        var subject = new LineLayer2() {
+        var subject = new LineLayer() {
            Chart = new() {
                Labels = { "Foo", "Bar" }
            },
@@ -307,7 +307,7 @@ public class LineLayer2Tests {
     [InlineData(LineGapMode.Skip, "M 210.0 325.00 L 380.0 325.00 M 720.0 325.00 L 890.0 325.00")]
     [InlineData(LineGapMode.Join, "M 210.0 325.00 L 380.0 325.00 L 720.0 325.00 L 890.0 325.00")]
     public void GetDataSeriesShapes_LineGapMode(LineGapMode lineGapMode, string expectedPath) {
-        var subject = new LineLayer2() {
+        var subject = new LineLayer() {
             Chart = new() {
                 Canvas = {
                     Width = 1000,
