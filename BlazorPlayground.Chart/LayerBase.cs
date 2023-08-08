@@ -39,13 +39,13 @@ public abstract class LayerBase : ComponentBase, IDisposable {
 
     public abstract IEnumerable<ShapeBase> GetDataSeriesShapes();
 
-    public IEnumerable<DataPoint> GetDataPoints() {
+    public IEnumerable<CanvasDataPoint> GetCanvasDataPoints() {
         var dataPointTransformer = GetDataPointTransformer();
 
         return DataSeries.SelectMany((dataSeries, dataSeriesIndex) => dataSeries.DataPoints
             .Select((dataPoint, index) => (DataPoint: dataPoint, Index: index))
             .Where(value => value.DataPoint != null && value.Index < Chart.Labels.Count)
-            .Select(value => new DataPoint(
+            .Select(value => new CanvasDataPoint(
                 Chart.MapDataIndexToCanvas(value.Index),
                 Chart.MapDataPointToCanvas(dataPointTransformer(value.DataPoint!.Value, value.Index)),
                 Chart.MapDataValueToPlotArea(value.DataPoint!.Value),

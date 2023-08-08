@@ -21,7 +21,7 @@ public class LineLayer : LayerBase {
 
     // TODO fluent lines?
     public override IEnumerable<ShapeBase> GetDataSeriesShapes() {
-        var dataPointsByDataSeries = GetDataPoints().ToLookup(dataSeriesPoint => dataSeriesPoint.DataSeriesIndex);
+        var dataPointsByDataSeries = GetCanvasDataPoints().ToLookup(dataSeriesPoint => dataSeriesPoint.DataSeriesIndex);
 
         for (var dataSeriesIndex = 0; dataSeriesIndex < DataSeries.Count; dataSeriesIndex++) {
             var dataPoints = dataPointsByDataSeries[dataSeriesIndex].OrderBy(dataPoint => dataPoint.Index).ToList();
