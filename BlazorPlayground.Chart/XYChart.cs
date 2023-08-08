@@ -8,10 +8,11 @@ namespace BlazorPlayground.Chart;
 public class XYChart : ComponentBase {
     [Parameter] public RenderFragment? ChildContent { get; set; }
     [Parameter] public List<string> Labels { get; set; } = new();
-    internal Canvas Canvas { get; set; } = new(); // TODO private?
-    internal PlotArea PlotArea { get; set; } = new(); // TODO private?
-    public List<LayerBase> Layers { get; set; } = new(); // TODO private?
+    internal Canvas Canvas { get; set; } = new(); // TODO check references outside test
+    internal PlotArea PlotArea { get; set; } = new(); // TODO check references outside test
+    internal List<LayerBase> Layers { get; set; } = new(); // TODO check references outside test
     public decimal DataPointWidth => ((decimal)Canvas.PlotAreaWidth) / Labels.Count;
+    internal Action? StateHasChangedHandler { get; init; }
 
     protected override void BuildRenderTree(RenderTreeBuilder builder) {
         builder.OpenComponent<CascadingValue<XYChart>>(1);
@@ -39,22 +40,22 @@ public class XYChart : ComponentBase {
 
     internal void SetCanvas(Canvas canvas) {
         Canvas = canvas;
-        StateHasChanged();
+        HandleStateChange();
     }
 
     internal void ResetCanvas() {
         Canvas = new();
-        StateHasChanged();
+        HandleStateChange();
     }
 
     internal void SetPlotArea(PlotArea plotArea) {
         PlotArea = plotArea;
-        StateHasChanged();
+        HandleStateChange();
     }
 
     internal void ResetPlotArea() {
         PlotArea = new();
-        StateHasChanged();
+        HandleStateChange();
     }
 
     internal void AddLayer(LayerBase layer) {
@@ -62,16 +63,15 @@ public class XYChart : ComponentBase {
         if (!Layers.Contains(layer)) {
             Layers.Add(layer);
         }
-        StateHasChanged();
+        HandleStateChange();
     }
 
     internal void RemoveLayer(LayerBase layer) {
         Layers.Remove(layer);
-        StateHasChanged();
+        HandleStateChange();
     }
 
-    // TODO enable testing for calling methods
-    internal new void StateHasChanged() => base.StateHasChanged();
+    internal void HandleStateChange() => (StateHasChangedHandler ?? StateHasChanged)();
 
     public IEnumerable<ShapeBase> GetShapes() {
         PlotArea.AutoScale(Layers.SelectMany(layer => layer.GetScaleDataPoints()));

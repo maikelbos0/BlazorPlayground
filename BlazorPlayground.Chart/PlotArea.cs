@@ -15,7 +15,7 @@ public class PlotArea : ComponentBase, IDisposable {
     [Parameter] public decimal Max { get; set; } = DefaultMax;
     [Parameter] public decimal GridLineInterval { get; set; } = DefaultGridLineInterval;
     [Parameter] public decimal Multiplier { get; set; } = DefaultMultiplier;
-    public AutoScaleSettings AutoScaleSettings { get; set; } = new();  // TODO private?
+    public AutoScaleSettings AutoScaleSettings { get; set; } = new();  // TODO check references outside test
 
     protected override void OnInitialized() => Chart.SetPlotArea(this);
 
@@ -23,12 +23,12 @@ public class PlotArea : ComponentBase, IDisposable {
 
     internal void SetAutoScaleSettings(AutoScaleSettings autoScaleSettings) {
         AutoScaleSettings = autoScaleSettings;
-        Chart.StateHasChanged();
+        Chart.HandleStateChange();
     }
 
     internal void ResetAutoScaleSettings() {
         AutoScaleSettings = new();
-        Chart.StateHasChanged();
+        Chart.HandleStateChange();
     }
 
     protected override void BuildRenderTree(RenderTreeBuilder builder) {
