@@ -6,8 +6,11 @@
 <XYChart Labels="@(new List<string>() { "Foo", "Bar", "Baz", "Quux", "Quuux" })">
     <Canvas Height="500" Width="1000" XAxisLabelHeight="60" YAxisLabelWidth="60" Padding="15" />
     <PlotArea Multiplier="1000">
-        <AutoScaleSettings IsEnabled="true" IncludeZero="true" ClearancePercentage="20" RequestedGridLineCount="8" />
+        <AutoScaleSettings IsEnabled="true" IncludeZero="true" ClearancePercentage="0" RequestedGridLineCount="8" />
     </PlotArea>
+    <AreaLayer>
+        <DataSeries DataPoints="new List<decimal?> { 27000, 22500, 28500, 3500, 16000 }" Color="#f75c03" />
+    </AreaLayer>
     <BarLayer IsStacked="true" ClearancePercentage="25" GapPercentage="10">
         <DataSeries DataPoints="new List<decimal?> { 11000, 19000, 31500, null, 9500 }" Color="#f1c40f" />
         <DataSeries DataPoints="new List<decimal?> { 21000, -22000, 15500, 12000, 3500 }" Color="#00cc66" />
