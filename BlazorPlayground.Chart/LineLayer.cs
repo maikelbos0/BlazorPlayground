@@ -26,38 +26,42 @@ public class LineLayer : LayerBase {
         for (var dataSeriesIndex = 0; dataSeriesIndex < DataSeries.Count; dataSeriesIndex++) {
             var dataPoints = dataPointsByDataSeries[dataSeriesIndex].OrderBy(dataPoint => dataPoint.Index).ToList();
 
-            if (ShowDataMarkers) {
-                foreach (var dataPoint in dataPoints) {
-                    yield return DataMarkerType(
-                        dataPoint.X,
-                        dataPoint.Y,
-                        DataMarkerSize,
+            if (dataPoints.Any()) {
+                if (ShowDataMarkers) {
+                    foreach (var dataPoint in dataPoints) {
+                        yield return DataMarkerType(
+                            dataPoint.X,
+                            dataPoint.Y,
+                            DataMarkerSize,
+                            DataSeries[dataSeriesIndex].GetColor(),
+                            dataSeriesIndex,
+                            dataPoint.Index
+                        );
+                    }
+                }
+
+                if (ShowDataLines) {
+                    var commands = new List<string>();
+
+                    for (var i = 0; i < dataPoints.Count; i++) {
+                        if (i == 0) {
+                            commands.Add(PathCommandFactory.MoveTo(dataPoints[i].X, dataPoints[i].Y));
+                        }
+                        else if (dataPoints[i - 1].Index < dataPoints[i].Index - 1 && LineGapMode == LineGapMode.Skip) {
+                            commands.Add(PathCommandFactory.MoveTo(dataPoints[i].X, dataPoints[i].Y));
+                        }
+                        else {
+                            commands.Add(PathCommandFactory.LineTo(dataPoints[i].X, dataPoints[i].Y));
+                        }
+                    }
+
+                    yield return new DataLineShape(
+                        commands,
+                        DataLineWidth,
                         DataSeries[dataSeriesIndex].GetColor(),
-                        dataSeriesIndex,
-                        dataPoint.Index
+                        dataSeriesIndex
                     );
                 }
-            }
-
-            if (ShowDataLines) {
-                var commands = dataPoints.Select((dataPoint, index) => {
-                    if (index == 0) {
-                        return PathCommandFactory.MoveTo(dataPoint.X, dataPoint.Y);
-                    }
-                    else if (dataPoints[index - 1].Index < dataPoint.Index - 1 && LineGapMode == LineGapMode.Skip) {
-                        return PathCommandFactory.MoveTo(dataPoint.X, dataPoint.Y);
-                    }
-                    else {
-                        return PathCommandFactory.LineTo(dataPoint.X, dataPoint.Y);
-                    }
-                });
-
-                yield return new DataLineShape(
-                    commands,
-                    DataLineWidth,
-                    DataSeries[dataSeriesIndex].GetColor(),
-                    dataSeriesIndex
-                );
             }
         }
     }
