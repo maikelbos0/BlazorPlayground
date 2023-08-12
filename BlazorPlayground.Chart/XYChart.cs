@@ -8,9 +8,9 @@ namespace BlazorPlayground.Chart;
 public class XYChart : ComponentBase {
     [Parameter] public RenderFragment? ChildContent { get; set; }
     [Parameter] public List<string> Labels { get; set; } = new();
-    internal Canvas Canvas { get; set; } = new(); // TODO check references outside test
-    internal PlotArea PlotArea { get; set; } = new(); // TODO check references outside test
-    internal List<LayerBase> Layers { get; set; } = new(); // TODO check references outside test
+    internal Canvas Canvas { get; set; } = new();
+    internal PlotArea PlotArea { get; set; } = new();
+    internal List<LayerBase> Layers { get; set; } = new();
     public decimal DataPointWidth => ((decimal)Canvas.PlotAreaWidth) / Labels.Count;
     internal Action? StateHasChangedHandler { get; init; }
 
@@ -59,10 +59,10 @@ public class XYChart : ComponentBase {
     }
 
     internal void AddLayer(LayerBase layer) {
-        // TODO the ordering might not make sense when adding/removing layers
         if (!Layers.Contains(layer)) {
             Layers.Add(layer);
         }
+
         HandleStateChange();
     }
 

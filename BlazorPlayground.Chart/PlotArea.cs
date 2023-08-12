@@ -15,7 +15,7 @@ public class PlotArea : ComponentBase, IDisposable {
     [Parameter] public decimal Max { get; set; } = DefaultMax;
     [Parameter] public decimal GridLineInterval { get; set; } = DefaultGridLineInterval;
     [Parameter] public decimal Multiplier { get; set; } = DefaultMultiplier;
-    public AutoScaleSettings AutoScaleSettings { get; set; } = new();  // TODO check references outside test
+    public AutoScaleSettings AutoScaleSettings { get; set; } = new();
 
     protected override void OnInitialized() => Chart.SetPlotArea(this);
 

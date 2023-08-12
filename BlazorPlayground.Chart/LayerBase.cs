@@ -10,7 +10,7 @@ public abstract class LayerBase : ComponentBase, IDisposable {
     [CascadingParameter] internal XYChart Chart { get; set; } = null!;
     [Parameter] public RenderFragment? ChildContent { get; set; }
     [Parameter] public bool IsStacked { get; set; } = DefaultIsStacked;
-    internal List<DataSeries> DataSeries { get; set; } = new(); // TODO check references outside test
+    internal List<DataSeries> DataSeries { get; set; } = new();
     public abstract StackMode StackMode { get; }
 
     protected override void OnInitialized() => Chart.AddLayer(this);
@@ -18,10 +18,10 @@ public abstract class LayerBase : ComponentBase, IDisposable {
     public void Dispose() => Chart.RemoveLayer(this);
 
     internal void AddDataSeries(DataSeries dataSeries) {
-        // TODO the ordering might not make sense when adding/removing data series
         if (!DataSeries.Contains(dataSeries)) {
             DataSeries.Add(dataSeries);
         }
+
         Chart.HandleStateChange();
     }
 
