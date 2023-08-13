@@ -6,6 +6,7 @@ namespace BlazorPlayground.Chart;
 
 public class XYChart : ComponentBase {
     public static DataPointSpacingMode? DefaultDataPointSpacingMode { get; set; } = null;
+
     [Parameter] public RenderFragment? ChildContent { get; set; }
     [Parameter] public List<string> Labels { get; set; } = new();
     [Parameter] public DataPointSpacingMode? DataPointSpacingMode { get; set; } = DefaultDataPointSpacingMode;
@@ -121,14 +122,14 @@ public class XYChart : ComponentBase {
     public DataPointSpacingMode GetDataPointSpacingMode() => DataPointSpacingMode ?? (Layers.Any(layer => true) ? Chart.DataPointSpacingMode.Center : Chart.DataPointSpacingMode.EdgeToEdge);
 
     public decimal GetDataPointWidth() => GetDataPointSpacingMode() switch {
-        Chart.DataPointSpacingMode.EdgeToEdge => ((decimal)Canvas.PlotAreaWidth) / (Labels.Count - 1),
-        Chart.DataPointSpacingMode.Center => ((decimal)Canvas.PlotAreaWidth) / Labels.Count,
+        Chart.DataPointSpacingMode.EdgeToEdge => ((decimal)Canvas.PlotAreaWidth) / Math.Max(1, Labels.Count - 1),
+        Chart.DataPointSpacingMode.Center => ((decimal)Canvas.PlotAreaWidth) / Math.Max(1, Labels.Count),
         _ => throw new NotImplementedException($"No implementation found for {nameof(DataPointSpacingMode)} '{DataPointSpacingMode}'.")
     };
 
     public decimal MapDataIndexToCanvas(int index) => GetDataPointSpacingMode() switch {
         Chart.DataPointSpacingMode.EdgeToEdge => Canvas.PlotAreaX + index * GetDataPointWidth(),
         Chart.DataPointSpacingMode.Center => Canvas.PlotAreaX + (index + 0.5M) * GetDataPointWidth(),
-        _ => throw new NotImplementedException($"No implementation found for {nameof(DataPointSpacingMode)} '{DataPointSpacingMode}'.")        
+        _ => throw new NotImplementedException($"No implementation found for {nameof(DataPointSpacingMode)} '{DataPointSpacingMode}'.")
     };
 }

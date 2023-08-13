@@ -1,4 +1,5 @@
 ﻿using BlazorPlayground.Chart.Shapes;
+using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
@@ -525,7 +526,7 @@ public class XYChartTests {
 
     [Theory]
     [MemberData(nameof(GetDataPointWidth_Data))]
-    public void GetDataPointWidth(DataPointSpacingMode dataPointSpacingMode, decimal expectedWidth) {
+    public void GetDataPointWidth(DataPointSpacingMode dataPointSpacingMode, List<string> labels, decimal expectedWidth) {
         var subject = new XYChart() {
             Canvas = {
                 Width = 1000,
@@ -536,19 +537,21 @@ public class XYChartTests {
                 YAxisLabelWidth = 80,
                 YAxisLabelClearance = 10
             },
-            Labels = { "Foo", "Bar", "Baz" },
+            Labels = labels,
             DataPointSpacingMode = dataPointSpacingMode
         };
 
         Assert.Equal(expectedWidth, subject.GetDataPointWidth());
     }
 
-    public static TheoryData<DataPointSpacingMode, decimal> GetDataPointWidth_Data() => new() {
-        { DataPointSpacingMode.EdgeToEdge, 870M / 2 },
-        { DataPointSpacingMode.Center, 870M / 3 },
+    public static TheoryData<DataPointSpacingMode, List<string>, decimal> GetDataPointWidth_Data() => new() {
+        { DataPointSpacingMode.EdgeToEdge, new List<string>() { "Foo", "Bar", "Baz" }, 870M / 2 },
+        { DataPointSpacingMode.Center, new List<string>() { "Foo", "Bar", "Baz" }, 870M / 3 },
+        { DataPointSpacingMode.EdgeToEdge, new List<string>() { "Foo", }, 870M },
+        { DataPointSpacingMode.Center, new List<string>() { "Foo" }, 870M },
+        { DataPointSpacingMode.EdgeToEdge, new List<string>(), 870M },
+        { DataPointSpacingMode.Center, new List<string>(), 870M },
     };
-
-    }
 
     [Theory]
     [MemberData(nameof(MapDataIndexToCanvas_Data))]
