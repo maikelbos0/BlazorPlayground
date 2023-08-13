@@ -5,11 +5,11 @@ using Microsoft.AspNetCore.Components.Rendering;
 namespace BlazorPlayground.Chart;
 
 public class XYChart : ComponentBase {
-    public static DataPointSpacingMode? DefaultDataPointSpacingMode { get; set; } = null;
+    public static DataPointSpacingMode DefaultDataPointSpacingMode { get; set; } = DataPointSpacingMode.Auto;
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
     [Parameter] public List<string> Labels { get; set; } = new();
-    [Parameter] public DataPointSpacingMode? DataPointSpacingMode { get; set; } = DefaultDataPointSpacingMode;
+    [Parameter] public DataPointSpacingMode DataPointSpacingMode { get; set; } = DefaultDataPointSpacingMode;
     internal Canvas Canvas { get; set; } = new();
     internal PlotArea PlotArea { get; set; } = new();
     internal List<LayerBase> Layers { get; set; } = new();
@@ -119,17 +119,20 @@ public class XYChart : ComponentBase {
 
     public decimal MapDataValueToPlotArea(decimal dataPoint) => dataPoint / (PlotArea.Max - PlotArea.Min) * Canvas.PlotAreaHeight;
 
-    public DataPointSpacingMode GetDataPointSpacingMode() => DataPointSpacingMode ?? (Layers.Any(layer => true) ? Chart.DataPointSpacingMode.Center : Chart.DataPointSpacingMode.EdgeToEdge);
+    public DataPointSpacingMode GetDataPointSpacingMode() => DataPointSpacingMode switch {
+        DataPointSpacingMode.Auto => Layers.Any(layer => true) ? DataPointSpacingMode.Center : DataPointSpacingMode.EdgeToEdge,
+        _ => DataPointSpacingMode
+    };
 
     public decimal GetDataPointWidth() => GetDataPointSpacingMode() switch {
-        Chart.DataPointSpacingMode.EdgeToEdge => ((decimal)Canvas.PlotAreaWidth) / Math.Max(1, Labels.Count - 1),
-        Chart.DataPointSpacingMode.Center => ((decimal)Canvas.PlotAreaWidth) / Math.Max(1, Labels.Count),
+        DataPointSpacingMode.EdgeToEdge => ((decimal)Canvas.PlotAreaWidth) / Math.Max(1, Labels.Count - 1),
+        DataPointSpacingMode.Center => ((decimal)Canvas.PlotAreaWidth) / Math.Max(1, Labels.Count),
         _ => throw new NotImplementedException($"No implementation found for {nameof(DataPointSpacingMode)} '{DataPointSpacingMode}'.")
     };
 
     public decimal MapDataIndexToCanvas(int index) => GetDataPointSpacingMode() switch {
-        Chart.DataPointSpacingMode.EdgeToEdge => Canvas.PlotAreaX + index * GetDataPointWidth(),
-        Chart.DataPointSpacingMode.Center => Canvas.PlotAreaX + (index + 0.5M) * GetDataPointWidth(),
+        DataPointSpacingMode.EdgeToEdge => Canvas.PlotAreaX + index * GetDataPointWidth(),
+        DataPointSpacingMode.Center => Canvas.PlotAreaX + (index + 0.5M) * GetDataPointWidth(),
         _ => throw new NotImplementedException($"No implementation found for {nameof(DataPointSpacingMode)} '{DataPointSpacingMode}'.")
     };
 }
