@@ -24,7 +24,8 @@ public class LineLayerTests {
                      Max = 40M,
                      GridLineInterval = 10M
                 },
-                Labels = { "Foo", "Bar", "Baz", "Quux" }
+                Labels = { "Foo", "Bar", "Baz", "Quux" },
+                DataPointSpacingMode = DataPointSpacingMode.Center
             },
             DataSeries = {
                 new() {
@@ -88,7 +89,8 @@ public class LineLayerTests {
                      Max = 30M,
                      GridLineInterval = 10M
                 },
-                Labels = { "Foo", "Bar", "Baz", "Quux" }
+                Labels = { "Foo", "Bar", "Baz", "Quux" },
+                DataPointSpacingMode = DataPointSpacingMode.Center
             },
             DataSeries = {
                 new() {
@@ -140,7 +142,7 @@ public class LineLayerTests {
     public void GetStackedDataSeriesShapes_HideDataMarkers() {
         var subject = new LineLayer() {
             Chart = new() {
-                Labels = { "Foo" }
+                Labels = { "Foo", "Bar" }
             },
             DataSeries = {
                 new() {
@@ -176,7 +178,8 @@ public class LineLayerTests {
                      Max = 40M,
                      GridLineInterval = 10M
                 },
-                Labels = { "Foo", "Bar", "Baz", "Quux" }
+                Labels = { "Foo", "Bar", "Baz", "Quux" },
+                DataPointSpacingMode = DataPointSpacingMode.Center
             },
             DataSeries = {
                 new() {
@@ -238,7 +241,8 @@ public class LineLayerTests {
                      Max = 30M,
                      GridLineInterval = 10M
                 },
-                Labels = { "Foo", "Bar", "Baz", "Quux" }
+                Labels = { "Foo", "Bar", "Baz", "Quux" },
+                DataPointSpacingMode = DataPointSpacingMode.Center
             },
             DataSeries = {
                 new() {
@@ -323,7 +327,8 @@ public class LineLayerTests {
                      Max = 40M,
                      GridLineInterval = 10M
                 },
-                Labels = { "Foo", "Bar", "Baz", "Quux", "Quuux" }
+                Labels = { "Foo", "Bar", "Baz", "Quux", "Quuux" },
+                DataPointSpacingMode = DataPointSpacingMode.Center
             },
             DataSeries = {
                 new() {

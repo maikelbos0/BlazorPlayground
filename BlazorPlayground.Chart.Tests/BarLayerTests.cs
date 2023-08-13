@@ -23,7 +23,8 @@ public class BarLayerTests {
                      Max = 40M,
                      GridLineInterval = 10M
                 },
-                Labels = { "Foo", "Bar", "Baz", "Quux" }
+                Labels = { "Foo", "Bar", "Baz", "Quux" },
+                DataPointSpacingMode = DataPointSpacingMode.Center
             },
             DataSeries = {
                 new() {
@@ -87,7 +88,8 @@ public class BarLayerTests {
                      Max = 30M,
                      GridLineInterval = 10M
                 },
-                Labels = { "Foo", "Bar", "Baz", "Quux" }
+                Labels = { "Foo", "Bar", "Baz", "Quux" },
+                DataPointSpacingMode = DataPointSpacingMode.Center
             },
             DataSeries = {
                 new() {

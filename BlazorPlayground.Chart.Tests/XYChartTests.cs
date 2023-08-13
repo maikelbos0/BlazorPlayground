@@ -9,16 +9,16 @@ public class XYChartTests {
     public void SetCanvas() {
         var stateHasChangedInvoked = false;
         var canvas = new Canvas();
-        var subject = new XYChart() { 
-            StateHasChangedHandler = () => stateHasChangedInvoked = true 
+        var subject = new XYChart() {
+            StateHasChangedHandler = () => stateHasChangedInvoked = true
         };
 
         subject.SetCanvas(canvas);
-        
+
         Assert.Same(canvas, subject.Canvas);
         Assert.True(stateHasChangedInvoked);
     }
-    
+
     [Fact]
     public void ResetCanvas() {
         var stateHasChangedInvoked = false;
@@ -29,7 +29,7 @@ public class XYChartTests {
         };
 
         subject.ResetCanvas();
-        
+
         Assert.NotSame(canvas, subject.Canvas);
         Assert.True(stateHasChangedInvoked);
     }
@@ -38,16 +38,16 @@ public class XYChartTests {
     public void SetPlotArea() {
         var stateHasChangedInvoked = false;
         var plotArea = new PlotArea();
-        var subject = new XYChart() { 
-            StateHasChangedHandler = () => stateHasChangedInvoked = true 
+        var subject = new XYChart() {
+            StateHasChangedHandler = () => stateHasChangedInvoked = true
         };
 
         subject.SetPlotArea(plotArea);
-        
+
         Assert.Same(plotArea, subject.PlotArea);
         Assert.True(stateHasChangedInvoked);
     }
-    
+
     [Fact]
     public void ResetPlotArea() {
         var stateHasChangedInvoked = false;
@@ -58,7 +58,7 @@ public class XYChartTests {
         };
 
         subject.ResetPlotArea();
-        
+
         Assert.NotSame(plotArea, subject.PlotArea);
         Assert.True(stateHasChangedInvoked);
     }
@@ -67,16 +67,16 @@ public class XYChartTests {
     public void AddLayer() {
         var stateHasChangedInvoked = false;
         var layer = new BarLayer();
-        var subject = new XYChart() { 
-            StateHasChangedHandler = () => stateHasChangedInvoked = true 
+        var subject = new XYChart() {
+            StateHasChangedHandler = () => stateHasChangedInvoked = true
         };
 
         subject.AddLayer(layer);
-        
+
         Assert.Same(layer, Assert.Single(subject.Layers));
         Assert.True(stateHasChangedInvoked);
     }
-    
+
     [Fact]
     public void RemoveLayer() {
         var stateHasChangedInvoked = false;
@@ -176,7 +176,7 @@ public class XYChartTests {
         Assert.Equal(10M, subject.PlotArea.Max);
         Assert.Equal(1M, subject.PlotArea.GridLineInterval);
     }
-    
+
     [Fact]
     public void GetShapes_PlotAreaShape() {
         var subject = new XYChart();
@@ -224,7 +224,7 @@ public class XYChartTests {
 
         Assert.Contains(subject.GetShapes(), shape => shape is XAxisLabelShape);
     }
-    
+
     [Fact]
     public void GetShapes_DataSeriesShapes() {
         var subject = new XYChart() {
@@ -243,7 +243,7 @@ public class XYChartTests {
 
         Assert.Contains(subject.GetShapes(), shape => shape is DataBarShape);
     }
-        
+
     [Fact]
     public void GetGridLineShapes() {
         var subject = new XYChart() {
@@ -278,7 +278,7 @@ public class XYChartTests {
         Assert.Single(result, shape => shape.Key.EndsWith("[1]") && shape.Y == subject.Canvas.PlotAreaY + (200M - subject.PlotArea.Min) / plotAreaRange * subject.Canvas.PlotAreaHeight);
         Assert.Single(result, shape => shape.Key.EndsWith("[2]") && shape.Y == subject.Canvas.PlotAreaY + (0M - subject.PlotArea.Min) / plotAreaRange * subject.Canvas.PlotAreaHeight);
     }
-    
+
     [Fact]
     public void GetYAxisLabelShapes() {
         var subject = new XYChart() {
@@ -378,7 +378,7 @@ public class XYChartTests {
                 Padding = 25,
                 XAxisLabelHeight = 50,
                 XAxisLabelClearance = 5,
-                YAxisLabelWidth = 100,
+                YAxisLabelWidth = 80,
                 YAxisLabelClearance = 10
             },
             PlotArea = {
@@ -387,7 +387,8 @@ public class XYChartTests {
                  GridLineInterval = 200M,
                  Multiplier = 1000
             },
-            Labels = { "Foo", "Bar", "Baz" }
+            Labels = { "Foo", "Bar", "Baz" },
+            DataPointSpacingMode = DataPointSpacingMode.Center
         };
 
         var result = subject.GetXAxisLabelShapes();
@@ -398,13 +399,13 @@ public class XYChartTests {
             Assert.Equal(500 - 25 - 50 + 5, shape.Y);
         });
 
-        var dataPointWidth = subject.Canvas.PlotAreaWidth / 3M;
+        var dataPointWidth = 870M / 3;
 
         Assert.Single(result, shape => shape.Key.EndsWith("[0]") && shape.X == subject.Canvas.PlotAreaX + 0.5M * dataPointWidth && shape.Label == "Foo");
         Assert.Single(result, shape => shape.Key.EndsWith("[1]") && shape.X == subject.Canvas.PlotAreaX + 1.5M * dataPointWidth && shape.Label == "Bar");
         Assert.Single(result, shape => shape.Key.EndsWith("[2]") && shape.X == subject.Canvas.PlotAreaX + 2.5M * dataPointWidth && shape.Label == "Baz");
     }
-    
+
     [Fact]
     public void GetDataSeriesShapes() {
 
@@ -452,7 +453,7 @@ public class XYChartTests {
 
         Assert.All(result, shape => Assert.IsType<DataBarShape>(shape));
     }
-    
+
     [Theory]
     [MemberData(nameof(MapDataPointToCanvas_Data))]
     public void MapDataPointToCanvas(decimal dataPoint, decimal expectedValue) {
@@ -522,8 +523,9 @@ public class XYChartTests {
         };
     }
 
-    [Fact]
-    public void GetDataPointWidth() {
+    [Theory]
+    [MemberData(nameof(GetDataPointWidth_Data))]
+    public void GetDataPointWidth(DataPointSpacingMode dataPointSpacingMode, decimal expectedWidth) {
         var subject = new XYChart() {
             Canvas = {
                 Width = 1000,
@@ -534,15 +536,23 @@ public class XYChartTests {
                 YAxisLabelWidth = 80,
                 YAxisLabelClearance = 10
             },
-            Labels = { "Foo", "Bar", "Baz" }
+            Labels = { "Foo", "Bar", "Baz" },
+            DataPointSpacingMode = dataPointSpacingMode
         };
 
-        Assert.Equal(870M / 3M, subject.GetDataPointWidth());
+        Assert.Equal(expectedWidth, subject.GetDataPointWidth());
+    }
+
+    public static TheoryData<DataPointSpacingMode, decimal> GetDataPointWidth_Data() => new() {
+        { DataPointSpacingMode.EdgeToEdge, 870M / 2 },
+        { DataPointSpacingMode.Center, 870M / 3 },
+    };
+
     }
 
     [Theory]
     [MemberData(nameof(MapDataIndexToCanvas_Data))]
-    public void MapDataIndexToCanvas(int index, decimal expectedValue) {
+    public void MapDataIndexToCanvas(DataPointSpacingMode dataPointSpacingMode, int index, decimal expectedValue) {
         var subject = new XYChart() {
             Canvas = {
                 Width = 1000,
@@ -550,23 +560,26 @@ public class XYChartTests {
                 Padding = 25,
                 XAxisLabelHeight = 50,
                 XAxisLabelClearance = 5,
-                YAxisLabelWidth = 100,
+                YAxisLabelWidth = 80,
                 YAxisLabelClearance = 10
             },
-            Labels = { "Foo", "Bar", "Baz" }
+            Labels = { "Foo", "Bar", "Baz" },
+            DataPointSpacingMode = dataPointSpacingMode
         };
 
         Assert.Equal(expectedValue, subject.MapDataIndexToCanvas(index));
     }
 
-    public static TheoryData<int, decimal> MapDataIndexToCanvas_Data() {
-        var plotAreaX = 25 + 100;
-        var dataPointWidth = (1000 - 25 - 25 - 100) / 3M;
+    public static TheoryData<DataPointSpacingMode, int, decimal> MapDataIndexToCanvas_Data() {
+        var plotAreaX = 25 + 80;
 
         return new() {
-            { 0, plotAreaX + 0.5M * dataPointWidth },
-            { 1, plotAreaX + 1.5M * dataPointWidth },
-            { 2, plotAreaX + 2.5M * dataPointWidth },
+            { DataPointSpacingMode.EdgeToEdge, 0, plotAreaX },
+            { DataPointSpacingMode.EdgeToEdge, 1, plotAreaX + 1 * 870M / 2 },
+            { DataPointSpacingMode.EdgeToEdge, 2, plotAreaX + 2 * 870M / 2 },
+            { DataPointSpacingMode.Center, 0, plotAreaX + 0.5M * 870M / 3 },
+            { DataPointSpacingMode.Center, 1, plotAreaX + 1.5M * 870M / 3 },
+            { DataPointSpacingMode.Center, 2, plotAreaX + 2.5M * 870M / 3 },
         };
     }
 }

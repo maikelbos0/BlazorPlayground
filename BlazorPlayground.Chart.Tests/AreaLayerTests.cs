@@ -16,7 +16,7 @@ public class AreaLayerTests {
                     Padding = 25,
                     XAxisLabelHeight = 50,
                     XAxisLabelClearance = 5,
-                    YAxisLabelWidth = 100,
+                    YAxisLabelWidth = 80,
                     YAxisLabelClearance = 10
                 },
                 PlotArea = {
@@ -24,7 +24,8 @@ public class AreaLayerTests {
                      Max = 40M,
                      GridLineInterval = 10M
                 },
-                Labels = { "Foo", "Bar", "Baz", "Quux" }
+                Labels = { "Foo", "Bar", "Baz", "Quux" },
+                DataPointSpacingMode = DataPointSpacingMode.EdgeToEdge
             },
             DataSeries = {
                 new() {
@@ -52,17 +53,17 @@ public class AreaLayerTests {
     }
 
     public static TheoryData<int, decimal, int, decimal, string> GetUnstackedDataSeriesShapes_Data() {
-        var plotAreaX = 25 + 100;
+        var plotAreaX = 25 + 80;
         var plotAreaY = 25;
-        var dataPointWidth = (1000 - 25 - 25 - 100) / 4M;
+        var dataPointWidth = (1000 - 25 - 25 - 80) / 3M;
         var plotAreaHeight = 500 - 25 - 25 - 50;
         var plotAreaMax = 40M;
         var plotAreaRange = plotAreaMax - -10M;
 
         return new() {
-            { 0, 5M, 1, -5M, FormattableString.Invariant($"M {plotAreaX + 0.5M * dataPointWidth} {plotAreaY + plotAreaMax / plotAreaRange * plotAreaHeight} L {plotAreaX + 0.5M * dataPointWidth} {plotAreaY + (plotAreaMax - 5M) / plotAreaRange * plotAreaHeight} L {plotAreaX + 1.5M * dataPointWidth} {plotAreaY + (plotAreaMax + 5M) / plotAreaRange * plotAreaHeight} L {plotAreaX + 1.5M * dataPointWidth} {plotAreaY + plotAreaMax / plotAreaRange * plotAreaHeight} Z") },
-            { 1, -5M, 2, 5M, FormattableString.Invariant($"M {plotAreaX + 1.5M * dataPointWidth} {plotAreaY + plotAreaMax / plotAreaRange * plotAreaHeight} L {plotAreaX + 1.5M * dataPointWidth} {plotAreaY + (plotAreaMax + 5M) / plotAreaRange * plotAreaHeight} L {plotAreaX + 2.5M * dataPointWidth} {plotAreaY + (plotAreaMax - 5M) / plotAreaRange * plotAreaHeight} L {plotAreaX + 2.5M * dataPointWidth} {plotAreaY + plotAreaMax / plotAreaRange * plotAreaHeight} Z") },
-            { 1, 10M, 3, 35M, FormattableString.Invariant($"M {plotAreaX + 1.5M * dataPointWidth} {plotAreaY + plotAreaMax / plotAreaRange * plotAreaHeight} L {plotAreaX + 1.5M * dataPointWidth} {plotAreaY + (plotAreaMax - 10M) / plotAreaRange * plotAreaHeight} L {plotAreaX + 3.5M * dataPointWidth} {plotAreaY + (plotAreaMax - 35M) / plotAreaRange * plotAreaHeight} L {plotAreaX + 3.5M * dataPointWidth} {plotAreaY + plotAreaMax / plotAreaRange * plotAreaHeight} Z") },
+            { 0, 5M, 1, -5M, FormattableString.Invariant($"M {plotAreaX} {plotAreaY + plotAreaMax / plotAreaRange * plotAreaHeight} L {plotAreaX} {plotAreaY + (plotAreaMax - 5M) / plotAreaRange * plotAreaHeight} L {plotAreaX + dataPointWidth} {plotAreaY + (plotAreaMax + 5M) / plotAreaRange * plotAreaHeight} L {plotAreaX + dataPointWidth} {plotAreaY + plotAreaMax / plotAreaRange * plotAreaHeight} Z") },
+            { 1, -5M, 2, 5M, FormattableString.Invariant($"M {plotAreaX + dataPointWidth} {plotAreaY + plotAreaMax / plotAreaRange * plotAreaHeight} L {plotAreaX + dataPointWidth} {plotAreaY + (plotAreaMax + 5M) / plotAreaRange * plotAreaHeight} L {plotAreaX + 2M * dataPointWidth} {plotAreaY + (plotAreaMax - 5M) / plotAreaRange * plotAreaHeight} L {plotAreaX + 2M * dataPointWidth} {plotAreaY + plotAreaMax / plotAreaRange * plotAreaHeight} Z") },
+            { 1, 10M, 3, 35M, FormattableString.Invariant($"M {plotAreaX + dataPointWidth} {plotAreaY + plotAreaMax / plotAreaRange * plotAreaHeight} L {plotAreaX + dataPointWidth} {plotAreaY + (plotAreaMax - 10M) / plotAreaRange * plotAreaHeight} L {plotAreaX + 3M * dataPointWidth} {plotAreaY + (plotAreaMax - 35M) / plotAreaRange * plotAreaHeight} L {plotAreaX + 3M * dataPointWidth} {plotAreaY + plotAreaMax / plotAreaRange * plotAreaHeight} Z") },
         };
     }
 
@@ -77,7 +78,7 @@ public class AreaLayerTests {
                     Padding = 25,
                     XAxisLabelHeight = 50,
                     XAxisLabelClearance = 5,
-                    YAxisLabelWidth = 100,
+                    YAxisLabelWidth = 80,
                     YAxisLabelClearance = 10
                 },
                 PlotArea = {
@@ -85,7 +86,8 @@ public class AreaLayerTests {
                      Max = 30M,
                      GridLineInterval = 10M
                 },
-                Labels = { "Foo", "Bar", "Baz", "Quux" }
+                Labels = { "Foo", "Bar", "Baz", "Quux" },
+                DataPointSpacingMode = DataPointSpacingMode.EdgeToEdge
             },
             DataSeries = {
                 new() {
@@ -113,25 +115,25 @@ public class AreaLayerTests {
     }
 
     public static TheoryData<int, int, decimal, int, decimal, string> GetStackedDataSeriesShapes_Data() {
-        var plotAreaX = 25 + 100;
+        var plotAreaX = 25 + 80;
         var plotAreaY = 25;
-        var dataPointWidth = (1000 - 25 - 25 - 100) / 4M;
+        var dataPointWidth = (1000 - 25 - 25 - 80) / 3M;
         var plotAreaHeight = 500 - 25 - 25 - 50;
         var plotAreaMax = 30M;
         var plotAreaRange = plotAreaMax - -20M;
 
         return new() {
-            { 0, 0, 5M, 1, 5M, FormattableString.Invariant($"M {plotAreaX + 0.5M * dataPointWidth} {plotAreaY + plotAreaMax / plotAreaRange * plotAreaHeight} L {plotAreaX + 0.5M * dataPointWidth} {plotAreaY + (plotAreaMax - 5M) / plotAreaRange * plotAreaHeight} L {plotAreaX + 1.5M * dataPointWidth} {plotAreaY + (plotAreaMax - 5M) / plotAreaRange * plotAreaHeight} L 656.25 185.0 L 868.75 185.0 L 868.75 265.0 Z") },
-            { 1, 0, 5M, 1, -5M, FormattableString.Invariant($"M {plotAreaX + 0.5M * dataPointWidth} {plotAreaY + plotAreaMax / plotAreaRange * plotAreaHeight} L {plotAreaX + 0.5M * dataPointWidth} {plotAreaY + (plotAreaMax + 5M) / plotAreaRange * plotAreaHeight} L {plotAreaX + 1.5M * dataPointWidth} {plotAreaY + (plotAreaMax + 15M) / plotAreaRange * plotAreaHeight} L {plotAreaX + 1.5M * dataPointWidth} {plotAreaY + plotAreaMax / plotAreaRange * plotAreaHeight} Z") },
-            { 1, 0, -5M, 1, 5M, FormattableString.Invariant($"M {plotAreaX + 0.5M * dataPointWidth} {plotAreaY + plotAreaMax / plotAreaRange * plotAreaHeight} L {plotAreaX + 0.5M * dataPointWidth} {plotAreaY + (plotAreaMax + 15M) / plotAreaRange * plotAreaHeight} L {plotAreaX + 1.5M * dataPointWidth} {plotAreaY + (plotAreaMax + 5M) / plotAreaRange * plotAreaHeight} L {plotAreaX + 1.5M * dataPointWidth} {plotAreaY + plotAreaMax / plotAreaRange * plotAreaHeight} Z") },
-            { 1, 2, 5M, 3, -5M, FormattableString.Invariant($"M {plotAreaX + 2.5M * dataPointWidth} {plotAreaY + plotAreaMax / plotAreaRange * plotAreaHeight} L {plotAreaX + 2.5M * dataPointWidth} {plotAreaY + (plotAreaMax - 15M) / plotAreaRange * plotAreaHeight} L {plotAreaX + 3.5M * dataPointWidth} {plotAreaY + (plotAreaMax - 5M) / plotAreaRange * plotAreaHeight} L {plotAreaX + 3.5M * dataPointWidth} {plotAreaY + plotAreaMax / plotAreaRange * plotAreaHeight} Z") },
-            { 1, 2, -5M, 3, 5M, FormattableString.Invariant($"M {plotAreaX + 2.5M * dataPointWidth} {plotAreaY + plotAreaMax / plotAreaRange * plotAreaHeight} L {plotAreaX + 2.5M * dataPointWidth} {plotAreaY + (plotAreaMax - 5M) / plotAreaRange * plotAreaHeight} L {plotAreaX + 3.5M * dataPointWidth} {plotAreaY + (plotAreaMax - 15M) / plotAreaRange * plotAreaHeight} L {plotAreaX + 3.5M * dataPointWidth} {plotAreaY + plotAreaMax / plotAreaRange * plotAreaHeight} Z") },
+            { 0, 0, 5M, 1, 5M, FormattableString.Invariant($"M {plotAreaX} {plotAreaY + plotAreaMax / plotAreaRange * plotAreaHeight} L {plotAreaX} {plotAreaY + (plotAreaMax - 5M) / plotAreaRange * plotAreaHeight} L {plotAreaX + dataPointWidth} {plotAreaY + (plotAreaMax - 5M) / plotAreaRange * plotAreaHeight} L 685 185.0 L 975 185.0 L 975 265.0 Z") },
+            { 1, 0, 5M, 1, -5M, FormattableString.Invariant($"M {plotAreaX} {plotAreaY + plotAreaMax / plotAreaRange * plotAreaHeight} L {plotAreaX} {plotAreaY + (plotAreaMax + 5M) / plotAreaRange * plotAreaHeight} L {plotAreaX + dataPointWidth} {plotAreaY + (plotAreaMax + 15M) / plotAreaRange * plotAreaHeight} L {plotAreaX + dataPointWidth} {plotAreaY + plotAreaMax / plotAreaRange * plotAreaHeight} Z") },
+            { 1, 0, -5M, 1, 5M, FormattableString.Invariant($"M {plotAreaX} {plotAreaY + plotAreaMax / plotAreaRange * plotAreaHeight} L {plotAreaX} {plotAreaY + (plotAreaMax + 15M) / plotAreaRange * plotAreaHeight} L {plotAreaX + dataPointWidth} {plotAreaY + (plotAreaMax + 5M) / plotAreaRange * plotAreaHeight} L {plotAreaX + dataPointWidth} {plotAreaY + plotAreaMax / plotAreaRange * plotAreaHeight} Z") },
+            { 1, 2, 5M, 3, -5M, FormattableString.Invariant($"M {plotAreaX + 2M * dataPointWidth} {plotAreaY + plotAreaMax / plotAreaRange * plotAreaHeight} L {plotAreaX + 2M * dataPointWidth} {plotAreaY + (plotAreaMax - 15M) / plotAreaRange * plotAreaHeight} L {plotAreaX + 3M * dataPointWidth} {plotAreaY + (plotAreaMax - 5M) / plotAreaRange * plotAreaHeight} L {plotAreaX + 3M * dataPointWidth} {plotAreaY + plotAreaMax / plotAreaRange * plotAreaHeight} Z") },
+            { 1, 2, -5M, 3, 5M, FormattableString.Invariant($"M {plotAreaX + 2M * dataPointWidth} {plotAreaY + plotAreaMax / plotAreaRange * plotAreaHeight} L {plotAreaX + 2M * dataPointWidth} {plotAreaY + (plotAreaMax - 5M) / plotAreaRange * plotAreaHeight} L {plotAreaX + 3M * dataPointWidth} {plotAreaY + (plotAreaMax - 15M) / plotAreaRange * plotAreaHeight} L {plotAreaX + 3M * dataPointWidth} {plotAreaY + plotAreaMax / plotAreaRange * plotAreaHeight} Z") },
         };
     }
 
     [Theory]
-    [InlineData(LineGapMode.Skip, "M 210.0 425 L 210.0 325.00 L 380.0 325.00 L 380.0 425 Z M 720.0 425 L 720.0 325.00 L 890.0 325.00 L 890.0 425 Z")]
-    [InlineData(LineGapMode.Join, "M 210.0 425 L 210.0 325.00 L 380.0 325.00 L 720.0 325.00 L 890.0 325.00 L 890.0 425 Z")]
+    [InlineData(LineGapMode.Skip, "M 125.0 425 L 125.0 325.00 L 337.5 325.00 L 337.5 425 Z M 762.5 425 L 762.5 325.00 L 975.0 325.00 L 975.0 425 Z")]
+    [InlineData(LineGapMode.Join, "M 125.0 425 L 125.0 325.00 L 337.5 325.00 L 762.5 325.00 L 975.0 325.00 L 975.0 425 Z")]
     public void GetDataSeriesShapes_LineGapMode(LineGapMode lineGapMode, string expectedPath) {
         var subject = new AreaLayer() {
             Chart = new() {
@@ -149,7 +151,8 @@ public class AreaLayerTests {
                      Max = 40M,
                      GridLineInterval = 10M
                 },
-                Labels = { "Foo", "Bar", "Baz", "Quux", "Quuux" }
+                Labels = { "Foo", "Bar", "Baz", "Quux", "Quuux" },
+                DataPointSpacingMode = DataPointSpacingMode.EdgeToEdge
             },
             DataSeries = {
                 new() {
