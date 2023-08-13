@@ -1,7 +1,6 @@
 ﻿using BlazorPlayground.Chart.Shapes;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
-using System.Linq;
 
 namespace BlazorPlayground.Chart;
 
@@ -11,7 +10,6 @@ public class XYChart : ComponentBase {
     internal Canvas Canvas { get; set; } = new();
     internal PlotArea PlotArea { get; set; } = new();
     internal List<LayerBase> Layers { get; set; } = new();
-    public decimal DataPointWidth => ((decimal)Canvas.PlotAreaWidth) / Labels.Count;
     internal Action? StateHasChangedHandler { get; init; }
 
     protected override void BuildRenderTree(RenderTreeBuilder builder) {
@@ -118,5 +116,7 @@ public class XYChart : ComponentBase {
 
     public decimal MapDataValueToPlotArea(decimal dataPoint) => dataPoint / (PlotArea.Max - PlotArea.Min) * Canvas.PlotAreaHeight;
 
-    public decimal MapDataIndexToCanvas(int index) => Canvas.PlotAreaX + (index + 0.5M) * DataPointWidth;
+    public decimal GetDataPointWidth() => ((decimal)Canvas.PlotAreaWidth) / Labels.Count;
+
+    public decimal MapDataIndexToCanvas(int index) => Canvas.PlotAreaX + (index + 0.5M) * GetDataPointWidth();
 }

@@ -12,11 +12,11 @@ public class BarLayer : LayerBase {
     public override StackMode StackMode => StackMode.Split;
 
     public override IEnumerable<ShapeBase> GetDataSeriesShapes() {
-        var width = Chart.DataPointWidth / 100M * (100M - ClearancePercentage * 2);
+        var width = Chart.GetDataPointWidth() / 100M * (100M - ClearancePercentage * 2);
         Func<int, decimal> offsetProvider = dataSeriesIndex => -width / 2M;
 
         if (!IsStacked) {
-            var gapWidth = Chart.DataPointWidth / 100M * GapPercentage;
+            var gapWidth = Chart.GetDataPointWidth() / 100M * GapPercentage;
             var dataSeriesWidth = (width - gapWidth * (DataSeries.Count - 1)) / DataSeries.Count;
 
             width = (width - gapWidth * (DataSeries.Count - 1)) / DataSeries.Count;

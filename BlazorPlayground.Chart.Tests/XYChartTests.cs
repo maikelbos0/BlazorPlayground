@@ -6,24 +6,6 @@ namespace BlazorPlayground.Chart.Tests;
 
 public class XYChartTests {
     [Fact]
-    public void DataPointWidth() {
-        var subject = new XYChart() {
-            Canvas = {
-                Width = 1000,
-                Height = 500,
-                Padding = 25,
-                XAxisLabelHeight = 50,
-                XAxisLabelClearance = 5,
-                YAxisLabelWidth = 80,
-                YAxisLabelClearance = 10
-            },
-            Labels = { "Foo", "Bar", "Baz" }
-        };
-
-        Assert.Equal(870M / 3M, subject.DataPointWidth);
-    }
-
-    [Fact]
     public void SetCanvas() {
         var stateHasChangedInvoked = false;
         var canvas = new Canvas();
@@ -538,6 +520,24 @@ public class XYChartTests {
             { 200M, 200M / plotAreaRange * plotAreaHeight },
             { 350M, 350M / plotAreaRange * plotAreaHeight }
         };
+    }
+
+    [Fact]
+    public void GetDataPointWidth() {
+        var subject = new XYChart() {
+            Canvas = {
+                Width = 1000,
+                Height = 500,
+                Padding = 25,
+                XAxisLabelHeight = 50,
+                XAxisLabelClearance = 5,
+                YAxisLabelWidth = 80,
+                YAxisLabelClearance = 10
+            },
+            Labels = { "Foo", "Bar", "Baz" }
+        };
+
+        Assert.Equal(870M / 3M, subject.GetDataPointWidth());
     }
 
     [Theory]
