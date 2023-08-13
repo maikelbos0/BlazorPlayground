@@ -200,14 +200,11 @@ fieldset:disabled label, fieldset:disabled .form-control:disabled, fieldset:disa
 
 .chart-main .y-axis-label {
     text-anchor: end;
-    font-family: Courier New, Courier, monospace;
     font-size: 10pt;
     alignment-baseline: central;
 }
 
 .chart-main .y-axis-multiplier {
-    font-family: Courier New, Courier, monospace;
-    font-size: 12pt;
     transform-box: fill-box;
     transform-origin: 50% 50% 0;
     transform: translate(6pt, 0) rotate(-90deg);
@@ -216,11 +213,7 @@ fieldset:disabled label, fieldset:disabled .form-control:disabled, fieldset:disa
 }
 
 .chart-main .x-axis-label {
-    font-family: Courier New, Courier, monospace;
-    transform-box: fill-box;
-    transform-origin: 50% 50% 0;
-    transform: rotate(-90deg) translate(-50%, 0);
-    dominant-baseline: central;
+    dominant-baseline: hanging;
     text-anchor: middle;
 }
 
