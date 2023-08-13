@@ -8,6 +8,7 @@ namespace BlazorPlayground.Chart.Tests;
 public class LayerBaseTests {
     private class TestLayer : LayerBase {
         public override StackMode StackMode { get; }
+        public override DataPointSpacingMode DefaultDataPointSpacingMode => throw new NotImplementedException();
 
         public TestLayer(StackMode stackMode) {
             StackMode = stackMode;

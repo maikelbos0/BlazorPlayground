@@ -8,6 +8,7 @@ namespace BlazorPlayground.Chart.Tests;
 public class DataSeriesTests {
     private class TestLayer : LayerBase {
         public override StackMode StackMode => throw new NotImplementedException();
+        public override DataPointSpacingMode DefaultDataPointSpacingMode => throw new NotImplementedException();
 
         public override IEnumerable<ShapeBase> GetDataSeriesShapes() => throw new NotImplementedException();
     }

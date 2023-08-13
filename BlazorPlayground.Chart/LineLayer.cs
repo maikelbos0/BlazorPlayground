@@ -18,6 +18,7 @@ public class LineLayer : LayerBase {
     [Parameter] public decimal DataLineWidth { get; set; } = DefaultDataLineWidth;
     [Parameter] public LineGapMode LineGapMode { get; set; } = DefaultLineGapMode;
     public override StackMode StackMode => StackMode.Single;
+    public override DataPointSpacingMode DefaultDataPointSpacingMode => DataPointSpacingMode.Center;
 
     // TODO fluent lines?
     public override IEnumerable<ShapeBase> GetDataSeriesShapes() {

@@ -7,6 +7,7 @@ public class AreaLayer : LayerBase {
     public static LineGapMode DefaultLineGapMode { get; set; } = LineGapMode.Skip;
 
     public override StackMode StackMode => StackMode.Single;
+    public override DataPointSpacingMode DefaultDataPointSpacingMode => DataPointSpacingMode.EdgeToEdge;
 
     [Parameter] public LineGapMode LineGapMode { get; set; } = DefaultLineGapMode;
 

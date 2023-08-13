@@ -525,6 +525,26 @@ public class XYChartTests {
     }
 
     [Theory]
+    [MemberData(nameof(GetDataPointSpacingMode_Data))]
+    public void GetDataPointSpacingMode(DataPointSpacingMode dataPointSpacingMode, List<LayerBase> layers, DataPointSpacingMode expectedDataPointSpacingMode) {
+        var subject = new XYChart() {
+            Layers = layers,
+            DataPointSpacingMode = dataPointSpacingMode
+        };
+
+        Assert.Equal(expectedDataPointSpacingMode, subject.GetDataPointSpacingMode());
+    }
+
+    public static TheoryData<DataPointSpacingMode, List<LayerBase>, DataPointSpacingMode> GetDataPointSpacingMode_Data() => new() {
+        { DataPointSpacingMode.Center, new List<LayerBase> { new AreaLayer() }, DataPointSpacingMode.Center },
+        { DataPointSpacingMode.EdgeToEdge, new List<LayerBase> { new BarLayer() }, DataPointSpacingMode.EdgeToEdge },
+        { DataPointSpacingMode.Auto, new List<LayerBase>(), DataPointSpacingMode.EdgeToEdge },
+        { DataPointSpacingMode.Auto, new List<LayerBase> { new AreaLayer() }, DataPointSpacingMode.EdgeToEdge },
+        { DataPointSpacingMode.Auto, new List<LayerBase> { new BarLayer() }, DataPointSpacingMode.Center },
+        { DataPointSpacingMode.Auto, new List<LayerBase> { new LineLayer() }, DataPointSpacingMode.Center }
+    };
+
+    [Theory]
     [MemberData(nameof(GetDataPointWidth_Data))]
     public void GetDataPointWidth(DataPointSpacingMode dataPointSpacingMode, List<string> labels, decimal expectedWidth) {
         var subject = new XYChart() {

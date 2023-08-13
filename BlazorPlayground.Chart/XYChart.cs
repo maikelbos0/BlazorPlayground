@@ -120,7 +120,7 @@ public class XYChart : ComponentBase {
     public decimal MapDataValueToPlotArea(decimal dataPoint) => dataPoint / (PlotArea.Max - PlotArea.Min) * Canvas.PlotAreaHeight;
 
     public DataPointSpacingMode GetDataPointSpacingMode() => DataPointSpacingMode switch {
-        DataPointSpacingMode.Auto => Layers.Any(layer => true) ? DataPointSpacingMode.Center : DataPointSpacingMode.EdgeToEdge,
+        DataPointSpacingMode.Auto => Layers.Select(layer => layer.DefaultDataPointSpacingMode).DefaultIfEmpty(DataPointSpacingMode.EdgeToEdge).Max(),
         _ => DataPointSpacingMode
     };
 

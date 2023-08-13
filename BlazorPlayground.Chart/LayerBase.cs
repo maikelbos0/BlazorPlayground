@@ -12,6 +12,7 @@ public abstract class LayerBase : ComponentBase, IDisposable {
     [Parameter] public bool IsStacked { get; set; } = DefaultIsStacked;
     internal List<DataSeries> DataSeries { get; set; } = new();
     public abstract StackMode StackMode { get; }
+    public abstract DataPointSpacingMode DefaultDataPointSpacingMode { get; }
 
     protected override void OnInitialized() => Chart.AddLayer(this);
 

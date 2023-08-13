@@ -10,6 +10,7 @@ public class BarLayer : LayerBase {
     [Parameter] public decimal ClearancePercentage { get; set; } = DefaultClearancePercentage;
     [Parameter] public decimal GapPercentage { get; set; } = DefaultGapPercentage;
     public override StackMode StackMode => StackMode.Split;
+    public override DataPointSpacingMode DefaultDataPointSpacingMode => DataPointSpacingMode.Center;
 
     public override IEnumerable<ShapeBase> GetDataSeriesShapes() {
         var width = Chart.GetDataPointWidth() / 100M * (100M - ClearancePercentage * 2);
