@@ -27,6 +27,7 @@
         new() { Title = "Item 3" },
     };
     private List<int> Heights { get; set; }
+    private int PageY { get; set; }
 
     protected override async Task OnAfterRenderAsync(bool firstRender) {
         if (firstRender) {
@@ -44,7 +45,8 @@
         SelectedEl = el;
         StartEventArgs = args;
         Heights = await ModuleReference.InvokeAsync<List<int>>("getElementHeights", ContainerReference);
-        Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(Heights));
+        PageY = await ModuleReference.InvokeAsync<int>("getPageY", ContainerReference);
+        Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(PageY));
     }
 
     public void Drag(MouseEventArgs args) {
