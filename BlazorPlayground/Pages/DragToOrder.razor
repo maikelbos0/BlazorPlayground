@@ -27,17 +27,40 @@
     private IJSObjectReference ModuleReference { get; set; }
     private ElementReference ContainerReference { get; set; }
     private Element SelectedElement { get; set; }
+    private List<Element> Elements { get; set; } = Enumerable.Range(1, 8).Select(i => new Element() { Title = $"Item {i}" }).ToList();
+    private int? SelectedElementIndex => SelectedElement == null ? null : Elements.IndexOf(SelectedElement);
+    private int? NewElementIndex {
+        get {
+            if (SelectedElement == null || DeltaY == null) {
+                return null;
+            }
+
+            var index = SelectedElementIndex.Value;
+            var deltaY = DeltaY.Value;
+
+            if (deltaY < 0) {
+                while (index >= 0 && deltaY < 0) {
+                    deltaY += Heights[index];
+                    index--;
+                }
+                index++;
+            }
+            else {
+                while (index < Elements.Count && deltaY > 0) {
+                    deltaY -= Heights[index];
+                    index++;
+                }
+                index--;
+            }
+
+            return index;
+        }
+    }
     private double? StartY { get; set; }
     private double? CurrentY { get; set; }
     private double? DeltaY => CurrentY - StartY;
-    private List<Element> Elements { get; set; } = new() {
-        new() { Title = "Item 1" },
-        new() { Title = "Item 2" },
-        new() { Title = "Item 3" },
-    };
     private List<double> Heights { get; set; } = new();
     private double PageY { get; set; }
-    //private int CurrentElementIndex => ;
 
     protected override async Task OnAfterRenderAsync(bool firstRender) {
         if (firstRender) {
@@ -54,14 +77,14 @@
     public async Task StartDrag(Element element, MouseEventArgs args) {
         SelectedElement = element;
         StartY = args.PageY;
-        Heights = await ModuleReference.InvokeAsync<List<double>>("getElementHeights", ContainerReference);
         PageY = await ModuleReference.InvokeAsync<double>("getPageY", ContainerReference);
-
+        Heights = await ModuleReference.InvokeAsync<List<double>>("getElementHeights", ContainerReference);
     }
 
     public void Drag(MouseEventArgs args) {
         if (SelectedElement != null) {
             CurrentY = args.PageY;
+            Console.WriteLine(NewElementIndex);
         }
     }
 
@@ -72,8 +95,24 @@
     }
 
     public string GetStyle(Element element) {
-        if (element == SelectedElement && DeltaY != null) {
+        if (DeltaY == null) {
+            return "";
+        }
+
+        if (element == SelectedElement) {
             return $"z-index: 1000; margin-top: {DeltaY}px; margin-bottom: {-DeltaY}px";
+        }
+
+        var selectedElementIndex = SelectedElementIndex.Value;
+        var newElementIndex = NewElementIndex.Value;
+        var elementIndex = Elements.IndexOf(element);
+
+        if (selectedElementIndex < newElementIndex && selectedElementIndex < elementIndex && newElementIndex >= elementIndex) {
+            return $"margin-top: {-Heights[selectedElementIndex]}px; margin-bottom: {Heights[selectedElementIndex]}px";
+        }
+
+        if (selectedElementIndex > newElementIndex && selectedElementIndex > elementIndex && newElementIndex <= elementIndex) {
+            return $"margin-top: {Heights[selectedElementIndex]}px; margin-bottom: {-Heights[selectedElementIndex]}px";
         }
 
         return "";
