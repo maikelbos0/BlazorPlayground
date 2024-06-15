@@ -7,11 +7,19 @@
 <GlobalEventHandler OnMouseMove="Drag" OnMouseUp="StopDrag" />
 
 <ul class="list-group position-relative" @ref="ContainerReference">
-    @foreach (var element in Elements) {
-        <li class="list-group-item d-flex justify-content-between align-items-center" style="@GetStyle(element)">
-            <h5>@element.Title</h5>
-            <button class="btn btn-primary" @onmousedown="args => StartDrag(element, args)">Move</button>
-        </li>
+    @{
+        var index = 0;
+        var heights = new int[] { 50, 70, 90 };
+
+        foreach (var element in Elements) {
+            
+            <li class="list-group-item d-flex justify-content-between align-items-center" style="height: @(heights[index % heights.Length])px; @GetStyle(element)">
+                <h5>@element.Title</h5>
+                <button class="btn btn-primary" @onmousedown="args => StartDrag(element, args)">Move</button>
+            </li>
+
+            index++;
+        }
     }
 </ul>
 
