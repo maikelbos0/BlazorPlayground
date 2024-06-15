@@ -1,0 +1,57 @@
+﻿@page "/DragToOrder"
+
+<h1>Drag to order</h1>
+
+<GlobalEventHandler OnMouseMove="Drag" OnMouseUp="StopDrag" />
+
+<ul class="list-group position-relative">
+    @foreach (var el in Els) {
+        <li class="list-group-item d-flex justify-content-between align-items-center" style="@GetStyle(el)">
+            <h5>@el.Title</h5>
+            <button class="btn btn-primary" @onmousedown="args => StartDrag(el, args)">Move</button>
+        </li>
+    }
+</ul>
+
+@code {
+    private El SelectedEl { get; set; }
+    private MouseEventArgs StartEventArgs { get; set; }
+    private MouseEventArgs CurrentEventArgs { get; set; }
+    private List<El> Els { get; set; } = new() {
+        new() { Title = "Item 1" },
+        new() { Title = "Item 2" },
+        new() { Title = "Item 3" },
+    };
+
+
+    public void StartDrag(El el, MouseEventArgs args) {
+        SelectedEl = el;
+        StartEventArgs = args;
+    }
+
+    public void Drag(MouseEventArgs args) {
+        if (SelectedEl != null) {
+            CurrentEventArgs = args;
+        }
+    }
+
+    public void StopDrag() {
+        SelectedEl = null;
+        StartEventArgs = null;
+        CurrentEventArgs = null;
+    }
+
+    public string GetStyle(El el) {
+        if (el == SelectedEl && StartEventArgs != null && CurrentEventArgs != null) {
+            var delta = CurrentEventArgs.PageY - StartEventArgs.PageY;
+            return $"z-index: 1000; margin-top: {delta}px; margin-bottom: {-delta}px";
+        }
+
+        return "";
+    }
+
+    public class El {
+        public Guid Id { get; set; } = Guid.NewGuid();
+        public required string Title { get; set; }
+    }
+}
