@@ -30,19 +30,12 @@
             var index = SelectedElementIndex.Value;
             var deltaY = DeltaY.Value;
 
-            if (deltaY < 0) {
-                while (index >= 0 && deltaY < 0) {
-                    deltaY += Heights[index];
-                    index--;
-                }
-                index++;
+            while (index > 0 && deltaY < -Heights[index - 1] / 2) {
+                deltaY += Heights[--index];
             }
-            else {
-                while (index < Elements.Count && deltaY > 0) {
-                    deltaY -= Heights[index];
-                    index++;
-                }
-                index--;
+
+            while (index < Elements.Count - 1 && deltaY > Heights[index + 1] / 2) {
+                deltaY -= Heights[++index];
             }
 
             return index;
