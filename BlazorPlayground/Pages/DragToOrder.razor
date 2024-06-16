@@ -74,6 +74,13 @@
     }
 
     public void StopDrag() {
+        if (SelectedElement != null && SelectedElementIndex.Value != NewElementIndex.Value) {
+            var newElementIndex = NewElementIndex.Value;
+
+            Elements.RemoveAt(SelectedElementIndex.Value);
+            Elements.Insert(newElementIndex, SelectedElement);
+        }
+
         SelectedElement = null;
         StartY = null;
         CurrentY = null;
