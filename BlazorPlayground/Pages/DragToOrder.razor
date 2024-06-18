@@ -45,7 +45,6 @@
     private double? CurrentY { get; set; }
     private double? DeltaY => CurrentY - StartY;
     private List<double> Heights { get; set; } = new();
-    private double PageY { get; set; }
 
     protected override async Task OnAfterRenderAsync(bool firstRender) {
         if (firstRender) {
@@ -62,7 +61,6 @@
     public async Task StartDrag(Element element, MouseEventArgs args) {
         SelectedElement = element;
         StartY = args.PageY;
-        PageY = await ModuleReference.InvokeAsync<double>("getPageY", ContainerReference);
         Heights = await ModuleReference.InvokeAsync<List<double>>("getElementHeights", ContainerReference);
     }
 
