@@ -7,8 +7,7 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.3" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="9.0.3" PrivateAssets="all" />
-		<PackageReference Include="System.Net.Http.Json" Version="7.0.1" />
-		<PackageReference Include="VDT.Core.Blazor.GlobalEventHandler" Version="3.2.0" />
+		<PackageReference Include="VDT.Core.Blazor.GlobalEventHandler" Version="4.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
