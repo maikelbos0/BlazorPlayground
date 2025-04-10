@@ -25,7 +25,7 @@ public class DrawableShapeGeometryFactory {
     }
 
     private Geometry GetGeometry(Rectangle rectangle)
-        => GeometryFactory.Default.CreatePolygon([
+        => geometryFactory.CreatePolygon([
             GetCoordinate(rectangle.StartPoint.X, rectangle.StartPoint.Y),
             GetCoordinate(rectangle.StartPoint.X, rectangle.EndPoint.Y),
             GetCoordinate(rectangle.EndPoint.X, rectangle.EndPoint.Y),
@@ -38,7 +38,7 @@ public class DrawableShapeGeometryFactory {
 
         coordinates.Add(coordinates.First());
 
-        return GeometryFactory.Default.CreatePolygon(coordinates.ToArray());
+        return geometryFactory.CreatePolygon(coordinates.ToArray());
     }
 
     private Coordinate GetCoordinate(double x, double y)
