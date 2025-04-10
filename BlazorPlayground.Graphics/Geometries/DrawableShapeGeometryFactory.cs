@@ -33,6 +33,14 @@ public class DrawableShapeGeometryFactory {
             GetCoordinate(rectangle.StartPoint.X, rectangle.StartPoint.Y)
         ]);
 
+    private Geometry GetGeometry(RegularPolygon regularPolygon) {
+        var coordinates = regularPolygon.GetPoints().Select(point => GetCoordinate(point.X, point.Y)).ToList();
+
+        coordinates.Add(coordinates.First());
+
+        return GeometryFactory.Default.CreatePolygon(coordinates.ToArray());
+    }
+
     private Coordinate GetCoordinate(double x, double y)
         => new(geometryFactory.PrecisionModel.MakePrecise(x), geometryFactory.PrecisionModel.MakePrecise(y));
 }
