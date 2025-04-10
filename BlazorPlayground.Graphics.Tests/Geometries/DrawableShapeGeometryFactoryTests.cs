@@ -8,7 +8,8 @@ namespace BlazorPlayground.Graphics.Tests.Geometries;
 public class DrawableShapeGeometryFactoryTests {
     [Fact]
     public void GetGeometryFromEmptyEnumerable() {
-        var subject = new DrawableShapeGeometryFactory();
+        var geometryFactory = new GeometryFactory(new PrecisionModel(1000));
+        var subject = new DrawableShapeGeometryFactory(geometryFactory);
 
         var result = subject.GetGeometry(Enumerable.Empty<DrawableShape>());
 
@@ -17,7 +18,8 @@ public class DrawableShapeGeometryFactoryTests {
 
     [Fact]
     public void GetGeometryFromRectangle() {
-        var subject = new DrawableShapeGeometryFactory();
+        var geometryFactory = new GeometryFactory(new PrecisionModel(1000));
+        var subject = new DrawableShapeGeometryFactory(geometryFactory);
 
         var result = subject.GetGeometry([new Rectangle(new(-10, -10), new(50, -30))]);
 

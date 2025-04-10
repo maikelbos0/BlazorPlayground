@@ -4,12 +4,19 @@ using NetTopologySuite.Geometries.Utilities;
 namespace BlazorPlayground.Graphics.Geometries;
 
 public class DrawableShapeGeometryFactory {
+    private readonly GeometryFactory geometryFactory;
+
+    public DrawableShapeGeometryFactory(GeometryFactory geometryFactory) {
+        this.geometryFactory = geometryFactory;
+    }
+
     public Geometry GetGeometry(IEnumerable<DrawableShape> shapes) {
         var geometries = new List<Geometry>();
 
         foreach (var shape in shapes) {
             geometries.Add(shape switch {
                 Rectangle rectangle => GetGeometry(rectangle),
+                RegularPolygon regularPolygon => GetGeometry(regularPolygon),
                 _ => throw new NotImplementedException()
             });
         }
@@ -19,10 +26,13 @@ public class DrawableShapeGeometryFactory {
 
     private Geometry GetGeometry(Rectangle rectangle)
         => GeometryFactory.Default.CreatePolygon([
-            new(rectangle.StartPoint.X, rectangle.StartPoint.Y),
-            new(rectangle.StartPoint.X, rectangle.EndPoint.Y),
-            new(rectangle.EndPoint.X, rectangle.EndPoint.Y),
-            new(rectangle.EndPoint.X, rectangle.StartPoint.Y),
-            new(rectangle.StartPoint.X, rectangle.StartPoint.Y)
+            GetCoordinate(rectangle.StartPoint.X, rectangle.StartPoint.Y),
+            GetCoordinate(rectangle.StartPoint.X, rectangle.EndPoint.Y),
+            GetCoordinate(rectangle.EndPoint.X, rectangle.EndPoint.Y),
+            GetCoordinate(rectangle.EndPoint.X, rectangle.StartPoint.Y),
+            GetCoordinate(rectangle.StartPoint.X, rectangle.StartPoint.Y)
         ]);
+
+    private Coordinate GetCoordinate(double x, double y)
+        => new(geometryFactory.PrecisionModel.MakePrecise(x), geometryFactory.PrecisionModel.MakePrecise(y));
 }
