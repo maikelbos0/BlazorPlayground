@@ -6,6 +6,7 @@ namespace BlazorPlayground.Graphics.Geometries;
 public class DrawableShapeGeometryFactory {
     private const int approximationSegmentCount = 60;
     private const double angleIncrement = 2 * Math.PI / approximationSegmentCount;
+    private const double stepIncrement = 1.0 / approximationSegmentCount;
     
     private readonly GeometryFactory geometryFactory;
 
@@ -23,6 +24,7 @@ public class DrawableShapeGeometryFactory {
                 Circle circle => GetGeometry(circle),
                 Ellipse ellipse => GetGeometry(ellipse),
                 Line line => GetGeometry(line),
+                QuadraticBezier quadraticBezier => GetGeometry(quadraticBezier),
                 _ => throw new NotImplementedException()
             });
         }
@@ -51,7 +53,7 @@ public class DrawableShapeGeometryFactory {
         var radius = (circle.CenterPoint - circle.RadiusPoint).Distance;
         var coordinates = new Coordinate[approximationSegmentCount + 1];
 
-        for (int i = 0; i < approximationSegmentCount; i++) {
+        for (var i = 0; i < approximationSegmentCount; i++) {
             var angle = angleIncrement * i;
             var dx = radius * Math.Cos(angle);
             var dy = radius * Math.Sin(angle);
@@ -68,7 +70,7 @@ public class DrawableShapeGeometryFactory {
         var radiusY = Math.Abs(ellipse.CenterPoint.Y - ellipse.RadiusPoint.Y);
         var coordinates = new Coordinate[approximationSegmentCount + 1];
 
-        for (int i = 0; i < approximationSegmentCount; i++) {
+        for (var i = 0; i < approximationSegmentCount; i++) {
             var angle = angleIncrement * i;
             var dx = radiusX * Math.Cos(angle);
             var dy = radiusY * Math.Sin(angle);
@@ -82,6 +84,25 @@ public class DrawableShapeGeometryFactory {
 
     private Geometry GetGeometry(Line line)
         => geometryFactory.CreateLineString([GetCoordinate(line.StartPoint.X, line.StartPoint.Y), GetCoordinate(line.EndPoint.X, line.EndPoint.Y)]);
+
+    private Geometry GetGeometry(QuadraticBezier quadraticBezier) {
+        var coordinates = new Coordinate[approximationSegmentCount + 1];
+
+        for (var i = 1; i < approximationSegmentCount; i++) {
+            var step = stepIncrement * i;
+            var invertedStep = 1.0 - step;
+            var intermediatePoint = quadraticBezier.StartPoint * invertedStep * invertedStep
+                + quadraticBezier.ControlPoint * step * invertedStep * 2
+                + quadraticBezier.EndPoint * step * step;
+
+            coordinates[i] = GetCoordinate(intermediatePoint.X, intermediatePoint.Y);
+        }
+
+        coordinates[0] = GetCoordinate(quadraticBezier.StartPoint.X, quadraticBezier.StartPoint.Y);
+        coordinates[approximationSegmentCount] = GetCoordinate(quadraticBezier.EndPoint.X, quadraticBezier.EndPoint.Y);
+
+        return geometryFactory.CreateLineString(coordinates);
+    }
 
     private Coordinate GetCoordinate(double x, double y)
         => new(geometryFactory.PrecisionModel.MakePrecise(x), geometryFactory.PrecisionModel.MakePrecise(y));

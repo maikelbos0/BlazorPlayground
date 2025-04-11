@@ -77,4 +77,18 @@ public class DrawableShapeGeometryFactoryTests {
         Assert.NotNull(result);
         Assert.Equal(GeometryFactory.Default.CreateLineString([new(30, 50), new(50, 100)]), result);
     }
+
+    [Fact]
+    public void GetGeometryFromQuadraticBezier() {
+        var geometryFactory = new GeometryFactory(new PrecisionModel(1000));
+        var subject = new DrawableShapeGeometryFactory(geometryFactory);
+        var quadraticBezier = new QuadraticBezier(new(30, 50), new(50, 100)) {
+            ControlPoint = new(20, 70)
+        };
+
+        var result = subject.GetGeometry([quadraticBezier]);
+
+        Assert.NotNull(result);
+        Assert.Equal(GeometryFactory.Default.CreateLineString([new(30, 50), new(29.678, 50.669), new(29.378, 51.344), new(29.1, 52.025), new(28.844, 52.711), new(28.611, 53.403), new(28.4, 54.1), new(28.211, 54.803), new(28.044, 55.511), new(27.9, 56.225), new(27.778, 56.944), new(27.678, 57.669), new(27.6, 58.4), new(27.544, 59.136), new(27.511, 59.878), new(27.5, 60.625), new(27.511, 61.378), new(27.544, 62.136), new(27.6, 62.9), new(27.678, 63.669), new(27.778, 64.444), new(27.9, 65.225), new(28.044, 66.011), new(28.211, 66.803), new(28.4, 67.6), new(28.611, 68.403), new(28.844, 69.211), new(29.1, 70.025), new(29.378, 70.844), new(29.678, 71.669), new(30, 72.5), new(30.344, 73.336), new(30.711, 74.178), new(31.1, 75.025), new(31.511, 75.878), new(31.944, 76.736), new(32.4, 77.6), new(32.878, 78.469), new(33.378, 79.344), new(33.9, 80.225), new(34.444, 81.111), new(35.011, 82.003), new(35.6, 82.9), new(36.211, 83.803), new(36.844, 84.711), new(37.5, 85.625), new(38.178, 86.544), new(38.878, 87.469), new(39.6, 88.4), new(40.344, 89.336), new(41.111, 90.278), new(41.9, 91.225), new(42.711, 92.178), new(43.544, 93.136), new(44.4, 94.1), new(45.278, 95.069), new(46.178, 96.044), new(47.1, 97.025), new(48.044, 98.011), new(49.011, 99.003), new(50, 100)]), result);
+    }
 }
