@@ -1,6 +1,5 @@
 ﻿using BlazorPlayground.Graphics.Geometries;
 using NetTopologySuite.Geometries;
-using System;
 using System.Linq;
 using Xunit;
 
@@ -21,8 +20,9 @@ public class DrawableShapeGeometryFactoryTests {
     public void GetGeometryFromRectangle() {
         var geometryFactory = new GeometryFactory(new PrecisionModel(1000));
         var subject = new DrawableShapeGeometryFactory(geometryFactory);
+        var rectangle = new Rectangle(new(-10, -10), new(50, -30));
 
-        var result = subject.GetGeometry([new Rectangle(new(-10, -10), new(50, -30))]);
+        var result = subject.GetGeometry([rectangle]);
 
         Assert.NotNull(result);
         Assert.Equal(GeometryFactory.Default.CreatePolygon([new(-10, -10), new(-10, -30), new(50, -30), new(50, -10), new(-10, -10)]), result);
@@ -64,5 +64,17 @@ public class DrawableShapeGeometryFactoryTests {
 
         Assert.NotNull(result);
         Assert.Equal(GeometryFactory.Default.CreatePolygon([new(50, 50), new(49.89, 55.226), new(49.563, 60.396), new(49.021, 65.451), new(48.271, 70.337), new(47.321, 75), new(46.18, 79.389), new(44.863, 83.457), new(43.383, 87.157), new(41.756, 90.451), new(40, 93.301), new(38.135, 95.677), new(36.18, 97.553), new(34.158, 98.907), new(32.091, 99.726), new(30, 100), new(27.909, 99.726), new(25.842, 98.907), new(23.82, 97.553), new(21.865, 95.677), new(20, 93.301), new(18.244, 90.451), new(16.617, 87.157), new(15.137, 83.457), new(13.82, 79.389), new(12.679, 75), new(11.729, 70.337), new(10.979, 65.451), new(10.437, 60.396), new(10.11, 55.226), new(10, 50), new(10.11, 44.774), new(10.437, 39.604), new(10.979, 34.549), new(11.729, 29.663), new(12.679, 25), new(13.82, 20.611), new(15.137, 16.543), new(16.617, 12.843), new(18.244, 9.549), new(20, 6.699), new(21.865, 4.323), new(23.82, 2.447), new(25.842, 1.093), new(27.909, 0.274), new(30, 0), new(32.091, 0.274), new(34.158, 1.093), new(36.18, 2.447), new(38.135, 4.323), new(40, 6.699), new(41.756, 9.549), new(43.383, 12.843), new(44.863, 16.543), new(46.18, 20.611), new(47.321, 25), new(48.271, 29.663), new(49.021, 34.549), new(49.563, 39.604), new(49.89, 44.774), new(50, 50)]), result);
+    }
+
+    [Fact]
+    public void GetGeometryFromLine() {
+        var geometryFactory = new GeometryFactory(new PrecisionModel(1000));
+        var subject = new DrawableShapeGeometryFactory(geometryFactory);
+        var line = new Line(new(30, 50), new(50, 100));
+
+        var result = subject.GetGeometry([line]);
+
+        Assert.NotNull(result);
+        Assert.Equal(GeometryFactory.Default.CreateLineString([new(30, 50), new(50, 100)]), result);
     }
 }

@@ -22,6 +22,7 @@ public class DrawableShapeGeometryFactory {
                 RegularPolygon regularPolygon => GetGeometry(regularPolygon),
                 Circle circle => GetGeometry(circle),
                 Ellipse ellipse => GetGeometry(ellipse),
+                Line line => GetGeometry(line),
                 _ => throw new NotImplementedException()
             });
         }
@@ -78,6 +79,9 @@ public class DrawableShapeGeometryFactory {
 
         return geometryFactory.CreatePolygon(coordinates);
     }
+
+    private Geometry GetGeometry(Line line)
+        => geometryFactory.CreateLineString([GetCoordinate(line.StartPoint.X, line.StartPoint.Y), GetCoordinate(line.EndPoint.X, line.EndPoint.Y)]);
 
     private Coordinate GetCoordinate(double x, double y)
         => new(geometryFactory.PrecisionModel.MakePrecise(x), geometryFactory.PrecisionModel.MakePrecise(y));
