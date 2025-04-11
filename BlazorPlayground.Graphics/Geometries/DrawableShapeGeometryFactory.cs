@@ -25,6 +25,7 @@ public class DrawableShapeGeometryFactory {
                 Ellipse ellipse => GetGeometry(ellipse),
                 Line line => GetGeometry(line),
                 QuadraticBezier quadraticBezier => GetGeometry(quadraticBezier),
+                CubicBezier cubicBezier => GetGeometry(cubicBezier),
                 _ => throw new NotImplementedException()
             });
         }
@@ -100,6 +101,26 @@ public class DrawableShapeGeometryFactory {
 
         coordinates[0] = GetCoordinate(quadraticBezier.StartPoint.X, quadraticBezier.StartPoint.Y);
         coordinates[approximationSegmentCount] = GetCoordinate(quadraticBezier.EndPoint.X, quadraticBezier.EndPoint.Y);
+
+        return geometryFactory.CreateLineString(coordinates);
+    }
+
+    private Geometry GetGeometry(CubicBezier cubicBezier) {
+        var coordinates = new Coordinate[approximationSegmentCount + 1];
+
+        for (var i = 1; i < approximationSegmentCount; i++) {
+            var step = stepIncrement * i;
+            var invertedStep = 1.0 - step;
+            var intermediatePoint = cubicBezier.StartPoint * invertedStep * invertedStep * invertedStep
+                + cubicBezier.ControlPoint1 * step * invertedStep * invertedStep * 3
+                + cubicBezier.ControlPoint2 * step * step * invertedStep * 3
+                + cubicBezier.EndPoint * step * step * step;
+
+            coordinates[i] = GetCoordinate(intermediatePoint.X, intermediatePoint.Y);
+        }
+
+        coordinates[0] = GetCoordinate(cubicBezier.StartPoint.X, cubicBezier.StartPoint.Y);
+        coordinates[approximationSegmentCount] = GetCoordinate(cubicBezier.EndPoint.X, cubicBezier.EndPoint.Y);
 
         return geometryFactory.CreateLineString(coordinates);
     }
