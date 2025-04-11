@@ -21,6 +21,7 @@ public class DrawableShapeGeometryFactory {
                 Rectangle rectangle => GetGeometry(rectangle),
                 RegularPolygon regularPolygon => GetGeometry(regularPolygon),
                 Circle circle => GetGeometry(circle),
+                Ellipse ellipse => GetGeometry(ellipse),
                 _ => throw new NotImplementedException()
             });
         }
@@ -50,10 +51,27 @@ public class DrawableShapeGeometryFactory {
         var coordinates = new Coordinate[approximationSegmentCount + 1];
 
         for (int i = 0; i < approximationSegmentCount; i++) {
-            double angle = angleIncrement * i;
-            double dx = radius * Math.Cos(angle);
-            double dy = radius * Math.Sin(angle);
+            var angle = angleIncrement * i;
+            var dx = radius * Math.Cos(angle);
+            var dy = radius * Math.Sin(angle);
             coordinates[i] = GetCoordinate(circle.CenterPoint.X + dx, circle.CenterPoint.Y + dy);
+        }
+
+        coordinates[approximationSegmentCount] = coordinates[0];
+
+        return geometryFactory.CreatePolygon(coordinates);
+    }
+
+    private Geometry GetGeometry(Ellipse ellipse) {
+        var radiusX = Math.Abs(ellipse.CenterPoint.X - ellipse.RadiusPoint.X);
+        var radiusY = Math.Abs(ellipse.CenterPoint.Y - ellipse.RadiusPoint.Y);
+        var coordinates = new Coordinate[approximationSegmentCount + 1];
+
+        for (int i = 0; i < approximationSegmentCount; i++) {
+            var angle = angleIncrement * i;
+            var dx = radiusX * Math.Cos(angle);
+            var dy = radiusY * Math.Sin(angle);
+            coordinates[i] = GetCoordinate(ellipse.CenterPoint.X + dx, ellipse.CenterPoint.Y + dy);
         }
 
         coordinates[approximationSegmentCount] = coordinates[0];
