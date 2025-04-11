@@ -4,6 +4,9 @@ using NetTopologySuite.Geometries.Utilities;
 namespace BlazorPlayground.Graphics.Geometries;
 
 public class DrawableShapeGeometryFactory {
+    private const int approximationSegmentCount = 60;
+    private const double angleIncrement = 2 * Math.PI / approximationSegmentCount;
+    
     private readonly GeometryFactory geometryFactory;
 
     public DrawableShapeGeometryFactory(GeometryFactory geometryFactory) {
@@ -17,6 +20,7 @@ public class DrawableShapeGeometryFactory {
             geometries.Add(shape switch {
                 Rectangle rectangle => GetGeometry(rectangle),
                 RegularPolygon regularPolygon => GetGeometry(regularPolygon),
+                Circle circle => GetGeometry(circle),
                 _ => throw new NotImplementedException()
             });
         }
@@ -38,7 +42,23 @@ public class DrawableShapeGeometryFactory {
 
         coordinates.Add(coordinates.First());
 
-        return geometryFactory.CreatePolygon(coordinates.ToArray());
+        return geometryFactory.CreatePolygon([.. coordinates]);
+    }
+
+    private Geometry GetGeometry(Circle circle) {
+        var radius = (circle.CenterPoint - circle.RadiusPoint).Distance;
+        var coordinates = new Coordinate[approximationSegmentCount + 1];
+
+        for (int i = 0; i < approximationSegmentCount; i++) {
+            double angle = angleIncrement * i;
+            double dx = radius * Math.Cos(angle);
+            double dy = radius * Math.Sin(angle);
+            coordinates[i] = GetCoordinate(circle.CenterPoint.X + dx, circle.CenterPoint.Y + dy);
+        }
+
+        coordinates[approximationSegmentCount] = coordinates[0];
+
+        return geometryFactory.CreatePolygon(coordinates);
     }
 
     private Coordinate GetCoordinate(double x, double y)
