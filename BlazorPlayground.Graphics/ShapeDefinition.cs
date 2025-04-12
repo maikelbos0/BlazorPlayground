@@ -10,6 +10,7 @@
             { typeof(RegularPolygon), new(typeof(RegularPolygon), "Regular polygon", (startPoint, endPoint) => new RegularPolygon(startPoint, endPoint)) },
             { typeof(QuadraticBezier), new(typeof(QuadraticBezier), "Quadratic bezier", (startPoint, endPoint) => new QuadraticBezier(startPoint, endPoint)) },
             { typeof(CubicBezier), new(typeof(CubicBezier), "Cubic bezier", (startPoint, endPoint) => new CubicBezier(startPoint, endPoint)) },
+            { typeof(ClosedPath), new(typeof(ClosedPath), "Closed path", (startPoint, endPoint) => new ClosedPath(startPoint, endPoint)) },
             { typeof(RawShape), new(typeof(RawShape), "Raw shape") }
         };
 

@@ -174,6 +174,25 @@ namespace BlazorPlayground.Graphics.Tests {
         }
 
         [Fact]
+        public void ClosedPath() {
+            var definition = Assert.Single(ShapeDefinition.Values, d => d.Name == "Closed path");
+
+            Assert.Equal(typeof(ClosedPath), definition.Type);
+            Assert.True(definition.UseOpacity);
+            Assert.True(definition.UseFill);
+            Assert.True(definition.UseStroke);
+            Assert.True(definition.UseStrokeLinejoin);
+            Assert.False(definition.UseStrokeLinecap);
+            Assert.False(definition.UseSides);
+            Assert.True(definition.AutoSelect);
+
+            var shape = Assert.IsType<ClosedPath>(definition.Construct(new Point(100, 200), new Point(150, 250)));
+
+            PointAssert.Equal(new Point(100, 200), shape.StartPoint);
+            PointAssert.Equal(new Point(150, 250), Assert.Single(shape.IntermediatePoints));
+        }
+
+        [Fact]
         public void RawShape() {
             var definition = Assert.Single(ShapeDefinition.Values, d => d.Name == "Raw shape");
 

@@ -1,6 +1,6 @@
 ﻿namespace BlazorPlayground.Graphics;
 
-public class ClosedPath : DrawableShape, IShapeWithOpacity, IShapeWithFill, IShapeWithStroke, IShapeWithSides, IShapeWithStrokeLinejoin {
+public class ClosedPath : DrawableShape, IShapeWithOpacity, IShapeWithFill, IShapeWithStroke, IShapeWithStrokeLinejoin, IAutoSelectedShape {
     public override string ElementName => "path";
     public override IReadOnlyList<Anchor> Anchors => Array.AsReadOnly([
         new Anchor<ClosedPath>(s => s.StartPoint, (s, p) => s.StartPoint = p),
