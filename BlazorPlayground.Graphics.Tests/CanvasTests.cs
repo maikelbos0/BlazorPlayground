@@ -1,4 +1,4 @@
-﻿using System;
+﻿using NSubstitute;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
@@ -412,9 +412,10 @@ namespace BlazorPlayground.Graphics.Tests {
         public void StartActionExecution() {
             var canvas = new Canvas();
 
-            canvas.StartActionExecution(new Point(100, 150));
+            canvas.StartActionExecution(new Point(100, 150), true);
 
             PointAssert.Equal(new Point(100, 150), canvas.StartPoint);
+            Assert.True(canvas.IsSecondaryAction);
         }
 
         [Fact]
@@ -471,6 +472,22 @@ namespace BlazorPlayground.Graphics.Tests {
             canvas.EndActionExecution();
 
             Assert.Single(canvas.Shapes);
+        }
+
+        [Fact]
+        public void EndActionExecution_SelectedShape_SecondaryAction() {
+            var shape = Substitute.For<DrawableShape, IHasSecondaryAction>();
+            var canvas = new Canvas() {
+                StartPoint = new Point(100, 150),
+                EndPoint = new Point(200, 250),
+                IsDrawing = false,
+                SelectedShape = shape,
+                IsSecondaryAction = true
+            };
+
+            canvas.EndActionExecution();
+
+            ((IHasSecondaryAction)shape).Received().ExecuteSecondaryAction(new(100, 150), new(200, 250));
         }
 
         [Fact]
@@ -538,7 +555,8 @@ namespace BlazorPlayground.Graphics.Tests {
                 EndPoint = new Point(150, 202),
                 SelectedShape = shape,
                 IsSelecting = true,
-                SelectedAnchor = shape.Anchors[0]
+                SelectedAnchor = shape.Anchors[0],
+                IsSecondaryAction = true
             };
 
             canvas.EndActionExecution();
@@ -547,6 +565,7 @@ namespace BlazorPlayground.Graphics.Tests {
             Assert.Null(canvas.EndPoint);
             Assert.False(canvas.IsSelecting);
             Assert.Null(canvas.SelectedAnchor);
+            Assert.False(canvas.IsSecondaryAction);
         }
 
         [Fact]

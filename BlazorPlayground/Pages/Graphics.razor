@@ -241,7 +241,7 @@
 </div>
 
 <svg class="graphics-main" viewBox="0 0 @Canvas.Width @Canvas.Height" width="@Canvas.Width" height="@Canvas.Height"
-     @onmousedown="args => Canvas.StartActionExecution(GetPoint(args))"
+     @onmousedown="args => Canvas.StartActionExecution(GetPoint(args), args.CtrlKey)"
      @onmousemove="args => Canvas.UpdateActionExecution(GetPoint(args))"
      @onmouseup="() => Canvas.EndActionExecution()">
 

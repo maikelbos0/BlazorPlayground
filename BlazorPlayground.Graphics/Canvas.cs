@@ -34,6 +34,7 @@ namespace BlazorPlayground.Graphics {
         public Point? SnappedStartPoint => Snap(StartPoint);
         public Point? EndPoint { get; set; }
         public Point? SnappedEndPoint => Snap(EndPoint);
+        public bool IsSecondaryAction { get; set; }
         public bool IsExecutingAction => StartPoint != null && EndPoint != null;
         public Point? Delta => StartPoint != null && EndPoint != null ? EndPoint - StartPoint : null;
         public DrawSettings DrawSettings { get; } = new DrawSettings();
@@ -119,8 +120,9 @@ namespace BlazorPlayground.Graphics {
             }
         }
 
-        public void StartActionExecution(Point startPoint) {
+        public void StartActionExecution(Point startPoint, bool isSecondaryAction) {
             StartPoint = startPoint;
+            IsSecondaryAction = isSecondaryAction;
         }
 
         public void UpdateActionExecution(Point endPoint) {
@@ -138,7 +140,12 @@ namespace BlazorPlayground.Graphics {
                     TransformSelectedShapeAnchor();
                 }
                 else if (SelectedShape != null) {
-                    TransformSelectedShape();
+                    if (IsSecondaryAction && SelectedShape is IHasSecondaryAction hasSecondaryAction) {
+                        hasSecondaryAction.ExecuteSecondaryAction(StartPoint, EndPoint);
+                    }
+                    else {
+                        TransformSelectedShape();
+                    }
                 }
             }
             else if (!IsSelecting) {
@@ -149,6 +156,7 @@ namespace BlazorPlayground.Graphics {
             EndPoint = null;
             SelectedAnchor = null;
             IsSelecting = false;
+            IsSecondaryAction = false;
         }
 
         internal void AddShape() {
