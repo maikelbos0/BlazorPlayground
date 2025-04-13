@@ -132,7 +132,10 @@ namespace BlazorPlayground.Graphics {
         }
 
         public void EndActionExecution() {
-            if (SnappedStartPoint != null && SnappedEndPoint != null) {
+            if (SnappedStartPoint != null && IsSecondaryAction && SelectedShape is IHasSecondaryAction hasSecondaryAction) {
+                hasSecondaryAction.ExecuteSecondaryAction(SnappedEndPoint ?? SnappedStartPoint);
+            }
+            else if (SnappedStartPoint != null && SnappedEndPoint != null) {
                 if (IsDrawing) {
                     AddShape();
                 }
@@ -140,12 +143,7 @@ namespace BlazorPlayground.Graphics {
                     TransformSelectedShapeAnchor();
                 }
                 else if (SelectedShape != null) {
-                    if (IsSecondaryAction && SelectedShape is IHasSecondaryAction hasSecondaryAction) {
-                        hasSecondaryAction.ExecuteSecondaryAction(SnappedEndPoint);
-                    }
-                    else {
-                        TransformSelectedShape();
-                    }
+                    TransformSelectedShape();
                 }
             }
             else if (!IsSelecting) {

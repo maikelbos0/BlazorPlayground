@@ -479,6 +479,21 @@ namespace BlazorPlayground.Graphics.Tests {
             var shape = Substitute.For<DrawableShape, IHasSecondaryAction>();
             var canvas = new Canvas() {
                 StartPoint = new Point(100, 150),
+                IsDrawing = false,
+                SelectedShape = shape,
+                IsSecondaryAction = true
+            };
+
+            canvas.EndActionExecution();
+
+            ((IHasSecondaryAction)shape).Received().ExecuteSecondaryAction(new(100, 150));
+        }
+
+        [Fact]
+        public void EndActionExecution_SelectedShape_SecondaryAction_EndPoint() {
+            var shape = Substitute.For<DrawableShape, IHasSecondaryAction>();
+            var canvas = new Canvas() {
+                StartPoint = new Point(100, 150),
                 EndPoint = new Point(200, 250),
                 IsDrawing = false,
                 SelectedShape = shape,
