@@ -26,6 +26,7 @@ public class DrawableShapeGeometryFactory {
                 Line line => GetGeometry(line),
                 QuadraticBezier quadraticBezier => GetGeometry(quadraticBezier),
                 CubicBezier cubicBezier => GetGeometry(cubicBezier),
+                ClosedPath closedPath => GetGeometry(closedPath),
                 _ => throw new NotImplementedException()
             });
         }
@@ -123,6 +124,19 @@ public class DrawableShapeGeometryFactory {
         coordinates[approximationSegmentCount] = GetCoordinate(cubicBezier.EndPoint.X, cubicBezier.EndPoint.Y);
 
         return geometryFactory.CreateLineString(coordinates);
+    }
+
+    private Geometry GetGeometry(ClosedPath closedPath) {
+        if (closedPath.IntermediatePoints.Count == 1) {
+            return geometryFactory.CreateLineString([GetCoordinate(closedPath.StartPoint.X, closedPath.StartPoint.Y), GetCoordinate(closedPath.IntermediatePoints[0].X, closedPath.IntermediatePoints[0].Y)]);
+        }
+        else { 
+            return geometryFactory.CreatePolygon([
+                GetCoordinate(closedPath.StartPoint.X, closedPath.StartPoint.Y),
+                .. closedPath.IntermediatePoints.Select(point => GetCoordinate(point.X, point.Y)),
+                GetCoordinate(closedPath.StartPoint.X, closedPath.StartPoint.Y)
+            ]);
+        }
     }
 
     private Coordinate GetCoordinate(double x, double y)

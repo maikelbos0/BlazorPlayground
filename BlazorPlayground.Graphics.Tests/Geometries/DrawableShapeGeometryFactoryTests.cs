@@ -109,6 +109,35 @@ public class DrawableShapeGeometryFactoryTests {
     }
 
     [Fact]
+    public void GetGeometryFromClosedPathWithTwoCoordinates() {
+        var geometryFactory = new GeometryFactory(new PrecisionModel(1000));
+        var subject = new DrawableShapeGeometryFactory(geometryFactory);
+        var closedPath = new ClosedPath(new(30, 50), new(50, 100));
+
+        var result = subject.GetGeometry([closedPath]);
+
+        Assert.NotNull(result);
+        Assert.Equal(geometryFactory.CreateLineString([new(30, 50), new(50, 100)]), result);
+    }
+
+    [Fact]
+    public void GetGeometryFromClosedPath() {
+        var geometryFactory = new GeometryFactory(new PrecisionModel(1000));
+        var subject = new DrawableShapeGeometryFactory(geometryFactory);
+        var closedPath = new ClosedPath(new(30, 50), new(50, 100)) {
+            IntermediatePoints = {
+                new(60, 40),
+                new(30, 10)
+            }
+        };
+
+        var result = subject.GetGeometry([closedPath]);
+
+        Assert.NotNull(result);
+        Assert.Equal(geometryFactory.CreatePolygon([new(30, 50), new(50, 100), new(60, 40), new(30, 10), new(30, 50)]), result);
+    }
+
+    [Fact]
     public void GetGeometryFromMultiplePolygons() {
         var geometryFactory = new GeometryFactory(new PrecisionModel(1000));
         var subject = new DrawableShapeGeometryFactory(geometryFactory);
