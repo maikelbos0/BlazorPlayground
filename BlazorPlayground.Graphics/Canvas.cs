@@ -91,20 +91,31 @@ namespace BlazorPlayground.Graphics {
         }
 
         public Shape? CreateVirtualSelectedShape() {
-            if (SelectedShape == null || Delta == null || SnappedEndPoint == null) {
-                return null;
+            if (SelectedShape != null) {
+                if (SnappedStartPoint != null && IsSecondaryAction && SelectedShape is IHasSecondaryAction) {
+                    var virtualShape = SelectedShape.Clone();
+
+                    ((IHasSecondaryAction)virtualShape).ExecuteSecondaryAction(SnappedEndPoint ?? SnappedStartPoint);
+
+                    return virtualShape;
+                }
+                else if (SnappedEndPoint != null && SelectedAnchor != null) {
+                    var virtualShape = SelectedShape.Clone();
+
+                    SelectedAnchor.Set(virtualShape, SnappedEndPoint);
+
+                    return virtualShape;
+                }
+                else if (Delta != null && SelectedShape != null) {
+                    var virtualShape = SelectedShape.Clone();
+
+                    virtualShape.Transform(Delta, SnapToGrid, GridSize, SnapToShapes, GetSnapPoints());
+
+                    return virtualShape;
+                }
             }
 
-            var virtualShape = SelectedShape.Clone();
-
-            if (SelectedAnchor == null) {
-                virtualShape.Transform(Delta, SnapToGrid, GridSize, SnapToShapes, GetSnapPoints());
-            }
-            else {
-                SelectedAnchor.Set(virtualShape, SnappedEndPoint);
-            }
-
-            return virtualShape;
+            return null;
         }
 
         public void SelectShape(Shape shape) {

@@ -338,6 +338,41 @@ namespace BlazorPlayground.Graphics.Tests {
         }
 
         [Fact]
+        public void CreateVirtualSelectedShape_SecondaryAction() {
+            var shape = Substitute.For<DrawableShape, IHasSecondaryAction>();
+            var canvas = new Canvas() {
+                StartPoint = new Point(100, 150),
+                IsDrawing = false,
+                SelectedShape = shape,
+                IsSecondaryAction = true
+            };
+
+            shape.Clone().Returns(Substitute.For<DrawableShape, IHasSecondaryAction>());
+
+            var virtualShape = Assert.IsType<IHasSecondaryAction>(canvas.CreateVirtualSelectedShape(), false);
+
+            virtualShape.Received().ExecuteSecondaryAction(new(100, 150));
+        }
+
+        [Fact]
+        public void CreateVirtualSelectedShape_SecondaryAction_EndPoint() {
+            var shape = Substitute.For<DrawableShape, IHasSecondaryAction>();
+            var canvas = new Canvas() {
+                StartPoint = new Point(100, 150),
+                EndPoint = new Point(200, 250),
+                IsDrawing = false,
+                SelectedShape = shape,
+                IsSecondaryAction = true
+            };
+
+            shape.Clone().Returns(Substitute.For<DrawableShape, IHasSecondaryAction>());
+
+            var virtualShape = Assert.IsType<IHasSecondaryAction>(canvas.CreateVirtualSelectedShape(), false);
+
+            virtualShape.Received().ExecuteSecondaryAction(new(200, 250));
+        }
+
+        [Fact]
         public void CreateVirtualSelectedShape_Shape() {
             var shape = new Line(new Point(100, 100), new Point(200, 200));
             var canvas = new Canvas() {
