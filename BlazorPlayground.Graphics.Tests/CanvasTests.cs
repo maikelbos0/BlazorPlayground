@@ -487,7 +487,7 @@ namespace BlazorPlayground.Graphics.Tests {
 
             canvas.EndActionExecution();
 
-            ((IHasSecondaryAction)shape).Received().ExecuteSecondaryAction(new(100, 150), new(200, 250));
+            ((IHasSecondaryAction)shape).Received().ExecuteSecondaryAction(new(200, 250));
         }
 
         [Fact]

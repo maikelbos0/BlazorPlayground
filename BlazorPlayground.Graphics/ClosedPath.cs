@@ -37,5 +37,5 @@ public class ClosedPath : DrawableShape, IShapeWithOpacity, IShapeWithFill, ISha
         IntermediatePoints = new(IntermediatePoints)
     };
 
-    public void ExecuteSecondaryAction(Point _, Point endPoint) => IntermediatePoints.Add(endPoint);
+    public void ExecuteSecondaryAction(Point endPoint) => IntermediatePoints.Add(endPoint);
 }

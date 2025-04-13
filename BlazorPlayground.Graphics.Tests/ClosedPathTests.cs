@@ -89,7 +89,7 @@ public class ClosedPathTests {
     public void ExecuteSecondaryActionAddsEndPointAsIntermediatePoint() {
         var closedPath = new ClosedPath(new Point(100, 150), new Point(200, 250));
 
-        closedPath.ExecuteSecondaryAction(new(0, 0), new(200, 50));
+        closedPath.ExecuteSecondaryAction(new(200, 50));
 
         Assert.Equal(2, closedPath.IntermediatePoints.Count);
         PointAssert.Equal(new Point(200, 50), closedPath.IntermediatePoints[^1]);

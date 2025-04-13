@@ -132,7 +132,7 @@ namespace BlazorPlayground.Graphics {
         }
 
         public void EndActionExecution() {
-            if (StartPoint != null && EndPoint != null) {
+            if (SnappedStartPoint != null && SnappedEndPoint != null) {
                 if (IsDrawing) {
                     AddShape();
                 }
@@ -141,7 +141,7 @@ namespace BlazorPlayground.Graphics {
                 }
                 else if (SelectedShape != null) {
                     if (IsSecondaryAction && SelectedShape is IHasSecondaryAction hasSecondaryAction) {
-                        hasSecondaryAction.ExecuteSecondaryAction(StartPoint, EndPoint);
+                        hasSecondaryAction.ExecuteSecondaryAction(SnappedEndPoint);
                     }
                     else {
                         TransformSelectedShape();
