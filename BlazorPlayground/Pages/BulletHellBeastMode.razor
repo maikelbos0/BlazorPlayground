@@ -1,4 +1,6 @@
 ﻿@page "/BulletHellBeastMode"
+@implements IAsyncDisposable
+@inject IJSRuntime JSRuntime
 
 <h1>Bullet Hell: Beast Mode</h1>
 
@@ -14,14 +16,32 @@
 	</fieldset>
 </div>
 
-@if (CurrentGame != null) {
-	<canvas id="game"></canvas>
-}
+<canvas id="game"></canvas>
 
 @code {
+	private IJSObjectReference ModuleReference { get; set; }
 	private Game CurrentGame { get; set; }
 
-	public class Game {
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			ModuleReference = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./js/bulletHellBeastMode.js");
+			await ModuleReference.InvokeVoidAsync("initializeGame", Game.Width, Game.Height, Game.FrameRate);
+		}
+	}
 
+	public async ValueTask DisposeAsync()
+	{
+		if (ModuleReference is not null)
+		{
+			await ModuleReference.DisposeAsync();
+		}
+	}
+
+	public class Game {
+		public const int Width = 1000;
+		public const int Height = 1000;
+		public const int FrameRate = 1000;
 	}
 }
