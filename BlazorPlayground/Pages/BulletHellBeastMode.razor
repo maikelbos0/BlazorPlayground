@@ -1,0 +1,27 @@
+﻿@page "/BulletHellBeastMode"
+
+<h1>Bullet Hell: Beast Mode</h1>
+
+<div class="btn-toolbar">
+	<fieldset class="btn-group mb-3 me-3">
+		@if (CurrentGame == null) {
+			<button type="button" class="btn btn-primary" @onclick="() => CurrentGame = new()">Start</button>
+		}
+		else {
+			<button type="button" class="btn btn-secondary" @onclick="() => CurrentGame = new()">Restart</button>
+			<button type="button" class="btn btn-primary" @onclick="() => CurrentGame = null">Stop</button>
+		}
+	</fieldset>
+</div>
+
+@if (CurrentGame != null) {
+	<canvas id="game"></canvas>
+}
+
+@code {
+	private Game CurrentGame { get; set; }
+
+	public class Game {
+
+	}
+}

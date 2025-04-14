@@ -109,3 +109,7 @@ fieldset:disabled label, fieldset:disabled .form-control:disabled, fieldset:disa
 .btn-toolbar .form-control, .btn-toolbar .form-select {
     max-width: 8em;
 }
+
+canvas {
+    background-color: #000000;
+}
