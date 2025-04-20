@@ -1,5 +1,4 @@
 ﻿using NetTopologySuite.Geometries;
-using NetTopologySuite.Geometries.Utilities;
 
 namespace BlazorPlayground.Graphics.Geometries;
 
@@ -14,27 +13,20 @@ public class DrawableShapeGeometryFactory {
         this.geometryFactory = geometryFactory;
     }
 
-    public Geometry GetGeometry(IEnumerable<DrawableShape> shapes) {
-        var geometries = new List<Geometry>();
+    public Geometry GetGeometry(DrawableShape shape) 
+        => shape switch {
+            Rectangle rectangle => GetGeometry(rectangle),
+            RegularPolygon regularPolygon => GetGeometry(regularPolygon),
+            Circle circle => GetGeometry(circle),
+            Ellipse ellipse => GetGeometry(ellipse),
+            Line line => GetGeometry(line),
+            QuadraticBezier quadraticBezier => GetGeometry(quadraticBezier),
+            CubicBezier cubicBezier => GetGeometry(cubicBezier),
+            ClosedPath closedPath => GetGeometry(closedPath),
+            _ => throw new NotImplementedException()
+        };
 
-        foreach (var shape in shapes) {
-            geometries.Add(shape switch {
-                Rectangle rectangle => GetGeometry(rectangle),
-                RegularPolygon regularPolygon => GetGeometry(regularPolygon),
-                Circle circle => GetGeometry(circle),
-                Ellipse ellipse => GetGeometry(ellipse),
-                Line line => GetGeometry(line),
-                QuadraticBezier quadraticBezier => GetGeometry(quadraticBezier),
-                CubicBezier cubicBezier => GetGeometry(cubicBezier),
-                ClosedPath closedPath => GetGeometry(closedPath),
-                _ => throw new NotImplementedException()
-            });
-        }
-
-        return GeometryCombiner.Combine(geometries);
-    }
-
-    private Geometry GetGeometry(Rectangle rectangle)
+    private Polygon GetGeometry(Rectangle rectangle)
         => geometryFactory.CreatePolygon([
             GetCoordinate(rectangle.StartPoint.X, rectangle.StartPoint.Y),
             GetCoordinate(rectangle.StartPoint.X, rectangle.EndPoint.Y),
@@ -43,7 +35,7 @@ public class DrawableShapeGeometryFactory {
             GetCoordinate(rectangle.StartPoint.X, rectangle.StartPoint.Y)
         ]);
 
-    private Geometry GetGeometry(RegularPolygon regularPolygon) {
+    private Polygon GetGeometry(RegularPolygon regularPolygon) {
         var coordinates = regularPolygon.GetPoints().Select(point => GetCoordinate(point.X, point.Y)).ToList();
 
         coordinates.Add(coordinates.First());
@@ -51,7 +43,7 @@ public class DrawableShapeGeometryFactory {
         return geometryFactory.CreatePolygon([.. coordinates]);
     }
 
-    private Geometry GetGeometry(Circle circle) {
+    private Polygon GetGeometry(Circle circle) {
         var radius = (circle.CenterPoint - circle.RadiusPoint).Distance;
         var coordinates = new Coordinate[approximationSegmentCount + 1];
 
@@ -67,7 +59,7 @@ public class DrawableShapeGeometryFactory {
         return geometryFactory.CreatePolygon(coordinates);
     }
 
-    private Geometry GetGeometry(Ellipse ellipse) {
+    private Polygon GetGeometry(Ellipse ellipse) {
         var radiusX = Math.Abs(ellipse.CenterPoint.X - ellipse.RadiusPoint.X);
         var radiusY = Math.Abs(ellipse.CenterPoint.Y - ellipse.RadiusPoint.Y);
         var coordinates = new Coordinate[approximationSegmentCount + 1];
@@ -84,10 +76,10 @@ public class DrawableShapeGeometryFactory {
         return geometryFactory.CreatePolygon(coordinates);
     }
 
-    private Geometry GetGeometry(Line line)
+    private LineString GetGeometry(Line line)
         => geometryFactory.CreateLineString([GetCoordinate(line.StartPoint.X, line.StartPoint.Y), GetCoordinate(line.EndPoint.X, line.EndPoint.Y)]);
 
-    private Geometry GetGeometry(QuadraticBezier quadraticBezier) {
+    private LineString GetGeometry(QuadraticBezier quadraticBezier) {
         var coordinates = new Coordinate[approximationSegmentCount + 1];
 
         for (var i = 1; i < approximationSegmentCount; i++) {
@@ -106,7 +98,7 @@ public class DrawableShapeGeometryFactory {
         return geometryFactory.CreateLineString(coordinates);
     }
 
-    private Geometry GetGeometry(CubicBezier cubicBezier) {
+    private LineString GetGeometry(CubicBezier cubicBezier) {
         var coordinates = new Coordinate[approximationSegmentCount + 1];
 
         for (var i = 1; i < approximationSegmentCount; i++) {
