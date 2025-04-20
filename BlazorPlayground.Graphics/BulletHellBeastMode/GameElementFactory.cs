@@ -23,6 +23,16 @@ public class GameElementFactory {
         return null;
     }
 
+    public BulletHellBeastMode.Color? GetStrokeColor(DrawableShape shape) {
+        if (shape is IShapeWithStroke shapeWithStroke && shapeWithStroke.GetStroke() is Color strokeColor) {
+            var strokeOpacity = shapeWithStroke.GetStrokeOpacity() / 100.0;
+
+            return new BulletHellBeastMode.Color(strokeColor.Red, strokeColor.Green, strokeColor.Blue, strokeColor.Alpha * strokeOpacity);
+        }
+
+        return null;
+    }
+
     public Geometry GetGeometry(DrawableShape shape) 
         => shape switch {
             Rectangle rectangle => GetGeometry(rectangle),

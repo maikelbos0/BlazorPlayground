@@ -1,4 +1,5 @@
 ﻿using NetTopologySuite.Geometries;
+using NSubstitute;
 using Xunit;
 
 namespace BlazorPlayground.Graphics.Tests.Geometries;
@@ -8,9 +9,9 @@ public class GameElementFactoryTests {
     public void GetFillColorFromShapeWithoutFill() {
         var geometryFactory = new GeometryFactory(new PrecisionModel(1000));
         var subject = new Graphics.Geometries.GameElementFactory(geometryFactory);
-        var line = new Line(new(30, 50), new(50, 100));
+        var shape = Substitute.For<DrawableShape>();
 
-        var result = subject.GetFillColor(line);
+        var result = subject.GetFillColor(shape);
 
         Assert.Null(result);
     }
@@ -25,6 +26,35 @@ public class GameElementFactoryTests {
         rectangle.SetFillOpacity(80);
 
         var result = subject.GetFillColor(rectangle);
+
+        Assert.NotNull(result);
+        Assert.Equal(255, result.Red);
+        Assert.Equal(128, result.Green);
+        Assert.Equal(64, result.Blue);
+        Assert.Equal(0.4, result.Alpha);
+    }
+
+    [Fact]
+    public void GetStrokeColorFromShapeWithoutStroke() {
+        var geometryFactory = new GeometryFactory(new PrecisionModel(1000));
+        var subject = new Graphics.Geometries.GameElementFactory(geometryFactory);
+        var shape = Substitute.For<DrawableShape>();
+
+        var result = subject.GetStrokeColor(shape);
+
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public void GetStrokeColorFromShapeWithStroke() {
+        var geometryFactory = new GeometryFactory(new PrecisionModel(1000));
+        var subject = new Graphics.Geometries.GameElementFactory(geometryFactory);
+        var rectangle = new Rectangle(new(-10, -10), new(50, -30));
+
+        rectangle.SetStroke(new Color(255, 128, 64, 0.5));
+        rectangle.SetStrokeOpacity(80);
+
+        var result = subject.GetStrokeColor(rectangle);
 
         Assert.NotNull(result);
         Assert.Equal(255, result.Red);
