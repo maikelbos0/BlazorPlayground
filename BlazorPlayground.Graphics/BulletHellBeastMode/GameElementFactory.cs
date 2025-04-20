@@ -1,47 +1,47 @@
 ﻿using NetTopologySuite.Geometries;
 
-namespace BlazorPlayground.Graphics.Geometries;
+namespace BlazorPlayground.Graphics.BulletHellBeastMode;
 
 public class GameElementFactory {
     private const int approximationSegmentCount = 60;
     private const double angleIncrement = 2 * Math.PI / approximationSegmentCount;
     private const double stepIncrement = 1.0 / approximationSegmentCount;
-    
+
     private readonly GeometryFactory geometryFactory;
 
     public GameElementFactory(GeometryFactory geometryFactory) {
         this.geometryFactory = geometryFactory;
     }
 
-    public BulletHellBeastMode.Color? GetFillColor(DrawableShape shape) {
+    public static BlazorPlayground.BulletHellBeastMode.Color? GetFillColor(DrawableShape shape) {
         if (shape is IShapeWithFill shapeWithFill && shapeWithFill.GetFill() is Color fillColor) {
             var fillOpacity = shapeWithFill.GetFillOpacity() / 100.0;
 
-            return new BulletHellBeastMode.Color(fillColor.Red, fillColor.Green, fillColor.Blue, fillColor.Alpha * fillOpacity);
+            return new BlazorPlayground.BulletHellBeastMode.Color(fillColor.Red, fillColor.Green, fillColor.Blue, fillColor.Alpha * fillOpacity);
         }
 
         return null;
     }
 
-    public BulletHellBeastMode.Color? GetStrokeColor(DrawableShape shape) {
+    public static BlazorPlayground.BulletHellBeastMode.Color? GetStrokeColor(DrawableShape shape) {
         if (shape is IShapeWithStroke shapeWithStroke && shapeWithStroke.GetStroke() is Color strokeColor) {
             var strokeOpacity = shapeWithStroke.GetStrokeOpacity() / 100.0;
 
-            return new BulletHellBeastMode.Color(strokeColor.Red, strokeColor.Green, strokeColor.Blue, strokeColor.Alpha * strokeOpacity);
+            return new BlazorPlayground.BulletHellBeastMode.Color(strokeColor.Red, strokeColor.Green, strokeColor.Blue, strokeColor.Alpha * strokeOpacity);
         }
 
         return null;
     }
 
-    public int? GetStrokeWidth(DrawableShape shape) {
-        if (shape is IShapeWithStroke shapeWithStroke && shapeWithStroke.GetStroke() is Color strokeColor) {
+    public static int? GetStrokeWidth(DrawableShape shape) {
+        if (shape is IShapeWithStroke shapeWithStroke) {
             return shapeWithStroke.GetStrokeWidth();
         }
 
         return null;
     }
 
-    public Geometry GetGeometry(DrawableShape shape) 
+    public Geometry GetGeometry(DrawableShape shape)
         => shape switch {
             Rectangle rectangle => GetGeometry(rectangle),
             RegularPolygon regularPolygon => GetGeometry(regularPolygon),
@@ -150,7 +150,7 @@ public class GameElementFactory {
         if (closedPath.IntermediatePoints.Count == 1) {
             return geometryFactory.CreateLineString([GetCoordinate(closedPath.StartPoint.X, closedPath.StartPoint.Y), GetCoordinate(closedPath.IntermediatePoints[0].X, closedPath.IntermediatePoints[0].Y)]);
         }
-        else { 
+        else {
             return geometryFactory.CreatePolygon([
                 GetCoordinate(closedPath.StartPoint.X, closedPath.StartPoint.Y),
                 .. closedPath.IntermediatePoints.Select(point => GetCoordinate(point.X, point.Y)),
