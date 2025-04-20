@@ -64,6 +64,30 @@ public class GameElementFactoryTests {
     }
 
     [Fact]
+    public void GetStrokeWidthFromShapeWithoutStroke() {
+        var geometryFactory = new GeometryFactory(new PrecisionModel(1000));
+        var subject = new Graphics.Geometries.GameElementFactory(geometryFactory);
+        var shape = Substitute.For<DrawableShape>();
+
+        var result = subject.GetStrokeWidth(shape);
+
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public void GetStrokeWdithFromShapeWithStroke() {
+        var geometryFactory = new GeometryFactory(new PrecisionModel(1000));
+        var subject = new Graphics.Geometries.GameElementFactory(geometryFactory);
+        var rectangle = new Rectangle(new(-10, -10), new(50, -30));
+
+        rectangle.SetStrokeWidth(5);
+
+        var result = subject.GetStrokeWidth(rectangle);
+
+        Assert.Equal(5, result);
+    }
+
+    [Fact]
     public void GetGeometryFromRectangle() {
         var geometryFactory = new GeometryFactory(new PrecisionModel(1000));
         var subject = new Graphics.Geometries.GameElementFactory(geometryFactory);

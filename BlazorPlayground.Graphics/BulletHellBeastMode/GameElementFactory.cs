@@ -33,6 +33,14 @@ public class GameElementFactory {
         return null;
     }
 
+    public int? GetStrokeWidth(DrawableShape shape) {
+        if (shape is IShapeWithStroke shapeWithStroke && shapeWithStroke.GetStroke() is Color strokeColor) {
+            return shapeWithStroke.GetStrokeWidth();
+        }
+
+        return null;
+    }
+
     public Geometry GetGeometry(DrawableShape shape) 
         => shape switch {
             Rectangle rectangle => GetGeometry(rectangle),
