@@ -1,14 +1,42 @@
-﻿using BlazorPlayground.Graphics.Geometries;
-using NetTopologySuite.Geometries;
+﻿using NetTopologySuite.Geometries;
 using Xunit;
 
 namespace BlazorPlayground.Graphics.Tests.Geometries;
 
-public class DrawableShapeGeometryFactoryTests {
+public class GameElementFactoryTests {
+    [Fact]
+    public void GetFillColorFromShapeWithoutFill() {
+        var geometryFactory = new GeometryFactory(new PrecisionModel(1000));
+        var subject = new Graphics.Geometries.GameElementFactory(geometryFactory);
+        var line = new Line(new(30, 50), new(50, 100));
+
+        var result = subject.GetFillColor(line);
+
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public void GetFillColorFromShapeWithFill() {
+        var geometryFactory = new GeometryFactory(new PrecisionModel(1000));
+        var subject = new Graphics.Geometries.GameElementFactory(geometryFactory);
+        var rectangle = new Rectangle(new(-10, -10), new(50, -30));
+
+        rectangle.SetFill(new Color(255, 128, 64, 0.5));
+        rectangle.SetFillOpacity(80);
+
+        var result = subject.GetFillColor(rectangle);
+
+        Assert.NotNull(result);
+        Assert.Equal(255, result.Red);
+        Assert.Equal(128, result.Green);
+        Assert.Equal(64, result.Blue);
+        Assert.Equal(0.4, result.Alpha);
+    }
+
     [Fact]
     public void GetGeometryFromRectangle() {
         var geometryFactory = new GeometryFactory(new PrecisionModel(1000));
-        var subject = new DrawableShapeGeometryFactory(geometryFactory);
+        var subject = new Graphics.Geometries.GameElementFactory(geometryFactory);
         var rectangle = new Rectangle(new(-10, -10), new(50, -30));
 
         var result = subject.GetGeometry(rectangle);
@@ -20,7 +48,7 @@ public class DrawableShapeGeometryFactoryTests {
     [Fact]
     public void GetGeometryFromRegularPolygon() {
         var geometryFactory = new GeometryFactory(new PrecisionModel(1000));
-        var subject = new DrawableShapeGeometryFactory(geometryFactory);
+        var subject = new Graphics.Geometries.GameElementFactory(geometryFactory);
         var regularPolygon = new RegularPolygon(new(50, 50), new(50, 100));
 
         regularPolygon.SetSides(3);
@@ -34,7 +62,7 @@ public class DrawableShapeGeometryFactoryTests {
     [Fact]
     public void GetGeometryFromCircle() {
         var geometryFactory = new GeometryFactory(new PrecisionModel(1000));
-        var subject = new DrawableShapeGeometryFactory(geometryFactory);
+        var subject = new Graphics.Geometries.GameElementFactory(geometryFactory);
         var circle = new Circle(new(30, 50), new(50, 100));
 
         var result = subject.GetGeometry(circle);
@@ -46,7 +74,7 @@ public class DrawableShapeGeometryFactoryTests {
     [Fact]
     public void GetGeometryFromEllipse() {
         var geometryFactory = new GeometryFactory(new PrecisionModel(1000));
-        var subject = new DrawableShapeGeometryFactory(geometryFactory);
+        var subject = new Graphics.Geometries.GameElementFactory(geometryFactory);
         var ellipse = new Ellipse(new(30, 50), new(50, 100));
 
         var result = subject.GetGeometry(ellipse);
@@ -58,7 +86,7 @@ public class DrawableShapeGeometryFactoryTests {
     [Fact]
     public void GetGeometryFromLine() {
         var geometryFactory = new GeometryFactory(new PrecisionModel(1000));
-        var subject = new DrawableShapeGeometryFactory(geometryFactory);
+        var subject = new Graphics.Geometries.GameElementFactory(geometryFactory);
         var line = new Line(new(30, 50), new(50, 100));
 
         var result = subject.GetGeometry(line);
@@ -70,7 +98,7 @@ public class DrawableShapeGeometryFactoryTests {
     [Fact]
     public void GetGeometryFromQuadraticBezier() {
         var geometryFactory = new GeometryFactory(new PrecisionModel(1000));
-        var subject = new DrawableShapeGeometryFactory(geometryFactory);
+        var subject = new Graphics.Geometries.GameElementFactory(geometryFactory);
         var quadraticBezier = new QuadraticBezier(new(30, 50), new(50, 100)) {
             ControlPoint = new(20, 70)
         };
@@ -84,7 +112,7 @@ public class DrawableShapeGeometryFactoryTests {
     [Fact]
     public void GetGeometryFromCubicBezier() {
         var geometryFactory = new GeometryFactory(new PrecisionModel(1000));
-        var subject = new DrawableShapeGeometryFactory(geometryFactory);
+        var subject = new Graphics.Geometries.GameElementFactory(geometryFactory);
         var quadraticBezier = new CubicBezier(new(30, 50), new(50, 100)) {
             ControlPoint1 = new(20, 60),
             ControlPoint2 = new(10, 90)
@@ -99,7 +127,7 @@ public class DrawableShapeGeometryFactoryTests {
     [Fact]
     public void GetGeometryFromClosedPathWithTwoCoordinates() {
         var geometryFactory = new GeometryFactory(new PrecisionModel(1000));
-        var subject = new DrawableShapeGeometryFactory(geometryFactory);
+        var subject = new Graphics.Geometries.GameElementFactory(geometryFactory);
         var closedPath = new ClosedPath(new(30, 50), new(50, 100));
 
         var result = subject.GetGeometry(closedPath);
@@ -111,7 +139,7 @@ public class DrawableShapeGeometryFactoryTests {
     [Fact]
     public void GetGeometryFromClosedPath() {
         var geometryFactory = new GeometryFactory(new PrecisionModel(1000));
-        var subject = new DrawableShapeGeometryFactory(geometryFactory);
+        var subject = new Graphics.Geometries.GameElementFactory(geometryFactory);
         var closedPath = new ClosedPath(new(30, 50), new(50, 100)) {
             IntermediatePoints = {
                 new(60, 40),

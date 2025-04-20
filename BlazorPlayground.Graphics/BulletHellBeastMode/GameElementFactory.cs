@@ -2,15 +2,25 @@
 
 namespace BlazorPlayground.Graphics.Geometries;
 
-public class DrawableShapeGeometryFactory {
+public class GameElementFactory {
     private const int approximationSegmentCount = 60;
     private const double angleIncrement = 2 * Math.PI / approximationSegmentCount;
     private const double stepIncrement = 1.0 / approximationSegmentCount;
     
     private readonly GeometryFactory geometryFactory;
 
-    public DrawableShapeGeometryFactory(GeometryFactory geometryFactory) {
+    public GameElementFactory(GeometryFactory geometryFactory) {
         this.geometryFactory = geometryFactory;
+    }
+
+    public BulletHellBeastMode.Color? GetFillColor(DrawableShape shape) {
+        if (shape is IShapeWithFill shapeWithFill && shapeWithFill.GetFill() is Color fillColor) {
+            var fillOpacity = shapeWithFill.GetFillOpacity() / 100.0;
+
+            return new BulletHellBeastMode.Color(fillColor.Red, fillColor.Green, fillColor.Blue, fillColor.Alpha * fillOpacity);
+        }
+
+        return null;
     }
 
     public Geometry GetGeometry(DrawableShape shape) 
