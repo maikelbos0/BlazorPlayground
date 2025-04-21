@@ -132,7 +132,7 @@ public class GameElementFactoryTests {
 
         var result = GameElementFactory.GetFillColor(shape);
 
-        Assert.Null(result);
+        Assert.Equal(GameElementFactory.DefaultColor, result);
     }
 
     [Fact]
@@ -157,7 +157,7 @@ public class GameElementFactoryTests {
 
         var result = GameElementFactory.GetStrokeColor(shape);
 
-        Assert.Null(result);
+        Assert.Equal(GameElementFactory.DefaultColor, result);
     }
 
     [Fact]
@@ -182,7 +182,7 @@ public class GameElementFactoryTests {
 
         var result = GameElementFactory.GetStrokeWidth(shape);
 
-        Assert.Null(result);
+        Assert.Equal(GameElementFactory.DefaultStrokeWidth, result);
     }
 
     [Fact]
@@ -202,7 +202,7 @@ public class GameElementFactoryTests {
 
         var result = GameElementFactory.GetOpacity(shape);
 
-        Assert.Null(result);
+        Assert.Equal(GameElementFactory.DefaultOpacity, result);
     }
 
     [Fact]
