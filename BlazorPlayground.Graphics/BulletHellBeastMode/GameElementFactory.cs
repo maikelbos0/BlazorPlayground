@@ -1,4 +1,5 @@
-﻿using NetTopologySuite.Geometries;
+﻿using BlazorPlayground.BulletHellBeastMode;
+using NetTopologySuite.Geometries;
 
 namespace BlazorPlayground.Graphics.BulletHellBeastMode;
 
@@ -17,6 +18,19 @@ public class GameElementFactory {
     public GameElementFactory(GeometryFactory geometryFactory) {
         this.geometryFactory = geometryFactory;
     }
+
+    //TODO add translation to center?
+
+    public GameElement GetGameElement(IEnumerable<DrawableShape> shapes)
+        => new GameElement() {
+            Sections = shapes.Select(shape => new GameElementSection() {
+                Geometry = GetGeometry(shape),
+                FillColor = GetFillColor(shape),
+                StrokeColor = GetStrokeColor(shape),
+                StrokeWidth = GetStrokeWidth(shape),
+                Opacity = GetOpacity(shape)
+            }).ToList()
+        };
 
     public Geometry GetGeometry(DrawableShape shape)
         => shape switch {

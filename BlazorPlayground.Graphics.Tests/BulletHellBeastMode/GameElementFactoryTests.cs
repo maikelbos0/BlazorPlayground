@@ -7,6 +7,65 @@ namespace BlazorPlayground.Graphics.Tests.BulletHellBeastMode;
 
 public class GameElementFactoryTests {
     [Fact]
+    public void GetGameElementFromEmptyEnumerable() {
+        var geometryFactory = new GeometryFactory(new PrecisionModel(1000));
+        var subject = new GameElementFactory(geometryFactory);
+
+        var result = subject.GetGameElement([]);
+
+        Assert.NotNull(result);
+        Assert.Empty(result.Sections);
+    }
+
+    [Fact]
+    public void GetGameElementFromSingleDrawableShape() {
+        var geometryFactory = new GeometryFactory(new PrecisionModel(1000));
+        var subject = new GameElementFactory(geometryFactory);
+        var rectangle = new Rectangle(new(-10, -10), new(50, -30));
+
+        rectangle.SetFill(new Color(255, 0, 0, 1));
+        rectangle.SetFillOpacity(50);
+        rectangle.SetStroke(new Color(0, 0, 255, 1));
+        rectangle.SetStrokeOpacity(80);
+        rectangle.SetStrokeWidth(2);
+        rectangle.SetOpacity(90);
+
+        var result = subject.GetGameElement([rectangle]);
+
+        Assert.NotNull(result);
+        
+        var section = Assert.Single(result.Sections);
+
+        Assert.IsType<Polygon>(section.Geometry);
+        Assert.Equal(255, section.FillColor.Red);
+        Assert.Equal(0, section.FillColor.Green);
+        Assert.Equal(0, section.FillColor.Blue);
+        Assert.Equal(0.5, section.FillColor.Alpha);
+        Assert.Equal(0, section.StrokeColor.Red);
+        Assert.Equal(0, section.StrokeColor.Green);
+        Assert.Equal(255, section.StrokeColor.Blue);
+        Assert.Equal(0.8, section.StrokeColor.Alpha);
+        Assert.Equal(2, section.StrokeWidth);
+        Assert.Equal(0.9, section.Opacity);
+    }
+
+
+    [Fact]
+    public void GetGameElementFromMultipleDrawableShapes() {
+        var geometryFactory = new GeometryFactory(new PrecisionModel(1000));
+        var subject = new GameElementFactory(geometryFactory);
+
+        var result = subject.GetGameElement([
+            new Rectangle(new(-10, -10), new(50, -30)),
+            new Line(new(20, 30), new(40, 50))
+        ]);
+
+        Assert.NotNull(result);
+
+        Assert.Equal(2, result.Sections.Count);
+    }
+
+    [Fact]
     public void GetGeometryFromRectangle() {
         var geometryFactory = new GeometryFactory(new PrecisionModel(1000));
         var subject = new GameElementFactory(geometryFactory);
