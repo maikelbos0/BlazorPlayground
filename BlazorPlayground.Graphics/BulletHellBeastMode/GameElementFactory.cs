@@ -13,34 +13,6 @@ public class GameElementFactory {
         this.geometryFactory = geometryFactory;
     }
 
-    public static BlazorPlayground.BulletHellBeastMode.Color? GetFillColor(DrawableShape shape) {
-        if (shape is IShapeWithFill shapeWithFill && shapeWithFill.GetFill() is Color fillColor) {
-            var fillOpacity = shapeWithFill.GetFillOpacity() / 100.0;
-
-            return new BlazorPlayground.BulletHellBeastMode.Color(fillColor.Red, fillColor.Green, fillColor.Blue, fillColor.Alpha * fillOpacity);
-        }
-
-        return null;
-    }
-
-    public static BlazorPlayground.BulletHellBeastMode.Color? GetStrokeColor(DrawableShape shape) {
-        if (shape is IShapeWithStroke shapeWithStroke && shapeWithStroke.GetStroke() is Color strokeColor) {
-            var strokeOpacity = shapeWithStroke.GetStrokeOpacity() / 100.0;
-
-            return new BlazorPlayground.BulletHellBeastMode.Color(strokeColor.Red, strokeColor.Green, strokeColor.Blue, strokeColor.Alpha * strokeOpacity);
-        }
-
-        return null;
-    }
-
-    public static int? GetStrokeWidth(DrawableShape shape) {
-        if (shape is IShapeWithStroke shapeWithStroke) {
-            return shapeWithStroke.GetStrokeWidth();
-        }
-
-        return null;
-    }
-
     public Geometry GetGeometry(DrawableShape shape)
         => shape switch {
             Rectangle rectangle => GetGeometry(rectangle),
@@ -161,4 +133,40 @@ public class GameElementFactory {
 
     private Coordinate GetCoordinate(double x, double y)
         => new(geometryFactory.PrecisionModel.MakePrecise(x), geometryFactory.PrecisionModel.MakePrecise(y));
+
+    public static BlazorPlayground.BulletHellBeastMode.Color? GetFillColor(DrawableShape shape) {
+        if (shape is IShapeWithFill shapeWithFill && shapeWithFill.GetFill() is Color fillColor) {
+            var fillOpacity = shapeWithFill.GetFillOpacity() / 100.0;
+
+            return new BlazorPlayground.BulletHellBeastMode.Color(fillColor.Red, fillColor.Green, fillColor.Blue, fillColor.Alpha * fillOpacity);
+        }
+
+        return null;
+    }
+
+    public static BlazorPlayground.BulletHellBeastMode.Color? GetStrokeColor(DrawableShape shape) {
+        if (shape is IShapeWithStroke shapeWithStroke && shapeWithStroke.GetStroke() is Color strokeColor) {
+            var strokeOpacity = shapeWithStroke.GetStrokeOpacity() / 100.0;
+
+            return new BlazorPlayground.BulletHellBeastMode.Color(strokeColor.Red, strokeColor.Green, strokeColor.Blue, strokeColor.Alpha * strokeOpacity);
+        }
+
+        return null;
+    }
+
+    public static int? GetStrokeWidth(DrawableShape shape) {
+        if (shape is IShapeWithStroke shapeWithStroke) {
+            return shapeWithStroke.GetStrokeWidth();
+        }
+
+        return null;
+    }
+
+    public static double? GetOpacity(DrawableShape shape) {
+        if (shape is IShapeWithOpacity shapeWithOpacity) {
+            return shapeWithOpacity.GetOpacity() / 100.0;
+        }
+
+        return null;
+    }
 }

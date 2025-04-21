@@ -7,76 +7,6 @@ namespace BlazorPlayground.Graphics.Tests.BulletHellBeastMode;
 
 public class GameElementFactoryTests {
     [Fact]
-    public void GetFillColorFromShapeWithoutFill() {
-        var shape = Substitute.For<DrawableShape>();
-
-        var result = GameElementFactory.GetFillColor(shape);
-
-        Assert.Null(result);
-    }
-
-    [Fact]
-    public void GetFillColorFromShapeWithFill() {
-        var rectangle = new Rectangle(new(-10, -10), new(50, -30));
-
-        rectangle.SetFill(new Color(255, 128, 64, 0.5));
-        rectangle.SetFillOpacity(80);
-
-        var result = GameElementFactory.GetFillColor(rectangle);
-
-        Assert.NotNull(result);
-        Assert.Equal(255, result.Red);
-        Assert.Equal(128, result.Green);
-        Assert.Equal(64, result.Blue);
-        Assert.Equal(0.4, result.Alpha);
-    }
-
-    [Fact]
-    public void GetStrokeColorFromShapeWithoutStroke() {
-        var shape = Substitute.For<DrawableShape>();
-
-        var result = GameElementFactory.GetStrokeColor(shape);
-
-        Assert.Null(result);
-    }
-
-    [Fact]
-    public void GetStrokeColorFromShapeWithStroke() {
-        var rectangle = new Rectangle(new(-10, -10), new(50, -30));
-
-        rectangle.SetStroke(new Color(255, 128, 64, 0.5));
-        rectangle.SetStrokeOpacity(80);
-
-        var result = GameElementFactory.GetStrokeColor(rectangle);
-
-        Assert.NotNull(result);
-        Assert.Equal(255, result.Red);
-        Assert.Equal(128, result.Green);
-        Assert.Equal(64, result.Blue);
-        Assert.Equal(0.4, result.Alpha);
-    }
-
-    [Fact]
-    public void GetStrokeWidthFromShapeWithoutStroke() {
-        var shape = Substitute.For<DrawableShape>();
-
-        var result = GameElementFactory.GetStrokeWidth(shape);
-
-        Assert.Null(result);
-    }
-
-    [Fact]
-    public void GetStrokeWdithFromShapeWithStroke() {
-        var rectangle = new Rectangle(new(-10, -10), new(50, -30));
-
-        rectangle.SetStrokeWidth(5);
-
-        var result = GameElementFactory.GetStrokeWidth(rectangle);
-
-        Assert.Equal(5, result);
-    }
-
-    [Fact]
     public void GetGeometryFromRectangle() {
         var geometryFactory = new GeometryFactory(new PrecisionModel(1000));
         var subject = new GameElementFactory(geometryFactory);
@@ -194,5 +124,95 @@ public class GameElementFactoryTests {
 
         Assert.NotNull(result);
         Assert.Equal(geometryFactory.CreatePolygon([new(30, 50), new(50, 100), new(60, 40), new(30, 10), new(30, 50)]), result);
+    }
+
+    [Fact]
+    public void GetFillColorFromShapeWithoutFill() {
+        var shape = Substitute.For<DrawableShape>();
+
+        var result = GameElementFactory.GetFillColor(shape);
+
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public void GetFillColorFromShapeWithFill() {
+        var rectangle = new Rectangle(new(-10, -10), new(50, -30));
+
+        rectangle.SetFill(new Color(255, 128, 64, 0.5));
+        rectangle.SetFillOpacity(80);
+
+        var result = GameElementFactory.GetFillColor(rectangle);
+
+        Assert.NotNull(result);
+        Assert.Equal(255, result.Red);
+        Assert.Equal(128, result.Green);
+        Assert.Equal(64, result.Blue);
+        Assert.Equal(0.4, result.Alpha);
+    }
+
+    [Fact]
+    public void GetStrokeColorFromShapeWithoutStroke() {
+        var shape = Substitute.For<DrawableShape>();
+
+        var result = GameElementFactory.GetStrokeColor(shape);
+
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public void GetStrokeColorFromShapeWithStroke() {
+        var rectangle = new Rectangle(new(-10, -10), new(50, -30));
+
+        rectangle.SetStroke(new Color(255, 128, 64, 0.5));
+        rectangle.SetStrokeOpacity(80);
+
+        var result = GameElementFactory.GetStrokeColor(rectangle);
+
+        Assert.NotNull(result);
+        Assert.Equal(255, result.Red);
+        Assert.Equal(128, result.Green);
+        Assert.Equal(64, result.Blue);
+        Assert.Equal(0.4, result.Alpha);
+    }
+
+    [Fact]
+    public void GetStrokeWidthFromShapeWithoutStroke() {
+        var shape = Substitute.For<DrawableShape>();
+
+        var result = GameElementFactory.GetStrokeWidth(shape);
+
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public void GetStrokeWidthFromShapeWithStroke() {
+        var rectangle = new Rectangle(new(-10, -10), new(50, -30));
+
+        rectangle.SetStrokeWidth(5);
+
+        var result = GameElementFactory.GetStrokeWidth(rectangle);
+
+        Assert.Equal(5, result);
+    }
+
+    [Fact]
+    public void GetOpacityFromShapeWithoutOpacity() {
+        var shape = Substitute.For<DrawableShape>();
+
+        var result = GameElementFactory.GetOpacity(shape);
+
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public void GetOpacityFromShapeWithOpacity() {
+        var rectangle = new Rectangle(new(-10, -10), new(50, -30));
+
+        rectangle.SetOpacity(50);
+
+        var result = GameElementFactory.GetOpacity(rectangle);
+
+        Assert.Equal(0.5, result);
     }
 }
