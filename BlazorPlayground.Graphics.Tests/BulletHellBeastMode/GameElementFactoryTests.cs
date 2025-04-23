@@ -49,7 +49,6 @@ public class GameElementFactoryTests {
         Assert.Equal(0.9, section.Opacity);
     }
 
-
     [Fact]
     public void GetGameElementFromMultipleDrawableShapes() {
         var geometryFactory = new GeometryFactory(new PrecisionModel(1000));
@@ -63,6 +62,22 @@ public class GameElementFactoryTests {
         Assert.NotNull(result);
 
         Assert.Equal(2, result.Sections.Count);
+    }
+
+    [Fact]
+    public void GetOriginFromEmptyEnumerable() {
+        var result = GameElementFactory.GetOrigin(Enumerable.Empty<DrawableShape>());
+
+        Assert.NotNull(result);
+        PointAssert.Equal(new(0, 0), result);
+    }
+
+    [Fact]
+    public void GetOriginFromRectangle() {
+        var result = GameElementFactory.GetOrigin([new Rectangle(new(120, 80), new(-10, -30))]);
+
+        Assert.NotNull(result);
+        PointAssert.Equal(new(55, 25), result);
     }
 
     [Fact]

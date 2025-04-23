@@ -31,6 +31,35 @@ public class GameElementFactory {
             }).ToList()
         };
 
+    public static Point GetOrigin(IEnumerable<DrawableShape> shapes) {
+        var boundingBoxes = new List<(double MinX, double MaxX, double MinY, double MaxY)>();
+
+        foreach (var shape in shapes) {
+            boundingBoxes.Add(shape switch {
+                Rectangle rectangle => GetBoundingBox(rectangle),
+                _ => throw new NotImplementedException()
+            });
+        }
+
+        if (boundingBoxes.Count > 0) {
+            return new(
+                (boundingBoxes.Max(boundingBox => boundingBox.MaxX) + boundingBoxes.Min(boundingBox => boundingBox.MinX)) / 2,
+                (boundingBoxes.Max(boundingBox => boundingBox.MaxY) + boundingBoxes.Min(boundingBox => boundingBox.MinY)) / 2
+            );
+        }
+        else {
+            return new(0, 0);
+        }
+    }
+
+    private static (double MinX, double MaxX, double MinY, double MaxY) GetBoundingBox(Rectangle rectangle)
+        => (
+            Math.Min(rectangle.StartPoint.X, rectangle.EndPoint.X),
+            Math.Max(rectangle.StartPoint.X, rectangle.EndPoint.X),
+            Math.Min(rectangle.StartPoint.Y, rectangle.EndPoint.Y),
+            Math.Max(rectangle.StartPoint.Y, rectangle.EndPoint.Y)
+        );
+
     public Geometry GetGeometry(DrawableShape shape, Point origin)
         => shape switch {
             Rectangle rectangle => GetGeometry(rectangle, origin),
