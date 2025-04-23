@@ -54,9 +54,13 @@ public class GameElementFactory {
         ]);
 
     private Polygon GetGeometry(RegularPolygon regularPolygon, Point origin) {
-        var coordinates = regularPolygon.GetPoints().Select(point => GetCoordinate(point.X, point.Y, origin)).ToList();
+        var coordinates = new Coordinate[regularPolygon.GetSides() + 1];
 
-        coordinates.Add(coordinates.First());
+        foreach (var (point, i) in regularPolygon.GetPoints().Select((point, i) => (point, i))) {
+            coordinates[i] = GetCoordinate(point.X, point.Y, origin);
+        }
+
+        coordinates[^1] = coordinates[0];
 
         return geometryFactory.CreatePolygon([.. coordinates]);
     }
@@ -72,7 +76,7 @@ public class GameElementFactory {
             coordinates[i] = GetCoordinate(circle.CenterPoint.X + dx, circle.CenterPoint.Y + dy, origin);
         }
 
-        coordinates[approximationSegmentCount] = coordinates[0];
+        coordinates[^1] = coordinates[0];
 
         return geometryFactory.CreatePolygon(coordinates);
     }
@@ -89,7 +93,7 @@ public class GameElementFactory {
             coordinates[i] = GetCoordinate(ellipse.CenterPoint.X + dx, ellipse.CenterPoint.Y + dy, origin);
         }
 
-        coordinates[approximationSegmentCount] = coordinates[0];
+        coordinates[^1] = coordinates[0];
 
         return geometryFactory.CreatePolygon(coordinates);
     }
@@ -114,7 +118,7 @@ public class GameElementFactory {
         }
 
         coordinates[0] = GetCoordinate(quadraticBezier.StartPoint.X, quadraticBezier.StartPoint.Y, origin);
-        coordinates[approximationSegmentCount] = GetCoordinate(quadraticBezier.EndPoint.X, quadraticBezier.EndPoint.Y, origin);
+        coordinates[^1] = GetCoordinate(quadraticBezier.EndPoint.X, quadraticBezier.EndPoint.Y, origin);
 
         return geometryFactory.CreateLineString(coordinates);
     }
@@ -134,7 +138,7 @@ public class GameElementFactory {
         }
 
         coordinates[0] = GetCoordinate(cubicBezier.StartPoint.X, cubicBezier.StartPoint.Y, origin);
-        coordinates[approximationSegmentCount] = GetCoordinate(cubicBezier.EndPoint.X, cubicBezier.EndPoint.Y, origin);
+        coordinates[^1] = GetCoordinate(cubicBezier.EndPoint.X, cubicBezier.EndPoint.Y, origin);
 
         return geometryFactory.CreateLineString(coordinates);
     }
@@ -147,11 +151,15 @@ public class GameElementFactory {
             ]);
         }
         else {
-            return geometryFactory.CreatePolygon([
-                GetCoordinate(closedPath.StartPoint.X, closedPath.StartPoint.Y, origin),
-                .. closedPath.IntermediatePoints.Select(point => GetCoordinate(point.X, point.Y, origin)),
-                GetCoordinate(closedPath.StartPoint.X, closedPath.StartPoint.Y, origin)
-            ]);
+            var coordinates = new Coordinate[closedPath.IntermediatePoints.Count + 2];
+
+            for (var i = 0; i < closedPath.IntermediatePoints.Count; i++) {
+                coordinates[i + 1] = GetCoordinate(closedPath.IntermediatePoints[i].X, closedPath.IntermediatePoints[i].Y, origin);
+            }
+
+            coordinates[0] = coordinates[^1] = GetCoordinate(closedPath.StartPoint.X, closedPath.StartPoint.Y, origin);
+
+            return geometryFactory.CreatePolygon(coordinates);
         }
     }
 
