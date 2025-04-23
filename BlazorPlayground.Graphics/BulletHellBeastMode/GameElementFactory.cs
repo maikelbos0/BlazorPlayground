@@ -19,12 +19,11 @@ public class GameElementFactory {
         this.geometryFactory = geometryFactory;
     }
 
-    //TODO add translation to center?
-
+    //TODO determine origin
     public GameElement GetGameElement(IEnumerable<DrawableShape> shapes)
         => new GameElement() {
             Sections = shapes.Select(shape => new GameElementSection() {
-                Geometry = GetGeometry(shape),
+                Geometry = GetGeometry(shape, new(0, 0)),
                 FillColor = GetFillColor(shape),
                 StrokeColor = GetStrokeColor(shape),
                 StrokeWidth = GetStrokeWidth(shape),
@@ -32,37 +31,37 @@ public class GameElementFactory {
             }).ToList()
         };
 
-    public Geometry GetGeometry(DrawableShape shape)
+    public Geometry GetGeometry(DrawableShape shape, Point origin)
         => shape switch {
-            Rectangle rectangle => GetGeometry(rectangle),
-            RegularPolygon regularPolygon => GetGeometry(regularPolygon),
-            Circle circle => GetGeometry(circle),
-            Ellipse ellipse => GetGeometry(ellipse),
-            Line line => GetGeometry(line),
-            QuadraticBezier quadraticBezier => GetGeometry(quadraticBezier),
-            CubicBezier cubicBezier => GetGeometry(cubicBezier),
-            ClosedPath closedPath => GetGeometry(closedPath),
+            Rectangle rectangle => GetGeometry(rectangle, origin),
+            RegularPolygon regularPolygon => GetGeometry(regularPolygon, origin),
+            Circle circle => GetGeometry(circle, origin),
+            Ellipse ellipse => GetGeometry(ellipse, origin),
+            Line line => GetGeometry(line, origin),
+            QuadraticBezier quadraticBezier => GetGeometry(quadraticBezier, origin),
+            CubicBezier cubicBezier => GetGeometry(cubicBezier, origin),
+            ClosedPath closedPath => GetGeometry(closedPath, origin),
             _ => throw new NotImplementedException()
         };
 
-    private Polygon GetGeometry(Rectangle rectangle)
+    private Polygon GetGeometry(Rectangle rectangle, Point origin)
         => geometryFactory.CreatePolygon([
-            GetCoordinate(rectangle.StartPoint.X, rectangle.StartPoint.Y),
-            GetCoordinate(rectangle.StartPoint.X, rectangle.EndPoint.Y),
-            GetCoordinate(rectangle.EndPoint.X, rectangle.EndPoint.Y),
-            GetCoordinate(rectangle.EndPoint.X, rectangle.StartPoint.Y),
-            GetCoordinate(rectangle.StartPoint.X, rectangle.StartPoint.Y)
+            GetCoordinate(rectangle.StartPoint.X, rectangle.StartPoint.Y, origin),
+            GetCoordinate(rectangle.StartPoint.X, rectangle.EndPoint.Y, origin),
+            GetCoordinate(rectangle.EndPoint.X, rectangle.EndPoint.Y, origin),
+            GetCoordinate(rectangle.EndPoint.X, rectangle.StartPoint.Y, origin),
+            GetCoordinate(rectangle.StartPoint.X, rectangle.StartPoint.Y, origin)
         ]);
 
-    private Polygon GetGeometry(RegularPolygon regularPolygon) {
-        var coordinates = regularPolygon.GetPoints().Select(point => GetCoordinate(point.X, point.Y)).ToList();
+    private Polygon GetGeometry(RegularPolygon regularPolygon, Point origin) {
+        var coordinates = regularPolygon.GetPoints().Select(point => GetCoordinate(point.X, point.Y, origin)).ToList();
 
         coordinates.Add(coordinates.First());
 
         return geometryFactory.CreatePolygon([.. coordinates]);
     }
 
-    private Polygon GetGeometry(Circle circle) {
+    private Polygon GetGeometry(Circle circle, Point origin) {
         var radius = (circle.CenterPoint - circle.RadiusPoint).Distance;
         var coordinates = new Coordinate[approximationSegmentCount + 1];
 
@@ -70,7 +69,7 @@ public class GameElementFactory {
             var angle = angleIncrement * i;
             var dx = radius * Math.Cos(angle);
             var dy = radius * Math.Sin(angle);
-            coordinates[i] = GetCoordinate(circle.CenterPoint.X + dx, circle.CenterPoint.Y + dy);
+            coordinates[i] = GetCoordinate(circle.CenterPoint.X + dx, circle.CenterPoint.Y + dy, origin);
         }
 
         coordinates[approximationSegmentCount] = coordinates[0];
@@ -78,7 +77,7 @@ public class GameElementFactory {
         return geometryFactory.CreatePolygon(coordinates);
     }
 
-    private Polygon GetGeometry(Ellipse ellipse) {
+    private Polygon GetGeometry(Ellipse ellipse, Point origin) {
         var radiusX = Math.Abs(ellipse.CenterPoint.X - ellipse.RadiusPoint.X);
         var radiusY = Math.Abs(ellipse.CenterPoint.Y - ellipse.RadiusPoint.Y);
         var coordinates = new Coordinate[approximationSegmentCount + 1];
@@ -87,7 +86,7 @@ public class GameElementFactory {
             var angle = angleIncrement * i;
             var dx = radiusX * Math.Cos(angle);
             var dy = radiusY * Math.Sin(angle);
-            coordinates[i] = GetCoordinate(ellipse.CenterPoint.X + dx, ellipse.CenterPoint.Y + dy);
+            coordinates[i] = GetCoordinate(ellipse.CenterPoint.X + dx, ellipse.CenterPoint.Y + dy, origin);
         }
 
         coordinates[approximationSegmentCount] = coordinates[0];
@@ -95,10 +94,13 @@ public class GameElementFactory {
         return geometryFactory.CreatePolygon(coordinates);
     }
 
-    private LineString GetGeometry(Line line)
-        => geometryFactory.CreateLineString([GetCoordinate(line.StartPoint.X, line.StartPoint.Y), GetCoordinate(line.EndPoint.X, line.EndPoint.Y)]);
+    private LineString GetGeometry(Line line, Point origin)
+        => geometryFactory.CreateLineString([
+            GetCoordinate(line.StartPoint.X, line.StartPoint.Y, origin),
+            GetCoordinate(line.EndPoint.X, line.EndPoint.Y, origin)
+        ]);
 
-    private LineString GetGeometry(QuadraticBezier quadraticBezier) {
+    private LineString GetGeometry(QuadraticBezier quadraticBezier, Point origin) {
         var coordinates = new Coordinate[approximationSegmentCount + 1];
 
         for (var i = 1; i < approximationSegmentCount; i++) {
@@ -108,16 +110,16 @@ public class GameElementFactory {
                 + quadraticBezier.ControlPoint * step * invertedStep * 2
                 + quadraticBezier.EndPoint * step * step;
 
-            coordinates[i] = GetCoordinate(intermediatePoint.X, intermediatePoint.Y);
+            coordinates[i] = GetCoordinate(intermediatePoint.X, intermediatePoint.Y, origin);
         }
 
-        coordinates[0] = GetCoordinate(quadraticBezier.StartPoint.X, quadraticBezier.StartPoint.Y);
-        coordinates[approximationSegmentCount] = GetCoordinate(quadraticBezier.EndPoint.X, quadraticBezier.EndPoint.Y);
+        coordinates[0] = GetCoordinate(quadraticBezier.StartPoint.X, quadraticBezier.StartPoint.Y, origin);
+        coordinates[approximationSegmentCount] = GetCoordinate(quadraticBezier.EndPoint.X, quadraticBezier.EndPoint.Y, origin);
 
         return geometryFactory.CreateLineString(coordinates);
     }
 
-    private LineString GetGeometry(CubicBezier cubicBezier) {
+    private LineString GetGeometry(CubicBezier cubicBezier, Point origin) {
         var coordinates = new Coordinate[approximationSegmentCount + 1];
 
         for (var i = 1; i < approximationSegmentCount; i++) {
@@ -128,30 +130,33 @@ public class GameElementFactory {
                 + cubicBezier.ControlPoint2 * step * step * invertedStep * 3
                 + cubicBezier.EndPoint * step * step * step;
 
-            coordinates[i] = GetCoordinate(intermediatePoint.X, intermediatePoint.Y);
+            coordinates[i] = GetCoordinate(intermediatePoint.X, intermediatePoint.Y, origin);
         }
 
-        coordinates[0] = GetCoordinate(cubicBezier.StartPoint.X, cubicBezier.StartPoint.Y);
-        coordinates[approximationSegmentCount] = GetCoordinate(cubicBezier.EndPoint.X, cubicBezier.EndPoint.Y);
+        coordinates[0] = GetCoordinate(cubicBezier.StartPoint.X, cubicBezier.StartPoint.Y, origin);
+        coordinates[approximationSegmentCount] = GetCoordinate(cubicBezier.EndPoint.X, cubicBezier.EndPoint.Y, origin);
 
         return geometryFactory.CreateLineString(coordinates);
     }
 
-    private Geometry GetGeometry(ClosedPath closedPath) {
+    private Geometry GetGeometry(ClosedPath closedPath, Point origin) {
         if (closedPath.IntermediatePoints.Count == 1) {
-            return geometryFactory.CreateLineString([GetCoordinate(closedPath.StartPoint.X, closedPath.StartPoint.Y), GetCoordinate(closedPath.IntermediatePoints[0].X, closedPath.IntermediatePoints[0].Y)]);
+            return geometryFactory.CreateLineString([
+                GetCoordinate(closedPath.StartPoint.X, closedPath.StartPoint.Y, origin),
+                GetCoordinate(closedPath.IntermediatePoints[0].X, closedPath.IntermediatePoints[0].Y, origin)
+            ]);
         }
         else {
             return geometryFactory.CreatePolygon([
-                GetCoordinate(closedPath.StartPoint.X, closedPath.StartPoint.Y),
-                .. closedPath.IntermediatePoints.Select(point => GetCoordinate(point.X, point.Y)),
-                GetCoordinate(closedPath.StartPoint.X, closedPath.StartPoint.Y)
+                GetCoordinate(closedPath.StartPoint.X, closedPath.StartPoint.Y, origin),
+                .. closedPath.IntermediatePoints.Select(point => GetCoordinate(point.X, point.Y, origin)),
+                GetCoordinate(closedPath.StartPoint.X, closedPath.StartPoint.Y, origin)
             ]);
         }
     }
 
-    private Coordinate GetCoordinate(double x, double y)
-        => new(geometryFactory.PrecisionModel.MakePrecise(x), geometryFactory.PrecisionModel.MakePrecise(y));
+    private Coordinate GetCoordinate(double x, double y, Point origin)
+        => new(geometryFactory.PrecisionModel.MakePrecise(x - origin.X), geometryFactory.PrecisionModel.MakePrecise(y - origin.Y));
 
     public static BlazorPlayground.BulletHellBeastMode.Color GetFillColor(DrawableShape shape) {
         if (shape is IShapeWithFill shapeWithFill && shapeWithFill.GetFill() is Color fillColor) {
