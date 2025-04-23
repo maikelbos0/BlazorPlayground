@@ -40,6 +40,9 @@ public class GameElementFactory {
                 RegularPolygon regularPolygon => GetBoundingBox(regularPolygon),
                 Circle circle => GetBoundingBox(circle),
                 Ellipse ellipse => GetBoundingBox(ellipse),
+                Line line => GetBoundingBox(line),
+                QuadraticBezier quadraticBezier => GetBoundingBox(quadraticBezier),
+                CubicBezier cubicBezier => GetBoundingBox(cubicBezier),
                 _ => throw new NotImplementedException()
             });
         }
@@ -96,6 +99,30 @@ public class GameElementFactory {
             ellipse.CenterPoint.Y + radiusY
         );
     }
+
+    private static (double MinX, double MaxX, double MinY, double MaxY) GetBoundingBox(Line line)
+        => (
+            Math.Min(line.StartPoint.X, line.EndPoint.X),
+            Math.Max(line.StartPoint.X, line.EndPoint.X),
+            Math.Min(line.StartPoint.Y, line.EndPoint.Y),
+            Math.Max(line.StartPoint.Y, line.EndPoint.Y)
+        );
+
+    private static (double MinX, double MaxX, double MinY, double MaxY) GetBoundingBox(QuadraticBezier quadraticBezier)
+        => (
+            Math.Min(quadraticBezier.StartPoint.X, quadraticBezier.EndPoint.X),
+            Math.Max(quadraticBezier.StartPoint.X, quadraticBezier.EndPoint.X),
+            Math.Min(quadraticBezier.StartPoint.Y, quadraticBezier.EndPoint.Y),
+            Math.Max(quadraticBezier.StartPoint.Y, quadraticBezier.EndPoint.Y)
+        );
+
+    private static (double MinX, double MaxX, double MinY, double MaxY) GetBoundingBox(CubicBezier cubicBezier)
+        => (
+            Math.Min(cubicBezier.StartPoint.X, cubicBezier.EndPoint.X),
+            Math.Max(cubicBezier.StartPoint.X, cubicBezier.EndPoint.X),
+            Math.Min(cubicBezier.StartPoint.Y, cubicBezier.EndPoint.Y),
+            Math.Max(cubicBezier.StartPoint.Y, cubicBezier.EndPoint.Y)
+        );
 
     public Geometry GetGeometry(DrawableShape shape, Point origin)
         => shape switch {

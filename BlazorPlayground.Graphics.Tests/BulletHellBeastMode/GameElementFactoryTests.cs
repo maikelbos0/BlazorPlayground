@@ -106,6 +106,30 @@ public class GameElementFactoryTests {
     }
 
     [Fact]
+    public void GetOriginFromLine() {
+        var result = GameElementFactory.GetOrigin([new Line(new(30, 50), new(50, 100))]);
+
+        Assert.NotNull(result);
+        PointAssert.Equal(new(40, 75), result);
+    }
+
+    [Fact]
+    public void GetOriginFromQuadraticBezier() {
+        var result = GameElementFactory.GetOrigin([new QuadraticBezier(new(30, 50), new(50, 100))]);
+
+        Assert.NotNull(result);
+        PointAssert.Equal(new(40, 75), result);
+    }
+
+    [Fact]
+    public void GetOriginFromCubicBezier() {
+        var result = GameElementFactory.GetOrigin([new CubicBezier(new(30, 50), new(50, 100))]);
+
+        Assert.NotNull(result);
+        PointAssert.Equal(new(40, 75), result);
+    }
+
+    [Fact]
     public void GetGeometryFromRectangle() {
         var geometryFactory = new GeometryFactory(new PrecisionModel(1000));
         var subject = new GameElementFactory(geometryFactory);
