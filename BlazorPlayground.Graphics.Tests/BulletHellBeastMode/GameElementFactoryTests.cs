@@ -1,6 +1,7 @@
 ﻿using BlazorPlayground.Graphics.BulletHellBeastMode;
 using NetTopologySuite.Geometries;
 using NSubstitute;
+using System.Linq;
 using Xunit;
 
 namespace BlazorPlayground.Graphics.Tests.BulletHellBeastMode;
@@ -78,6 +79,30 @@ public class GameElementFactoryTests {
 
         Assert.NotNull(result);
         PointAssert.Equal(new(55, 25), result);
+    }
+
+    [Fact]
+    public void GetOriginFromRegularPolygon() {
+        var result = GameElementFactory.GetOrigin([new RegularPolygon(new(50, 50), new(50, 100))]);
+
+        Assert.NotNull(result);
+        PointAssert.Equal(new(50, 50), result);
+    }
+
+    [Fact]
+    public void GetOriginFromCircle() {
+        var result = GameElementFactory.GetOrigin([new Circle(new(30, 50), new(50, 100))]);
+
+        Assert.NotNull(result);
+        PointAssert.Equal(new(30, 50), result);
+    }
+
+    [Fact]
+    public void GetOriginFromEllipse() {
+        var result = GameElementFactory.GetOrigin([new Ellipse(new(30, 50), new(50, 100))]);
+
+        Assert.NotNull(result);
+        PointAssert.Equal(new(30, 50), result);
     }
 
     [Fact]

@@ -37,6 +37,9 @@ public class GameElementFactory {
         foreach (var shape in shapes) {
             boundingBoxes.Add(shape switch {
                 Rectangle rectangle => GetBoundingBox(rectangle),
+                RegularPolygon regularPolygon => GetBoundingBox(regularPolygon),
+                Circle circle => GetBoundingBox(circle),
+                Ellipse ellipse => GetBoundingBox(ellipse),
                 _ => throw new NotImplementedException()
             });
         }
@@ -59,6 +62,40 @@ public class GameElementFactory {
             Math.Min(rectangle.StartPoint.Y, rectangle.EndPoint.Y),
             Math.Max(rectangle.StartPoint.Y, rectangle.EndPoint.Y)
         );
+
+    private static (double MinX, double MaxX, double MinY, double MaxY) GetBoundingBox(RegularPolygon regularPolygon) {
+        var radius = (regularPolygon.CenterPoint - regularPolygon.RadiusPoint).Distance;
+
+        return (
+            regularPolygon.CenterPoint.X - radius,
+            regularPolygon.CenterPoint.X + radius,
+            regularPolygon.CenterPoint.Y - radius,
+            regularPolygon.CenterPoint.Y + radius
+        );
+    }
+
+    private static (double MinX, double MaxX, double MinY, double MaxY) GetBoundingBox(Circle circle) {
+        var radius = (circle.CenterPoint - circle.RadiusPoint).Distance;
+
+        return (
+            circle.CenterPoint.X - radius,
+            circle.CenterPoint.X + radius,
+            circle.CenterPoint.Y - radius,
+            circle.CenterPoint.Y + radius
+        );
+    }
+
+    private static (double MinX, double MaxX, double MinY, double MaxY) GetBoundingBox(Ellipse ellipse) {
+        var radiusX = Math.Abs(ellipse.CenterPoint.X - ellipse.RadiusPoint.X);
+        var radiusY = Math.Abs(ellipse.CenterPoint.Y - ellipse.RadiusPoint.Y);
+
+        return (
+            ellipse.CenterPoint.X - radiusX,
+            ellipse.CenterPoint.X + radiusX,
+            ellipse.CenterPoint.Y - radiusY,
+            ellipse.CenterPoint.Y + radiusY
+        );
+    }
 
     public Geometry GetGeometry(DrawableShape shape, Point origin)
         => shape switch {
