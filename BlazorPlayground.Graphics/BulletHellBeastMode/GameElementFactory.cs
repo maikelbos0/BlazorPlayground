@@ -19,17 +19,19 @@ public class GameElementFactory {
         this.geometryFactory = geometryFactory;
     }
 
-    //TODO determine origin
-    public GameElement GetGameElement(IEnumerable<DrawableShape> shapes)
-        => new GameElement() {
+    public GameElement GetGameElement(IEnumerable<DrawableShape> shapes) {
+        var origin = GetOrigin(shapes);
+
+        return new GameElement() {
             Sections = shapes.Select(shape => new GameElementSection() {
-                Geometry = GetGeometry(shape, new(0, 0)),
+                Geometry = GetGeometry(shape, origin),
                 FillColor = GetFillColor(shape),
                 StrokeColor = GetStrokeColor(shape),
                 StrokeWidth = GetStrokeWidth(shape),
                 Opacity = GetOpacity(shape)
             }).ToList()
         };
+    }
 
     public static Point GetOrigin(IEnumerable<DrawableShape> shapes) {
         var boundingBoxes = new List<(double MinX, double MaxX, double MinY, double MaxY)>();
@@ -43,6 +45,7 @@ public class GameElementFactory {
                 Line line => GetBoundingBox(line),
                 QuadraticBezier quadraticBezier => GetBoundingBox(quadraticBezier),
                 CubicBezier cubicBezier => GetBoundingBox(cubicBezier),
+                ClosedPath closedPath => GetBoundingBox(closedPath),
                 _ => throw new NotImplementedException()
             });
         }
@@ -123,6 +126,17 @@ public class GameElementFactory {
             Math.Min(cubicBezier.StartPoint.Y, cubicBezier.EndPoint.Y),
             Math.Max(cubicBezier.StartPoint.Y, cubicBezier.EndPoint.Y)
         );
+
+    private static (double MinX, double MaxX, double MinY, double MaxY) GetBoundingBox(ClosedPath closedPath) {
+        var allPoints = closedPath.IntermediatePoints.Append(closedPath.StartPoint).ToList();
+
+        return (
+                allPoints.Min(point => point.X),
+                allPoints.Max(point => point.X),
+                allPoints.Min(point => point.Y),
+                allPoints.Max(point => point.Y)
+            );
+    }
 
     public Geometry GetGeometry(DrawableShape shape, Point origin)
         => shape switch {

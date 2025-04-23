@@ -37,7 +37,7 @@ public class GameElementFactoryTests {
 
         var section = Assert.Single(result.Sections);
 
-        Assert.IsType<Polygon>(section.Geometry);
+        Assert.Equal(geometryFactory.CreatePolygon([new(-30, 10), new(-30, -10), new(30, -10), new(30, 10), new(-30, 10)]), section.Geometry);
         Assert.Equal(255, section.FillColor.Red);
         Assert.Equal(0, section.FillColor.Green);
         Assert.Equal(0, section.FillColor.Blue);
@@ -127,6 +127,30 @@ public class GameElementFactoryTests {
 
         Assert.NotNull(result);
         PointAssert.Equal(new(40, 75), result);
+    }
+
+    [Fact]
+    public void GetOriginFromClosedPath() {
+        var result = GameElementFactory.GetOrigin([new ClosedPath(new(30, 50), new(50, 100)) {
+            IntermediatePoints = {
+                new(70, 20),
+                new(30, 20)
+            }
+        }]);
+
+        Assert.NotNull(result);
+        PointAssert.Equal(new(50, 60), result);
+    }
+
+    [Fact]
+    public void GetOriginFromMultipleShapes() {
+        var result = GameElementFactory.GetOrigin([
+            new Rectangle(new(-10, -10), new(40, 40)),
+            new Line(new(30, 50), new(50, 100))
+        ]);
+
+        Assert.NotNull(result);
+        PointAssert.Equal(new(20, 45), result);
     }
 
     [Fact]
