@@ -80,13 +80,12 @@ public class LineTests {
 
         var result = subject.GetGeometry(geometryFactory, new(-100, -100));
 
-        Assert.NotNull(result);
         Assert.Equal(geometryFactory.CreateLineString([new(130, 150), new(150, 200)]), result);
     }
 
     [Fact]
     public void GetBoundingBox() {
-        var subject = new Line(new(30, 50), new(50, 100));
+        var subject = new Line(new(50, 100), new(30, 50));
 
         var result = subject.GetBoundingBox();
 
