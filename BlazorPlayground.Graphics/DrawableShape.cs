@@ -7,8 +7,8 @@ namespace BlazorPlayground.Graphics;
 
 public abstract class DrawableShape : Shape {
     public const int CurveApproximationSegmentCount = 60;
-    public const double AngleIncrement = 2 * Math.PI / CurveApproximationSegmentCount;
-    public const double StepIncrement = 1.0 / CurveApproximationSegmentCount;
+    public const double CurveAproximationAngleIncrement = 2 * Math.PI / CurveApproximationSegmentCount;
+    public const double CurveAproximationStepIncrement = 1.0 / CurveApproximationSegmentCount;
 
     public abstract string ElementName { get; }
 
@@ -93,9 +93,7 @@ public abstract class DrawableShape : Shape {
         }
     }
 
-    // TODO make abstract
-    public virtual Geometry GetGeometry(GeometryFactory geometryFactory, Point origin) => throw new NotImplementedException();
+    public abstract Geometry GetGeometry(GeometryFactory geometryFactory, Point origin);
 
-    // TODO make abstract
-    public virtual BoundingBox GetBoundingBox() => throw new NotImplementedException();
+    public abstract BoundingBox GetBoundingBox();
 }

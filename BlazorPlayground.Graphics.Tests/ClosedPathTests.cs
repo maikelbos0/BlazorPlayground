@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using NetTopologySuite.Geometries;
+using System.Linq;
 using Xunit;
 
 namespace BlazorPlayground.Graphics.Tests;
@@ -93,5 +94,46 @@ public class ClosedPathTests {
 
         Assert.Equal(2, closedPath.IntermediatePoints.Count);
         PointAssert.Equal(new Point(200, 50), closedPath.IntermediatePoints[^1]);
+    }
+
+    [Fact]
+    public void GetGeometryWithTwoCoordinates() {
+        var geometryFactory = new GeometryFactory(new PrecisionModel(10));
+        var subject = new ClosedPath(new(30, 50), new(50, 100));
+
+        var result = subject.GetGeometry(geometryFactory, new(-100, -100));
+
+        Assert.NotNull(result);
+        Assert.Equal(geometryFactory.CreateLineString([new(130, 150), new(150, 200)]), result);
+    }
+
+    [Fact]
+    public void GetGeometry() {
+        var geometryFactory = new GeometryFactory(new PrecisionModel(10));
+        var subject = new ClosedPath(new(30, 50), new(50, 100)) {
+            IntermediatePoints = {
+                new(60, 40),
+                new(30, 10)
+            }
+        };
+
+        var result = subject.GetGeometry(geometryFactory, new(-100, -100));
+
+        Assert.NotNull(result);
+        Assert.Equal(geometryFactory.CreatePolygon([new(130, 150), new(150, 200), new(160, 140), new(130, 110), new(130, 150)]), result);
+    }
+
+    [Fact]
+    public void GetBoundingBox() {
+        var subject = new ClosedPath(new(30, 50), new(50, 100)) {
+            IntermediatePoints = {
+                new(70, 20),
+                new(30, 20)
+            }
+        };
+
+        var result = subject.GetBoundingBox();
+
+        BoundingBoxAssert.Equal(new(30, 70, 20, 100), result);
     }
 }
