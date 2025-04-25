@@ -1,5 +1,4 @@
-﻿using BlazorPlayground.Graphics.BulletHellBeastMode;
-using NetTopologySuite.Geometries;
+﻿using NetTopologySuite.Geometries;
 using System.Linq;
 using Xunit;
 

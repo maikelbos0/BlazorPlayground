@@ -6,6 +6,10 @@ using System.Xml.Linq;
 namespace BlazorPlayground.Graphics;
 
 public abstract class DrawableShape : Shape {
+    public const int CurveApproximationSegmentCount = 60;
+    public const double AngleIncrement = 2 * Math.PI / CurveApproximationSegmentCount;
+    public const double StepIncrement = 1.0 / CurveApproximationSegmentCount;
+
     public abstract string ElementName { get; }
 
     public override void BuildRenderTree(RenderTreeBuilder builder) {
