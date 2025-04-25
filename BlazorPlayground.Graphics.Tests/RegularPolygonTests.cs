@@ -1,172 +1,194 @@
-﻿using System.Linq;
+﻿using NetTopologySuite.Geometries;
+using System.Linq;
 using Xunit;
 
-namespace BlazorPlayground.Graphics.Tests {
-    public class RegularPolygonTests {
-        [Fact]
-        public void ElementName() {
-            var polygon = new RegularPolygon(new Point(100, 100), new Point(50, 50));
+namespace BlazorPlayground.Graphics.Tests;
 
-            Assert.Equal("polygon", polygon.ElementName);
-        }
+public class RegularPolygonTests {
+    [Fact]
+    public void ElementName() {
+        var polygon = new RegularPolygon(new Point(100, 100), new Point(50, 50));
 
-        [Fact]
-        public void GetSnapPoints() {
-            var square = new RegularPolygon(new Point(100, 100), new Point(50, 50));
+        Assert.Equal("polygon", polygon.ElementName);
+    }
 
-            square.SetSides(4);
+    [Fact]
+    public void GetSnapPoints() {
+        var square = new RegularPolygon(new Point(100, 100), new Point(50, 50));
 
-            var result = square.GetSnapPoints();
+        square.SetSides(4);
 
-            Assert.Equal(5, result.Count);
-            PointAssert.Contains(result, new Point(50, 50));
-            PointAssert.Contains(result, new Point(150, 50));
-            PointAssert.Contains(result, new Point(150, 150));
-            PointAssert.Contains(result, new Point(50, 150));
-            PointAssert.Contains(result, new Point(100, 100));
-        }
+        var result = square.GetSnapPoints();
 
-        [Fact]
-        public void GetPoints_Square_0_Degrees() {
-            var square = new RegularPolygon(new Point(100, 100), new Point(50, 50));
+        Assert.Equal(5, result.Count);
+        PointAssert.Contains(result, new Point(50, 50));
+        PointAssert.Contains(result, new Point(150, 50));
+        PointAssert.Contains(result, new Point(150, 150));
+        PointAssert.Contains(result, new Point(50, 150));
+        PointAssert.Contains(result, new Point(100, 100));
+    }
 
-            square.SetSides(4);
+    [Fact]
+    public void GetPoints_Square_0_Degrees() {
+        var square = new RegularPolygon(new Point(100, 100), new Point(50, 50));
 
-            var result = square.GetPoints().ToList();
+        square.SetSides(4);
 
-            Assert.Equal(4, result.Count);
-            PointAssert.Equal(new Point(50, 50), result[0]);
-            PointAssert.Equal(new Point(150, 50), result[1]);
-            PointAssert.Equal(new Point(150, 150), result[2]);
-            PointAssert.Equal(new Point(50, 150), result[3]);
-        }
+        var result = square.GetPoints().ToList();
 
-        [Fact]
-        public void GetPoints_Square_45_Degrees() {
-            var square = new RegularPolygon(new Point(100, 100), new Point(50, 100));
+        Assert.Equal(4, result.Count);
+        PointAssert.Equal(new Point(50, 50), result[0]);
+        PointAssert.Equal(new Point(150, 50), result[1]);
+        PointAssert.Equal(new Point(150, 150), result[2]);
+        PointAssert.Equal(new Point(50, 150), result[3]);
+    }
 
-            square.SetSides(4);
+    [Fact]
+    public void GetPoints_Square_45_Degrees() {
+        var square = new RegularPolygon(new Point(100, 100), new Point(50, 100));
 
-            var result = square.GetPoints().ToList();
+        square.SetSides(4);
 
-            Assert.Equal(4, result.Count);
-            PointAssert.Equal(new Point(50, 100), result[0]);
-            PointAssert.Equal(new Point(100, 50), result[1]);
-            PointAssert.Equal(new Point(150, 100), result[2]);
-            PointAssert.Equal(new Point(100, 150), result[3]);
-        }
+        var result = square.GetPoints().ToList();
 
-        [Fact]
-        public void GetPoints_Square_22_Degrees() {
-            var square = new RegularPolygon(new Point(100, 100), new Point(50, 120));
+        Assert.Equal(4, result.Count);
+        PointAssert.Equal(new Point(50, 100), result[0]);
+        PointAssert.Equal(new Point(100, 50), result[1]);
+        PointAssert.Equal(new Point(150, 100), result[2]);
+        PointAssert.Equal(new Point(100, 150), result[3]);
+    }
 
-            square.SetSides(4);
+    [Fact]
+    public void GetPoints_Square_22_Degrees() {
+        var square = new RegularPolygon(new Point(100, 100), new Point(50, 120));
 
-            var result = square.GetPoints().ToList();
+        square.SetSides(4);
 
-            Assert.Equal(4, result.Count);
-            PointAssert.Equal(new Point(50, 120), result[0]);
-            PointAssert.Equal(new Point(80, 50), result[1]);
-            PointAssert.Equal(new Point(150, 80), result[2]);
-            PointAssert.Equal(new Point(120, 150), result[3]);
-        }
+        var result = square.GetPoints().ToList();
 
-        [Fact]
-        public void GetPoints_Square_112_Degrees() {
-            var square = new RegularPolygon(new Point(100, 100), new Point(150, 120));
+        Assert.Equal(4, result.Count);
+        PointAssert.Equal(new Point(50, 120), result[0]);
+        PointAssert.Equal(new Point(80, 50), result[1]);
+        PointAssert.Equal(new Point(150, 80), result[2]);
+        PointAssert.Equal(new Point(120, 150), result[3]);
+    }
 
-            square.SetSides(4);
+    [Fact]
+    public void GetPoints_Square_112_Degrees() {
+        var square = new RegularPolygon(new Point(100, 100), new Point(150, 120));
 
-            var result = square.GetPoints().ToList();
+        square.SetSides(4);
 
-            Assert.Equal(4, result.Count);
-            PointAssert.Equal(new Point(150, 120), result[0]);
-            PointAssert.Equal(new Point(80, 150), result[1]);
-            PointAssert.Equal(new Point(50, 80), result[2]);
-            PointAssert.Equal(new Point(120, 50), result[3]);
-        }
+        var result = square.GetPoints().ToList();
 
-        [Fact]
-        public void GetPoints_Triangle() {
-            var triangle = new RegularPolygon(new Point(100, 100), new Point(100, 50));
+        Assert.Equal(4, result.Count);
+        PointAssert.Equal(new Point(150, 120), result[0]);
+        PointAssert.Equal(new Point(80, 150), result[1]);
+        PointAssert.Equal(new Point(50, 80), result[2]);
+        PointAssert.Equal(new Point(120, 50), result[3]);
+    }
 
-            triangle.SetSides(3);
+    [Fact]
+    public void GetPoints_Triangle() {
+        var triangle = new RegularPolygon(new Point(100, 100), new Point(100, 50));
 
-            var result = triangle.GetPoints().ToList();
+        triangle.SetSides(3);
 
-            Assert.Equal(3, result.Count);
+        var result = triangle.GetPoints().ToList();
 
-            PointAssert.Equal(new Point(100, 50), result[0]);
-            PointAssert.Equal(new Point(143.3, 125), result[1]);
-            PointAssert.Equal(new Point(56.7, 125), result[2]);
-        }
+        Assert.Equal(3, result.Count);
 
-        [Fact]
-        public void GetPoints_Hexagon() {
-            var hexagon = new RegularPolygon(new Point(100, 100), new Point(100, 50));
+        PointAssert.Equal(new Point(100, 50), result[0]);
+        PointAssert.Equal(new Point(143.3, 125), result[1]);
+        PointAssert.Equal(new Point(56.7, 125), result[2]);
+    }
 
-            hexagon.SetSides(6);
+    [Fact]
+    public void GetPoints_Hexagon() {
+        var hexagon = new RegularPolygon(new Point(100, 100), new Point(100, 50));
 
-            var result = hexagon.GetPoints().ToList();
+        hexagon.SetSides(6);
 
-            Assert.Equal(6, result.Count);
+        var result = hexagon.GetPoints().ToList();
 
-            PointAssert.Equal(new Point(100, 50), result[0]);
-            PointAssert.Equal(new Point(143.3, 75), result[1]);
-            PointAssert.Equal(new Point(143.3, 125), result[2]);
-            PointAssert.Equal(new Point(100, 150), result[3]);
-            PointAssert.Equal(new Point(56.7, 125), result[4]);
-            PointAssert.Equal(new Point(56.7, 75), result[5]);
-        }
+        Assert.Equal(6, result.Count);
 
-        [Fact]
-        public void GetAttributes() {
-            var polygon = new RegularPolygon(new Point(100, 100), new Point(50, 50));
+        PointAssert.Equal(new Point(100, 50), result[0]);
+        PointAssert.Equal(new Point(143.3, 75), result[1]);
+        PointAssert.Equal(new Point(143.3, 125), result[2]);
+        PointAssert.Equal(new Point(100, 150), result[3]);
+        PointAssert.Equal(new Point(56.7, 125), result[4]);
+        PointAssert.Equal(new Point(56.7, 75), result[5]);
+    }
 
-            polygon.SetSides(4);
+    [Fact]
+    public void GetAttributes() {
+        var polygon = new RegularPolygon(new Point(100, 100), new Point(50, 50));
 
-            var attributes = polygon.GetAttributes();
+        polygon.SetSides(4);
 
-            var attribute = Assert.Single(attributes);
-            Assert.Equal("points", attribute.Key);
-            Assert.Equal("50,49.99999999999999 150,49.99999999999999 150,150 50,150", attribute.Value);
-        }
+        var attributes = polygon.GetAttributes();
 
-        [Fact]
-        public void Anchors_Get() {
-            var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250));
+        var attribute = Assert.Single(attributes);
+        Assert.Equal("points", attribute.Key);
+        Assert.Equal("50,49.99999999999999 150,49.99999999999999 150,150 50,150", attribute.Value);
+    }
 
-            var result = polygon.Anchors;
+    [Fact]
+    public void Anchors_Get() {
+        var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250));
 
-            Assert.Equal(2, result.Count);
-            PointAssert.Equal(new Point(100, 150), result[0].Get(polygon));
-            PointAssert.Equal(new Point(200, 250), result[1].Get(polygon));
-        }
+        var result = polygon.Anchors;
 
-        [Fact]
-        public void Anchors_Set() {
-            var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250));
+        Assert.Equal(2, result.Count);
+        PointAssert.Equal(new Point(100, 150), result[0].Get(polygon));
+        PointAssert.Equal(new Point(200, 250), result[1].Get(polygon));
+    }
 
-            var result = polygon.Anchors;
+    [Fact]
+    public void Anchors_Set() {
+        var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250));
 
-            Assert.Equal(2, result.Count);
-            result[0].Set(polygon, new Point(110, 160));
-            result[1].Set(polygon, new Point(210, 260));
-            PointAssert.Equal(new Point(110, 160), polygon.CenterPoint);
-            PointAssert.Equal(new Point(210, 260), polygon.RadiusPoint);
-        }
+        var result = polygon.Anchors;
 
-        [Fact]
-        public void Clone() {
-            var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250));
+        Assert.Equal(2, result.Count);
+        result[0].Set(polygon, new Point(110, 160));
+        result[1].Set(polygon, new Point(210, 260));
+        PointAssert.Equal(new Point(110, 160), polygon.CenterPoint);
+        PointAssert.Equal(new Point(210, 260), polygon.RadiusPoint);
+    }
 
-            var result = polygon.Clone();
+    [Fact]
+    public void Clone() {
+        var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250));
 
-            var resultPolygon = Assert.IsType<RegularPolygon>(result);
+        var result = polygon.Clone();
 
-            Assert.NotSame(polygon, resultPolygon);
-            PointAssert.Equal(new Point(100, 150), resultPolygon.CenterPoint);
-            PointAssert.Equal(new Point(200, 250), resultPolygon.RadiusPoint);
-        }
+        var resultPolygon = Assert.IsType<RegularPolygon>(result);
+
+        Assert.NotSame(polygon, resultPolygon);
+        PointAssert.Equal(new Point(100, 150), resultPolygon.CenterPoint);
+        PointAssert.Equal(new Point(200, 250), resultPolygon.RadiusPoint);
+    }
+
+    [Fact]
+    public void GetGeometry() {
+        var geometryFactory = new GeometryFactory(new PrecisionModel(10));
+        var subject = new RegularPolygon(new(50, 50), new(50, 100));
+
+        subject.SetSides(3);
+
+        var result = subject.GetGeometry(geometryFactory, new(-100, -100));
+
+        Assert.Equal(geometryFactory.CreatePolygon([new(150, 200), new(106.7, 125), new(193.3, 125), new(150, 200)]), result);
+    }
+
+    [Fact]
+    public void GetBoundingBox() {
+        var subject = new RegularPolygon(new(30, 50), new(50, 100));
+
+        var result = subject.GetBoundingBox();
+
+        BoundingBoxAssert.Equal(new(-23.9, 83.9, -3.9, 103.9), result);
     }
 }
