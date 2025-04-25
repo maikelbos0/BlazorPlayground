@@ -45,7 +45,7 @@ public class Circle : DrawableShape, IShapeWithOpacity, IShapeWithFill, IShapeWi
         var coordinates = new Coordinate[CurveApproximationSegmentCount + 1];
 
         for (var i = 0; i < CurveApproximationSegmentCount; i++) {
-            var angle = AngleIncrement * i;
+            var angle = CurveAproximationAngleIncrement * i;
             var dx = radius * Math.Cos(angle);
             var dy = radius * Math.Sin(angle);
             coordinates[i] = geometryFactory.GetCoordinate(CenterPoint.X + dx, CenterPoint.Y + dy, origin);
