@@ -9,7 +9,7 @@ namespace BlazorPlayground.Graphics.Tests.BulletHellBeastMode;
 public class GameElementFactoryTests {
     [Fact]
     public void GetGameElementFromEmptyEnumerable() {
-        var geometryFactory = new GeometryFactory(new PrecisionModel(1000));
+        var geometryFactory = new GeometryFactory(new PrecisionModel(10));
         var subject = new GameElementFactory(geometryFactory);
 
         var result = subject.GetGameElement([]);
@@ -20,7 +20,7 @@ public class GameElementFactoryTests {
 
     [Fact]
     public void GetGameElementFromSingleDrawableShape() {
-        var geometryFactory = new GeometryFactory(new PrecisionModel(1000));
+        var geometryFactory = new GeometryFactory(new PrecisionModel(10));
         var subject = new GameElementFactory(geometryFactory);
         var rectangle = new Rectangle(new(-10, -10), new(50, -30));
 
@@ -52,7 +52,7 @@ public class GameElementFactoryTests {
 
     [Fact]
     public void GetGameElementFromSingleDrawableShapeWithoutProperties() {
-        var geometryFactory = new GeometryFactory(new PrecisionModel(1000));
+        var geometryFactory = new GeometryFactory(new PrecisionModel(10));
         var subject = new GameElementFactory(geometryFactory);
         var shape = Substitute.For<DrawableShape>();
         shape.GetGeometry(geometryFactory, Arg.Any<Point>()).Returns(Polygon.Empty);
@@ -78,7 +78,7 @@ public class GameElementFactoryTests {
 
     [Fact]
     public void GetGameElementFromMultipleDrawableShapes() {
-        var geometryFactory = new GeometryFactory(new PrecisionModel(1000));
+        var geometryFactory = new GeometryFactory(new PrecisionModel(10));
         var subject = new GameElementFactory(geometryFactory);
 
         var result = subject.GetGameElement([

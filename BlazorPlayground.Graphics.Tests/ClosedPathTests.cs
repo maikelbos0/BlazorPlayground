@@ -16,7 +16,7 @@ public class ClosedPathTests {
     public void GetSnapPoints() {
         var closedPath = new ClosedPath(new Point(100, 150), new Point(200, 250));
 
-        closedPath.IntermediatePoints.Add(new(200, 50));
+        closedPath.Points.Add(new(200, 50));
 
         var result = closedPath.GetSnapPoints();
 
@@ -27,10 +27,23 @@ public class ClosedPathTests {
     }
 
     [Fact]
-    public void GetAttributes() {
-        var closedPath = new ClosedPath(new Point(100, 150), new Point(200, 250));
+    public void GetAttributesWithoutPoints() {
+        var closedPath = new ClosedPath() {
+            Points = []
+        };
 
-        closedPath.IntermediatePoints.Add(new(200, 50));
+        var attributes = closedPath.GetAttributes().ToList();
+
+        Assert.Empty(attributes);
+    }
+
+    [Fact]
+    public void GetAttributes() {
+        var closedPath = new ClosedPath(new Point(100, 150), new Point(200, 250)) { 
+            Points = {
+                new(200, 50)
+            }
+        };
 
         var attributes = closedPath.GetAttributes().ToList();
 
@@ -43,7 +56,7 @@ public class ClosedPathTests {
     public void Anchors_Get() {
         var closedPath = new ClosedPath(new Point(100, 150), new Point(200, 250));
 
-        closedPath.IntermediatePoints.Add(new(200, 50));
+        closedPath.Points.Add(new(200, 50));
 
         var result = closedPath.Anchors;
 
@@ -57,7 +70,7 @@ public class ClosedPathTests {
     public void Anchors_Set() {
         var closedPath = new ClosedPath(new Point(100, 150), new Point(200, 250));
 
-        closedPath.IntermediatePoints.Add(new(200, 50));
+        closedPath.Points.Add(new(200, 50));
 
         var result = closedPath.Anchors;
 
@@ -65,25 +78,24 @@ public class ClosedPathTests {
         result[0].Set(closedPath, new Point(110, 160));
         result[1].Set(closedPath, new Point(210, 260));
         result[2].Set(closedPath, new Point(210, 60));
-        PointAssert.Equal(new Point(110, 160), closedPath.StartPoint);
-        PointAssert.Equal(new Point(210, 260), closedPath.IntermediatePoints[0]);
-        PointAssert.Equal(new Point(210, 60), closedPath.IntermediatePoints[1]);
+        PointAssert.Equal(new Point(110, 160), closedPath.Points[0]);
+        PointAssert.Equal(new Point(210, 260), closedPath.Points[1]);
+        PointAssert.Equal(new Point(210, 60), closedPath.Points[2]);
     }
 
     [Fact]
     public void Clone() {
         var closedPath = new ClosedPath(new Point(100, 150), new Point(200, 250));
 
-        closedPath.IntermediatePoints.Add(new(200, 50));
+        closedPath.Points.Add(new(200, 50));
 
         var result = closedPath.Clone();
 
         var resultClosedPath = Assert.IsType<ClosedPath>(result);
 
         Assert.NotSame(closedPath, resultClosedPath);
-        PointAssert.Equal(new Point(100, 150), resultClosedPath.StartPoint);
-        Assert.NotSame(closedPath.IntermediatePoints, resultClosedPath.IntermediatePoints);
-        Assert.Equal(closedPath.IntermediatePoints, resultClosedPath.IntermediatePoints);
+        Assert.NotSame(closedPath.Points, resultClosedPath.Points);
+        Assert.Equal(closedPath.Points, resultClosedPath.Points);
     }
 
     [Fact]
@@ -92,12 +104,38 @@ public class ClosedPathTests {
 
         closedPath.ExecuteSecondaryAction(new(200, 50));
 
-        Assert.Equal(2, closedPath.IntermediatePoints.Count);
-        PointAssert.Equal(new Point(200, 50), closedPath.IntermediatePoints[^1]);
+        Assert.Equal(3, closedPath.Points.Count);
+        PointAssert.Equal(new Point(200, 50), closedPath.Points[^1]);
     }
 
     [Fact]
-    public void GetGeometryWithTwoCoordinates() {
+    public void GetGeometryWithoutPoints() {
+        var geometryFactory = new GeometryFactory(new PrecisionModel(10));
+        var subject = new ClosedPath() {
+            Points = []
+        };
+
+        var result = subject.GetGeometry(geometryFactory, new(-100, -100));
+
+        Assert.NotNull(result);
+        Assert.Equal(geometryFactory.CreateEmpty(Dimension.Point), result);
+    }
+
+    [Fact]
+    public void GetGeometryWithOnePoint() {
+        var geometryFactory = new GeometryFactory(new PrecisionModel(10));
+        var subject = new ClosedPath() {
+            Points = [new(30, 50)]
+        };
+
+        var result = subject.GetGeometry(geometryFactory, new(-100, -100));
+
+        Assert.NotNull(result);
+        Assert.Equal(geometryFactory.CreatePoint(new Coordinate(130, 150)), result);
+    }
+
+    [Fact]
+    public void GetGeometryWithTwoPoints() {
         var geometryFactory = new GeometryFactory(new PrecisionModel(10));
         var subject = new ClosedPath(new(30, 50), new(50, 100));
 
@@ -111,7 +149,7 @@ public class ClosedPathTests {
     public void GetGeometry() {
         var geometryFactory = new GeometryFactory(new PrecisionModel(10));
         var subject = new ClosedPath(new(30, 50), new(50, 100)) {
-            IntermediatePoints = {
+            Points = {
                 new(60, 40),
                 new(30, 10)
             }
@@ -126,7 +164,7 @@ public class ClosedPathTests {
     [Fact]
     public void GetBoundingBox() {
         var subject = new ClosedPath(new(30, 50), new(50, 100)) {
-            IntermediatePoints = {
+            Points = {
                 new(70, 20),
                 new(30, 20)
             }

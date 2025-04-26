@@ -188,8 +188,9 @@ namespace BlazorPlayground.Graphics.Tests {
 
             var shape = Assert.IsType<ClosedPath>(definition.Construct(new Point(100, 200), new Point(150, 250)));
 
-            PointAssert.Equal(new Point(100, 200), shape.StartPoint);
-            PointAssert.Equal(new Point(150, 250), Assert.Single(shape.IntermediatePoints));
+            Assert.Equal(2, shape.Points.Count);
+            PointAssert.Equal(new Point(100, 200), shape.Points[0]);
+            PointAssert.Equal(new Point(150, 250), shape.Points[1]);
         }
 
         [Fact]

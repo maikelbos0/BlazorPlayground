@@ -4,27 +4,28 @@ namespace BlazorPlayground.Graphics;
 
 public class ClosedPath : DrawableShape, IShapeWithOpacity, IShapeWithFill, IShapeWithStroke, IShapeWithStrokeLinejoin, IAutoSelectedShape, IHasSecondaryAction {
     public override string ElementName => "path";
-    public override IReadOnlyList<Anchor> Anchors => Array.AsReadOnly([
-        new Anchor<ClosedPath>(s => s.StartPoint, (s, p) => s.StartPoint = p),
-        .. IntermediatePoints.Select((_, index) => new Anchor<ClosedPath>(s => s.IntermediatePoints[index], (s, p) => s.IntermediatePoints[index] = p))
-    ]);
-    public Point StartPoint { get; set; }
-    public List<Point> IntermediatePoints { get; set; }
+    public override IReadOnlyList<Anchor> Anchors => Array.AsReadOnly(
+        Points.Select((_, index) => new Anchor<ClosedPath>(s => s.Points[index], (s, p) => s.Points[index] = p)).ToArray()
+    );
+    public List<Point> Points { get; set; }
 
     public ClosedPath() : this(new(0, 0), new(0, 0)) { }
 
-    public ClosedPath(Point startPoint, Point firstIntermediatePoint) {
-        StartPoint = startPoint;
-        IntermediatePoints = [firstIntermediatePoint];
+    public ClosedPath(Point firstPoint, Point secondPoint) {
+        Points = [firstPoint, secondPoint];
     }
 
     public override ShapeAttributeCollection GetAttributes() {
+        if (Points.Count == 0) {
+            return [];
+        }
+
         var pathSegments = new List<string>() {
-            $"M {StartPoint.X} {StartPoint.Y}"
+            $"M {Points[0].X} {Points[0].Y}"
         };
 
-        foreach (var intermediatePoint in IntermediatePoints) {
-            pathSegments.Add($"L {intermediatePoint.X} {intermediatePoint.Y}");
+        foreach (var point in Points.Skip(1)) {
+            pathSegments.Add($"L {point.X} {point.Y}");
         }
 
         return new() {
@@ -32,43 +33,46 @@ public class ClosedPath : DrawableShape, IShapeWithOpacity, IShapeWithFill, ISha
         };
     }
 
-    public override IReadOnlyList<Point> GetSnapPoints() => Array.AsReadOnly([StartPoint, .. IntermediatePoints]);
+    public override IReadOnlyList<Point> GetSnapPoints() => Points.AsReadOnly();
 
     protected override Shape CreateClone() => new ClosedPath() {
-        StartPoint = StartPoint,
-        IntermediatePoints = new(IntermediatePoints)
+        Points = new(Points)
     };
 
-    public void ExecuteSecondaryAction(Point endPoint) => IntermediatePoints.Add(endPoint);
+    public void ExecuteSecondaryAction(Point endPoint) => Points.Add(endPoint);
 
     public override Geometry GetGeometry(GeometryFactory geometryFactory, Point origin) {
-        if (IntermediatePoints.Count == 1) {
+        if (Points.Count == 0) {
+            return geometryFactory.CreateEmpty(Dimension.Point);
+        }
+        else if (Points.Count == 1) {
+            return geometryFactory.CreatePoint(geometryFactory.GetCoordinate(Points[0].X, Points[0].Y, origin));
+        }
+        else if (Points.Count == 2) {
             return geometryFactory.CreateLineString([
-                geometryFactory.GetCoordinate(StartPoint.X, StartPoint.Y, origin),
-                geometryFactory.GetCoordinate(IntermediatePoints[0].X, IntermediatePoints[0].Y, origin)
+                geometryFactory.GetCoordinate(Points[0].X, Points[0].Y, origin),
+                geometryFactory.GetCoordinate(Points[1].X, Points[1].Y, origin)
             ]);
         }
         else {
-            var coordinates = new Coordinate[IntermediatePoints.Count + 2];
+            var coordinates = new Coordinate[Points.Count + 1];
 
-            for (var i = 0; i < IntermediatePoints.Count; i++) {
-                coordinates[i + 1] = geometryFactory.GetCoordinate(IntermediatePoints[i].X, IntermediatePoints[i].Y, origin);
+            for (var i = 0; i < Points.Count; i++) {
+                coordinates[i] = geometryFactory.GetCoordinate(Points[i].X, Points[i].Y, origin);
             }
 
-            coordinates[0] = coordinates[^1] = geometryFactory.GetCoordinate(StartPoint.X, StartPoint.Y, origin);
+            coordinates[^1] = geometryFactory.GetCoordinate(Points[0].X, Points[0].Y, origin);
 
             return geometryFactory.CreatePolygon(coordinates);
         }
     }
 
     public override BoundingBox GetBoundingBox() {
-        var allPoints = IntermediatePoints.Append(StartPoint).ToList();
-
         return new(
-            allPoints.Min(point => point.X),
-            allPoints.Max(point => point.X),
-            allPoints.Min(point => point.Y),
-            allPoints.Max(point => point.Y)
+            Points.Min(point => point.X),
+            Points.Max(point => point.X),
+            Points.Min(point => point.Y),
+            Points.Max(point => point.Y)
         );
     }
 }
