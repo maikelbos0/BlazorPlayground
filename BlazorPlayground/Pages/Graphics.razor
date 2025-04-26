@@ -1,9 +1,12 @@
 ﻿@page "/Graphics"
+@using BlazorPlayground.BulletHellBeastMode
 @using BlazorPlayground.Graphics
 @using System.Globalization
 @using System.Xml.Linq
 @using System.Text
 @using System.IO
+@using BlazorPlayground.Graphics.BulletHellBeastMode
+@using System.Text.Json
 @implements IAsyncDisposable
 @inject IJSRuntime JSRuntime
 
@@ -37,6 +40,7 @@
 <div class="btn-toolbar">
     <fieldset class="btn-group mb-3 me-3">
         <button type="button" class="btn btn-secondary" @onclick="() => Save()">Save</button>
+        <button type="button" class="btn btn-secondary" @onclick="() => CreateGameElement()">Create game element</button>
         <button type="button" class="btn btn-secondary" @onclick="() => ToggleLoadModal(true)">Load</button>
     </fieldset>
 
@@ -241,9 +245,9 @@
 </div>
 
 <svg class="graphics-main" viewBox="0 0 @Canvas.Width @Canvas.Height" width="@Canvas.Width" height="@Canvas.Height"
-     @onmousedown="args => Canvas.StartActionExecution(GetPoint(args), args.CtrlKey)"
-     @onmousemove="args => Canvas.UpdateActionExecution(GetPoint(args))"
-     @onmouseup="() => Canvas.EndActionExecution()">
+@onmousedown="args => Canvas.StartActionExecution(GetPoint(args), args.CtrlKey)"
+@onmousemove="args => Canvas.UpdateActionExecution(GetPoint(args))"
+@onmouseup="() => Canvas.EndActionExecution()">
 
     @{
         if (Canvas.ShowGrid) {
@@ -323,6 +327,14 @@
         var element = Canvas.ExportSvg();
 
         await ModuleReference.InvokeVoidAsync("downloadFile", FileName ?? $"graphics {DateTime.UtcNow:yyyyMMdd hhmm}.svg", "image/svg+xml", Encoding.UTF8.GetBytes(element.ToString()));
+    }
+
+    private async Task CreateGameElement() {
+        var geometryFactory = new NetTopologySuite.Geometries.GeometryFactory(new NetTopologySuite.Geometries.PrecisionModel(10));
+        var factory = new GameElementFactory(geometryFactory);
+        var gameElement = factory.GetGameElement(Canvas.Shapes.OfType<DrawableShape>());
+        
+        await ModuleReference.InvokeVoidAsync("downloadFile", FileName ?? $"game-element {DateTime.UtcNow:yyyyMMdd hhmm}.json", "application/json", Encoding.UTF8.GetBytes(GameElementSerializer.Serialize(gameElement)));
     }
 
     private void ToggleLoadModal(bool showLoadModal) {
