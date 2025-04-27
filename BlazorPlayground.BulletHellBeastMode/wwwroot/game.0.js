@@ -9,4 +9,14 @@ function initialize(canvas, width, height, frameRate) {
     game.elements = {};
 }
 
-export { initialize };
+function addGameElement(id, element) {
+    game.elements[id] = element;
+    console.log(game.elements);
+}
+
+function removeGameElement(id) {
+    delete game.elements[id];
+    console.log(game.elements);
+}
+
+export { initialize, addGameElement, removeGameElement };
