@@ -1,47 +1,23 @@
 ﻿@page "/BulletHellBeastMode"
-@implements IAsyncDisposable
-@inject IJSRuntime JSRuntime
+@using BlazorPlayground.BulletHellBeastMode
 
 <h1>Bullet Hell: Beast Mode</h1>
 
 <div class="btn-toolbar">
 	<fieldset class="btn-group mb-3 me-3">
-		@if (CurrentGame == null) {
-			<button type="button" class="btn btn-primary" @onclick="() => CurrentGame = new()">Start</button>
+		@if (IsActive) {
+			<button type="button" class="btn btn-primary" @onclick="() => IsActive = false">Stop</button>
 		}
 		else {
-			<button type="button" class="btn btn-secondary" @onclick="() => CurrentGame = new()">Restart</button>
-			<button type="button" class="btn btn-primary" @onclick="() => CurrentGame = null">Stop</button>
+			<button type="button" class="btn btn-primary" @onclick="() => IsActive = true">Start</button>
 		}
 	</fieldset>
 </div>
 
-<canvas id="game"></canvas>
+@if (IsActive) {
+	<Game />
+}
 
 @code {
-	private IJSObjectReference ModuleReference { get; set; }
-	private Game CurrentGame { get; set; }
-
-	protected override async Task OnAfterRenderAsync(bool firstRender)
-	{
-		if (firstRender)
-		{
-			ModuleReference = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./js/bulletHellBeastMode.js");
-			await ModuleReference.InvokeVoidAsync("initializeGame", Game.Width, Game.Height, Game.FrameRate);
-		}
-	}
-
-	public async ValueTask DisposeAsync()
-	{
-		if (ModuleReference is not null)
-		{
-			await ModuleReference.DisposeAsync();
-		}
-	}
-
-	public class Game {
-		public const int Width = 1000;
-		public const int Height = 1000;
-		public const int FrameRate = 1000;
-	}
+	private bool IsActive { get; set; }
 }
