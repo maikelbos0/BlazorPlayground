@@ -8,9 +8,9 @@ public class Game : ComponentBase, IAsyncDisposable {
     public const int Width = 1000;
     public const int Height = 1000;
     public const int FrameRate = 1000;
-    public const string ModuleLocation = "./_content/BlazorPlayground.BulletHellBeastMode/bulletHellBeastMode.0.js";
+    public const string ModuleLocation = "./_content/BlazorPlayground.BulletHellBeastMode/game.0.js";
 
-    private readonly Guid id = Guid.NewGuid();
+    private ElementReference? canvasReference;
     private IJSObjectReference? moduleReference;
     private DotNetObjectReference<Game>? dotNetObjectReference;
 
@@ -18,15 +18,14 @@ public class Game : ComponentBase, IAsyncDisposable {
 
     protected override void BuildRenderTree(RenderTreeBuilder builder) {
         builder.OpenElement(0, "canvas");
-        builder.AddAttribute(1, "id", id);
+        builder.AddElementReferenceCapture(1, (elementReference) => canvasReference = elementReference);
         builder.CloseElement();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender) {
         if (firstRender) {
             moduleReference = await JSRuntime.InvokeAsync<IJSObjectReference>("import", ModuleLocation);
-            dotNetObjectReference = DotNetObjectReference.Create(this);
-            await moduleReference.InvokeVoidAsync("initialize", id, Width, Height, FrameRate);
+            await moduleReference.InvokeVoidAsync("initialize", canvasReference, Width, Height, FrameRate);
         }
     }
 

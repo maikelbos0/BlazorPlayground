@@ -1,8 +1,8 @@
 ﻿
 const game = {};
 
-function initialize(id, width, height, frameRate) {
-    game.canvas = document.getElementById(id);
+function initialize(canvas, width, height, frameRate) {
+    game.canvas = canvas;
     game.canvas.width = width;
     game.canvas.height = height;
     game.frameRate = frameRate;
