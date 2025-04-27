@@ -62,6 +62,14 @@
 
     <fieldset class="input-group mb-3 me-3">
         <div class="input-group-text">
+            <label for="canvasZoom">Canvas zoom</label>
+        </div>
+
+        <input type="text" class="form-control" id="canvasZoom" @bind-value="Canvas.Zoom" />
+    </fieldset>
+
+    <fieldset class="input-group mb-3 me-3">
+        <div class="input-group-text">
             <label for="gridSize">Grid size</label>
         </div>
 
@@ -244,10 +252,13 @@
     </fieldset>
 </div>
 
-<svg class="graphics-main" viewBox="0 0 @Canvas.Width @Canvas.Height" width="@Canvas.Width" height="@Canvas.Height"
-@onmousedown="args => Canvas.StartActionExecution(GetPoint(args), args.CtrlKey)"
-@onmousemove="args => Canvas.UpdateActionExecution(GetPoint(args))"
-@onmouseup="() => Canvas.EndActionExecution()">
+<svg class="graphics-main"
+    viewBox="0 0 @Canvas.Width @Canvas.Height" 
+    width="@Canvas.DisplayWidth" 
+    height="@Canvas.DisplayHeight"
+    @onmousedown="Canvas.StartActionExecution"
+    @onmousemove="Canvas.UpdateActionExecution"
+    @onmouseup="Canvas.EndActionExecution">
 
     @{
         if (Canvas.ShowGrid) {
