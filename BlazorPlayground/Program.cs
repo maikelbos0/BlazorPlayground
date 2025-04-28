@@ -1,18 +1,15 @@
+using BlazorPlayground;
+using BlazorPlayground.BulletHellBeastMode;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Net.Http;
-using System.Threading.Tasks;
 
-namespace BlazorPlayground {
-    public class Program {
-        public static async Task Main(string[] args) {
-            var builder = WebAssemblyHostBuilder.CreateDefault(args);
-            builder.RootComponents.Add<App>("#app");
+var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
-            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+builder.RootComponents.Add<App>("#app");
 
-            await builder.Build().RunAsync();
-        }
-    }
-}
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+builder.Services.AddScoped<IGameElementProvider, GameElementProvider>();
+
+await builder.Build().RunAsync();
