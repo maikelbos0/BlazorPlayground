@@ -15,7 +15,7 @@ public class GameElementSection {
             LineString => "linestring",
             _ => throw new NotImplementedException()
         };
-        var coordinates = Geometry.Coordinates.Select(coordinate => (coordinate.X, coordinate.Y)).ToList();
+        var coordinates = Geometry.Coordinates.Select(coordinate => new Coordinate(coordinate.X, coordinate.Y)).ToList();
 
         return new(type, coordinates, FillColor.ToString(), StrokeColor.ToString(), StrokeWidth, Opacity);
     }

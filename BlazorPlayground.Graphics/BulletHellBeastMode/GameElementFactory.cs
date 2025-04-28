@@ -19,6 +19,7 @@ public class GameElementFactory {
         var origin = GetOrigin(shapes);
 
         return new GameElement() {
+            Position = new(0, 0),
             Sections = shapes.Select(shape => new GameElementSection() {
                 Geometry = shape.GetGeometry(geometryFactory, origin),
                 FillColor = GetFillColor(shape),
