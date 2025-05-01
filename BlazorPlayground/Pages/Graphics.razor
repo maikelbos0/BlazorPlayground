@@ -345,7 +345,7 @@
         var factory = new GameElementFactory(geometryFactory);
         var gameElement = factory.GetGameElement(Canvas.Shapes.OfType<DrawableShape>());
         
-        await ModuleReference.InvokeVoidAsync("downloadFile", FileName ?? $"game-element {DateTime.UtcNow:yyyyMMdd hhmm}.json", "application/json", Encoding.UTF8.GetBytes(GameElementSerializer.Serialize(gameElement)));
+        await ModuleReference.InvokeVoidAsync("downloadFile", FileName ?? $"game-element {DateTime.UtcNow:yyyyMMdd hhmm}.json", "application/json", Encoding.UTF8.GetBytes(JsonSerializer.Serialize(gameElement)));
     }
 
     private void ToggleLoadModal(bool showLoadModal) {
