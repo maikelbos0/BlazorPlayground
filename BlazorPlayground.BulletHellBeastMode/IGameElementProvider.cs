@@ -2,5 +2,5 @@
 namespace BlazorPlayground.BulletHellBeastMode;
 
 public interface IGameElementProvider {
-    Task<GameElement> LoadFromAsset(string assetName);
+    Task<GameElement> CreateFromAsset(string assetName);
 }

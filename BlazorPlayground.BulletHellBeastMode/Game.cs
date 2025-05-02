@@ -41,10 +41,10 @@ public class Game : ComponentBase, IAsyncDisposable {
         }
 
         var id = Guid.NewGuid();
-        var gameElement = await GameElementProvider.LoadFromAsset(assetName);
+        var gameElement = await GameElementProvider.CreateFromAsset(assetName);
 
         gameElements.Add(id, gameElement);
-        await moduleReference.InvokeVoidAsync("addGameElement", id, gameElement.ForCanvas());
+        await moduleReference.InvokeVoidAsync("addGameElement", id, gameElement);
 
         return id;
     }
