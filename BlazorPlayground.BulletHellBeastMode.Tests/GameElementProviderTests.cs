@@ -28,18 +28,8 @@ public class GameElementProviderTests {
                             ]
                         ]
                     },
-                    ""FillColor"": {
-                        ""Red"": 0,
-                        ""Green"": 0,
-                        ""Blue"": 0,
-                        ""Alpha"": 0
-                    },
-                    ""StrokeColor"": {
-                        ""Red"": 0,
-                        ""Green"": 255,
-                        ""Blue"": 255,
-                        ""Alpha"": 1
-                    },
+                    ""FillColor"": ""rgba(0, 0, 0, 0)"",
+                    ""StrokeColor"": ""#00FFFF"",
                     ""StrokeWidth"": 1,
                     ""Opacity"": 0.5
                 }
@@ -61,7 +51,8 @@ public class GameElementProviderTests {
         
         var sectionResult = Assert.Single(result.Sections);
         Assert.Equal(6, sectionResult.Coordinates.Length);
-        // TODO colors when normalized
+        Assert.Equal("rgba(0, 0, 0, 0)", sectionResult.FillColor);
+        Assert.Equal("#00FFFF", sectionResult.StrokeColor);
         Assert.Equal(1, sectionResult.StrokeWidth);
         Assert.Equal(0.5, sectionResult.Opacity);
     }

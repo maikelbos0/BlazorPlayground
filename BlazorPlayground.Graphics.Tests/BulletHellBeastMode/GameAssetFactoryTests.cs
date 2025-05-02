@@ -38,14 +38,8 @@ public class GameAssetFactoryTests {
         var section = Assert.Single(result.Sections);
 
         Assert.Equal(geometryFactory.CreatePolygon([new(-30, 10), new(-30, -10), new(30, -10), new(30, 10), new(-30, 10)]), section.Geometry);
-        Assert.Equal(255, section.FillColor.Red);
-        Assert.Equal(0, section.FillColor.Green);
-        Assert.Equal(0, section.FillColor.Blue);
-        Assert.Equal(0.5, section.FillColor.Alpha);
-        Assert.Equal(0, section.StrokeColor.Red);
-        Assert.Equal(0, section.StrokeColor.Green);
-        Assert.Equal(255, section.StrokeColor.Blue);
-        Assert.Equal(0.8, section.StrokeColor.Alpha);
+        Assert.Equal("rgba(255, 0, 0, 0.5)", section.FillColor);
+        Assert.Equal("rgba(0, 0, 255, 0.8)", section.StrokeColor);
         Assert.Equal(2, section.StrokeWidth);
         Assert.Equal(0.9, section.Opacity);
     }
@@ -64,14 +58,8 @@ public class GameAssetFactoryTests {
 
         var section = Assert.Single(result.Sections);
 
-        Assert.Equal(GameAssetFactory.DefaultColor.Red, section.FillColor.Red);
-        Assert.Equal(GameAssetFactory.DefaultColor.Green, section.FillColor.Green);
-        Assert.Equal(GameAssetFactory.DefaultColor.Blue, section.FillColor.Blue);
-        Assert.Equal(GameAssetFactory.DefaultColor.Alpha, section.FillColor.Alpha);
-        Assert.Equal(GameAssetFactory.DefaultColor.Red, section.StrokeColor.Red);
-        Assert.Equal(GameAssetFactory.DefaultColor.Green, section.StrokeColor.Green);
-        Assert.Equal(GameAssetFactory.DefaultColor.Blue, section.StrokeColor.Blue);
-        Assert.Equal(GameAssetFactory.DefaultColor.Alpha, section.StrokeColor.Alpha);
+        Assert.Equal(GameAssetFactory.DefaultColor, section.FillColor);
+        Assert.Equal(GameAssetFactory.DefaultColor, section.StrokeColor);
         Assert.Equal(GameAssetFactory.DefaultStrokeWidth, section.StrokeWidth);
         Assert.Equal(GameAssetFactory.DefaultOpacity, section.Opacity);
     }

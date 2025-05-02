@@ -2,4 +2,4 @@
 
 namespace BlazorPlayground.BulletHellBeastMode;
 
-public record GameAssetSection(Geometry Geometry, Color FillColor, Color StrokeColor, int StrokeWidth, double Opacity);
+public record GameAssetSection(Geometry Geometry, string FillColor, string StrokeColor, int StrokeWidth, double Opacity);

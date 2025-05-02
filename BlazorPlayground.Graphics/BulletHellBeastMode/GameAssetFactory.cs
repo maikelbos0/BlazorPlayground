@@ -7,7 +7,7 @@ public class GameAssetFactory {
     public const double DefaultOpacity = 1.0;
     public const int DefaultStrokeWidth = 0;
 
-    public readonly static BlazorPlayground.BulletHellBeastMode.Color DefaultColor = new(0, 0, 0, 0);
+    public readonly static string DefaultColor = "rgba(0, 0, 0, 0)";
 
     private readonly GeometryFactory geometryFactory;
 
@@ -41,21 +41,21 @@ public class GameAssetFactory {
         }
     }
 
-    private static BlazorPlayground.BulletHellBeastMode.Color GetFillColor(DrawableShape shape) {
+    private static string GetFillColor(DrawableShape shape) {
         if (shape is IShapeWithFill shapeWithFill && shapeWithFill.GetFill() is Color fillColor) {
             var fillOpacity = shapeWithFill.GetFillOpacity() / 100.0;
 
-            return new BlazorPlayground.BulletHellBeastMode.Color(fillColor.Red, fillColor.Green, fillColor.Blue, fillColor.Alpha * fillOpacity);
+            return new Color(fillColor.Red, fillColor.Green, fillColor.Blue, fillColor.Alpha * fillOpacity).ToString();
         }
 
         return DefaultColor;
     }
 
-    private static BlazorPlayground.BulletHellBeastMode.Color GetStrokeColor(DrawableShape shape) {
+    private static string GetStrokeColor(DrawableShape shape) {
         if (shape is IShapeWithStroke shapeWithStroke && shapeWithStroke.GetStroke() is Color strokeColor) {
             var strokeOpacity = shapeWithStroke.GetStrokeOpacity() / 100.0;
 
-            return new BlazorPlayground.BulletHellBeastMode.Color(strokeColor.Red, strokeColor.Green, strokeColor.Blue, strokeColor.Alpha * strokeOpacity);
+            return new Color(strokeColor.Red, strokeColor.Green, strokeColor.Blue, strokeColor.Alpha * strokeOpacity).ToString();
         }
 
         return DefaultColor;
