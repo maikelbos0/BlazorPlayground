@@ -6,22 +6,22 @@ using Xunit;
 
 namespace BlazorPlayground.Graphics.Tests.BulletHellBeastMode;
 
-public class GameElementFactoryTests {
+public class GameAssetFactoryTests {
     [Fact]
-    public void GetGameElementFromEmptyEnumerable() {
+    public void GetGameAssetFromEmptyEnumerable() {
         var geometryFactory = new GeometryFactory(new PrecisionModel(10));
-        var subject = new GameElementFactory(geometryFactory);
+        var subject = new GameAssetFactory(geometryFactory);
 
-        var result = subject.GetGameElement([]);
+        var result = subject.GetGameAsset([]);
 
         Assert.NotNull(result);
         Assert.Empty(result.Sections);
     }
 
     [Fact]
-    public void GetGameElementFromSingleDrawableShape() {
+    public void GetGameAssetFromSingleDrawableShape() {
         var geometryFactory = new GeometryFactory(new PrecisionModel(10));
-        var subject = new GameElementFactory(geometryFactory);
+        var subject = new GameAssetFactory(geometryFactory);
         var rectangle = new Rectangle(new(-10, -10), new(50, -30));
 
         rectangle.SetFill(new Color(255, 0, 0, 1));
@@ -31,7 +31,7 @@ public class GameElementFactoryTests {
         rectangle.SetStrokeWidth(2);
         rectangle.SetOpacity(90);
 
-        var result = subject.GetGameElement([rectangle]);
+        var result = subject.GetGameAsset([rectangle]);
 
         Assert.NotNull(result);
 
@@ -51,37 +51,37 @@ public class GameElementFactoryTests {
     }
 
     [Fact]
-    public void GetGameElementFromSingleDrawableShapeWithoutProperties() {
+    public void GetGameAssetFromSingleDrawableShapeWithoutProperties() {
         var geometryFactory = new GeometryFactory(new PrecisionModel(10));
-        var subject = new GameElementFactory(geometryFactory);
+        var subject = new GameAssetFactory(geometryFactory);
         var shape = Substitute.For<DrawableShape>();
         shape.GetGeometry(geometryFactory, Arg.Any<Point>()).Returns(Polygon.Empty);
         shape.GetBoundingBox().Returns(new BoundingBox(0, 0, 0, 0));
 
-        var result = subject.GetGameElement([shape]);
+        var result = subject.GetGameAsset([shape]);
 
         Assert.NotNull(result);
 
         var section = Assert.Single(result.Sections);
 
-        Assert.Equal(GameElementFactory.DefaultColor.Red, section.FillColor.Red);
-        Assert.Equal(GameElementFactory.DefaultColor.Green, section.FillColor.Green);
-        Assert.Equal(GameElementFactory.DefaultColor.Blue, section.FillColor.Blue);
-        Assert.Equal(GameElementFactory.DefaultColor.Alpha, section.FillColor.Alpha);
-        Assert.Equal(GameElementFactory.DefaultColor.Red, section.StrokeColor.Red);
-        Assert.Equal(GameElementFactory.DefaultColor.Green, section.StrokeColor.Green);
-        Assert.Equal(GameElementFactory.DefaultColor.Blue, section.StrokeColor.Blue);
-        Assert.Equal(GameElementFactory.DefaultColor.Alpha, section.StrokeColor.Alpha);
-        Assert.Equal(GameElementFactory.DefaultStrokeWidth, section.StrokeWidth);
-        Assert.Equal(GameElementFactory.DefaultOpacity, section.Opacity);
+        Assert.Equal(GameAssetFactory.DefaultColor.Red, section.FillColor.Red);
+        Assert.Equal(GameAssetFactory.DefaultColor.Green, section.FillColor.Green);
+        Assert.Equal(GameAssetFactory.DefaultColor.Blue, section.FillColor.Blue);
+        Assert.Equal(GameAssetFactory.DefaultColor.Alpha, section.FillColor.Alpha);
+        Assert.Equal(GameAssetFactory.DefaultColor.Red, section.StrokeColor.Red);
+        Assert.Equal(GameAssetFactory.DefaultColor.Green, section.StrokeColor.Green);
+        Assert.Equal(GameAssetFactory.DefaultColor.Blue, section.StrokeColor.Blue);
+        Assert.Equal(GameAssetFactory.DefaultColor.Alpha, section.StrokeColor.Alpha);
+        Assert.Equal(GameAssetFactory.DefaultStrokeWidth, section.StrokeWidth);
+        Assert.Equal(GameAssetFactory.DefaultOpacity, section.Opacity);
     }
 
     [Fact]
-    public void GetGameElementFromMultipleDrawableShapes() {
+    public void GetGameAssetFromMultipleDrawableShapes() {
         var geometryFactory = new GeometryFactory(new PrecisionModel(10));
-        var subject = new GameElementFactory(geometryFactory);
+        var subject = new GameAssetFactory(geometryFactory);
 
-        var result = subject.GetGameElement([
+        var result = subject.GetGameAsset([
             new Rectangle(new(-10, -10), new(50, -30)),
             new Line(new(20, 30), new(40, 50))
         ]);
@@ -93,7 +93,7 @@ public class GameElementFactoryTests {
 
     [Fact]
     public void GetOriginFromEmptyEnumerable() {
-        var result = GameElementFactory.GetOrigin(Enumerable.Empty<DrawableShape>());
+        var result = GameAssetFactory.GetOrigin(Enumerable.Empty<DrawableShape>());
 
         Assert.NotNull(result);
         PointAssert.Equal(new(0, 0), result);
@@ -101,7 +101,7 @@ public class GameElementFactoryTests {
 
     [Fact]
     public void GetOriginFromSingleDrawableShape() {
-        var result = GameElementFactory.GetOrigin([new Line(new(30, 50), new(50, 100))]);
+        var result = GameAssetFactory.GetOrigin([new Line(new(30, 50), new(50, 100))]);
 
         Assert.NotNull(result);
         PointAssert.Equal(new(40, 75), result);
@@ -109,7 +109,7 @@ public class GameElementFactoryTests {
 
     [Fact]
     public void GetOriginFromMultipleDrawableShapesShapes() {
-        var result = GameElementFactory.GetOrigin([
+        var result = GameAssetFactory.GetOrigin([
             new Rectangle(new(-10, -10), new(40, 40)),
             new Line(new(30, 50), new(50, 100))
         ]);

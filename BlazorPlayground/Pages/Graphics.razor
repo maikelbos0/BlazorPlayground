@@ -40,7 +40,7 @@
 <div class="btn-toolbar">
     <fieldset class="btn-group mb-3 me-3">
         <button type="button" class="btn btn-secondary" @onclick="() => Save()">Save</button>
-        <button type="button" class="btn btn-secondary" @onclick="() => CreateGameElement()">Create game element</button>
+        <button type="button" class="btn btn-secondary" @onclick="() => CreateGameAsset()">Create game asset</button>
         <button type="button" class="btn btn-secondary" @onclick="() => ToggleLoadModal(true)">Load</button>
     </fieldset>
 
@@ -340,12 +340,12 @@
         await ModuleReference.InvokeVoidAsync("downloadFile", FileName ?? $"graphics {DateTime.UtcNow:yyyyMMdd hhmm}.svg", "image/svg+xml", Encoding.UTF8.GetBytes(element.ToString()));
     }
 
-    private async Task CreateGameElement() {
+    private async Task CreateGameAsset() {
         var geometryFactory = new NetTopologySuite.Geometries.GeometryFactory(new NetTopologySuite.Geometries.PrecisionModel(10));
-        var factory = new GameElementFactory(geometryFactory);
-        var gameElement = factory.GetGameElement(Canvas.Shapes.OfType<DrawableShape>());
+        var factory = new GameAssetFactory(geometryFactory);
+        var gameAsset = factory.GetGameAsset(Canvas.Shapes.OfType<DrawableShape>());
         
-        await ModuleReference.InvokeVoidAsync("downloadFile", FileName ?? $"game-element {DateTime.UtcNow:yyyyMMdd hhmm}.json", "application/json", Encoding.UTF8.GetBytes(JsonSerializer.Serialize(gameElement)));
+        await ModuleReference.InvokeVoidAsync("downloadFile", FileName ?? $"game-asset {DateTime.UtcNow:yyyyMMdd hhmm}.json", "application/json", Encoding.UTF8.GetBytes(GameAssetSerializer.Serialize(gameAsset)));
     }
 
     private void ToggleLoadModal(bool showLoadModal) {

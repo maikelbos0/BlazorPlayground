@@ -3,7 +3,7 @@ using NetTopologySuite.Geometries;
 
 namespace BlazorPlayground.Graphics.BulletHellBeastMode;
 
-public class GameElementFactory {
+public class GameAssetFactory {
     public const double DefaultOpacity = 1.0;
     public const int DefaultStrokeWidth = 0;
 
@@ -11,23 +11,20 @@ public class GameElementFactory {
 
     private readonly GeometryFactory geometryFactory;
 
-    public GameElementFactory(GeometryFactory geometryFactory) {
+    public GameAssetFactory(GeometryFactory geometryFactory) {
         this.geometryFactory = geometryFactory;
     }
 
-    public GameElement GetGameElement(IEnumerable<DrawableShape> shapes) {
+    public GameAsset GetGameAsset(IEnumerable<DrawableShape> shapes) {
         var origin = GetOrigin(shapes);
 
-        return new GameElement() {
-            Position = new(0, 0),
-            Sections = shapes.Select(shape => new GameElementSection() {
-                Geometry = shape.GetGeometry(geometryFactory, origin),
-                FillColor = GetFillColor(shape),
-                StrokeColor = GetStrokeColor(shape),
-                StrokeWidth = GetStrokeWidth(shape),
-                Opacity = GetOpacity(shape)
-            }).ToList()
-        };
+        return new GameAsset(shapes.Select(shape => new GameAssetSection(
+                shape.GetGeometry(geometryFactory, origin),
+                GetFillColor(shape),
+                GetStrokeColor(shape),
+                GetStrokeWidth(shape),
+                GetOpacity(shape)
+            )).ToList());
     }
 
     public static Point GetOrigin(IEnumerable<DrawableShape> shapes) {
