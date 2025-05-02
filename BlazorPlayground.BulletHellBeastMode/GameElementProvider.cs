@@ -5,7 +5,7 @@ using System.Text.Json;
 namespace BlazorPlayground.BulletHellBeastMode;
 
 public class GameElementProvider : IGameElementProvider {
-    public const string AssetsLocation = "./_content/BlazorPlayground.BulletHellBeastMode/assets/";
+    public const string AssetLocation = "./_content/BlazorPlayground.BulletHellBeastMode/assets";
 
     private readonly static JsonSerializerOptions jsonSerializerOptions = new() {
         Converters = {
@@ -19,11 +19,11 @@ public class GameElementProvider : IGameElementProvider {
         this.httpClient = httpClient;
     }
 
-    public async Task<GameElement> CreateFromAsset(string assetName) {
-        var asset = await httpClient.GetFromJsonAsync<GameAsset>($"{AssetsLocation}{assetName}.json", jsonSerializerOptions) ?? throw new NullReferenceException();
+    public async Task<GameElement> CreateFromAsset(string assetName, Coordinate position) {
+        var asset = await httpClient.GetFromJsonAsync<GameAsset>($"{AssetLocation}/{assetName}.json", jsonSerializerOptions) ?? throw new NullReferenceException();
 
         return new GameElement() {
-            Position = new(0, 0),
+            Position = position,
             Sections = asset.Sections.Select(section => new GameElementSection(section.Geometry, section.FillColor, section.StrokeColor, section.StrokeWidth, section.Opacity)).ToList()
         };
     }
