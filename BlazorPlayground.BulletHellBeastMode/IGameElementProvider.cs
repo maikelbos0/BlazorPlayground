@@ -1,4 +1,5 @@
-﻿
+﻿using System.Threading.Tasks;
+
 namespace BlazorPlayground.BulletHellBeastMode;
 
 public interface IGameElementProvider {

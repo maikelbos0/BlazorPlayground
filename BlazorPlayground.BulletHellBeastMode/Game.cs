@@ -1,18 +1,24 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.JSInterop;
-using System.Net.Http.Json;
+using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace BlazorPlayground.BulletHellBeastMode;
 
 public class Game : ComponentBase, IAsyncDisposable {
     public const int Width = 1000;
     public const int Height = 1000;
-    public const int FrameRate = 1000;
+    public const int FrameRate = 5;
     public const string ModuleLocation = "./_content/BlazorPlayground.BulletHellBeastMode/game.0.js";
 
     private ElementReference? canvasReference;
     private IJSObjectReference? moduleReference;
+    private DotNetObjectReference<Game>? dotNetObjectReference;
+    private Timer? timer;
+    private readonly object renderLock = new();
     private readonly Dictionary<Guid, GameElement> gameElements = [];
 
     [Inject] public IJSRuntime JSRuntime { get; set; } = null!;
@@ -28,8 +34,10 @@ public class Game : ComponentBase, IAsyncDisposable {
     protected override async Task OnAfterRenderAsync(bool firstRender) {
         if (firstRender) {
             moduleReference = await JSRuntime.InvokeAsync<IJSObjectReference>("import", ModuleLocation);
-            await moduleReference.InvokeVoidAsync("initialize", canvasReference, Width, Height, FrameRate);
-            
+            dotNetObjectReference = DotNetObjectReference.Create(this);
+            await moduleReference.InvokeVoidAsync("initialize", canvasReference, dotNetObjectReference, Width, Height);
+            timer = new(Render, null, TimeSpan.Zero, TimeSpan.FromSeconds(1.0 / FrameRate));
+
             var test = await AddGameElement("basic-ship", new(Width * 0.5, Height * 0.9));
             //await RemoveGameElement(test);
         }
@@ -58,10 +66,26 @@ public class Game : ComponentBase, IAsyncDisposable {
         await moduleReference.InvokeVoidAsync("removeGameElement", id);
     }
 
+    public async void Render(object? state) {
+        if (Monitor.TryEnter(renderLock) && moduleReference != null) {
+            await moduleReference.InvokeVoidAsync("requestRender");
+
+            Monitor.Exit(renderLock);
+        }
+    }
+
+    [JSInvokable]
+    public void ProcessElapsedTime(double elapsedMilliseconds) {
+        Console.WriteLine($"Elapsed: {elapsedMilliseconds}");
+    }
+
     public async ValueTask DisposeAsync() {
         if (moduleReference != null) {
             await moduleReference.DisposeAsync();
         }
+
+        timer?.Dispose();
+        dotNetObjectReference?.Dispose();
 
         GC.SuppressFinalize(this);
     }

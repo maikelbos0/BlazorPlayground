@@ -1,4 +1,6 @@
-﻿namespace BlazorPlayground.BulletHellBeastMode;
+﻿using System.Collections.Generic;
+
+namespace BlazorPlayground.BulletHellBeastMode;
 
 public class GameElement {
     public required Coordinate Position { get; set; }
