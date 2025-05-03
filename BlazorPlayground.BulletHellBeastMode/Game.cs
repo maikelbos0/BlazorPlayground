@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.JSInterop;
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace BlazorPlayground.BulletHellBeastMode;
@@ -16,8 +15,6 @@ public class Game : ComponentBase, IAsyncDisposable {
     private ElementReference? canvasReference;
     private IJSObjectReference? moduleReference;
     private DotNetObjectReference<Game>? dotNetObjectReference;
-    private Task? renderTask;
-    private readonly CancellationTokenSource cancellationTokenSource = new();
     private readonly Dictionary<Guid, GameElement> gameElements = [];
 
     [Inject] public IJSRuntime JSRuntime { get; set; } = null!;
@@ -35,7 +32,6 @@ public class Game : ComponentBase, IAsyncDisposable {
             moduleReference = await JSRuntime.InvokeAsync<IJSObjectReference>("import", ModuleLocation);
             dotNetObjectReference = DotNetObjectReference.Create(this);
             await moduleReference.InvokeVoidAsync("initialize", canvasReference, dotNetObjectReference, Width, Height);
-            renderTask = Render(cancellationTokenSource.Token);
 
             var test = await AddGameElement("basic-ship", new(Width * 0.5, Height * 0.9));
             //await RemoveGameElement(test);
@@ -65,28 +61,14 @@ public class Game : ComponentBase, IAsyncDisposable {
         await moduleReference.InvokeVoidAsync("removeGameElement", id);
     }
 
-    public async Task Render(CancellationToken cancellationToken) {
-        while (moduleReference != null && !cancellationToken.IsCancellationRequested) {
-            await moduleReference.InvokeVoidAsync("requestRender");
-            
-            // Pause resource hogging
-            await Task.Delay(1);
-        }
-    }
-
     [JSInvokable]
     public void ProcessElapsedTime(double elapsedMilliseconds) {
         Console.WriteLine($"Elapsed: {elapsedMilliseconds}");
     }
 
     public async ValueTask DisposeAsync() {
-        cancellationTokenSource.Cancel();
-
-        if (renderTask != null) {
-            await renderTask;
-        }
-
         if (moduleReference != null) {
+            await moduleReference.InvokeVoidAsync("requestCancellation");
             await moduleReference.DisposeAsync();
         }
 

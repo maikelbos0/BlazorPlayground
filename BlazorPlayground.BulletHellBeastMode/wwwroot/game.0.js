@@ -5,18 +5,21 @@ function initialize(canvas, dotNetObjectReference, width, height) {
     canvas.width = width;
     canvas.height = height;
 
+    game.cancellationRequested = false;
     game.canvas = canvas;
     game.context = canvas.getContext("2d");
     game.context.globalCompositeOperation = "destination-over";
     game.dotNetObjectReference = dotNetObjectReference;
     game.elements = {};
-}
 
-function requestRender() {
     window.requestAnimationFrame(render);
 }
 
 function render(timestamp) {
+    if (game.cancellationRequested) {
+        return;
+    }
+
     if (game.previousTimestamp && game.previousTimestamp != timestamp) {
         game.context.clearRect(0, 0, game.canvas.width, game.canvas.height);
 
@@ -48,10 +51,15 @@ function render(timestamp) {
 
             game.context.restore();
         }
+
         game.dotNetObjectReference.invokeMethodAsync("ProcessElapsedTime", timestamp - game.previousTimestamp)
     }
 
-    game.previousTimestamp = timestamp;
+
+    if (!game.cancellationRequested) {
+        game.previousTimestamp = timestamp;
+        window.requestAnimationFrame(render);
+    }
 }
 
 function addGameElement(id, element) {
@@ -62,4 +70,8 @@ function removeGameElement(id) {
     delete game.elements[id];
 }
 
-export { initialize, requestRender, addGameElement, removeGameElement };
+function requestCancellation() {
+    game.cancellationRequested = true;
+}
+
+export { addGameElement, initialize, removeGameElement, requestCancellation };
