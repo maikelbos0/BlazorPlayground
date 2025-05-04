@@ -66,9 +66,19 @@ public class Game : ComponentBase, IAsyncDisposable {
         Console.WriteLine($"Elapsed: {elapsedMilliseconds}");
     }
 
+    [JSInvokable]
+    public void KeyDown(string key) {
+        Console.WriteLine($"Key down: {key}");
+    }
+
+    [JSInvokable]
+    public void KeyUp(string key) {
+        Console.WriteLine($"Key up: {key}");
+    }
+
     public async ValueTask DisposeAsync() {
         if (moduleReference != null) {
-            await moduleReference.InvokeVoidAsync("requestCancellation");
+            await moduleReference.InvokeVoidAsync("terminate");
             await moduleReference.DisposeAsync();
         }
 

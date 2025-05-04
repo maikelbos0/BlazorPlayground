@@ -5,21 +5,26 @@ function initialize(canvas, dotNetObjectReference, width, height) {
     canvas.width = width;
     canvas.height = height;
 
-    game.cancellationRequested = false;
     game.canvas = canvas;
     game.context = canvas.getContext("2d");
     game.context.globalCompositeOperation = "destination-over";
     game.dotNetObjectReference = dotNetObjectReference;
     game.elements = {};
+    game.renderer = window.requestAnimationFrame(render);
 
-    window.requestAnimationFrame(render);
+    window.addEventListener("keydown", keyDown);
+    window.addEventListener("keyup", keyUp);
+}
+
+function keyDown(eventArgs) {
+    game.dotNetObjectReference.invokeMethod("KeyDown", eventArgs.key);
+}
+
+function keyUp(eventArgs) {
+    game.dotNetObjectReference.invokeMethod("KeyUp", eventArgs.key)
 }
 
 function render(timestamp) {
-    if (game.cancellationRequested) {
-        return;
-    }
-
     if (game.previousTimestamp && game.previousTimestamp != timestamp) {
         game.context.clearRect(0, 0, game.canvas.width, game.canvas.height);
 
@@ -52,13 +57,13 @@ function render(timestamp) {
             game.context.restore();
         }
 
-        game.dotNetObjectReference.invokeMethodAsync("ProcessElapsedTime", timestamp - game.previousTimestamp)
+        game.dotNetObjectReference.invokeMethod("ProcessElapsedTime", timestamp - game.previousTimestamp)
     }
 
 
     if (!game.cancellationRequested) {
         game.previousTimestamp = timestamp;
-        window.requestAnimationFrame(render);
+        game.renderer = window.requestAnimationFrame(render);
     }
 }
 
@@ -70,8 +75,11 @@ function removeGameElement(id) {
     delete game.elements[id];
 }
 
-function requestCancellation() {
-    game.cancellationRequested = true;
+function terminate() {
+    window.cancelAnimationFrame(game.renderer);
+
+    window.removeEventListener("keydown", keyDown);
+    window.removeEventListener("keyup", keyUp);
 }
 
-export { addGameElement, initialize, removeGameElement, requestCancellation };
+export { addGameElement, initialize, removeGameElement, terminate };
