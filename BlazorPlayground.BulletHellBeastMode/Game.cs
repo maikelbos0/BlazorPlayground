@@ -15,6 +15,7 @@ public class Game : ComponentBase, IAsyncDisposable {
     private ElementReference? canvasReference;
     private IJSObjectReference? moduleReference;
     private DotNetObjectReference<Game>? dotNetObjectReference;
+    private Ship ship;
     private readonly Dictionary<Guid, IGameElement> gameElements = [];
 
     [Inject]
@@ -34,24 +35,21 @@ public class Game : ComponentBase, IAsyncDisposable {
             moduleReference = await JSRuntime.InvokeAsync<IJSObjectReference>("import", ModuleLocation);
             dotNetObjectReference = DotNetObjectReference.Create(this);
             await moduleReference.InvokeVoidAsync("initialize", canvasReference, dotNetObjectReference, Width, Height);
-
-            var test = await AddGameElement<Ship>("basic-ship", new(Width * 0.5, Height * 0.9));
-            //await RemoveGameElement(test);
+            ship = await AddGameElement<Ship>("basic-ship", new(Width * 0.5, Height * 0.9));
         }
     }
 
-    public async Task<Guid> AddGameElement<TGameElement>(string assetName, Coordinate position) where TGameElement : IGameElement<TGameElement> {
+    public async Task<TGameElement> AddGameElement<TGameElement>(string assetName, Coordinate position) where TGameElement : IGameElement<TGameElement> {
         if (moduleReference == null) {
             throw new InvalidOperationException();
         }
 
-        var id = Guid.NewGuid();
         var gameElement = await GameElementProvider.CreateFromAsset<TGameElement>(assetName, position);
 
-        gameElements.Add(id, gameElement);
-        await moduleReference.InvokeVoidAsync("addGameElement", id, gameElement);
+        gameElements.Add(gameElement.Id, gameElement);
+        await moduleReference.InvokeVoidAsync("addGameElement", gameElement);
 
-        return id;
+        return gameElement;
     }
 
     public async Task RemoveGameElement(Guid id) {

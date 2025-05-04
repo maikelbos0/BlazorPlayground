@@ -23,8 +23,8 @@ function render(timestamp) {
     if (game.previousTimestamp && game.previousTimestamp != timestamp) {
         game.context.clearRect(0, 0, game.canvas.width, game.canvas.height);
 
-        for (let id in game.elements) {
-            let element = game.elements[id];
+        for (const id in game.elements) {
+            const element = game.elements[id];
 
             game.context.save();
             game.context.translate(element.position.x, element.position.y);
@@ -62,8 +62,8 @@ function render(timestamp) {
     }
 }
 
-function addGameElement(id, element) {
-    game.elements[id] = element;
+function addGameElement(element) {
+    game.elements[element.id] = element;
 }
 
 function removeGameElement(id) {
