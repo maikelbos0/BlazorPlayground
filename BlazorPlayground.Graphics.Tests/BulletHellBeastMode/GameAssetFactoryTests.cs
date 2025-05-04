@@ -81,7 +81,7 @@ public class GameAssetFactoryTests {
 
     [Fact]
     public void GetOriginFromEmptyEnumerable() {
-        var result = GameAssetFactory.GetOrigin(Enumerable.Empty<DrawableShape>());
+        var result = GameAssetFactory.GetOrigin([]);
 
         Assert.NotNull(result);
         PointAssert.Equal(new(0, 0), result);

@@ -3,5 +3,5 @@
 namespace BlazorPlayground.BulletHellBeastMode;
 
 public interface IGameElementProvider {
-    Task<GameElement> CreateFromAsset(string assetName, Coordinate position);
+    Task<TGameElement> CreateFromAsset<TGameElement>(string assetName, Coordinate position) where TGameElement : IGameElement<TGameElement>;
 }

@@ -23,12 +23,12 @@ public class GameElementProvider : IGameElementProvider {
         this.httpClient = httpClient;
     }
 
-    public async Task<GameElement> CreateFromAsset(string assetName, Coordinate position) {
+    public async Task<TGameElement> CreateFromAsset<TGameElement>(string assetName, Coordinate position) where TGameElement : IGameElement<TGameElement> {
         var asset = await httpClient.GetFromJsonAsync<GameAsset>($"{AssetLocation}/{assetName}.json", jsonSerializerOptions) ?? throw new NullReferenceException();
 
-        return new GameElement() {
-            Position = position,
-            Sections = asset.Sections.Select(section => new GameElementSection(section.Geometry, section.FillColor, section.StrokeColor, section.StrokeWidth, section.Opacity)).ToList()
-        };
+        return TGameElement.Create(
+            position,
+            asset.Sections.Select(section => new GameElementSection(section.Geometry, section.FillColor, section.StrokeColor, section.StrokeWidth, section.Opacity)).ToList()
+        );
     }
 }

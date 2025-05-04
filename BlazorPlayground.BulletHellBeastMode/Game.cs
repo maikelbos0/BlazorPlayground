@@ -15,11 +15,13 @@ public class Game : ComponentBase, IAsyncDisposable {
     private ElementReference? canvasReference;
     private IJSObjectReference? moduleReference;
     private DotNetObjectReference<Game>? dotNetObjectReference;
-    private readonly Dictionary<Guid, GameElement> gameElements = [];
+    private readonly Dictionary<Guid, IGameElement> gameElements = [];
 
-    [Inject] public IJSRuntime JSRuntime { get; set; } = null!;
+    [Inject]
+    public IJSRuntime JSRuntime { get; set; } = null!;
 
-    [Inject] public IGameElementProvider GameElementProvider { get; set; } = null!;
+    [Inject]
+    public IGameElementProvider GameElementProvider { get; set; } = null!;
 
     protected override void BuildRenderTree(RenderTreeBuilder builder) {
         builder.OpenElement(0, "canvas");
@@ -33,18 +35,18 @@ public class Game : ComponentBase, IAsyncDisposable {
             dotNetObjectReference = DotNetObjectReference.Create(this);
             await moduleReference.InvokeVoidAsync("initialize", canvasReference, dotNetObjectReference, Width, Height);
 
-            var test = await AddGameElement("basic-ship", new(Width * 0.5, Height * 0.9));
+            var test = await AddGameElement<Ship>("basic-ship", new(Width * 0.5, Height * 0.9));
             //await RemoveGameElement(test);
         }
     }
 
-    public async Task<Guid> AddGameElement(string assetName, Coordinate position) {
+    public async Task<Guid> AddGameElement<TGameElement>(string assetName, Coordinate position) where TGameElement : IGameElement<TGameElement> {
         if (moduleReference == null) {
             throw new InvalidOperationException();
         }
 
         var id = Guid.NewGuid();
-        var gameElement = await GameElementProvider.CreateFromAsset(assetName, position);
+        var gameElement = await GameElementProvider.CreateFromAsset<TGameElement>(assetName, position);
 
         gameElements.Add(id, gameElement);
         await moduleReference.InvokeVoidAsync("addGameElement", id, gameElement);

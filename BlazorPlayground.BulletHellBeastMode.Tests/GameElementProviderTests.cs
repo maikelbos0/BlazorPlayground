@@ -40,7 +40,7 @@ public class GameElementProviderTests {
         var httpClient = new HttpClient(httpMessageHandler) { BaseAddress = new(baseUrl) };
         var subject = new GameElementProvider(httpClient);
 
-        var result = await subject.CreateFromAsset("test-asset", new(100, 200));
+        var result = await subject.CreateFromAsset<Ship>("test-asset", new(100, 200));
 
         Assert.NotNull(httpMessageHandler.ReceivedRequest);
         Assert.Equal(HttpMethod.Get, httpMessageHandler.ReceivedRequest.Method);
