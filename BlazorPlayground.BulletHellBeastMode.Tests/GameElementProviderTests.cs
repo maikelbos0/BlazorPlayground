@@ -1,5 +1,4 @@
-﻿using BlazorPlayground.Graphics.Tests;
-using System;
+﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
@@ -48,7 +47,7 @@ public class GameElementProviderTests {
 
         Assert.NotNull(result);
         CoordinateAssert.Equal(new(100, 200), result.Position);
-        
+
         var sectionResult = Assert.Single(result.Sections);
         Assert.Equal(6, sectionResult.Coordinates.Length);
         Assert.Equal("rgba(0, 0, 0, 0)", sectionResult.FillColor);
