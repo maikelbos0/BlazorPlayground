@@ -13,18 +13,32 @@ function initialize(canvas, dotNetObjectReference, width, height) {
     game.renderer = window.requestAnimationFrame(render);
     game.cancellationRequested = false;
 
-    window.addEventListener("keydown", keyDown);
-    window.addEventListener("keyup", keyUp);
+    window.addEventListener("keydown", addDirection);
+    window.addEventListener("keyup", removeDirection);
+    canvas.addEventListener("mousedown", setTargetPosition);
+    canvas.addEventListener("mousemove", setTargetPosition);
+    canvas.addEventListener("mouseup", resetTargetPosition);
+    canvas.addEventListener("mouseleave", resetTargetPosition);
 }
 
-function keyDown(eventArgs) {
+function addDirection(eventArgs) {
     if (!eventArgs.repeat) {
-        game.dotNetObjectReference.invokeMethod("KeyDown", eventArgs.key);
+        game.dotNetObjectReference.invokeMethod("AddDirection", eventArgs.key);
     }
 }
 
-function keyUp(eventArgs) {
-    game.dotNetObjectReference.invokeMethod("KeyUp", eventArgs.key)
+function removeDirection(eventArgs) {
+    game.dotNetObjectReference.invokeMethod("RemoveDirection", eventArgs.key)
+}
+
+function setTargetPosition(eventArgs) {
+    if (eventArgs.buttons & 1 === 1) {
+        game.dotNetObjectReference.invokeMethod("SetTargetPosition", eventArgs.offsetX, eventArgs.offsetY);
+    }
+}
+
+function resetTargetPosition() {
+    game.dotNetObjectReference.invokeMethod("ResetTargetPosition");
 }
 
 function render(timestamp) {
@@ -85,8 +99,8 @@ function terminate() {
     game.cancellationRequested = true;
     window.cancelAnimationFrame(game.renderer);
 
-    window.removeEventListener("keydown", keyDown);
-    window.removeEventListener("keyup", keyUp);
+    window.removeEventListener("keydown", addDirection);
+    window.removeEventListener("keyup", removeDirection);
 }
 
 export { initialize, setGameElement, setGameElements, removeGameElement, terminate };

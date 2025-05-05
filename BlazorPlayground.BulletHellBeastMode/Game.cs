@@ -21,7 +21,7 @@ public class Game : ComponentBase, IAsyncDisposable {
     private ElementReference? canvasReference;
     private IJSObjectReference? moduleReference;
     private DotNetObjectReference<Game>? dotNetObjectReference;
-    private Ship ship;
+    private Ship? ship;
     private readonly Dictionary<Guid, IGameElement> gameElements = [];
 
     [Inject]
@@ -87,14 +87,40 @@ public class Game : ComponentBase, IAsyncDisposable {
     }
 
     [JSInvokable]
-    public void KeyDown(string key) {
+    public void SetTargetPosition(double x, double y) {
+        if (ship == null) {
+            throw new InvalidOperationException();
+        }
+
+        ship.TargetPosition = new(x, y);
+    }
+
+    [JSInvokable]
+    public void ResetTargetPosition() {
+        if (ship == null) {
+            throw new InvalidOperationException();
+        }
+
+        //ship.TargetPosition = null;
+    }
+
+    [JSInvokable]
+    public void AddDirection(string key) {
+        if (ship == null) {
+            throw new InvalidOperationException();
+        }
+
         if (keyMap.TryGetValue(key, out var direction)) {
             ship.Direction |= direction;
         }
     }
 
     [JSInvokable]
-    public void KeyUp(string key) {
+    public void RemoveDirection(string key) {
+        if (ship == null) {
+            throw new InvalidOperationException();
+        }
+
         if (keyMap.TryGetValue(key, out var direction)) {
             ship.Direction &= ~direction;
         }

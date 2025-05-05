@@ -4,10 +4,13 @@ using System.Collections.Generic;
 namespace BlazorPlayground.BulletHellBeastMode;
 
 public class Ship : IGameElement<Ship> {
+    const int DirectionalSpeed = 10;
+
     public Guid Id { get; private set; }
     public required Coordinate Position { get; set; }
     public required List<GameElementSection> Sections { get; set; }
     public Direction Direction { get; set; } = Direction.None;
+    public Coordinate? TargetPosition { get; set; }
 
     public static Ship Create(Coordinate position, List<GameElementSection> sections) => new() {
         Id = Guid.NewGuid(),
@@ -16,30 +19,31 @@ public class Ship : IGameElement<Ship> {
     };
 
     public bool Move(double elapsedTime) {
-        var x = 0.0;
-        var y = 0.0;
+        var targetPosition = TargetPosition == null
+            ? new(0, 0)
+            : TargetPosition.Value - Position;
 
         if (Direction.HasFlag(Direction.Left)) {
-            x -= 10;
-        }
-        
-        if (Direction.HasFlag(Direction.Right)) {
-            x += 10;
-        }
-        
-        if (Direction.HasFlag(Direction.Up)) {
-            y -= 10;
-        }
-        
-        if (Direction.HasFlag(Direction.Down)) {
-            y += 10;
+            targetPosition -= new Coordinate(DirectionalSpeed, 0);
         }
 
-        if (x != 0 || y != 0) {
-            Position += new Coordinate(x, y);
+        if (Direction.HasFlag(Direction.Right)) {
+            targetPosition += new Coordinate(DirectionalSpeed, 0);
+        }
+
+        if (Direction.HasFlag(Direction.Up)) {
+            targetPosition -= new Coordinate(0, DirectionalSpeed);
+        }
+
+        if (Direction.HasFlag(Direction.Down)) {
+            targetPosition += new Coordinate(0, DirectionalSpeed);
+        }
+
+        if (targetPosition.HasMagnitude) {
+            Position += targetPosition.LimitMagnitude(10); // TOD move to speed / acceleration
             return true;
         }
-
+        
         return false;
     }
 }
