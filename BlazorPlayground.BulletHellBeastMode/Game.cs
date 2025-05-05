@@ -11,6 +11,12 @@ public class Game : ComponentBase, IAsyncDisposable {
     public const int Width = 1000;
     public const int Height = 1000;
     public const string ModuleLocation = "./_content/BlazorPlayground.BulletHellBeastMode/game.0.js";
+    private readonly Dictionary<string, Direction> keyMap = new() {
+        { "a", Direction.Left },
+        { "d", Direction.Right },
+        { "w", Direction.Up },
+        { "s", Direction.Down }
+    };
 
     private ElementReference? canvasReference;
     private IJSObjectReference? moduleReference;
@@ -47,7 +53,7 @@ public class Game : ComponentBase, IAsyncDisposable {
         var gameElement = await GameElementProvider.CreateFromAsset<TGameElement>(assetName, position);
 
         gameElements.Add(gameElement.Id, gameElement);
-        await moduleReference.InvokeVoidAsync("addGameElement", gameElement);
+        await moduleReference.InvokeVoidAsync("setGameElement", gameElement);
 
         return gameElement;
     }
@@ -62,18 +68,36 @@ public class Game : ComponentBase, IAsyncDisposable {
     }
 
     [JSInvokable]
-    public void ProcessElapsedTime(double elapsedMilliseconds) {
-        Console.WriteLine($"Elapsed: {elapsedMilliseconds}");
+    public async Task ProcessElapsedTime(double elapsedMilliseconds) {
+        if (moduleReference == null) {
+            throw new InvalidOperationException();
+        }
+
+        var movedGameElements = new List<IGameElement>();
+
+        foreach (var gameElement in gameElements.Values) {
+            if (gameElement.Move(elapsedMilliseconds)) {
+                movedGameElements.Add(gameElement);
+            }
+        }
+
+        if (movedGameElements.Count > 0) {
+            await moduleReference.InvokeVoidAsync("setGameElements", movedGameElements);
+        }
     }
 
     [JSInvokable]
     public void KeyDown(string key) {
-        Console.WriteLine($"Key down: {key}");
+        if (keyMap.TryGetValue(key, out var direction)) {
+            ship.Direction |= direction;
+        }
     }
 
     [JSInvokable]
     public void KeyUp(string key) {
-        Console.WriteLine($"Key up: {key}");
+        if (keyMap.TryGetValue(key, out var direction)) {
+            ship.Direction &= ~direction;
+        }
     }
 
     public async ValueTask DisposeAsync() {

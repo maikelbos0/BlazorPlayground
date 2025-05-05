@@ -19,8 +19,8 @@ function initialize(canvas, dotNetObjectReference, width, height) {
 
 function keyDown(eventArgs) {
     if (!eventArgs.repeat) {
-    game.dotNetObjectReference.invokeMethod("KeyDown", eventArgs.key);
-}
+        game.dotNetObjectReference.invokeMethod("KeyDown", eventArgs.key);
+    }
 }
 
 function keyUp(eventArgs) {
@@ -60,7 +60,7 @@ function render(timestamp) {
             game.context.restore();
         }
 
-        game.dotNetObjectReference.invokeMethod("ProcessElapsedTime", timestamp - game.previousTimestamp)
+        game.dotNetObjectReference.invokeMethodAsync("ProcessElapsedTime", timestamp - game.previousTimestamp)
     }
 
     if (!game.cancellationRequested) {
@@ -69,8 +69,12 @@ function render(timestamp) {
     }
 }
 
-function addGameElement(element) {
+function setGameElement(element) {
     game.elements[element.id] = element;
+}
+
+function setGameElements(elements) {
+    elements.forEach((element) => game.elements[element.id] = element);
 }
 
 function removeGameElement(id) {
@@ -85,4 +89,4 @@ function terminate() {
     window.removeEventListener("keyup", keyUp);
 }
 
-export { addGameElement, initialize, removeGameElement, terminate };
+export { initialize, setGameElement, setGameElements, removeGameElement, terminate };
