@@ -10,7 +10,7 @@ public class VectorTests {
 
         var result = a + b;
 
-        VectorAssert.Equal(new(-25, 50), result);
+        Assert.Equal(new(-25, 50), result);
     }
     
     [Fact]
@@ -20,7 +20,7 @@ public class VectorTests {
 
         var result = a - b;
 
-        VectorAssert.Equal(new(-75, 200), result);
+        Assert.Equal(new(-75, 200), result);
     }
     
     [Fact]
@@ -29,7 +29,7 @@ public class VectorTests {
 
         var result = subject * 10;
 
-        VectorAssert.Equal(new(-500, 1250), result);
+        Assert.Equal(new(-500, 1250), result);
     }
     
     [Fact]
@@ -38,7 +38,7 @@ public class VectorTests {
 
         var result = subject / 10;
 
-        VectorAssert.Equal(new(-5, 12.5), result);
+        Assert.Equal(new(-5, 12.5), result);
     }
 
     [Theory]
@@ -64,7 +64,7 @@ public class VectorTests {
 
         var result = subject.LimitMagnitude(125);
 
-        VectorAssert.Equal(new(-100, -75), result);
+        Assert.Equal(new(-100, -75), result);
     }
 
     [Theory]
@@ -75,6 +75,6 @@ public class VectorTests {
 
         var result = subject.AdjustMagnitude(newMagnitude);
 
-        VectorAssert.Equal(new(expectedX, expectedY), result);
+        Assert.Equal(new(expectedX, expectedY), result);
     }
 }
