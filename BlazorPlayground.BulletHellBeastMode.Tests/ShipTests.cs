@@ -82,4 +82,30 @@ public class ShipTests {
         Assert.Equal(expectedX, result.X, 0.001);
         Assert.Equal(expectedY, result.Y, 0.001);
     }
+
+    [Fact]
+    public void ProcessElapsedTimeWhenStationary() {
+        var subject = Ship.Create(new(500, 900), []);
+
+        var result = subject.ProcessElapsedTime(0.1);
+
+        Assert.False(result);
+        Assert.Equal(new(500, 900), subject.Position);
+    }
+
+    [Fact]
+    public void ProcessElapsedTime() {
+        var subject = Ship.Create(new(500, 900), []);
+
+        subject.Direction = Direction.Left | Direction.Up;
+        subject.TargetPosition = new(1000, 500);
+
+        var result = subject.ProcessElapsedTime(0.1);
+
+        Assert.True(result);
+        Assert.Equal(11.06, subject.Velocity.X, 0.001);
+        Assert.Equal(-199.694, subject.Velocity.Y, 0.001);
+        Assert.Equal(501.106, subject.Position.X, 0.001);
+        Assert.Equal(880.03, subject.Position.Y, 0.001);
+    }
 }

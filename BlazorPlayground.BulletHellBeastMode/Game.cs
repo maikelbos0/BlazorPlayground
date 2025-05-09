@@ -68,7 +68,7 @@ public class Game : ComponentBase, IAsyncDisposable {
     }
 
     [JSInvokable]
-    public async Task ProcessElapsedTime(double elapsedMilliseconds) {
+    public async Task ProcessElapsedTime(double elapsedSeconds) {
         if (moduleReference == null) {
             throw new InvalidOperationException();
         }
@@ -76,7 +76,7 @@ public class Game : ComponentBase, IAsyncDisposable {
         var movedGameElements = new List<IGameElement>();
 
         foreach (var gameElement in gameElements.Values) {
-            if (gameElement.Move(elapsedMilliseconds)) {
+            if (gameElement.ProcessElapsedTime(elapsedSeconds)) {
                 movedGameElements.Add(gameElement);
             }
         }
@@ -101,7 +101,7 @@ public class Game : ComponentBase, IAsyncDisposable {
             throw new InvalidOperationException();
         }
 
-        //ship.TargetPosition = null;
+        ship.TargetPosition = null;
     }
 
     [JSInvokable]

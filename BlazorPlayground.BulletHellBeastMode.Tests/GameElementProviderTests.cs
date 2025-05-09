@@ -46,7 +46,7 @@ public class GameElementProviderTests {
         Assert.Equal(new Uri($"{baseUrl}/{GameElementProvider.AssetLocation}/{assetName}.json"), httpMessageHandler.ReceivedRequest.RequestUri);
 
         Assert.NotNull(result);
-        VectorAssert.Equal(new(100, 200), result.Position);
+        Assert.Equal(new(100, 200), result.Position);
 
         var sectionResult = Assert.Single(result.Sections);
         Assert.Equal(6, sectionResult.Coordinates.Length);

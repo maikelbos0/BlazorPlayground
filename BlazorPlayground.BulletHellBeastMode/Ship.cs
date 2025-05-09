@@ -14,6 +14,7 @@ public class Ship : IGameElement<Ship> {
     public required List<GameElementSection> Sections { get; set; }
     public Direction Direction { get; set; } = Direction.None;
     public Coordinate? TargetPosition { get; set; }
+    public Velocity Velocity { get; private set; } = new Velocity(0, 0);
 
     public static Ship Create(Coordinate position, List<GameElementSection> sections) => new() {
         Id = Guid.NewGuid(),
@@ -90,32 +91,22 @@ public class Ship : IGameElement<Ship> {
         return new Velocity(velocity.X * horizontalVelocityAdjustment, velocity.Y * verticalVelocityAdjustment);
     }
 
-    public bool Move(double elapsedTime) {
-        var targetPosition = TargetPosition == null
-            ? new(0, 0)
-            : TargetPosition.Value - Position;
-
-        if (Direction.HasFlag(Direction.Left)) {
-            targetPosition -= new Coordinate(DirectionalSpeed, 0);
+    public bool ProcessElapsedTime(double elapsedSeconds) {
+        if (!Velocity.HasMagnitude && TargetPosition == null && Direction == Direction.None) {
+            return false;
         }
 
-        if (Direction.HasFlag(Direction.Right)) {
-            targetPosition += new Coordinate(DirectionalSpeed, 0);
-        }
+        var desiredVelocity = GetDirectionalVelocity() + GetVelocityFromTargetPosition();
+        var velocityDelta = desiredVelocity - Velocity;
+        var acceleration = velocityDelta.GetAcceleration(elapsedSeconds).LimitMagnitude(MaximumAcceleration);
 
-        if (Direction.HasFlag(Direction.Up)) {
-            targetPosition -= new Coordinate(0, DirectionalSpeed);
-        }
+        Velocity = AdjustVelocityToBounds(Velocity.Accelerate(acceleration, elapsedSeconds).LimitMagnitude(MaximumSpeed));
 
-        if (Direction.HasFlag(Direction.Down)) {
-            targetPosition += new Coordinate(0, DirectionalSpeed);
-        }
-
-        if (targetPosition.HasMagnitude) {
-            Position += targetPosition.LimitMagnitude(10); // TOD move to speed / acceleration
+        if (Velocity.HasMagnitude) {
+            Position = Position.Move(Velocity, elapsedSeconds);
             return true;
         }
-        
+
         return false;
     }
 }

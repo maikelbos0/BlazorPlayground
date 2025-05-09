@@ -74,7 +74,7 @@ function render(timestamp) {
             game.context.restore();
         }
 
-        game.dotNetObjectReference.invokeMethodAsync("ProcessElapsedTime", timestamp - game.previousTimestamp)
+        game.dotNetObjectReference.invokeMethodAsync("ProcessElapsedTime", (timestamp - game.previousTimestamp) / 1000)
     }
 
     if (!game.cancellationRequested) {

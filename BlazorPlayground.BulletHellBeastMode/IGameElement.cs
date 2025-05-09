@@ -8,7 +8,7 @@ public interface IGameElement {
     Coordinate Position { get; set; }
     List<GameElementSection> Sections { get; set; }
 
-    bool Move(double elapsedTime);
+    bool ProcessElapsedTime(double elapsedSeconds);
 }
 
 public interface IGameElement<T> : IGameElement where T : IGameElement<T> {
