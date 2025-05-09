@@ -6,6 +6,8 @@ namespace BlazorPlayground.BulletHellBeastMode;
 public class Ship : IGameElement<Ship> {
     const int DirectionalSpeed = 10;
     public const double MaximumSpeed = 1000;
+    public const double MaximumAcceleration = 2000;
+    public const double StoppingDistance = MaximumAcceleration / 2 * (MaximumSpeed * MaximumSpeed / MaximumAcceleration / MaximumAcceleration);
 
     public Guid Id { get; private set; }
     public required Coordinate Position { get; set; }
@@ -43,6 +45,27 @@ public class Ship : IGameElement<Ship> {
         }
 
         return velocity;
+    }
+
+    public Velocity GetVelocityFromTargetPosition() {
+        if (TargetPosition == null) {
+            return new(0, 0);
+        }
+
+        var positionDelta = TargetPosition.Value - Position;
+        var distance = positionDelta.Magnitude;
+
+        if (distance == 0) {
+            return new Velocity(0, 0);
+        }
+        else if (distance > StoppingDistance) {
+            return new Velocity(positionDelta.X, positionDelta.Y).AdjustMagnitude(MaximumSpeed);
+        }
+        else {
+            var stoppingTime = Math.Sqrt(2 * distance / MaximumAcceleration);
+
+            return new Velocity(positionDelta.X, positionDelta.Y).AdjustMagnitude(distance / stoppingTime);
+        }
     }
 
     public bool Move(double elapsedTime) {
