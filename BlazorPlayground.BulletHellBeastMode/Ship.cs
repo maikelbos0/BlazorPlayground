@@ -5,6 +5,7 @@ namespace BlazorPlayground.BulletHellBeastMode;
 
 public class Ship : IGameElement<Ship> {
     const int DirectionalSpeed = 10;
+    public const double MaximumSpeed = 1000;
 
     public Guid Id { get; private set; }
     public required Coordinate Position { get; set; }
@@ -17,6 +18,32 @@ public class Ship : IGameElement<Ship> {
         Position = position,
         Sections = sections
     };
+
+    public Velocity GetDirectionalVelocity() {
+        var velocity = new Velocity(0, 0);
+
+        if (Direction.HasFlag(Direction.Left)) {
+            velocity -= new Velocity(1, 0);
+        }
+
+        if (Direction.HasFlag(Direction.Right)) {
+            velocity += new Velocity(1, 0);
+        }
+
+        if (Direction.HasFlag(Direction.Up)) {
+            velocity -= new Velocity(0, 1);
+        }
+
+        if (Direction.HasFlag(Direction.Down)) {
+            velocity += new Velocity(0, 1);
+        }
+
+        if (velocity.HasMagnitude) {
+            velocity = velocity.AdjustMagnitude(MaximumSpeed);
+        }
+
+        return velocity;
+    }
 
     public bool Move(double elapsedTime) {
         var targetPosition = TargetPosition == null
