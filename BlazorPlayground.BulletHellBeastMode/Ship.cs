@@ -68,6 +68,28 @@ public class Ship : IGameElement<Ship> {
         }
     }
 
+    public Velocity AdjustVelocityToBounds(Velocity velocity) {
+        var stoppedPosition = Position.Move(velocity, velocity.Magnitude / MaximumAcceleration / 2);
+        var horizontalVelocityAdjustment = 1.0;
+        var verticalVelocityAdjustment = 1.0;
+
+        if (stoppedPosition.X < 0) {
+            horizontalVelocityAdjustment = 1 + stoppedPosition.X / (Position.X - stoppedPosition.X);
+        }
+        else if (stoppedPosition.X > Game.Width) {
+            horizontalVelocityAdjustment = 1 - (stoppedPosition.X - Game.Width) / (stoppedPosition.X - Position.X);
+        }
+
+        if (stoppedPosition.Y < 0) {
+            verticalVelocityAdjustment = 1 + stoppedPosition.Y / (Position.Y - stoppedPosition.Y);
+        }
+        else if (stoppedPosition.Y > Game.Height) {
+            verticalVelocityAdjustment = 1 - (stoppedPosition.Y - Game.Height) / (stoppedPosition.Y - Position.Y);
+        }
+
+        return new Velocity(velocity.X * horizontalVelocityAdjustment, velocity.Y * verticalVelocityAdjustment);
+    }
+
     public bool Move(double elapsedTime) {
         var targetPosition = TargetPosition == null
             ? new(0, 0)

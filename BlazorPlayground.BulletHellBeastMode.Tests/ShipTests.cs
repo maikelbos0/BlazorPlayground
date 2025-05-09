@@ -64,4 +64,22 @@ public class ShipTests {
         Assert.Equal(expectedX, result.X, 0.001);
         Assert.Equal(expectedY, result.Y, 0.001);
     }
+
+    [Theory]
+    [InlineData(0, 0, 0, 0, 0, 0)]
+    [InlineData(0, 0, 1000, 1000, 1000, 1000)]
+    [InlineData(0, 0, 2000, 2000, 1414.214, 1414.214)]
+    [InlineData(1000, 1000, 0, 0, 0, 0)]
+    [InlineData(1000, 1000, -1000, -1000, -1000, -1000)]
+    [InlineData(1000, 1000, -2000, -2000, -1414.214, -1414.214)]
+    [InlineData(100, 100, -1000, -1000, -282.843, -282.843)]
+    [InlineData(900, 900, 1000, 1000, 282.843, 282.843)]
+    public void AdjustVelocityToBounds(double positionX, double positionY, double velocityX, double velocityY, double expectedX, double expectedY) {
+        var subject = Ship.Create(new(positionX, positionY), []);
+
+        var result = subject.AdjustVelocityToBounds(new Velocity(velocityX, velocityY));
+
+        Assert.Equal(expectedX, result.X, 0.001);
+        Assert.Equal(expectedY, result.Y, 0.001);
+    }
 }
