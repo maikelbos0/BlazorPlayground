@@ -81,7 +81,7 @@ public abstract class DrawableShape : Shape {
         }
 
         yield return new XAttribute("data-shape-type", GetType().Name);
-
+        
         for (var i = 0; i < Anchors.Count; i++) {
             var point = Anchors[i].Get(this);
 

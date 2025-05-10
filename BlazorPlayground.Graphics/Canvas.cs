@@ -106,10 +106,10 @@ public class Canvas {
 
     public Shape? CreateVirtualSelectedShape() {
         if (SelectedShape != null) {
-            if (SnappedStartPoint != null && IsSecondaryAction && SelectedShape is IHasSecondaryAction) {
+            if (SnappedStartPoint != null && IsSecondaryAction && SelectedShape is IExtensibleShape) {
                 var virtualShape = SelectedShape.Clone();
 
-                ((IHasSecondaryAction)virtualShape).ExecuteSecondaryAction(SnappedEndPoint ?? SnappedStartPoint);
+                ((IExtensibleShape)virtualShape).AddPoint(SnappedEndPoint ?? SnappedStartPoint);
 
                 return virtualShape;
             }
@@ -160,8 +160,8 @@ public class Canvas {
         => new(mouseEventArgs.OffsetX / Zoom * 100, mouseEventArgs.OffsetY / Zoom * 100);
 
     public void EndActionExecution() {
-        if (SnappedStartPoint != null && IsSecondaryAction && SelectedShape is IHasSecondaryAction hasSecondaryAction) {
-            hasSecondaryAction.ExecuteSecondaryAction(SnappedEndPoint ?? SnappedStartPoint);
+        if (SnappedStartPoint != null && IsSecondaryAction && SelectedShape is IExtensibleShape extensibleShape) {
+            extensibleShape.AddPoint(SnappedEndPoint ?? SnappedStartPoint);
         }
         else if (SnappedStartPoint != null && SnappedEndPoint != null) {
             if (IsDrawing) {

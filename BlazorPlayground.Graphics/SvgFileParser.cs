@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Xml.Linq;
 
 namespace BlazorPlayground.Graphics {
@@ -54,19 +55,38 @@ namespace BlazorPlayground.Graphics {
         }
 
         private static bool SetAnchors(Shape shape, XElement element) {
-            for (var i = 0; i < shape.Anchors.Count; i++) {
-                var coordinates = element.Attribute($"data-shape-anchor-{i}")?.Value?.Split(',');
+            int i;
 
-                if (coordinates == null
-                        || coordinates.Length != 2
-                        || !double.TryParse(coordinates[0], NumberStyles.Any, CultureInfo.InvariantCulture, out var x)
-                        || !double.TryParse(coordinates[1], NumberStyles.Any, CultureInfo.InvariantCulture, out var y)) {
+            for (i = 0; i < shape.Anchors.Count; i++) {
+                if (!TryParseAnchor(element.Attribute($"data-shape-anchor-{i}")?.Value, out var point)) {
                     return false;
                 }
 
-                shape.Anchors[i].Set(shape, new Point(x, y));
+                shape.Anchors[i].Set(shape, point);
             }
 
+            if (shape is IExtensibleShape extensibleShape) {
+                while (TryParseAnchor(element.Attribute($"data-shape-anchor-{i++}")?.Value, out var point)) {
+                    extensibleShape.AddPoint(point);
+                }
+            }
+
+            return true;
+        }
+
+        private static bool TryParseAnchor(string? anchorText, [NotNullWhen(true)] out Point? point) {
+            var coordinates = anchorText?.Split(',');
+
+            if (coordinates == null
+                    || coordinates.Length != 2
+                    || !double.TryParse(coordinates[0], NumberStyles.Any, CultureInfo.InvariantCulture, out var x)
+                    || !double.TryParse(coordinates[1], NumberStyles.Any, CultureInfo.InvariantCulture, out var y)) {
+
+                point = null;
+                return false;
+            }
+
+            point = new Point(x, y);
             return true;
         }
 

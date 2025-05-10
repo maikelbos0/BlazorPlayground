@@ -171,12 +171,26 @@ namespace BlazorPlayground.Graphics.Tests {
         public void Parse_CubicBezier() {
             var result = SvgFileParser.Parse(XElement.Parse("<path fill=\"none\" stroke=\"#000000\" stroke-width=\"1\" stroke-linecap=\"butt\" d=\"M 200 50 C 200 200, 300 200, 250 350\" data-shape-type=\"CubicBezier\" data-shape-anchor-0=\"200,50\" data-shape-anchor-1=\"200,200\" data-shape-anchor-2=\"300,200\" data-shape-anchor-3=\"250,350\"/>"));
 
-            var rectangle = Assert.IsType<CubicBezier>(result);
+            var cubicBezier = Assert.IsType<CubicBezier>(result);
 
-            PointAssert.Equal(new Point(200, 50), rectangle.StartPoint);
-            PointAssert.Equal(new Point(200, 200), rectangle.ControlPoint1);
-            PointAssert.Equal(new Point(300, 200), rectangle.ControlPoint2);
-            PointAssert.Equal(new Point(250, 350), rectangle.EndPoint);
+            PointAssert.Equal(new Point(200, 50), cubicBezier.StartPoint);
+            PointAssert.Equal(new Point(200, 200), cubicBezier.ControlPoint1);
+            PointAssert.Equal(new Point(300, 200), cubicBezier.ControlPoint2);
+            PointAssert.Equal(new Point(250, 350), cubicBezier.EndPoint);
+        }
+
+        [Fact]
+        public void Parse_ClosedPath() {
+            var result = SvgFileParser.Parse(XElement.Parse("<path fill=\"none\" stroke=\"#000000\" stroke-width=\"1\" stroke-linecap=\"butt\" d=\"M 50 90, L 100 70, L 90 40, L 70 60, L 50 70, Z\" data-shape-type=\"ClosedPath\" data-shape-anchor-0=\"50,90\" data-shape-anchor-1=\"100,70\" data-shape-anchor-2=\"90,40\" data-shape-anchor-3=\"70,60\" data-shape-anchor-4=\"50,70\"/>"));
+
+            var closedPath = Assert.IsType<ClosedPath>(result);
+
+            Assert.Equal(5, closedPath.Points.Count);
+            PointAssert.Equal(new Point(50, 90), closedPath.Points[0]);
+            PointAssert.Equal(new Point(100, 70), closedPath.Points[1]);
+            PointAssert.Equal(new Point(90, 40), closedPath.Points[2]);
+            PointAssert.Equal(new Point(70, 60), closedPath.Points[3]);
+            PointAssert.Equal(new Point(50, 70), closedPath.Points[4]);
         }
 
         [Theory]

@@ -370,7 +370,7 @@ public class CanvasTests {
 
     [Fact]
     public void CreateVirtualSelectedShape_SecondaryAction() {
-        var shape = Substitute.For<DrawableShape, IHasSecondaryAction>();
+        var shape = Substitute.For<DrawableShape, IExtensibleShape>();
         var canvas = new Canvas() {
             StartPoint = new Point(100, 150),
             IsDrawing = false,
@@ -378,16 +378,16 @@ public class CanvasTests {
             IsSecondaryAction = true
         };
 
-        shape.Clone().Returns(Substitute.For<DrawableShape, IHasSecondaryAction>());
+        shape.Clone().Returns(Substitute.For<DrawableShape, IExtensibleShape>());
 
-        var virtualShape = Assert.IsType<IHasSecondaryAction>(canvas.CreateVirtualSelectedShape(), false);
+        var virtualShape = Assert.IsType<IExtensibleShape>(canvas.CreateVirtualSelectedShape(), false);
 
-        virtualShape.Received().ExecuteSecondaryAction(new(100, 150));
+        virtualShape.Received().AddPoint(new(100, 150));
     }
 
     [Fact]
     public void CreateVirtualSelectedShape_SecondaryAction_EndPoint() {
-        var shape = Substitute.For<DrawableShape, IHasSecondaryAction>();
+        var shape = Substitute.For<DrawableShape, IExtensibleShape>();
         var canvas = new Canvas() {
             StartPoint = new Point(100, 150),
             EndPoint = new Point(200, 250),
@@ -396,11 +396,11 @@ public class CanvasTests {
             IsSecondaryAction = true
         };
 
-        shape.Clone().Returns(Substitute.For<DrawableShape, IHasSecondaryAction>());
+        shape.Clone().Returns(Substitute.For<DrawableShape, IExtensibleShape>());
 
-        var virtualShape = Assert.IsType<IHasSecondaryAction>(canvas.CreateVirtualSelectedShape(), false);
+        var virtualShape = Assert.IsType<IExtensibleShape>(canvas.CreateVirtualSelectedShape(), false);
 
-        virtualShape.Received().ExecuteSecondaryAction(new(200, 250));
+        virtualShape.Received().AddPoint(new(200, 250));
     }
 
     [Fact]
@@ -545,7 +545,7 @@ public class CanvasTests {
 
     [Fact]
     public void EndActionExecution_SelectedShape_SecondaryAction() {
-        var shape = Substitute.For<DrawableShape, IHasSecondaryAction>();
+        var shape = Substitute.For<DrawableShape, IExtensibleShape>();
         var canvas = new Canvas() {
             StartPoint = new Point(100, 150),
             IsDrawing = false,
@@ -555,12 +555,12 @@ public class CanvasTests {
 
         canvas.EndActionExecution();
 
-        ((IHasSecondaryAction)shape).Received().ExecuteSecondaryAction(new(100, 150));
+        ((IExtensibleShape)shape).Received().AddPoint(new(100, 150));
     }
 
     [Fact]
     public void EndActionExecution_SelectedShape_SecondaryAction_EndPoint() {
-        var shape = Substitute.For<DrawableShape, IHasSecondaryAction>();
+        var shape = Substitute.For<DrawableShape, IExtensibleShape>();
         var canvas = new Canvas() {
             StartPoint = new Point(100, 150),
             EndPoint = new Point(200, 250),
@@ -571,7 +571,7 @@ public class CanvasTests {
 
         canvas.EndActionExecution();
 
-        ((IHasSecondaryAction)shape).Received().ExecuteSecondaryAction(new(200, 250));
+        ((IExtensibleShape)shape).Received().AddPoint(new(200, 250));
     }
 
     [Fact]

@@ -2,7 +2,7 @@
 
 namespace BlazorPlayground.Graphics;
 
-public class ClosedPath : DrawableShape, IShapeWithOpacity, IShapeWithFill, IShapeWithStroke, IShapeWithStrokeLinejoin, IAutoSelectedShape, IHasSecondaryAction {
+public class ClosedPath : DrawableShape, IShapeWithOpacity, IShapeWithFill, IShapeWithStroke, IShapeWithStrokeLinejoin, IAutoSelectedShape, IExtensibleShape {
     public override string ElementName => "path";
     public override IReadOnlyList<Anchor> Anchors => Array.AsReadOnly(
         Points.Select((_, index) => new Anchor<ClosedPath>(s => s.Points[index], (s, p) => s.Points[index] = p)).ToArray()
@@ -39,7 +39,7 @@ public class ClosedPath : DrawableShape, IShapeWithOpacity, IShapeWithFill, ISha
         Points = new(Points)
     };
 
-    public void ExecuteSecondaryAction(Point endPoint) => Points.Add(endPoint);
+    public void AddPoint(Point endPoint) => Points.Add(endPoint);
 
     public override Geometry GetGeometry(GeometryFactory geometryFactory, Point origin) {
         if (Points.Count == 0) {
