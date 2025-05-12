@@ -1,7 +1,7 @@
 ﻿using BlazorPlayground.Graphics.BulletHellBeastMode;
 using NetTopologySuite.Geometries;
 using NSubstitute;
-using System.Linq;
+using System.Collections.Generic;
 using Xunit;
 
 namespace BlazorPlayground.Graphics.Tests.BulletHellBeastMode;
@@ -104,5 +104,42 @@ public class GameAssetFactoryTests {
 
         Assert.NotNull(result);
         PointAssert.Equal(new(20, 45), result);
+    }
+
+    [Fact]
+    public void GetGameElementPath() {
+        var geometryFactory = new GeometryFactory(new PrecisionModel(10));
+        var subject = new GameAssetFactory(geometryFactory);
+
+        var sections = new List<DrawableShape>() {
+            new Line(new(2, 3), new(12, 13)),
+            new Line(new(25, 26), new(12, 13)),
+            new Line(new(0, 0), new(-9, -8)),
+            new Rectangle(new(100, 200), new(300, 400)),
+            new Line(new(26, 26), new(30, 30)),
+            new Line(new(-20, -20), new(-9, -9))
+        };
+
+        var result = subject.GetGameElementPath(sections);
+
+        var expected = new List<Coordinate>() {
+            new(-20, -20),
+            new(-9, -9),
+            new(-9, -8),
+            new(0, 0),
+            new(2, 3),
+            new(12, 13),
+            new(25, 26),
+            new(26, 26),
+            new(30, 30)
+        };
+
+        Assert.Equal(GameAssetFactory.DefaultSpeed, result.Speed);
+
+        Assert.Equal(expected.Count, result.Coordinates.Count);
+        for (int i = 0; i < expected.Count; i++) {
+            Assert.Equal(expected[i].X, result.Coordinates[i].X);
+            Assert.Equal(expected[i].Y, result.Coordinates[i].Y);
+        }
     }
 }
