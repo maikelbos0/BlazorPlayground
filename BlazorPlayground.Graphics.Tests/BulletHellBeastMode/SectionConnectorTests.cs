@@ -9,8 +9,8 @@ public class SectionConnectorTests {
     [Theory]
     [InlineData(true, false, 0)]
     [InlineData(true, true, 2.8)]
-    [InlineData(false, true, 5.7)]
-    [InlineData(false, false, 2.8)]
+    [InlineData(false, true, 2.8)]
+    [InlineData(false, false, 5.7)]
     public void GetMagnitude(bool isAppend, bool isReversed, double expectedResult) {
         var currentSection = new List<Coordinate>() {
             new(0, 1),

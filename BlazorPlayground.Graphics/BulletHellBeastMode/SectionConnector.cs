@@ -3,7 +3,7 @@
 namespace BlazorPlayground.Graphics.BulletHellBeastMode;
 
 public record SectionConnector(bool IsAppend, bool IsReversed) {
-    public static IReadOnlyList<SectionConnector> SectionConnections { get; } = [
+    public static IReadOnlyList<SectionConnector> All { get; } = [
         new(true, false),
         new(true, true),
         new(false, true),
@@ -11,7 +11,7 @@ public record SectionConnector(bool IsAppend, bool IsReversed) {
     ];
 
     public double GetMagnitude(List<Coordinate> currentSection, List<Coordinate> nextSection)
-        => (currentSection[IsAppend ? ^1 : 0] - nextSection[IsReversed ? ^1 : 0]).Magnitude;
+        => (currentSection[IsAppend ? ^1 : 0] - nextSection[IsAppend == IsReversed ? ^1 : 0]).Magnitude;
 
     public void Add(List<Coordinate> path, List<Coordinate> nextSection) {
         IEnumerable<Coordinate> coordinatesToAdd = nextSection;
