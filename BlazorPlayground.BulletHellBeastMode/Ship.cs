@@ -4,12 +4,11 @@ using System.Collections.Generic;
 namespace BlazorPlayground.BulletHellBeastMode;
 
 public class Ship : IGameElement<Ship> {
-    const int DirectionalSpeed = 10;
     public const double MaximumSpeed = 1000;
     public const double MaximumAcceleration = 2000;
     public const double StoppingDistance = MaximumAcceleration / 2 * (MaximumSpeed * MaximumSpeed / MaximumAcceleration / MaximumAcceleration);
 
-    public Guid Id { get; private set; }
+    public Guid Id { get; private init; }
     public required Coordinate Position { get; set; }
     public required List<GameElementSection> Sections { get; set; }
     public Direction Direction { get; set; } = Direction.None;
