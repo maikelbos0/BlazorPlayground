@@ -12,8 +12,7 @@ public class CoordinateExtensionsTests {
         var subject = new Coordinate(coordinateX, coordinateY);
 
         var result = subject.Move(new Velocity(velocityX, velocityY), elapsedSeconds);
-
-        Assert.Equal(expectedX, result.X, 0.001);
-        Assert.Equal(expectedY, result.Y, 0.001);
+        
+        VectorAssert.Equal(new(expectedX, expectedY), result);
     }
 }

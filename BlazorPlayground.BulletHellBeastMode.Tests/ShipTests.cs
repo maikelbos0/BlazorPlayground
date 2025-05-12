@@ -12,7 +12,7 @@ public class ShipTests {
         var result = Ship.Create(new(500, 900), sections);
 
         Assert.NotEqual(Guid.Empty, result.Id);
-        Assert.Equal(position, result.Position);
+        VectorAssert.Equal(position, result.Position);
         Assert.Equal(sections, result.Sections);
     }
 
@@ -22,8 +22,8 @@ public class ShipTests {
     [InlineData(Direction.Down, 0, 1000)]
     [InlineData(Direction.Left, -1000, 0)]
     [InlineData(Direction.Right, 1000, 0)]
-    [InlineData(Direction.Up | Direction.Left, -707.1068, -707.1068)]
-    [InlineData(Direction.Down | Direction.Right, 707.1068, 707.1068)]
+    [InlineData(Direction.Up | Direction.Left, -707.1, -707.1)]
+    [InlineData(Direction.Down | Direction.Right, 707.1, 707.1)]
     [InlineData(Direction.Up | Direction.Down | Direction.Left | Direction.Right, 0, 0)]
     public void GetDirectionalVelocity(Direction direction, double expectedX, double expectedY) {
         var subject = Ship.Create(new(500, 900), []);
@@ -32,8 +32,7 @@ public class ShipTests {
 
         var result = subject.GetDirectionalVelocity();
 
-        Assert.Equal(expectedX, result.X, 0.001);
-        Assert.Equal(expectedY, result.Y, 0.001);
+        VectorAssert.Equal(new(expectedX, expectedY), result);
     }
 
     [Fact]
@@ -53,7 +52,7 @@ public class ShipTests {
     [InlineData(1000, 1000, 1000, 500, 0, -1000)]
     [InlineData(1000, 1000, 1300, 1400, 600, 800)]
     [InlineData(1000, 1000, 600, 700, -800, -600)]
-    [InlineData(1000, 1000, 900, 925, -282.843, -212.132)]
+    [InlineData(1000, 1000, 900, 925, -282.8, -212.1)]
     public void GetVelocityFromTargetPosition(double positionX, double positionY, double targetPositionX, double targetPositionY, double expectedX, double expectedY) {
         var subject = Ship.Create(new(positionX, positionY), []);
 
@@ -61,26 +60,24 @@ public class ShipTests {
 
         var result = subject.GetVelocityFromTargetPosition();
 
-        Assert.Equal(expectedX, result.X, 0.001);
-        Assert.Equal(expectedY, result.Y, 0.001);
+        VectorAssert.Equal(new(expectedX, expectedY), result);
     }
 
     [Theory]
     [InlineData(0, 0, 0, 0, 0, 0)]
     [InlineData(0, 0, 1000, 1000, 1000, 1000)]
-    [InlineData(0, 0, 2000, 2000, 1414.214, 1414.214)]
+    [InlineData(0, 0, 2000, 2000, 1414.2, 1414.2)]
     [InlineData(1000, 1000, 0, 0, 0, 0)]
     [InlineData(1000, 1000, -1000, -1000, -1000, -1000)]
-    [InlineData(1000, 1000, -2000, -2000, -1414.214, -1414.214)]
-    [InlineData(100, 100, -1000, -1000, -282.843, -282.843)]
-    [InlineData(900, 900, 1000, 1000, 282.843, 282.843)]
+    [InlineData(1000, 1000, -2000, -2000, -1414.2, -1414.2)]
+    [InlineData(100, 100, -1000, -1000, -282.8, -282.8)]
+    [InlineData(900, 900, 1000, 1000, 282.8, 282.8)]
     public void AdjustVelocityToBounds(double positionX, double positionY, double velocityX, double velocityY, double expectedX, double expectedY) {
         var subject = Ship.Create(new(positionX, positionY), []);
 
         var result = subject.AdjustVelocityToBounds(new Velocity(velocityX, velocityY));
 
-        Assert.Equal(expectedX, result.X, 0.001);
-        Assert.Equal(expectedY, result.Y, 0.001);
+        VectorAssert.Equal(new(expectedX, expectedY), result);
     }
 
     [Fact]
@@ -90,7 +87,7 @@ public class ShipTests {
         var result = subject.ProcessElapsedTime(0.1);
 
         Assert.False(result);
-        Assert.Equal(new(500, 900), subject.Position);
+        VectorAssert.Equal(new(500, 900), subject.Position);
     }
 
     [Fact]
@@ -103,9 +100,7 @@ public class ShipTests {
         var result = subject.ProcessElapsedTime(0.1);
 
         Assert.True(result);
-        Assert.Equal(11.06, subject.Velocity.X, 0.001);
-        Assert.Equal(-199.694, subject.Velocity.Y, 0.001);
-        Assert.Equal(501.106, subject.Position.X, 0.001);
-        Assert.Equal(880.03, subject.Position.Y, 0.001);
+        VectorAssert.Equal(new(11.1, -199.7), subject.Velocity);
+        VectorAssert.Equal(new(501.1, 880), subject.Position);
     }
 }

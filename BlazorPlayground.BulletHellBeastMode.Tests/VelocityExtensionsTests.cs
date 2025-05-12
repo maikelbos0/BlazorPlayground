@@ -13,8 +13,7 @@ public class VelocityExtensionsTests {
         
         var result = subject.Accelerate(new(accelerationX, accelerationY), elapsedSeconds);
 
-        Assert.Equal(expectedX, result.X, 0.001);
-        Assert.Equal(expectedY, result.Y, 0.001);
+        VectorAssert.Equal(new(expectedX, expectedY), result);
     }
 
     [Theory]
@@ -24,8 +23,7 @@ public class VelocityExtensionsTests {
         var subject = new Velocity(velocityX, velocityY);
         
         var result = subject.GetAcceleration(elapsedSeconds);
-    
-        Assert.Equal(expectedX, result.X, 0.001);
-        Assert.Equal(expectedY, result.Y, 0.001);
+
+        VectorAssert.Equal(new(expectedX, expectedY), result);
     }
 }
