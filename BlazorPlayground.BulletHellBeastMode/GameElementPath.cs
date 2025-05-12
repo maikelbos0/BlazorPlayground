@@ -2,4 +2,4 @@
 
 namespace BlazorPlayground.BulletHellBeastMode;
 
-public record GameElementPath(double Speed, List<Coordinate> Coordinates);
+public record GameElementPath(List<Coordinate> Coordinates);

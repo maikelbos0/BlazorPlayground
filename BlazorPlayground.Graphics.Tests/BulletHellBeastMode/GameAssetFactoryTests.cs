@@ -2,6 +2,7 @@
 using NetTopologySuite.Geometries;
 using NSubstitute;
 using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace BlazorPlayground.Graphics.Tests.BulletHellBeastMode;
@@ -107,6 +108,41 @@ public class GameAssetFactoryTests {
     }
 
     [Fact]
+    public void GetGameElementPathFromEmptyEnumerable() {
+        var geometryFactory = new GeometryFactory(new PrecisionModel(10));
+        var subject = new GameAssetFactory(geometryFactory);
+
+        var sections = Enumerable.Empty<DrawableShape>();
+
+        var result = subject.GetGameElementPath(sections);
+
+        Assert.Empty(result.Coordinates);
+    }
+    
+    [Fact]
+    public void GetGameElementPathFromSingleDrawableShape() {
+        var geometryFactory = new GeometryFactory(new PrecisionModel(10));
+        var subject = new GameAssetFactory(geometryFactory);
+
+        var sections = new List<DrawableShape>() {
+            new Line(new(2, 3), new(12, 13))
+        };
+
+        var result = subject.GetGameElementPath(sections);
+
+        var expected = new List<Coordinate>() {
+            new(2, 3),
+            new(12, 13)
+        };
+
+        Assert.Equal(expected.Count, result.Coordinates.Count);
+        for (int i = 0; i < expected.Count; i++) {
+            Assert.Equal(expected[i].X, result.Coordinates[i].X);
+            Assert.Equal(expected[i].Y, result.Coordinates[i].Y);
+        }
+    }
+
+    [Fact]
     public void GetGameElementPath() {
         var geometryFactory = new GeometryFactory(new PrecisionModel(10));
         var subject = new GameAssetFactory(geometryFactory);
@@ -133,8 +169,6 @@ public class GameAssetFactoryTests {
             new(26, 26),
             new(30, 30)
         };
-
-        Assert.Equal(GameAssetFactory.DefaultSpeed, result.Speed);
 
         Assert.Equal(expected.Count, result.Coordinates.Count);
         for (int i = 0; i < expected.Count; i++) {

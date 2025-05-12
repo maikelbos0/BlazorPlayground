@@ -7,7 +7,6 @@ namespace BlazorPlayground.Graphics.BulletHellBeastMode;
 public class GameAssetFactory {
     public const double DefaultOpacity = 1.0;
     public const int DefaultStrokeWidth = 0;
-    public const double DefaultSpeed = 500;
 
     public readonly static string DefaultColor = "rgba(0, 0, 0, 0)";
 
@@ -86,23 +85,26 @@ public class GameAssetFactory {
             .OfType<LineString>()
             .Select(lineString => lineString.Coordinates.Select(coordinate => new Coordinate(coordinate.X, coordinate.Y)).ToList())
             .ToList();
-        var coordinates = new List<Coordinate>(sections[0]);
+        var coordinates = new List<Coordinate>();
 
-        sections.Remove(sections[0]);
+        if (sections.Count > 0) {
+            coordinates.AddRange(sections[0]);
+            sections.Remove(sections[0]);
 
-        do {
-            var next = sections
-                .SelectMany(section => SectionConnector.All.Select(connector => new {
-                    Section = section,
-                    Connector = connector
-                }))
-                .OrderBy(candidate => candidate.Connector.GetMagnitude(coordinates, candidate.Section))
-                .First();
+            while (sections.Count != 0) {
+                var next = sections
+                    .SelectMany(section => SectionConnector.All.Select(connector => new {
+                        Section = section,
+                        Connector = connector
+                    }))
+                    .OrderBy(candidate => candidate.Connector.GetMagnitude(coordinates, candidate.Section))
+                    .First();
 
-            next.Connector.Add(coordinates, next.Section);
-            sections.Remove(next.Section);
-        } while (sections.Count != 0);
+                next.Connector.Add(coordinates, next.Section);
+                sections.Remove(next.Section);
+            }
+        }
 
-        return new GameElementPath(DefaultSpeed, coordinates);
+        return new GameElementPath(coordinates);
     }
 }
