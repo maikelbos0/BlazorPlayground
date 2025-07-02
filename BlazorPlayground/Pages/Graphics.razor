@@ -12,6 +12,32 @@
 
 <h1>Graphics</h1>
 
+<div class="modal graphics-modal @(ShowSaveGameElementPathModal ? "d-block" : "")" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Save path</h5>
+                <button type="button" class="btn-close" aria-label="Close" @onclick="() => ToggleSaveGameElementPathModal(false)"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="inputOriginX" class="form-label">Origin X</label>
+                    <input type="text" class="form-control" id="inputOriginX" @bind="GameElementPathOriginX" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="inputOriginY" class="form-label">Origin Y</label>
+                    <input type="text" class="form-control" id="inputOriginY" @bind="GameElementPathOriginY" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" @onclick="() => SaveGameElementPath()">Save path</button>
+                <button type="button" class="btn btn-secondary" @onclick="() => ToggleSaveGameElementPathModal(false)">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="modal graphics-modal @(ShowLoadModal ? "d-block" : "")" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -40,8 +66,8 @@
 <div class="btn-toolbar">
     <fieldset class="btn-group mb-3 me-3">
         <button type="button" class="btn btn-secondary" @onclick="() => Save()">Save</button>
-        <button type="button" class="btn btn-secondary" @onclick="() => CreateGameAsset()">Save as asset</button>
-        <button type="button" class="btn btn-secondary" @onclick="() => CreateGameElementPath()">Save as path</button>
+        <button type="button" class="btn btn-secondary" @onclick="() => SaveGameAsset()">Save as asset</button>
+        <button type="button" class="btn btn-secondary" @onclick="() => ToggleSaveGameElementPathModal(true)">Save as path</button>
         <button type="button" class="btn btn-secondary" @onclick="() => ToggleLoadModal(true)">Load</button>
     </fieldset>
 
@@ -313,6 +339,9 @@
 
 @code {
     private IJSObjectReference ModuleReference { get; set; }
+    private bool ShowSaveGameElementPathModal { get; set; } = false;
+    private int GameElementPathOriginX { get; set; } = 0;
+    private int GameElementPathOriginY { get; set; } = 0;
     private bool ShowLoadModal { get; set; } = false;
     private string FileLoadError { get; set; }
     private bool FileLoadHasError => !string.IsNullOrWhiteSpace(FileLoadError);
@@ -341,7 +370,7 @@
         await ModuleReference.InvokeVoidAsync("downloadFile", FileName ?? $"graphics {DateTime.UtcNow:yyyyMMdd hhmm}.svg", "image/svg+xml", Encoding.UTF8.GetBytes(element.ToString()));
     }
 
-    private async Task CreateGameAsset() {
+    private async Task SaveGameAsset() {
         var geometryFactory = new NetTopologySuite.Geometries.GeometryFactory(new NetTopologySuite.Geometries.PrecisionModel(10));
         var factory = new GameAssetFactory(geometryFactory);
         var gameAsset = factory.GetGameAsset(Canvas.Shapes.OfType<DrawableShape>());
@@ -349,12 +378,17 @@
         await ModuleReference.InvokeVoidAsync("downloadFile", FileName ?? $"game-asset {DateTime.UtcNow:yyyyMMdd hhmm}.json", "application/json", Encoding.UTF8.GetBytes(GameAssetSerializer.Serialize(gameAsset)));
     }
 
-    private async Task CreateGameElementPath(){
+    private void ToggleSaveGameElementPathModal(bool showSaveGameElementPathModal) {
+        ShowSaveGameElementPathModal = showSaveGameElementPathModal;
+    }
+
+    private async Task SaveGameElementPath() {
         var geometryFactory = new NetTopologySuite.Geometries.GeometryFactory(new NetTopologySuite.Geometries.PrecisionModel(10));
         var factory = new GameAssetFactory(geometryFactory);
-        var gameElementPath = factory.GetGameElementPath(Canvas.Shapes.OfType<DrawableShape>());
+        var gameElementPath = factory.GetGameElementPath(new(GameElementPathOriginX, GameElementPathOriginY), Canvas.Shapes.OfType<DrawableShape>());
 
         await ModuleReference.InvokeVoidAsync("downloadFile", FileName ?? $"game-element-path {DateTime.UtcNow:yyyyMMdd hhmm}.json", "application/json", Encoding.UTF8.GetBytes(JsonSerializer.Serialize(gameElementPath)));
+        ToggleSaveGameElementPathModal(false);
     }
 
     private void ToggleLoadModal(bool showLoadModal) {

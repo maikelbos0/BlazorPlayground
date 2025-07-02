@@ -114,7 +114,7 @@ public class GameAssetFactoryTests {
 
         var sections = Enumerable.Empty<DrawableShape>();
 
-        var result = subject.GetGameElementPath(sections);
+        var result = subject.GetGameElementPath(new(10, 20), sections);
 
         Assert.Empty(result.Coordinates);
     }
@@ -128,11 +128,11 @@ public class GameAssetFactoryTests {
             new Line(new(2, 3), new(12, 13))
         };
 
-        var result = subject.GetGameElementPath(sections);
+        var result = subject.GetGameElementPath(new(10, 20), sections);
 
         var expected = new List<Coordinate>() {
-            new(2, 3),
-            new(12, 13)
+            new(-8, -17),
+            new(2, -7)
         };
 
         Assert.Equal(expected.Count, result.Coordinates.Count);
@@ -156,18 +156,18 @@ public class GameAssetFactoryTests {
             new Line(new(-20, -20), new(-9, -9))
         };
 
-        var result = subject.GetGameElementPath(sections);
+        var result = subject.GetGameElementPath(new(10, 20), sections);
 
         var expected = new List<Coordinate>() {
-            new(-20, -20),
-            new(-9, -9),
-            new(-9, -8),
-            new(0, 0),
-            new(2, 3),
-            new(12, 13),
-            new(25, 26),
-            new(26, 26),
-            new(30, 30)
+            new(-30, -40),
+            new(-19, -29),
+            new(-19, -28),
+            new(-10, -20),
+            new(-8, -17),
+            new(2, -7),
+            new(15, 6),
+            new(16, 6),
+            new(20, 10)
         };
 
         Assert.Equal(expected.Count, result.Coordinates.Count);

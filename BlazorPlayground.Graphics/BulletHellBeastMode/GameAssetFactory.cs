@@ -78,8 +78,7 @@ public class GameAssetFactory {
         return DefaultOpacity;
     }
 
-    public GameElementPath GetGameElementPath(IEnumerable<DrawableShape> shapes) {
-        var origin = new Point(0, 0);
+    public GameElementPath GetGameElementPath(Point origin, IEnumerable<DrawableShape> shapes) {
         var sections = shapes
             .Select(shape => shape.GetGeometry(geometryFactory, origin))
             .OfType<LineString>()
