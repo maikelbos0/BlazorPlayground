@@ -41,21 +41,18 @@ public class Game : ComponentBase, IAsyncDisposable {
             moduleReference = await JSRuntime.InvokeAsync<IJSObjectReference>("import", ModuleLocation);
             dotNetObjectReference = DotNetObjectReference.Create(this);
             await moduleReference.InvokeVoidAsync("initialize", canvasReference, dotNetObjectReference, Width, Height);
-            ship = await AddGameElement<Ship>("basic-ship", new(Width * 0.5, Height * 0.9));
+            ship = await GameElementProvider.CreateShip(new(Width * 0.5, Height * 0.9));
+            await AddGameElement(ship);
         }
     }
 
-    public async Task<TGameElement> AddGameElement<TGameElement>(string assetName, Coordinate position) where TGameElement : IGameElement<TGameElement> {
+    private async Task AddGameElement(IGameElement gameElement) {
         if (moduleReference == null) {
             throw new InvalidOperationException();
         }
 
-        var gameElement = await GameElementProvider.CreateFromAsset<TGameElement>(assetName, position);
-
         gameElements.Add(gameElement.Id, gameElement);
         await moduleReference.InvokeVoidAsync("setGameElement", gameElement);
-
-        return gameElement;
     }
 
     public async Task RemoveGameElement(Guid id) {

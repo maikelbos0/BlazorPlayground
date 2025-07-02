@@ -3,23 +3,25 @@ using System.Collections.Generic;
 
 namespace BlazorPlayground.BulletHellBeastMode;
 
-public class Ship : IGameElement<Ship> {
+public class Ship : IGameElement {
     public const double MaximumSpeed = 1000;
     public const double MaximumAcceleration = 2000;
     public const double StoppingDistance = MaximumAcceleration / 2 * (MaximumSpeed * MaximumSpeed / MaximumAcceleration / MaximumAcceleration);
 
-    public Guid Id { get; private init; }
-    public required Coordinate Position { get; set; }
-    public required List<GameElementSection> Sections { get; set; }
-    public Direction Direction { get; set; } = Direction.None;
+    public Guid Id { get; } = Guid.NewGuid();
+    public Coordinate Position { get; private set; }
+    public List<GameElementSection> Sections { get; }
+    public Direction Direction { get; set; }
     public Coordinate? TargetPosition { get; set; }
-    public Velocity Velocity { get; private set; } = new Velocity(0, 0);
+    public Velocity Velocity { get; private set; }
 
-    public static Ship Create(Coordinate position, List<GameElementSection> sections) => new() {
-        Id = Guid.NewGuid(),
-        Position = position,
-        Sections = sections
-    };
+    public Ship(Coordinate position, List<GameElementSection> sections) {
+        Id = Guid.NewGuid();
+        Position = position;
+        Sections = sections;
+        Direction = Direction.None;
+        Velocity = new Velocity(0, 0);
+    }
 
     public Velocity GetDirectionalVelocity() {
         var velocity = new Velocity(0, 0);

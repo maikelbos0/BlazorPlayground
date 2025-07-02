@@ -7,9 +7,8 @@ namespace BlazorPlayground.BulletHellBeastMode.Tests;
 
 public class GameElementProviderTests {
     [Fact]
-    public async Task CreateFromAsset() {
+    public async Task CreateShip() {
         const string baseUrl = "https://localhost";
-        const string assetName = "test-asset";
         const string assetContent = @"
         {
             ""Sections"": [
@@ -39,11 +38,11 @@ public class GameElementProviderTests {
         var httpClient = new HttpClient(httpMessageHandler) { BaseAddress = new(baseUrl) };
         var subject = new GameElementProvider(httpClient);
 
-        var result = await subject.CreateFromAsset<Ship>("test-asset", new(100, 200));
+        var result = await subject.CreateShip(new(100, 200));
 
         Assert.NotNull(httpMessageHandler.ReceivedRequest);
         Assert.Equal(HttpMethod.Get, httpMessageHandler.ReceivedRequest.Method);
-        Assert.Equal(new Uri($"{baseUrl}/{GameElementProvider.AssetLocation}/{assetName}.json"), httpMessageHandler.ReceivedRequest.RequestUri);
+        Assert.Equal(new Uri($"{baseUrl}/{GameElementProvider.AssetLocation}/{GameElementProvider.ShipAssetName}.json"), httpMessageHandler.ReceivedRequest.RequestUri);
 
         Assert.NotNull(result);
         Assert.Equal(new(100, 200), result.Position);
