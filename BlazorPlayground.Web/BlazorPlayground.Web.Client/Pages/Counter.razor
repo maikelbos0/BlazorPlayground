@@ -10,7 +10,7 @@
 <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
 
 @code {
-    public State<int> Count = new State<int>(0);
+    public State<int> Count = 0;
 
     private void IncrementCount()
     {

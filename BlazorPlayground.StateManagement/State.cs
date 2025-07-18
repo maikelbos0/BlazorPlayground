@@ -14,6 +14,8 @@ public class State<T> {
     public void Update(ValueProvider<T> valueProvider) {
         Value = valueProvider(Value);
     }
-}
 
-public delegate T ValueProvider<T>(T currentValue);
+    public static implicit operator T(State<T> state) => state.Value;
+
+    public static implicit operator State<T>(T value) => new(value);
+}
