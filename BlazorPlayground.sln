@@ -17,6 +17,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorPlayground.BulletHell
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorPlayground.BulletHellBeastMode.Tests", "BlazorPlayground.BulletHellBeastMode.Tests\BlazorPlayground.BulletHellBeastMode.Tests.csproj", "{34CC4638-DCC8-4C1B-A8E0-F01D3CF7C3C0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorPlayground.Web", "BlazorPlayground.Web\BlazorPlayground.Web\BlazorPlayground.Web.csproj", "{3232C034-60C1-4F7D-91D5-BC7DC1C08B82}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorPlayground.Web.Client", "BlazorPlayground.Web\BlazorPlayground.Web.Client\BlazorPlayground.Web.Client.csproj", "{7E1264E7-F8FE-4E49-9A64-77601137BD43}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +55,14 @@ Global
 		{34CC4638-DCC8-4C1B-A8E0-F01D3CF7C3C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{34CC4638-DCC8-4C1B-A8E0-F01D3CF7C3C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{34CC4638-DCC8-4C1B-A8E0-F01D3CF7C3C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3232C034-60C1-4F7D-91D5-BC7DC1C08B82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3232C034-60C1-4F7D-91D5-BC7DC1C08B82}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3232C034-60C1-4F7D-91D5-BC7DC1C08B82}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3232C034-60C1-4F7D-91D5-BC7DC1C08B82}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E1264E7-F8FE-4E49-9A64-77601137BD43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E1264E7-F8FE-4E49-9A64-77601137BD43}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E1264E7-F8FE-4E49-9A64-77601137BD43}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E1264E7-F8FE-4E49-9A64-77601137BD43}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
