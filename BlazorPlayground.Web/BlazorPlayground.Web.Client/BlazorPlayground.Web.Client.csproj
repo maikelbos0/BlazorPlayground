@@ -12,4 +12,8 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\BlazorPlayground.StateManagement\BlazorPlayground.StateManagement.csproj" />
+  </ItemGroup>
+
 </Project>

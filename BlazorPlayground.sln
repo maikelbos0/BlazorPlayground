@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorPlayground.Web", "Bla
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorPlayground.Web.Client", "BlazorPlayground.Web\BlazorPlayground.Web.Client\BlazorPlayground.Web.Client.csproj", "{7E1264E7-F8FE-4E49-9A64-77601137BD43}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorPlayground.StateManagement", "BlazorPlayground.StateManagement\BlazorPlayground.StateManagement.csproj", "{94AFC000-0B76-4471-A3B3-1C6F91631ED4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,10 @@ Global
 		{7E1264E7-F8FE-4E49-9A64-77601137BD43}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7E1264E7-F8FE-4E49-9A64-77601137BD43}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7E1264E7-F8FE-4E49-9A64-77601137BD43}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94AFC000-0B76-4471-A3B3-1C6F91631ED4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94AFC000-0B76-4471-A3B3-1C6F91631ED4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94AFC000-0B76-4471-A3B3-1C6F91631ED4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94AFC000-0B76-4471-A3B3-1C6F91631ED4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
