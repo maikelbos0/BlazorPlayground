@@ -3,8 +3,7 @@
 namespace BlazorPlayground.StateManagement;
 
 public class StateProvider {
-    // TODO consider visibility of this
-    public ConcurrentDictionary<StateKey, object> StateCollection { get; } = new();
+    internal ConcurrentDictionary<StateKey, State> StateCollection { get; } = new();
 
     public MutableState<T> State<T>(T value)
         => State(value, null);
