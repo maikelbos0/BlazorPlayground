@@ -5,7 +5,7 @@ public class MutableState<T> : State<T> {
 
     public override T Value => value;
 
-    public MutableState(T value) {
+    public MutableState(StateProvider stateProvider, T value) : base(stateProvider) {
         this.value = value;
     }
 
@@ -14,8 +14,6 @@ public class MutableState<T> : State<T> {
     }
 
     public void Update(ValueProvider<T> valueProvider) {
-        this.value = valueProvider(value);
+        value = valueProvider(value);
     }
-
-    public static implicit operator MutableState<T>(T value) => new(value);
 }

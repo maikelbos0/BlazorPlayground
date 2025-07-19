@@ -12,7 +12,7 @@ public class StateProvider {
     public MutableState<T> State<T>(T value, string? name)
         => (MutableState<T>)StateCollection.AddOrUpdate(
             new StateKey(typeof(T), name),
-            _ => new MutableState<T>(value),
+            _ => new MutableState<T>(this, value),
             (key, currentState) => {
                 if (currentState is MutableState<T> mutableState) {
                     mutableState.Set(value);

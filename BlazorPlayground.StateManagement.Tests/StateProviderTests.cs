@@ -1,11 +1,13 @@
-﻿namespace BlazorPlayground.StateManagement.Tests;
+﻿using Xunit;
+
+namespace BlazorPlayground.StateManagement.Tests;
 
 public class StateProviderTests {
     // TODO clean up
     private class TestState<T> : State<T> {
         public override T Value { get; }
 
-        public TestState(T value) {
+        public TestState(StateProvider stateProvider, T value) : base(stateProvider) {
             Value = value;
         }
     }
@@ -23,7 +25,7 @@ public class StateProviderTests {
     public void StateReturnsAndUpdatesExistingMutableState() {
         var subject = new StateProvider();
 
-        subject.StateCollection.AddOrUpdate(new StateKey(typeof(int), "meaning"), _ => new MutableState<int>(40), (_, _) => throw new NullReferenceException());
+        subject.StateCollection.AddOrUpdate(new StateKey(typeof(int), "meaning"), _ => new MutableState<int>(subject, 40), (_, _) => throw new NullReferenceException());
 
         var result = subject.State(42, "meaning");
 
@@ -34,7 +36,7 @@ public class StateProviderTests {
     public void StateThrowsExceptionForInvalidExistingState() {
         var subject = new StateProvider();
 
-        subject.StateCollection.AddOrUpdate(new StateKey(typeof(int), "meaning"), _ => new TestState<int>(40), (_, _) => throw new NullReferenceException());
+        subject.StateCollection.AddOrUpdate(new StateKey(typeof(int), "meaning"), _ => new TestState<int>(subject, 40), (_, _) => throw new NullReferenceException());
 
         var exception = Assert.Throws<InvalidStateTypeException>(() => subject.State(42, "meaning"));
 

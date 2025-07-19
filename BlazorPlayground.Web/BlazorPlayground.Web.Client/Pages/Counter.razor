@@ -10,10 +10,15 @@
 <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
 
 @code {
-    public MutableState<int> Count = 0;
+	private MutableState<int> Count { get; }
 
-    private void IncrementCount()
-    {
-        Count.Update(count => count + 1);
-    }
+	public Counter() {
+		var stateProvider = new StateProvider();
+		
+		Count = stateProvider.State(0);
+	}
+
+	private void IncrementCount() {
+		Count.Update(count => count + 1);
+	}
 }
