@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Threading;
 
 namespace BlazorPlayground.StateManagement;
 
@@ -32,6 +31,7 @@ public class StateProvider {
     }
 
     internal void AddDependency(IDependency dependency) {
+        // TODO optimize
         foreach (var dependent in TrackedDependents) {
             if (dependent.Value == Environment.CurrentManagedThreadId) {
                 dependency.Dependents.Add(dependent.Key);

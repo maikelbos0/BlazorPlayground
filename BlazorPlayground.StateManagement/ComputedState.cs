@@ -2,7 +2,7 @@
 
 namespace BlazorPlayground.StateManagement;
 
-public class ComputedState<T> : State<T> {
+public class ComputedState<T> : State<T>, IDependent {
     private readonly Func<T> computation;
     private readonly object valueLock = new();
     private T value;
@@ -11,7 +11,10 @@ public class ComputedState<T> : State<T> {
 
     public ComputedState(StateProvider stateProvider, Func<T> computation) : base(stateProvider) {
         this.computation = computation;
+
+        stateProvider.StartBuildingDependencyGraph(this);
         value = computation();
+        stateProvider.StopBuildingDependencyGraph(this);
     }
 
     public void Evaluate() {

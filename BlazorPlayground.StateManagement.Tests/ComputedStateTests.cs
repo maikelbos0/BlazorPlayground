@@ -6,19 +6,20 @@ public class ComputedStateTests {
     [Fact]
     public void Constructor() {
         var stateProvider = new StateProvider();
-        var state = new MutableState<int>(stateProvider, 42);
-        var subject = new ComputedState<int>(stateProvider, () => state.Value);
+        var mutableState = new MutableState<int>(stateProvider, 42);
+        var subject = new ComputedState<int>(stateProvider, () => mutableState.Value);
 
         Assert.Equal(42, subject.Value);
+        Assert.Equal(subject, Assert.Single(mutableState.Dependents));
     }
 
     [Fact]
     public void Evaluate() {
         var stateProvider = new StateProvider();
-        var state = new MutableState<int>(stateProvider, 41);
-        var subject = new ComputedState<int>(stateProvider, () => state.Value);
+        var mutableState = new MutableState<int>(stateProvider, 41);
+        var subject = new ComputedState<int>(stateProvider, () => mutableState.Value);
 
-        state.Set(42);
+        mutableState.Set(42);
 
         subject.Evaluate();
 
