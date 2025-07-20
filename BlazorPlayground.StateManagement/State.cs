@@ -6,7 +6,6 @@ public abstract class State {
     internal State(StateProvider stateProvider) {
         StateProvider = stateProvider;
     }
-
 }
 
 public abstract class State<T> : State {

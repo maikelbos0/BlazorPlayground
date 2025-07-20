@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using NSubstitute;
+using Xunit;
 
 namespace BlazorPlayground.StateManagement.Tests;
 
@@ -43,5 +44,44 @@ public class StateProviderTests {
         Assert.Equal(typeof(TestState<int>), exception.FoundType);
         Assert.Equal(typeof(MutableState<int>), exception.ExpectedType);
         Assert.Equal(new StateKey(typeof(int), "meaning"), exception.Key);
+    }
+
+    [Fact]
+    public void StartBuildingDependencyGraph() {
+        var subject = new StateProvider();
+        var dependent = Substitute.For<IDependent>();
+
+        subject.StartBuildingDependencyGraph(dependent);
+
+        var trackedDependent = Assert.Single(subject.TrackedDependents);
+        Assert.Same(dependent, trackedDependent.Key);
+        Assert.Equal(Environment.CurrentManagedThreadId, trackedDependent.Value);
+    }
+
+    [Fact]
+    public void AddDependency() {
+        var subject = new StateProvider();
+        var dependent = Substitute.For<IDependent>();
+        var otherDependent = Substitute.For<IDependent>();
+        var dependency = Substitute.For<IDependency>();
+
+        Assert.True(subject.TrackedDependents.TryAdd(dependent, Environment.CurrentManagedThreadId));
+        Assert.True(subject.TrackedDependents.TryAdd(otherDependent, Environment.CurrentManagedThreadId - 1));
+        dependency.Dependents.Returns([]);
+
+        subject.AddDependency(dependency);
+
+        Assert.Equal(dependent, Assert.Single(dependency.Dependents));
+    }
+
+    [Fact]
+    public void StopBuildingDependencyGraph() {
+        var subject = new StateProvider();
+        var dependent = Substitute.For<IDependent>();
+
+        Assert.True(subject.TrackedDependents.TryAdd(dependent, Environment.CurrentManagedThreadId));
+
+        subject.StopBuildingDependencyGraph(dependent);
+        Assert.Empty(subject.TrackedDependents);
     }
 }

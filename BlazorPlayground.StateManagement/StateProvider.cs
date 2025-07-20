@@ -1,8 +1,13 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Threading;
 
 namespace BlazorPlayground.StateManagement;
 
 public class StateProvider {
+    internal ConcurrentDictionary<IDependent, int> TrackedDependents { get; } = new();
+
     internal ConcurrentDictionary<StateKey, State> StateCollection { get; } = new();
 
     public MutableState<T> State<T>(T value)
@@ -21,4 +26,20 @@ public class StateProvider {
                 throw new InvalidStateTypeException(key, typeof(MutableState<T>), currentState.GetType());
             }
         );
+
+    internal void StartBuildingDependencyGraph(IDependent dependent) {
+        _ = TrackedDependents.TryAdd(dependent, Environment.CurrentManagedThreadId);
+    }
+
+    internal void AddDependency(IDependency dependency) {
+        foreach (var dependent in TrackedDependents) {
+            if (dependent.Value == Environment.CurrentManagedThreadId) {
+                dependency.Dependents.Add(dependent.Key);
+            }
+        }
+    }
+
+    internal void StopBuildingDependencyGraph(IDependent dependent) {
+        TrackedDependents.Remove(dependent, out _);
+    }
 }
