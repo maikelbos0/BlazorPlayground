@@ -8,7 +8,7 @@ public class MutableState<T> : State<T>, IDependency {
 
     public override T Value {
         get {
-            StateProvider.AddDependency(this);
+            StateProvider.TrackDependency(this);
 
             return value;
         }

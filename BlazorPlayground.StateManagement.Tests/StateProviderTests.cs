@@ -49,13 +49,15 @@ public class StateProviderTests {
     [Fact]
     public void StartBuildingDependencyGraph() {
         var subject = new StateProvider();
-        var dependent = Substitute.For<IDependent>();
+        var firstDependent = Substitute.For<IDependent>();
+        var secondDependent = Substitute.For<IDependent>();
 
-        subject.StartBuildingDependencyGraph(dependent);
+        subject.StartBuildingDependencyGraph(firstDependent);
+        subject.StartBuildingDependencyGraph(secondDependent);
 
         var trackedDependent = Assert.Single(subject.TrackedDependents);
-        Assert.Same(dependent, trackedDependent.Key);
-        Assert.Equal(Environment.CurrentManagedThreadId, trackedDependent.Value);
+        Assert.Equal(Environment.CurrentManagedThreadId, trackedDependent.Key);
+        Assert.Equivalent(new List<IDependent>() { firstDependent, secondDependent }, trackedDependent.Value);
     }
 
     [Fact]
@@ -65,8 +67,8 @@ public class StateProviderTests {
         var otherDependent = Substitute.For<IDependent>();
         var dependency = Substitute.For<IDependency>();
 
-        Assert.True(subject.TrackedDependents.TryAdd(dependent, Environment.CurrentManagedThreadId));
-        Assert.True(subject.TrackedDependents.TryAdd(otherDependent, Environment.CurrentManagedThreadId - 1));
+        Assert.True(subject.TrackedDependents.TryAdd(Environment.CurrentManagedThreadId, [dependent]));
+        Assert.True(subject.TrackedDependents.TryAdd(Environment.CurrentManagedThreadId - 1, [otherDependent]));
         dependency.Dependents.Returns([]);
 
         subject.TrackDependency(dependency);
@@ -77,11 +79,15 @@ public class StateProviderTests {
     [Fact]
     public void StopBuildingDependencyGraph() {
         var subject = new StateProvider();
-        var dependent = Substitute.For<IDependent>();
+        var firstDependent = Substitute.For<IDependent>();
+        var secondDependent = Substitute.For<IDependent>();
 
-        Assert.True(subject.TrackedDependents.TryAdd(dependent, Environment.CurrentManagedThreadId));
+        Assert.True(subject.TrackedDependents.TryAdd(Environment.CurrentManagedThreadId, [firstDependent, secondDependent]));
 
-        subject.StopBuildingDependencyGraph(dependent);
+        subject.StopBuildingDependencyGraph(firstDependent);
+        Assert.Equal(secondDependent, Assert.Single(Assert.Single(subject.TrackedDependents).Value));
+
+        subject.StopBuildingDependencyGraph(secondDependent);
         Assert.Empty(subject.TrackedDependents);
     }
 }

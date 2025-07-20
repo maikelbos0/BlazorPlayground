@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace BlazorPlayground.StateManagement;
 
 public class StateProvider {
-    internal ConcurrentDictionary<IDependent, int> TrackedDependents { get; } = new();
+    internal ConcurrentDictionary<int, List<IDependent>> TrackedDependents { get; } = new();
 
     internal ConcurrentDictionary<StateKey, State> StateCollection { get; } = new();
 
@@ -26,20 +26,34 @@ public class StateProvider {
             }
         );
 
+    // TODO add computed state methods and maybe rename State?
+
     internal void StartBuildingDependencyGraph(IDependent dependent) {
-        _ = TrackedDependents.TryAdd(dependent, Environment.CurrentManagedThreadId);
+        TrackedDependents.AddOrUpdate(
+            Environment.CurrentManagedThreadId,
+            _ => [dependent],
+            (_, dependents) => {
+                dependents.Add(dependent);
+                return dependents;
+            }
+        );
     }
 
     internal void TrackDependency(IDependency dependency) {
-        // TODO optimize
-        foreach (var dependent in TrackedDependents) {
-            if (dependent.Value == Environment.CurrentManagedThreadId) {
-                dependency.Dependents.Add(dependent.Key);
+        if (TrackedDependents.TryGetValue(Environment.CurrentManagedThreadId, out var dependents)) {
+            foreach (var dependent in dependents) {
+                dependency.Dependents.Add(dependent);
             }
         }
     }
 
     internal void StopBuildingDependencyGraph(IDependent dependent) {
-        TrackedDependents.Remove(dependent, out _);
+        if (TrackedDependents.TryGetValue(Environment.CurrentManagedThreadId, out var dependents)) {
+            dependents.Remove(dependent);
+
+            if (dependents.Count == 0) {
+                TrackedDependents.Remove(Environment.CurrentManagedThreadId, out _);
+            }
+        }
     }
 }
