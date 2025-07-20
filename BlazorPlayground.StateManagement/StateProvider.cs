@@ -30,7 +30,7 @@ public class StateProvider {
         _ = TrackedDependents.TryAdd(dependent, Environment.CurrentManagedThreadId);
     }
 
-    internal void AddDependency(IDependency dependency) {
+    internal void TrackDependency(IDependency dependency) {
         // TODO optimize
         foreach (var dependent in TrackedDependents) {
             if (dependent.Value == Environment.CurrentManagedThreadId) {

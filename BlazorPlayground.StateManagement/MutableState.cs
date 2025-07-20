@@ -3,6 +3,7 @@
 namespace BlazorPlayground.StateManagement;
 
 public class MutableState<T> : State<T>, IDependency {
+    private readonly IDependency dependency;
     private T value;
 
     public override T Value {
@@ -13,9 +14,10 @@ public class MutableState<T> : State<T>, IDependency {
         }
     }
 
-    public ConcurrentBag<IDependent> Dependents { get; } = [];
+    ConcurrentBag<IDependent> IDependency.Dependents { get; } = [];
 
     public MutableState(StateProvider stateProvider, T value) : base(stateProvider) {
+        dependency = this;
         this.value = value;
     }
 
@@ -26,7 +28,7 @@ public class MutableState<T> : State<T>, IDependency {
     public void Set(T value) {
         this.value = value;
 
-        foreach (var dependent in Dependents) {
+        foreach (var dependent in dependency.Dependents) {
             dependent.Evaluate();
         }
     }

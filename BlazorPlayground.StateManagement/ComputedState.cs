@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Threading;
 
 namespace BlazorPlayground.StateManagement;
 
 public class ComputedState<T> : State<T>, IDependent {
     private readonly Func<T> computation;
-    private readonly object valueLock = new();
+    private readonly Lock valueLock = new();
     private T value;
 
     public override T Value => value;
@@ -17,7 +18,7 @@ public class ComputedState<T> : State<T>, IDependent {
         stateProvider.StopBuildingDependencyGraph(this);
     }
 
-    public void Evaluate() {
+    void IDependent.Evaluate() {
         lock (valueLock) {
             value = computation();
         }

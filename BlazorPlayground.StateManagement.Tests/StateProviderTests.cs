@@ -59,7 +59,7 @@ public class StateProviderTests {
     }
 
     [Fact]
-    public void AddDependency() {
+    public void TrackDependency() {
         var subject = new StateProvider();
         var dependent = Substitute.For<IDependent>();
         var otherDependent = Substitute.For<IDependent>();
@@ -69,7 +69,7 @@ public class StateProviderTests {
         Assert.True(subject.TrackedDependents.TryAdd(otherDependent, Environment.CurrentManagedThreadId - 1));
         dependency.Dependents.Returns([]);
 
-        subject.AddDependency(dependency);
+        subject.TrackDependency(dependency);
 
         Assert.Equal(dependent, Assert.Single(dependency.Dependents));
     }

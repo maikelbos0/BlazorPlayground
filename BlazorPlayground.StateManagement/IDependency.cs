@@ -2,6 +2,6 @@
 
 namespace BlazorPlayground.StateManagement;
 
-public interface IDependency {
+internal interface IDependency {
     ConcurrentBag<IDependent> Dependents { get; }
 }

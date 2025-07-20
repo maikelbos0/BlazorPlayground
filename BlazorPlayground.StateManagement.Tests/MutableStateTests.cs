@@ -9,7 +9,7 @@ public class MutableStateTests {
         var subject = new MutableState<int>(stateProvider, 41);
         var computedState = new ComputedState<int>(stateProvider, () => subject.Value);
 
-        Assert.Equal(computedState, Assert.Single(subject.Dependents));
+        Assert.Equal(computedState, Assert.Single(((IDependency)subject).Dependents));
     }
 
     [Fact]
