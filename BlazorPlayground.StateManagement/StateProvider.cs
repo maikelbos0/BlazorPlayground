@@ -7,9 +7,11 @@ namespace BlazorPlayground.StateManagement;
 public class StateProvider {
     internal ConcurrentDictionary<int, List<IDependent>> TrackedDependents { get; } = new();
 
-    public MutableState<T> State<T>(T value)
+    public MutableState<T> Mutable<T>(T value)
         => new(this, value);
 
+    public ComputedState<T> Computed<T>(Func<T> computation)
+        => new(this, computation);
 
     internal void StartBuildingDependencyGraph(IDependent dependent) {
         TrackedDependents.AddOrUpdate(

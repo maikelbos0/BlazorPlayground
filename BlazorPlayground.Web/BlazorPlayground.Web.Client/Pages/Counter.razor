@@ -6,16 +6,19 @@
 <h1>Counter</h1>
 
 <p role="status">Current count: @Count.Value</p>
+<p role="status">Double count: @DoubleCount.Value</p>
 
 <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
 
 @code {
 	private MutableState<int> Count { get; }
+	private ComputedState<int> DoubleCount { get; }
 
 	public Counter() {
 		var stateProvider = new StateProvider();
 		
-		Count = stateProvider.State(0);
+		Count = stateProvider.Mutable(0);
+		DoubleCount = stateProvider.Computed(() => 2 * Count.Value);
 	}
 
 	private void IncrementCount() {
