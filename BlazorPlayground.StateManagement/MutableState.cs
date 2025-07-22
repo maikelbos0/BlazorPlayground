@@ -16,7 +16,7 @@ public class MutableState<T> : State<T>, IDependency {
 
     ConcurrentBag<IDependent> IDependency.Dependents { get; } = [];
 
-    public MutableState(StateProvider stateProvider, T value) : base(stateProvider) {
+    internal MutableState(StateProvider stateProvider, T value) : base(stateProvider) {
         dependency = this;
         this.value = value;
     }

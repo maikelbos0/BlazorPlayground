@@ -10,7 +10,7 @@ public class ComputedState<T> : State<T>, IDependent {
 
     public override T Value => value;
 
-    public ComputedState(StateProvider stateProvider, Func<T> computation) : base(stateProvider) {
+    internal ComputedState(StateProvider stateProvider, Func<T> computation) : base(stateProvider) {
         this.computation = computation;
 
         stateProvider.StartBuildingDependencyGraph(this);
