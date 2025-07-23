@@ -24,6 +24,17 @@ public class StateProviderTests {
     }
 
     [Fact]
+    public void Effect() {
+        var result = 41;
+        var subject = new StateProvider();
+        var mutableState = subject.Mutable(42);
+
+        subject.Effect(() => result = mutableState.Value);
+
+        Assert.Equal(42, result);
+    }
+
+    [Fact]
     public void StartBuildingDependencyGraph() {
         var subject = new StateProvider();
         var firstDependent = Substitute.For<IDependent>();

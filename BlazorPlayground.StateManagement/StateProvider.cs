@@ -13,6 +13,9 @@ public class StateProvider {
     public ComputedState<T> Computed<T>(Func<T> computation)
         => new(this, computation);
 
+    public void Effect(Action effect) 
+        => new Effect(this, effect);
+
     internal void StartBuildingDependencyGraph(IDependent dependent) {
         TrackedDependents.AddOrUpdate(
             Environment.CurrentManagedThreadId,
