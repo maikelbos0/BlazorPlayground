@@ -2,13 +2,14 @@
 
 namespace BlazorPlayground.StateManagement;
 
-public class MutableState<T> : State<T>, IDependency {
+public class MutableState<T> : IDependency {
     private readonly IDependency dependency;
+    private readonly StateProvider stateProvider;
     private T value;
 
-    public override T Value {
+    public T Value {
         get {
-            StateProvider.TrackDependency(this);
+            stateProvider.TrackDependency(this);
 
             return value;
         }
@@ -16,8 +17,9 @@ public class MutableState<T> : State<T>, IDependency {
 
     ConcurrentBag<IDependent> IDependency.Dependents { get; } = [];
 
-    internal MutableState(StateProvider stateProvider, T value) : base(stateProvider) {
+    internal MutableState(StateProvider stateProvider, T value) {
         dependency = this;
+        this.stateProvider = stateProvider;
         this.value = value;
     }
 

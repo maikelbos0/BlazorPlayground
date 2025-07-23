@@ -3,14 +3,14 @@ using System.Threading;
 
 namespace BlazorPlayground.StateManagement;
 
-public class ComputedState<T> : State<T>, IDependent {
+public class ComputedState<T> : IDependent {
     private readonly Func<T> computation;
     private readonly Lock valueLock = new();
     private T value;
 
-    public override T Value => value;
+    public T Value => value;
 
-    internal ComputedState(StateProvider stateProvider, Func<T> computation) : base(stateProvider) {
+    internal ComputedState(StateProvider stateProvider, Func<T> computation) {
         this.computation = computation;
 
         stateProvider.StartBuildingDependencyGraph(this);
