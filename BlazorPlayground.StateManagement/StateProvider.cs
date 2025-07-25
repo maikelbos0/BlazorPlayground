@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace BlazorPlayground.StateManagement;
 
-public class StateProvider {
+public class StateProvider : IStateProvider {
     private readonly ConcurrentDictionary<int, HashSet<IDependent>> trackedDependents = new();
 
     public MutableState<T> Mutable<T>(T value)
