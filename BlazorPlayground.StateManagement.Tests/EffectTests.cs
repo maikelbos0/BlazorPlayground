@@ -5,24 +5,22 @@ namespace BlazorPlayground.StateManagement.Tests;
 public class EffectTests {
     [Fact]
     public void Constructor() {
-        var result = 41;
+        var result = 0;
         var stateProvider = new StateProvider();
-        var mutableState = new MutableState<int>(stateProvider, 42);
-        var subject = new Effect(stateProvider, () => result = mutableState.Value);
+        var subject = new Effect(stateProvider, () => result = 42);
 
         Assert.Equal(42, result);
     }
 
     [Fact]
     public void Evaluate() {
-        var result = 41;
+        var value = 41;
+        var result = 0;
         var stateProvider = new StateProvider();
-        var mutableState = new MutableState<int>(stateProvider, 41);
-        var subject = new Effect(stateProvider, () => result = mutableState.Value);
+        var subject = new Effect(stateProvider, () => result = value);
 
-        mutableState.Set(42);
-
-        // Evaluate should be indirectly called
+        value = 42;
+        subject.Evaluate();
 
         Assert.Equal(42, result);
     }
