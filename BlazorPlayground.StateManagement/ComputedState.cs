@@ -3,15 +3,25 @@ using System.Threading;
 
 namespace BlazorPlayground.StateManagement;
 
-public class ComputedState<T> : IDependent {
+public class ComputedState<T> : Dependency, IDependent {
+    private readonly StateProvider stateProvider;
     private readonly Func<T> computation;
     private readonly Lock valueLock = new();
     private T value;
 
-    public T Value => value;
+    public T Value {
+        get {
+            stateProvider.TrackDependency(this);
+            return value;
+        }
+    }
 
-    public ComputedState(StateProvider stateProvider, Func<T> computation) {
+    public string? Name { get; }
+
+    public ComputedState(StateProvider stateProvider, Func<T> computation, string? name = null) {
+        this.stateProvider = stateProvider;
         this.computation = computation;
+        Name = name;
 
         using var dependencyGraphBuilder = stateProvider.GetDependencyGraphBuilder(this);
         value = computation();
@@ -21,5 +31,6 @@ public class ComputedState<T> : IDependent {
         lock (valueLock) {
             value = computation();
         }
+        EvaluateDependents();
     }
 }

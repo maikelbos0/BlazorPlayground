@@ -22,7 +22,7 @@ public class EffectTests {
 
         mutableState.Set(42);
 
-        subject.Evaluate();
+        // Evaluate should be indirectly called
 
         Assert.Equal(42, result);
     }

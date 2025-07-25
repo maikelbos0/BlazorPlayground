@@ -17,11 +17,13 @@ public class ComputedStateTests {
         var stateProvider = new StateProvider();
         var mutableState = new MutableState<int>(stateProvider, 41);
         var subject = new ComputedState<int>(stateProvider, () => mutableState.Value);
+        var dependent = new ComputedState<int>(stateProvider, () => subject.Value);
 
         mutableState.Set(42);
 
-        subject.Evaluate();
+        // Evaluate should be indirectly called
 
         Assert.Equal(42, subject.Value);
+        Assert.Equal(42, dependent.Value);
     }
 }

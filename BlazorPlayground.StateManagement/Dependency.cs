@@ -3,7 +3,7 @@
 namespace BlazorPlayground.StateManagement;
 
 public abstract class Dependency {
-    private ConcurrentBag<IDependent> dependents { get; } = [];
+    private ConcurrentBag<IDependent> dependents = [];
 
     internal void AddDependent(IDependent dependent) => dependents.Add(dependent);
 
