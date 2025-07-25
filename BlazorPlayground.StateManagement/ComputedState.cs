@@ -10,15 +10,14 @@ public class ComputedState<T> : IDependent {
 
     public T Value => value;
 
-    internal ComputedState(StateProvider stateProvider, Func<T> computation) {
+    public ComputedState(StateProvider stateProvider, Func<T> computation) {
         this.computation = computation;
 
-        stateProvider.StartBuildingDependencyGraph(this);
+        using var dependencyGraphBuilder = stateProvider.GetDependencyGraphBuilder(this);
         value = computation();
-        stateProvider.StopBuildingDependencyGraph(this);
     }
 
-    void IDependent.Evaluate() {
+    public void Evaluate() {
         lock (valueLock) {
             value = computation();
         }

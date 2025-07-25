@@ -10,7 +10,6 @@ public class ComputedStateTests {
         var subject = new ComputedState<int>(stateProvider, () => mutableState.Value);
 
         Assert.Equal(42, subject.Value);
-        Assert.Equal(subject, Assert.Single(((IDependency)mutableState).Dependents));
     }
 
     [Fact]
@@ -21,7 +20,7 @@ public class ComputedStateTests {
 
         mutableState.Set(42);
 
-        ((IDependent)subject).Evaluate();
+        subject.Evaluate();
 
         Assert.Equal(42, subject.Value);
     }

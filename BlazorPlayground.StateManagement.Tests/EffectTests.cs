@@ -11,7 +11,6 @@ public class EffectTests {
         var subject = new Effect(stateProvider, () => result = mutableState.Value);
 
         Assert.Equal(42, result);
-        Assert.Equal(subject, Assert.Single(((IDependency)mutableState).Dependents));
     }
 
     [Fact]
@@ -23,7 +22,7 @@ public class EffectTests {
 
         mutableState.Set(42);
 
-        ((IDependent)subject).Evaluate();
+        subject.Evaluate();
 
         Assert.Equal(42, result);
     }

@@ -4,8 +4,8 @@ using System.Collections.Generic;
 
 namespace BlazorPlayground.StateManagement;
 
-public class StateProvider {
-    internal ConcurrentDictionary<int, List<IDependent>> TrackedDependents { get; } = new();
+public class StateProvider : IStateProvider {
+    private readonly ConcurrentDictionary<int, HashSet<IDependent>> trackedDependents = new();
 
     public MutableState<T> Mutable<T>(T value)
         => new(this, value);
@@ -13,34 +13,16 @@ public class StateProvider {
     public ComputedState<T> Computed<T>(Func<T> computation)
         => new(this, computation);
 
-    public void Effect(Action effect) 
+    public void Effect(Action effect)
         => new Effect(this, effect);
 
-    internal void StartBuildingDependencyGraph(IDependent dependent) {
-        TrackedDependents.AddOrUpdate(
-            Environment.CurrentManagedThreadId,
-            _ => [dependent],
-            (_, dependents) => {
-                dependents.Add(dependent);
-                return dependents;
-            }
-        );
-    }
+    public DependencyGraphBuilder GetDependencyGraphBuilder(IDependent dependent)
+        => new DependencyGraphBuilder(trackedDependents, dependent);
 
-    internal void TrackDependency(IDependency dependency) {
-        if (TrackedDependents.TryGetValue(Environment.CurrentManagedThreadId, out var dependents)) {
+    public void TrackDependency(Dependency dependency) {
+        if (trackedDependents.TryGetValue(Environment.CurrentManagedThreadId, out var dependents)) {
             foreach (var dependent in dependents) {
-                dependency.Dependents.Add(dependent);
-            }
-        }
-    }
-
-    internal void StopBuildingDependencyGraph(IDependent dependent) {
-        if (TrackedDependents.TryGetValue(Environment.CurrentManagedThreadId, out var dependents)) {
-            dependents.Remove(dependent);
-
-            if (dependents.Count == 0) {
-                TrackedDependents.Remove(Environment.CurrentManagedThreadId, out _);
+                dependency.AddDependent(dependent);
             }
         }
     }

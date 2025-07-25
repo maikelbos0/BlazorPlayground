@@ -1,24 +1,17 @@
-﻿using System.Collections.Concurrent;
+﻿namespace BlazorPlayground.StateManagement;
 
-namespace BlazorPlayground.StateManagement;
-
-public class MutableState<T> : IDependency {
-    private readonly IDependency dependency;
+public class MutableState<T> : Dependency {
     private readonly StateProvider stateProvider;
     private T value;
 
     public T Value {
         get {
             stateProvider.TrackDependency(this);
-
             return value;
         }
     }
 
-    ConcurrentBag<IDependent> IDependency.Dependents { get; } = [];
-
-    internal MutableState(StateProvider stateProvider, T value) {
-        dependency = this;
+    public MutableState(StateProvider stateProvider, T value) {
         this.stateProvider = stateProvider;
         this.value = value;
     }
@@ -29,9 +22,6 @@ public class MutableState<T> : IDependency {
 
     public void Set(T value) {
         this.value = value;
-
-        foreach (var dependent in dependency.Dependents) {
-            dependent.Evaluate();
-        }
+        EvaluateDependents();
     }
 }
