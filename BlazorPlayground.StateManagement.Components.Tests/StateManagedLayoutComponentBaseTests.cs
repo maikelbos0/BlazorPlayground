@@ -8,7 +8,7 @@ namespace BlazorPlayground.StateManagement.Components.Tests;
 
 public class StateManagedLayoutComponentBaseTests {
     private class StateManagedLayoutComponent : StateManagedLayoutComponentBase {
-        public new void OnParametersSet() => base.OnParametersSet();
+        public new void OnInitialized() => base.OnInitialized();
 
         public new void OnAfterRender(bool firstRender) => base.OnAfterRender(firstRender);
     }
@@ -29,7 +29,7 @@ public class StateManagedLayoutComponentBaseTests {
     }
 
     [Fact]
-    public void OnParametersSet_Gets_DependencyGraphBuilder() {
+    public void OnInitialized_Gets_DependencyGraphBuilder() {
         var stateProvider = Substitute.For<IStateProvider>();
         var dependencyGraphBuilder = Substitute.For<IDependencyGraphBuilder>();
         stateProvider.GetDependencyGraphBuilder(Arg.Any<IDependent>()).Returns(dependencyGraphBuilder);
@@ -38,7 +38,7 @@ public class StateManagedLayoutComponentBaseTests {
             StateProvider = stateProvider
         };
 
-        subject.OnParametersSet();
+        subject.OnInitialized();
         
         stateProvider.Received().GetDependencyGraphBuilder(subject);
     }
@@ -53,7 +53,7 @@ public class StateManagedLayoutComponentBaseTests {
             StateProvider = stateProvider
         };
 
-        subject.OnParametersSet();
+        subject.OnInitialized();
         subject.OnAfterRender(true);
 
         dependencyGraphBuilder.Received().Dispose();
@@ -69,7 +69,7 @@ public class StateManagedLayoutComponentBaseTests {
             StateProvider = stateProvider
         };
 
-        subject.OnParametersSet();
+        subject.OnInitialized();
         subject.OnAfterRender(false);
 
         dependencyGraphBuilder.DidNotReceive().Dispose();
@@ -84,7 +84,7 @@ public class StateManagedLayoutComponentBaseTests {
         using (var subject = new StateManagedLayoutComponent() {
             StateProvider = stateProvider
         }) {
-            subject.OnParametersSet();
+            subject.OnInitialized();
         }
 
         dependencyGraphBuilder.Received().Dispose();

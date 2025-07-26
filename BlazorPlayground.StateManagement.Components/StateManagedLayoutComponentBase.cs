@@ -6,13 +6,13 @@ public abstract class StateManagedLayoutComponentBase : LayoutComponentBase, IHa
     private IDependencyGraphBuilder? dependencyGraphBuilder;
     private bool isDisposed = false;
 
-    [Parameter]
+    [Inject]
     public required IStateProvider StateProvider { get; set; }
 
     Task IHandleEvent.HandleEventAsync(EventCallbackWorkItem item, object? arg)
         => item.InvokeAsync(arg);
 
-    protected override void OnParametersSet()
+    protected override void OnInitialized()
         => dependencyGraphBuilder = StateProvider.GetDependencyGraphBuilder(this);
 
     protected override void OnAfterRender(bool firstRender) {
