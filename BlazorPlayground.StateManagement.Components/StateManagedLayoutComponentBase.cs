@@ -12,7 +12,7 @@ public abstract class StateManagedLayoutComponentBase : LayoutComponentBase, IHa
     Task IHandleEvent.HandleEventAsync(EventCallbackWorkItem item, object? arg)
         => item.InvokeAsync(arg);
 
-    protected override void OnInitialized()
+    protected override void OnParametersSet()
         => dependencyGraphBuilder = StateProvider.GetDependencyGraphBuilder(this);
 
     protected override void OnAfterRender(bool firstRender) {
