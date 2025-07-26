@@ -7,7 +7,7 @@ using Xunit;
 namespace BlazorPlayground.StateManagement.Components.Tests;
 
 public class StateManagedComponentBaseTests {
-    public class StateManagedComponent : StateManagedComponentBase {
+    private class StateManagedComponent : StateManagedComponentBase {
         public new void OnInitialized() => base.OnInitialized();
 
         public new void OnAfterRender(bool firstRender) => base.OnAfterRender(firstRender);

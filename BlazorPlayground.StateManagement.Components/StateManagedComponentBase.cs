@@ -4,6 +4,7 @@ namespace BlazorPlayground.StateManagement.Components;
 
 public abstract class StateManagedComponentBase : ComponentBase, IHandleEvent, IDependent, IDisposable {
     private IDependencyGraphBuilder? dependencyGraphBuilder;
+    private bool isDisposed = false;
 
     [Parameter]
     public required IStateProvider StateProvider { get; set; }
@@ -23,7 +24,17 @@ public abstract class StateManagedComponentBase : ComponentBase, IHandleEvent, I
     public void Evaluate() => StateHasChanged();
 
     public void Dispose() {
-        dependencyGraphBuilder?.Dispose();
+        Dispose(true);
         GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing) {
+        if (!isDisposed) {
+            isDisposed = true;
+
+            if (disposing) {
+                dependencyGraphBuilder?.Dispose();
+            }
+        }
     }
 }
