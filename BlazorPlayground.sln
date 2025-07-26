@@ -25,6 +25,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorPlayground.StateManag
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorPlayground.StateManagement.Tests", "BlazorPlayground.StateManagement.Tests\BlazorPlayground.StateManagement.Tests.csproj", "{B271E86E-8608-4F52-8323-C5F6C7703DFF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorPlayground.StateManagement.Components", "BlazorPlayground.StateManagement.Components\BlazorPlayground.StateManagement.Components.csproj", "{D8AF4DD1-FC33-44C7-A839-41C407EAD21B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorPlayground.StateManagement.Components.Tests", "BlazorPlayground.StateManagement.Components.Tests\BlazorPlayground.StateManagement.Components.Tests.csproj", "{4ED33288-69C6-40D1-AFD8-0F68B47C9C66}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,6 +79,14 @@ Global
 		{B271E86E-8608-4F52-8323-C5F6C7703DFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B271E86E-8608-4F52-8323-C5F6C7703DFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B271E86E-8608-4F52-8323-C5F6C7703DFF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8AF4DD1-FC33-44C7-A839-41C407EAD21B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8AF4DD1-FC33-44C7-A839-41C407EAD21B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8AF4DD1-FC33-44C7-A839-41C407EAD21B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8AF4DD1-FC33-44C7-A839-41C407EAD21B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4ED33288-69C6-40D1-AFD8-0F68B47C9C66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4ED33288-69C6-40D1-AFD8-0F68B47C9C66}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4ED33288-69C6-40D1-AFD8-0F68B47C9C66}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4ED33288-69C6-40D1-AFD8-0F68B47C9C66}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

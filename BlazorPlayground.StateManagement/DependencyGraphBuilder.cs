@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace BlazorPlayground.StateManagement;
 
-public sealed class DependencyGraphBuilder : IDisposable {
+public sealed class DependencyGraphBuilder : IDisposable, IDependencyGraphBuilder {
     private readonly ConcurrentDictionary<int, HashSet<IDependent>> trackedDependents;
     private readonly IDependent dependent;
 

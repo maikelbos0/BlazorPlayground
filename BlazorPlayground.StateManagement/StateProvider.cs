@@ -14,9 +14,9 @@ public class StateProvider : IStateProvider {
         => new(this, computation);
 
     public void Effect(Action effect)
-        => new Effect(this, effect);
+        => _ = new Effect(this, effect);
 
-    public DependencyGraphBuilder GetDependencyGraphBuilder(IDependent dependent)
+    public IDependencyGraphBuilder GetDependencyGraphBuilder(IDependent dependent)
         => new DependencyGraphBuilder(trackedDependents, dependent);
 
     public void TrackDependency(Dependency dependency) {
