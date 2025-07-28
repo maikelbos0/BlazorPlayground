@@ -19,7 +19,7 @@ public class StateProvider : IStateProvider {
     public IDependencyGraphBuilder GetDependencyGraphBuilder(IDependent dependent)
         => new DependencyGraphBuilder(trackedDependents, dependent);
 
-    public void TrackDependency(Dependency dependency) {
+    public void TrackDependency(DependencyBase dependency) {
         if (trackedDependents.TryGetValue(Environment.CurrentManagedThreadId, out var dependents)) {
             foreach (var dependent in dependents) {
                 dependency.AddDependent(dependent);
