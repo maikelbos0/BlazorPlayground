@@ -23,9 +23,5 @@
 	<ItemGroup>
 		<ProjectReference Include="..\BlazorPlayground.StateManagement\BlazorPlayground.StateManagement.csproj" />
 	</ItemGroup>
-	
-	<PropertyGroup>
-		<NoWarn>1701;1702;IDE0290</NoWarn>
-	</PropertyGroup>
 
 </Project>
