@@ -382,7 +382,7 @@ public class CanvasTests {
 
         var virtualShape = Assert.IsType<IExtensibleShape>(canvas.CreateVirtualSelectedShape(), false);
 
-        virtualShape.Received().AddPoint(new(100, 150));
+        virtualShape.Received(1).AddPoint(new(100, 150));
     }
 
     [Fact]
@@ -400,7 +400,7 @@ public class CanvasTests {
 
         var virtualShape = Assert.IsType<IExtensibleShape>(canvas.CreateVirtualSelectedShape(), false);
 
-        virtualShape.Received().AddPoint(new(200, 250));
+        virtualShape.Received(1).AddPoint(new(200, 250));
     }
 
     [Fact]
@@ -555,7 +555,7 @@ public class CanvasTests {
 
         canvas.EndActionExecution();
 
-        ((IExtensibleShape)shape).Received().AddPoint(new(100, 150));
+        ((IExtensibleShape)shape).Received(1).AddPoint(new(100, 150));
     }
 
     [Fact]
@@ -571,7 +571,7 @@ public class CanvasTests {
 
         canvas.EndActionExecution();
 
-        ((IExtensibleShape)shape).Received().AddPoint(new(200, 250));
+        ((IExtensibleShape)shape).Received(1).AddPoint(new(200, 250));
     }
 
     [Fact]

@@ -40,7 +40,7 @@ public class StateManagedLayoutComponentBaseTests {
 
         subject.OnInitialized();
         
-        stateProvider.Received().GetDependencyGraphBuilder(subject);
+        stateProvider.Received(1).GetDependencyGraphBuilder(subject);
     }
 
     [Fact]
@@ -56,7 +56,7 @@ public class StateManagedLayoutComponentBaseTests {
         subject.OnInitialized();
         subject.OnAfterRender(true);
 
-        dependencyGraphBuilder.Received().Dispose();
+        dependencyGraphBuilder.Received(1).Dispose();
     }
 
     [Fact]
@@ -87,6 +87,6 @@ public class StateManagedLayoutComponentBaseTests {
             subject.OnInitialized();
         }
 
-        dependencyGraphBuilder.Received().Dispose();
+        dependencyGraphBuilder.Received(1).Dispose();
     }
 }
