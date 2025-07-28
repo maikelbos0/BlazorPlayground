@@ -13,6 +13,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\..\BlazorPlayground.StateManagement.Components\BlazorPlayground.StateManagement.Components.csproj" />
 		<ProjectReference Include="..\..\BlazorPlayground.StateManagement\BlazorPlayground.StateManagement.csproj" />
 	</ItemGroup>
 

@@ -6,8 +6,9 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
 
-
 builder.Services.AddHttpLogging(o => { });
+
+builder.Services.AddStateProvider();
 
 var app = builder.Build();
 
@@ -18,7 +19,6 @@ else {
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
     app.UseHsts();
 }
-;
 
 app.UseHttpLogging();
 app.UseHttpsRedirection();

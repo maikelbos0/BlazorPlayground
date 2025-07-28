@@ -1,4 +1,7 @@
 ﻿@using BlazorPlayground.StateManagement;
+@using BlazorPlayground.StateManagement.Components;
+@using System.Diagnostics.CodeAnalysis
+@inherits StateManagedComponentBase
 @page "/counter"
 
 <PageTitle>Counter</PageTitle>
@@ -11,14 +14,13 @@
 <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
 
 @code {
-	private MutableState<int> Count { get; }
-	private ComputedState<int> DoubleCount { get; }
+	[NotNull] private MutableState<int>? Count { get; set; }
+	[NotNull] private ComputedState<int>? DoubleCount { get; set; }
 
-	public Counter() {
-		var stateProvider = new StateProvider();
-		
-		Count = stateProvider.Mutable(0);
-		DoubleCount = stateProvider.Computed(() => 2 * Count.Value);
+	protected override void OnInitialized() {
+		base.OnInitialized();
+		Count = StateProvider.Mutable(0);
+		DoubleCount = StateProvider.Computed(() => Count.Value * 2);
 	}
 
 	private void IncrementCount() {
