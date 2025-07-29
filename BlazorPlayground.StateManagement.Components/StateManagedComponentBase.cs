@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 namespace BlazorPlayground.StateManagement.Components;
 
-public abstract class StateManagedComponentBase : IComponent, IHandleEvent, IHandleAfterRender, IDependent, IDisposable {
+public abstract class StateManagedComponentBase : IComponent, IHandleEvent, IHandleAfterRender, IDependent {
     private readonly RenderFragment renderFragment;
     private (IComponentRenderMode? mode, bool cached) renderMode;
     private RenderHandle renderHandle;
@@ -12,7 +12,6 @@ public abstract class StateManagedComponentBase : IComponent, IHandleEvent, IHan
     private bool hasNeverRendered = true;
     private bool hasPendingQueuedRender;
     private bool hasCalledOnAfterRender;
-    private IDependencyGraphBuilder? dependencyGraphBuilder;
     private bool isDisposed = false;
 
     [Inject]
@@ -23,6 +22,9 @@ public abstract class StateManagedComponentBase : IComponent, IHandleEvent, IHan
     /// </summary>
     public StateManagedComponentBase() {
         renderFragment = builder => {
+            var stateProvider = StateProvider ?? throw new InvalidOperationException($"Cannot invoke {nameof(renderFragment)} before {nameof(StateManagedComponentBase)} has dependencies set.");
+
+            using var dependencyGraphBuilder = stateProvider.GetDependencyGraphBuilder(this);
             hasPendingQueuedRender = false;
             hasNeverRendered = false;
             BuildRenderTree(builder);
@@ -50,8 +52,7 @@ public abstract class StateManagedComponentBase : IComponent, IHandleEvent, IHan
     protected virtual void BuildRenderTree(RenderTreeBuilder builder) { }
 
     /// <inheritdoc cref="ComponentBase.OnInitialized"/>
-    protected virtual void OnInitialized()
-        => dependencyGraphBuilder = StateProvider.GetDependencyGraphBuilder(this);
+    protected virtual void OnInitialized() { }
 
     /// <inheritdoc cref="ComponentBase.OnInitializedAsync"/>
     protected virtual Task OnInitializedAsync()
@@ -88,11 +89,7 @@ public abstract class StateManagedComponentBase : IComponent, IHandleEvent, IHan
         => true;
 
     /// <inheritdoc cref="ComponentBase.OnAfterRender(bool)"/>
-    protected virtual void OnAfterRender(bool firstRender) {
-        if (firstRender) {
-            dependencyGraphBuilder?.Dispose();
-        }
-    }
+    protected virtual void OnAfterRender(bool firstRender) { }
 
     /// <inheritdoc cref="ComponentBase.OnAfterRenderAsync(bool)"/>
     protected virtual Task OnAfterRenderAsync(bool firstRender)
@@ -112,7 +109,7 @@ public abstract class StateManagedComponentBase : IComponent, IHandleEvent, IHan
 
     void IComponent.Attach(RenderHandle renderHandle) {
         if (this.renderHandle.IsInitialized) {
-            throw new InvalidOperationException($"The render handle is already set. Cannot initialize a {nameof(Microsoft.AspNetCore.Components.ComponentBase)} more than once.");
+            throw new InvalidOperationException($"The render handle is already set. Cannot initialize a {nameof(StateManagedComponentBase)} more than once.");
         }
 
         this.renderHandle = renderHandle;
@@ -200,19 +197,4 @@ public abstract class StateManagedComponentBase : IComponent, IHandleEvent, IHan
     }
 
     public void Evaluate() => StateHasChanged();
-
-    public void Dispose() {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-    }
-
-    protected virtual void Dispose(bool disposing) {
-        if (!isDisposed) {
-            isDisposed = true;
-
-            if (disposing) {
-                dependencyGraphBuilder?.Dispose();
-            }
-        }
-    }
 }

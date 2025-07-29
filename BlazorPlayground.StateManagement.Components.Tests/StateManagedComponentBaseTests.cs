@@ -8,9 +8,7 @@ namespace BlazorPlayground.StateManagement.Components.Tests;
 
 public class StateManagedComponentBaseTests {
     private class StateManagedComponent : StateManagedComponentBase {
-        public new void OnInitialized() => base.OnInitialized();
-
-        public new void OnAfterRender(bool firstRender) => base.OnAfterRender(firstRender);
+        public new void StateHasChanged() => base.StateHasChanged();
     }
 
     [Fact]
@@ -19,7 +17,7 @@ public class StateManagedComponentBaseTests {
         var result = 0;
         var workItem = new EventCallbackWorkItem((Action<int>)(value => result = value));
 
-        using var subject = new StateManagedComponent() {
+        var subject = new StateManagedComponent() {
             StateProvider = stateProvider
         };
 
@@ -29,64 +27,18 @@ public class StateManagedComponentBaseTests {
     }
 
     [Fact]
-    public void OnInitialized_Gets_DependencyGraphBuilder() {
+    public void StateHasChanged_Builds_DependencyGraph() {
         var stateProvider = Substitute.For<IStateProvider>();
         var dependencyGraphBuilder = Substitute.For<IDependencyGraphBuilder>();
         stateProvider.GetDependencyGraphBuilder(Arg.Any<IDependent>()).Returns(dependencyGraphBuilder);
 
-        using var subject = new StateManagedComponent() {
+        var subject = new StateManagedComponent() {
             StateProvider = stateProvider
         };
 
-        subject.OnInitialized();
-        
+        subject.StateHasChanged();
+
         stateProvider.Received(1).GetDependencyGraphBuilder(subject);
-    }
-
-    [Fact]
-    public void OnAfterRender_FirstRender_Disposes_DependencyGraphBuilder() {
-        var stateProvider = Substitute.For<IStateProvider>();
-        var dependencyGraphBuilder = Substitute.For<IDependencyGraphBuilder>();
-        stateProvider.GetDependencyGraphBuilder(Arg.Any<IDependent>()).Returns(dependencyGraphBuilder);
-
-        using var subject = new StateManagedComponent() {
-            StateProvider = stateProvider
-        };
-
-        subject.OnInitialized();
-        subject.OnAfterRender(true);
-
-        dependencyGraphBuilder.Received(1).Dispose();
-    }
-
-    [Fact]
-    public void OnAfterRender_Not_FirstRender_Does_Not_Disposes_DependencyGraphBuilder() {
-        var stateProvider = Substitute.For<IStateProvider>();
-        var dependencyGraphBuilder = Substitute.For<IDependencyGraphBuilder>();
-        stateProvider.GetDependencyGraphBuilder(Arg.Any<IDependent>()).Returns(dependencyGraphBuilder);
-
-        using var subject = new StateManagedComponent() {
-            StateProvider = stateProvider
-        };
-
-        subject.OnInitialized();
-        subject.OnAfterRender(false);
-
-        dependencyGraphBuilder.DidNotReceive().Dispose();
-    }
-
-    [Fact]
-    public void Dispose_Disposes_DependencyGraphBuilder() {
-        var stateProvider = Substitute.For<IStateProvider>();
-        var dependencyGraphBuilder = Substitute.For<IDependencyGraphBuilder>();
-        stateProvider.GetDependencyGraphBuilder(Arg.Any<IDependent>()).Returns(dependencyGraphBuilder);
-
-        using (var subject = new StateManagedComponent() {
-            StateProvider = stateProvider
-        }) {
-            subject.OnInitialized();
-        }
-
         dependencyGraphBuilder.Received(1).Dispose();
     }
 }
