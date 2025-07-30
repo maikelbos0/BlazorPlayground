@@ -30,4 +30,7 @@ public abstract class StateManagedComponentBase : ComponentBase, IHandleEvent, I
         StateHasChanged();
         isEvaluating = false;
     }
+
+    Task IHandleEvent.HandleEventAsync(EventCallbackWorkItem item, object? arg)
+        => item.InvokeAsync(arg);
 }
