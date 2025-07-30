@@ -7,6 +7,8 @@ public abstract class StateManagedComponentBase : ComponentBase, IHandleEvent, I
     private static FieldInfo renderFragmentInfo = typeof(ComponentBase).GetField("_renderFragment", BindingFlags.Instance | BindingFlags.NonPublic)
         ?? throw new InvalidOperationException("The render fragment field cannot be found.");
 
+    private bool isEvaluating = false;
+
     [Inject]
     public required IStateProvider StateProvider { get; set; }
 
@@ -21,5 +23,11 @@ public abstract class StateManagedComponentBase : ComponentBase, IHandleEvent, I
         renderFragmentInfo.SetValue(this, renderFragment);
     }
 
-    public void Evaluate() => StateHasChanged();
+    protected sealed override bool ShouldRender() => isEvaluating;
+
+    public void Evaluate() {
+        isEvaluating = true;
+        StateHasChanged();
+        isEvaluating = false;
+    }
 }
