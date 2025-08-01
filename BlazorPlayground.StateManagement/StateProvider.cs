@@ -16,6 +16,27 @@ public class StateProvider : IStateProvider {
     public void Effect(Action effect)
         => _ = new Effect(this, effect);
 
+    public void BuildDependencyGraph(IDependent dependent, Action action) {
+        trackedDependents.AddOrUpdate(
+            Environment.CurrentManagedThreadId,
+            _ => [dependent],
+            (_, dependents) => {
+                dependents.Add(dependent);
+                return dependents;
+            }
+        );
+
+        action();
+
+        if (trackedDependents.TryGetValue(Environment.CurrentManagedThreadId, out var dependents)) {
+            dependents.Remove(dependent);
+
+            if (dependents.Count == 0) {
+                trackedDependents.Remove(Environment.CurrentManagedThreadId, out _);
+            }
+        }
+    }
+
     public IDependencyGraphBuilder GetDependencyGraphBuilder(IDependent dependent)
         => new DependencyGraphBuilder(trackedDependents, dependent);
 

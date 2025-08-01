@@ -7,9 +7,7 @@ public class Effect : IDependent {
 
     public Effect(StateProvider stateProvider, Action effect) {
         this.effect = effect;
-
-        using var dependencyGraphBuilder = stateProvider.GetDependencyGraphBuilder(this);
-        effect();
+        stateProvider.BuildDependencyGraph(this, effect);
     }
 
     public void Evaluate() => effect();

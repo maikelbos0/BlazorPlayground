@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 
 namespace BlazorPlayground.StateManagement;
@@ -23,8 +24,12 @@ public class ComputedState<T> : DependencyBase, IDependent {
         this.computation = computation;
         Name = name;
 
-        using var dependencyGraphBuilder = stateProvider.GetDependencyGraphBuilder(this);
-        value = computation();
+        BuildDependencyGraph();
+    }
+
+    [MemberNotNull(nameof(value))]
+    private void BuildDependencyGraph() {
+        stateProvider.BuildDependencyGraph(this, () => value = computation());
     }
 
     public void Evaluate() {
