@@ -69,4 +69,28 @@ public class StateManagedComponentBaseTests {
         stateProvider.Received(1).GetDependencyGraphBuilder(subject);
         dependencyGraphBuilder.Received(1).Dispose();
     }
+
+    [Fact]
+    public void RenderFragment_Builds_DependencyGraph_Only_First_Time() {
+        var stateProvider = Substitute.For<IStateProvider>();
+        var dependencyGraphBuilder = Substitute.For<IDependencyGraphBuilder>();
+        stateProvider.GetDependencyGraphBuilder(Arg.Any<IDependent>()).Returns(dependencyGraphBuilder);
+
+        var subject = new StateManagedComponent() {
+            StateProvider = stateProvider
+        };
+
+        var renderFragmentInfo = typeof(ComponentBase).GetField("_renderFragment", BindingFlags.Instance | BindingFlags.NonPublic);
+
+        Assert.NotNull(renderFragmentInfo);
+
+        var renderFragment = Assert.IsType<RenderFragment>(renderFragmentInfo.GetValue(subject));
+
+        Assert.NotNull(renderFragment);
+        renderFragment(new RenderTreeBuilder());
+        renderFragment(new RenderTreeBuilder());
+
+        stateProvider.Received(1).GetDependencyGraphBuilder(subject);
+        dependencyGraphBuilder.Received(1).Dispose();
+    }
 }
