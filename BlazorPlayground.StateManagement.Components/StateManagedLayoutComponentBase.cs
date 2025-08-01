@@ -15,14 +15,13 @@ public abstract class StateManagedLayoutComponentBase : LayoutComponentBase, IHa
 
     public StateManagedLayoutComponentBase() {
         var originalRenderFragment = (RenderFragment)(renderFragmentInfo.GetValue(this) ?? throw new InvalidOperationException("The render fragment field cannot be read."));
-        RenderFragment renderFragment = renderFragment = builder => {
+        RenderFragment renderFragment = builder => {
             if (hasBuiltDependencyGraph) {
                 originalRenderFragment(builder);
             }
             else {
                 var stateProvider = StateProvider ?? throw new InvalidOperationException($"Cannot invoke {nameof(renderFragment)} before {nameof(StateManagedComponentBase)} has dependencies set.");
-                using var dependencyGraphBuilder = stateProvider.GetDependencyGraphBuilder(this);
-                originalRenderFragment(builder);
+                stateProvider.BuildDependencyGraph(this, () => originalRenderFragment(builder));
                 hasBuiltDependencyGraph = true;
             }
         };

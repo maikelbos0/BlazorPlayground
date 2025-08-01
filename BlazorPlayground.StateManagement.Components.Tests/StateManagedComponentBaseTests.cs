@@ -10,9 +10,13 @@ namespace BlazorPlayground.StateManagement.Components.Tests;
 
 public class StateManagedComponentBaseTests {
     private class StateManagedComponent : StateManagedComponentBase {
+        public int BuildRenderTreeInvocations { get; private set; }
+
         public new void StateHasChanged() => base.StateHasChanged();
 
         public new bool ShouldRender() => base.ShouldRender();
+
+        protected override void BuildRenderTree(RenderTreeBuilder builder) => BuildRenderTreeInvocations++;
     }
 
     [Fact]
@@ -50,12 +54,11 @@ public class StateManagedComponentBaseTests {
     [Fact]
     public void RenderFragment_Builds_DependencyGraph() {
         var stateProvider = Substitute.For<IStateProvider>();
-        var dependencyGraphBuilder = Substitute.For<IDependencyGraphBuilder>();
-        stateProvider.GetDependencyGraphBuilder(Arg.Any<IDependent>()).Returns(dependencyGraphBuilder);
-
         var subject = new StateManagedComponent() {
             StateProvider = stateProvider
         };
+
+        stateProvider.When(x => x.BuildDependencyGraph(subject, Arg.Any<Action>())).Do(callInfo => callInfo.ArgAt<Action>(1)());
 
         var renderFragmentInfo = typeof(ComponentBase).GetField("_renderFragment", BindingFlags.Instance | BindingFlags.NonPublic);
 
@@ -66,19 +69,18 @@ public class StateManagedComponentBaseTests {
         Assert.NotNull(renderFragment);
         renderFragment(new RenderTreeBuilder());
 
-        stateProvider.Received(1).GetDependencyGraphBuilder(subject);
-        dependencyGraphBuilder.Received(1).Dispose();
+        stateProvider.Received(1).BuildDependencyGraph(subject, Arg.Any<Action>());
+        Assert.Equal(1, subject.BuildRenderTreeInvocations);
     }
 
     [Fact]
     public void RenderFragment_Builds_DependencyGraph_Only_First_Time() {
         var stateProvider = Substitute.For<IStateProvider>();
-        var dependencyGraphBuilder = Substitute.For<IDependencyGraphBuilder>();
-        stateProvider.GetDependencyGraphBuilder(Arg.Any<IDependent>()).Returns(dependencyGraphBuilder);
-
         var subject = new StateManagedComponent() {
             StateProvider = stateProvider
         };
+
+        stateProvider.When(x => x.BuildDependencyGraph(subject, Arg.Any<Action>())).Do(callInfo => callInfo.ArgAt<Action>(1)());
 
         var renderFragmentInfo = typeof(ComponentBase).GetField("_renderFragment", BindingFlags.Instance | BindingFlags.NonPublic);
 
@@ -90,7 +92,7 @@ public class StateManagedComponentBaseTests {
         renderFragment(new RenderTreeBuilder());
         renderFragment(new RenderTreeBuilder());
 
-        stateProvider.Received(1).GetDependencyGraphBuilder(subject);
-        dependencyGraphBuilder.Received(1).Dispose();
+        stateProvider.Received(1).BuildDependencyGraph(subject, Arg.Any<Action>());
+        Assert.Equal(2, subject.BuildRenderTreeInvocations);
     }
 }
