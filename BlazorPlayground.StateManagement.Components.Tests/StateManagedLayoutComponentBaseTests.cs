@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Rendering;
 using NSubstitute;
 using System;
+using System.Reflection;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -8,9 +10,9 @@ namespace BlazorPlayground.StateManagement.Components.Tests;
 
 public class StateManagedLayoutComponentBaseTests {
     private class StateManagedLayoutComponent : StateManagedLayoutComponentBase {
-        public new void OnInitialized() => base.OnInitialized();
+        public new void StateHasChanged() => base.StateHasChanged();
 
-        public new void OnAfterRender(bool firstRender) => base.OnAfterRender(firstRender);
+        public new bool ShouldRender() => base.ShouldRender();
     }
 
     [Fact]
@@ -19,7 +21,7 @@ public class StateManagedLayoutComponentBaseTests {
         var result = 0;
         var workItem = new EventCallbackWorkItem((Action<int>)(value => result = value));
 
-        using var subject = new StateManagedLayoutComponent() {
+        var subject = new StateManagedLayoutComponent() {
             StateProvider = stateProvider
         };
 
@@ -28,65 +30,67 @@ public class StateManagedLayoutComponentBaseTests {
         Assert.Equal(42, result);
     }
 
-    [Fact]
-    public void OnInitialized_Gets_DependencyGraphBuilder() {
+    [Theory]
+    [InlineData(true, true)]
+    [InlineData(false, false)]
+    public void ShouldRender_Returns_Correct_Value(bool isEvaluating, bool expectedShouldRender) {
         var stateProvider = Substitute.For<IStateProvider>();
-        var dependencyGraphBuilder = Substitute.For<IDependencyGraphBuilder>();
-        stateProvider.GetDependencyGraphBuilder(Arg.Any<IDependent>()).Returns(dependencyGraphBuilder);
-
-        using var subject = new StateManagedLayoutComponent() {
+        var subject = new StateManagedLayoutComponent() {
             StateProvider = stateProvider
         };
 
-        subject.OnInitialized();
-        
-        stateProvider.Received(1).GetDependencyGraphBuilder(subject);
+        var isEvaluatingInfo = typeof(StateManagedLayoutComponentBase).GetField("isEvaluating", BindingFlags.Instance | BindingFlags.NonPublic);
+
+        Assert.NotNull(isEvaluatingInfo);
+        isEvaluatingInfo.SetValue(subject, isEvaluating);
+
+        Assert.Equal(expectedShouldRender, subject.ShouldRender());
     }
 
     [Fact]
-    public void OnAfterRender_FirstRender_Disposes_DependencyGraphBuilder() {
+    public void RenderFragment_Builds_DependencyGraph() {
         var stateProvider = Substitute.For<IStateProvider>();
         var dependencyGraphBuilder = Substitute.For<IDependencyGraphBuilder>();
         stateProvider.GetDependencyGraphBuilder(Arg.Any<IDependent>()).Returns(dependencyGraphBuilder);
 
-        using var subject = new StateManagedLayoutComponent() {
+        var subject = new StateManagedLayoutComponent() {
             StateProvider = stateProvider
         };
 
-        subject.OnInitialized();
-        subject.OnAfterRender(true);
+        var renderFragmentInfo = typeof(ComponentBase).GetField("_renderFragment", BindingFlags.Instance | BindingFlags.NonPublic);
 
+        Assert.NotNull(renderFragmentInfo);
+
+        var renderFragment = Assert.IsType<RenderFragment>(renderFragmentInfo.GetValue(subject));
+
+        Assert.NotNull(renderFragment);
+        renderFragment(new RenderTreeBuilder());
+
+        stateProvider.Received(1).GetDependencyGraphBuilder(subject);
         dependencyGraphBuilder.Received(1).Dispose();
     }
 
     [Fact]
-    public void OnAfterRender_Not_FirstRender_Does_Not_Disposes_DependencyGraphBuilder() {
+    public void RenderFragment_Builds_DependencyGraph_Only_First_Time() {
         var stateProvider = Substitute.For<IStateProvider>();
         var dependencyGraphBuilder = Substitute.For<IDependencyGraphBuilder>();
         stateProvider.GetDependencyGraphBuilder(Arg.Any<IDependent>()).Returns(dependencyGraphBuilder);
 
-        using var subject = new StateManagedLayoutComponent() {
+        var subject = new StateManagedLayoutComponent() {
             StateProvider = stateProvider
         };
 
-        subject.OnInitialized();
-        subject.OnAfterRender(false);
+        var renderFragmentInfo = typeof(ComponentBase).GetField("_renderFragment", BindingFlags.Instance | BindingFlags.NonPublic);
 
-        dependencyGraphBuilder.DidNotReceive().Dispose();
-    }
+        Assert.NotNull(renderFragmentInfo);
 
-    [Fact]
-    public void Dispose_Disposes_DependencyGraphBuilder() {
-        var stateProvider = Substitute.For<IStateProvider>();
-        var dependencyGraphBuilder = Substitute.For<IDependencyGraphBuilder>();
-        stateProvider.GetDependencyGraphBuilder(Arg.Any<IDependent>()).Returns(dependencyGraphBuilder);
+        var renderFragment = Assert.IsType<RenderFragment>(renderFragmentInfo.GetValue(subject));
 
-        using (var subject = new StateManagedLayoutComponent() {
-            StateProvider = stateProvider
-        }) {
-            subject.OnInitialized();
-        }
+        Assert.NotNull(renderFragment);
+        renderFragment(new RenderTreeBuilder());
+        renderFragment(new RenderTreeBuilder());
 
+        stateProvider.Received(1).GetDependencyGraphBuilder(subject);
         dependencyGraphBuilder.Received(1).Dispose();
     }
 }

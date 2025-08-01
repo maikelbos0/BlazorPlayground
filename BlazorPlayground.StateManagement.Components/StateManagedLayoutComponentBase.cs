@@ -1,40 +1,43 @@
 ﻿using Microsoft.AspNetCore.Components;
+using System.Reflection;
 
 namespace BlazorPlayground.StateManagement.Components;
 
-public abstract class StateManagedLayoutComponentBase : LayoutComponentBase, IHandleEvent, IDependent, IDisposable {
-    private IDependencyGraphBuilder? dependencyGraphBuilder;
-    private bool isDisposed = false;
+public abstract class StateManagedLayoutComponentBase : LayoutComponentBase, IHandleEvent, IDependent {
+    private static FieldInfo renderFragmentInfo = typeof(ComponentBase).GetField("_renderFragment", BindingFlags.Instance | BindingFlags.NonPublic)
+        ?? throw new InvalidOperationException("The render fragment field cannot be found.");
+
+    private bool hasBuiltDependencyGraph = false;
+    private bool isEvaluating = false;
 
     [Inject]
     public required IStateProvider StateProvider { get; set; }
 
+    public StateManagedLayoutComponentBase() {
+        var originalRenderFragment = (RenderFragment)(renderFragmentInfo.GetValue(this) ?? throw new InvalidOperationException("The render fragment field cannot be read."));
+        RenderFragment renderFragment = renderFragment = builder => {
+            if (hasBuiltDependencyGraph) {
+                originalRenderFragment(builder);
+            }
+            else {
+                var stateProvider = StateProvider ?? throw new InvalidOperationException($"Cannot invoke {nameof(renderFragment)} before {nameof(StateManagedComponentBase)} has dependencies set.");
+                using var dependencyGraphBuilder = stateProvider.GetDependencyGraphBuilder(this);
+                originalRenderFragment(builder);
+                hasBuiltDependencyGraph = true;
+            }
+        };
+
+        renderFragmentInfo.SetValue(this, renderFragment);
+    }
+
+    protected sealed override bool ShouldRender() => isEvaluating;
+
+    public void Evaluate() {
+        isEvaluating = true;
+        StateHasChanged();
+        isEvaluating = false;
+    }
+
     Task IHandleEvent.HandleEventAsync(EventCallbackWorkItem item, object? arg)
         => item.InvokeAsync(arg);
-
-    protected override void OnInitialized()
-        => dependencyGraphBuilder = StateProvider.GetDependencyGraphBuilder(this);
-
-    protected override void OnAfterRender(bool firstRender) {
-        if (firstRender) {
-            dependencyGraphBuilder?.Dispose();
-        }
-    }
-
-    public void Evaluate() => StateHasChanged();
-
-    public void Dispose() {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-    }
-
-    protected virtual void Dispose(bool disposing) {
-        if (!isDisposed) {
-            isDisposed = true;
-
-            if (disposing) {
-                dependencyGraphBuilder?.Dispose();
-            }
-        }
-    }
 }
