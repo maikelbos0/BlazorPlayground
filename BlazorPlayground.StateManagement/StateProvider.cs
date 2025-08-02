@@ -17,23 +17,14 @@ public class StateProvider : IStateProvider {
         => _ = new Effect(this, effect);
 
     public void BuildDependencyGraph(IDependent dependent, Action action) {
-        trackedDependents.AddOrUpdate(
-            Environment.CurrentManagedThreadId,
-            _ => [dependent],
-            (_, dependents) => {
-                dependents.Add(dependent);
-                return dependents;
-            }
-        );
-
+        var dependents = trackedDependents.GetOrAdd(Environment.CurrentManagedThreadId, []);
+        
+        dependents.Add(dependent);
         action();
+        dependents.Remove(dependent);
 
-        if (trackedDependents.TryGetValue(Environment.CurrentManagedThreadId, out var dependents)) {
-            dependents.Remove(dependent);
-
-            if (dependents.Count == 0) {
-                trackedDependents.Remove(Environment.CurrentManagedThreadId, out _);
-            }
+        if (dependents.Count == 0) {
+            trackedDependents.Remove(Environment.CurrentManagedThreadId, out _);
         }
     }
 
