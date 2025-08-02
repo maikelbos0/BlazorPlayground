@@ -1,42 +1,22 @@
 ﻿using Microsoft.AspNetCore.Components;
-using System.Reflection;
+using System.Diagnostics.CodeAnalysis;
 
 namespace BlazorPlayground.StateManagement.Components;
 
-public abstract class StateManagedLayoutComponentBase : LayoutComponentBase, IHandleEvent, IDependent {
-    private static FieldInfo renderFragmentInfo = typeof(ComponentBase).GetField("_renderFragment", BindingFlags.Instance | BindingFlags.NonPublic)
-        ?? throw new InvalidOperationException("The render fragment field cannot be found.");
+public abstract class StateManagedLayoutComponentBase : StateManagedComponentBase {
+    /// <summary>
+    /// Gets the content to be rendered inside the layout.
+    /// </summary>
+    [Parameter]
+    public RenderFragment? Body { get; set; }
 
-    private bool hasBuiltDependencyGraph = false;
-    private bool isEvaluating = false;
-
-    [Inject]
-    public required IStateProvider StateProvider { get; set; }
-
-    public StateManagedLayoutComponentBase() {
-        var originalRenderFragment = (RenderFragment)(renderFragmentInfo.GetValue(this) ?? throw new InvalidOperationException("The render fragment field cannot be read."));
-        RenderFragment renderFragment = builder => {
-            if (hasBuiltDependencyGraph) {
-                originalRenderFragment(builder);
-            }
-            else {
-                var stateProvider = StateProvider ?? throw new InvalidOperationException($"Cannot invoke {nameof(renderFragment)} before {nameof(StateManagedComponentBase)} has dependencies set.");
-                stateProvider.BuildDependencyGraph(this, () => originalRenderFragment(builder));
-                hasBuiltDependencyGraph = true;
-            }
-        };
-
-        renderFragmentInfo.SetValue(this, renderFragment);
+    /// <inheritdoc />
+    // Derived instances of StateManagedLayoutComponentBase do not appear in any statically analyzable
+    // calls of OpenComponent<T> where T is well-known. Consequently we have to explicitly provide a hint to the trimmer to preserve
+    // properties.
+    [DynamicDependency(DynamicallyAccessedMemberTypes.All, typeof(LayoutComponentBase))]
+    public override async Task SetParametersAsync(ParameterView parameters) {
+        await base.SetParametersAsync(parameters);
+        Evaluate();
     }
-
-    protected sealed override bool ShouldRender() => isEvaluating;
-
-    public void Evaluate() {
-        isEvaluating = true;
-        StateHasChanged();
-        isEvaluating = false;
-    }
-
-    Task IHandleEvent.HandleEventAsync(EventCallbackWorkItem item, object? arg)
-        => item.InvokeAsync(arg);
 }

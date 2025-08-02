@@ -43,7 +43,7 @@ public class StateManagedLayoutComponentBaseTests {
             StateProvider = stateProvider
         };
 
-        var isEvaluatingInfo = typeof(StateManagedLayoutComponentBase).GetField("isEvaluating", BindingFlags.Instance | BindingFlags.NonPublic);
+        var isEvaluatingInfo = typeof(StateManagedComponentBase).GetField("isEvaluating", BindingFlags.Instance | BindingFlags.NonPublic);
 
         Assert.NotNull(isEvaluatingInfo);
         isEvaluatingInfo.SetValue(subject, isEvaluating);
