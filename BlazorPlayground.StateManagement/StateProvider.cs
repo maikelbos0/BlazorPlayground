@@ -1,11 +1,12 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace BlazorPlayground.StateManagement;
 
-public class StateProvider : IStateProvider {
-    private readonly ConcurrentDictionary<int, HashSet<IDependent>> trackedDependents = new();
+public class StateProvider : IStateProvider, IDisposable {
+    private readonly ThreadLocal<HashSet<IDependent>> trackedDependents = new(() => []);
+    private bool isDisposed = false;
 
     public MutableState<T> Mutable<T>(T value)
         => new(this, value);
@@ -17,21 +18,30 @@ public class StateProvider : IStateProvider {
         => _ = new Effect(this, effect);
 
     public void BuildDependencyGraph(IDependent dependent, Action action) {
-        var dependents = trackedDependents.GetOrAdd(Environment.CurrentManagedThreadId, []);
-        
-        dependents.Add(dependent);
-        action();
-        dependents.Remove(dependent);
+        trackedDependents.Value!.Add(dependent);
 
-        if (dependents.Count == 0) {
-            trackedDependents.Remove(Environment.CurrentManagedThreadId, out _);
-        }
+        action();
+
+        trackedDependents.Value.Remove(dependent);
     }
 
     public void TrackDependency(DependencyBase dependency) {
-        if (trackedDependents.TryGetValue(Environment.CurrentManagedThreadId, out var dependents)) {
-            foreach (var dependent in dependents) {
-                dependency.AddDependent(dependent);
+        foreach (var dependent in trackedDependents.Value!) {
+            dependency.AddDependent(dependent);
+        }
+    }
+
+    public void Dispose() {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing) {
+        if (!isDisposed) {
+            isDisposed = true;
+
+            if (disposing) {
+                trackedDependents.Dispose();
             }
         }
     }
