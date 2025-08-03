@@ -16,13 +16,10 @@ public class ComputedState<T> : DependencyBase, IDependent {
             return value;
         }
     }
-
-    public string? Name { get; }
-
-    public ComputedState(StateProvider stateProvider, Func<T> computation, string? name = null) {
+    
+    public ComputedState(StateProvider stateProvider, Func<T> computation) {
         this.stateProvider = stateProvider;
         this.computation = computation;
-        Name = name;
 
         BuildDependencyGraph();
     }
