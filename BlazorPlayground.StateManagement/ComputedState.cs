@@ -33,6 +33,5 @@ public class ComputedState<T> : DependencyBase, IDependent {
         lock (valueLock) {
             value = computation();
         }
-        EvaluateDependents();
     }
 }

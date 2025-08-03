@@ -1,6 +1,6 @@
 ﻿namespace BlazorPlayground.StateManagement;
 
-public class MutableState<T> : DependencyBase {
+public class MutableState<T> : DependencyRootBase {
     private readonly StateProvider stateProvider;
     private T value;
 

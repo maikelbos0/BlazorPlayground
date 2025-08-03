@@ -1,13 +1,13 @@
 ﻿using NSubstitute;
+using System.Collections.Generic;
 using Xunit;
 
 namespace BlazorPlayground.StateManagement.Tests;
 
 public class DependencyBaseTests {
     private class Dependency : DependencyBase {
-        public new void EvaluateDependents() {
-            base.EvaluateDependents();
-        }
+        public ICollection<IDependent> GetDependents()
+            => dependents.Keys;
     }
 
     [Fact]
@@ -18,8 +18,6 @@ public class DependencyBaseTests {
         subject.AddDependent(dependent);
         subject.AddDependent(dependent);
 
-        subject.EvaluateDependents();
-
-        dependent.Received(1).Evaluate();
+        Assert.Equal([dependent], subject.GetDependents());
     }
 }
