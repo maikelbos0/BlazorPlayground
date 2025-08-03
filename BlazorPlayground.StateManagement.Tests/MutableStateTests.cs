@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using NSubstitute;
+using Xunit;
 
 namespace BlazorPlayground.StateManagement.Tests;
 
@@ -7,23 +8,27 @@ public class MutableStateTests {
     public void Update() {
         var stateProvider = new StateProvider();
         var subject = new MutableState<int>(stateProvider, 41);
-        var computedState = new ComputedState<int>(stateProvider, () => subject.Value);
+        var dependent = Substitute.For<IDependent>();
+
+        Assert.True(subject.dependents.TryAdd(dependent, false));
 
         subject.Update(value => value + 1);
 
         Assert.Equal(42, subject.Value);
-        Assert.Equal(42, computedState.Value);
+        dependent.Received().Evaluate();
     }
 
     [Fact]
     public void Set() {
         var stateProvider = new StateProvider();
         var subject = new MutableState<int>(stateProvider, 41);
-        var computedState = new ComputedState<int>(stateProvider, () => subject.Value);
+        var dependent = Substitute.For<IDependent>();
+
+        Assert.True(subject.dependents.TryAdd(dependent, false));
 
         subject.Set(42);
 
         Assert.Equal(42, subject.Value);
-        Assert.Equal(42, computedState.Value);
+        dependent.Received().Evaluate();
     }
 }
