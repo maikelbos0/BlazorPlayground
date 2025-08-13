@@ -10,7 +10,7 @@ public class MutableStateTests {
         var subject = new MutableState<int>(stateProvider, 41);
         var dependent = Substitute.For<IDependent>();
 
-        Assert.True(subject.dependents.TryAdd(dependent, false));
+        subject.AddDependent(dependent);
 
         subject.Update(value => value + 1);
 
@@ -24,7 +24,7 @@ public class MutableStateTests {
         var subject = new MutableState<int>(stateProvider, 41);
         var dependent = Substitute.For<IDependent>();
 
-        Assert.True(subject.dependents.TryAdd(dependent, false));
+        subject.AddDependent(dependent);
 
         subject.Set(42);
 

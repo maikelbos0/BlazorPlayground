@@ -3,7 +3,7 @@ using System.Threading;
 
 namespace BlazorPlayground.StateManagement;
 
-public class ComputedState<T> : DependencyBase, IDependent {
+public class ComputedState<T> : DependencyBranchBase, IDependent {
     private readonly StateProvider stateProvider;
     private readonly Func<T> computation;
     private readonly Lock valueLock = new();
