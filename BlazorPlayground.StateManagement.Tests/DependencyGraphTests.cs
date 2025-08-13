@@ -5,7 +5,7 @@ using Xunit;
 
 namespace BlazorPlayground.StateManagement.Tests;
 
-public class DependencyRootBaseTests {
+public class DependencyGraphTests {
     private class ComputedStateCallTracker<T> {
         public int Calls { get; private set; }
         public ComputedState<T> State { get; }

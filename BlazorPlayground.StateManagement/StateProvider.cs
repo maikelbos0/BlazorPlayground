@@ -28,6 +28,10 @@ public class StateProvider : IStateProvider, IDisposable {
     public void TrackDependency(DependencyBase dependency) {
         foreach (var dependent in trackedDependents.Value!) {
             dependency.AddDependent(dependent);
+
+            if (dependent is DependencyBranchBase dependencyBranch) {
+                dependencyBranch.AddDependency(dependency);
+            }
         }
     }
 
