@@ -5,7 +5,7 @@ using System.Threading;
 namespace BlazorPlayground.StateManagement;
 
 public abstract class DependencyRootBase : DependencyBase {
-    private new readonly ConcurrentDictionary<IDependent, int> dependents = new();
+    private readonly ConcurrentDictionary<IDependent, int> dependents = new();
     private int order = int.MinValue;
 
     public override sealed void AddDependent(IDependent dependent) => dependents.AddOrUpdate(dependent, _ => Interlocked.Increment(ref order), (_, _) => Interlocked.Increment(ref order));
