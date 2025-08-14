@@ -9,5 +9,5 @@ public interface IStateProvider {
     MutableState<T> Mutable<T>(T value);
     MutableState<T> Mutable<T>(T value, IEqualityComparer<T> equalityComparer);
     void BuildDependencyGraph(IDependent dependent, Action action);
-    void TrackDependency(DependencyBase dependency);
+    void TrackDependency(IDependency dependency);
 }

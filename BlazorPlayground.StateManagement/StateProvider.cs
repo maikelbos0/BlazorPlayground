@@ -22,13 +22,13 @@ public class StateProvider : IStateProvider, IDisposable {
 
     public void BuildDependencyGraph(IDependent dependent, Action action) {
         trackedDependents.Value!.Add(dependent);
-
+        
         action();
 
         trackedDependents.Value.Remove(dependent);
     }
 
-    public void TrackDependency(DependencyBase dependency) {
+    public void TrackDependency(IDependency dependency) {
         foreach (var dependent in trackedDependents.Value!) {
             dependency.AddDependent(dependent);
 

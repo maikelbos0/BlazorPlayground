@@ -4,11 +4,11 @@ using System.Threading;
 
 namespace BlazorPlayground.StateManagement;
 
-public abstract class DependencyRootBase : DependencyBase {
+public abstract class DependencyRootBase : IDependency {
     private readonly ConcurrentDictionary<IDependent, int> dependents = new();
     private int order = int.MinValue;
 
-    public override sealed void AddDependent(IDependent dependent) => dependents.AddOrUpdate(dependent, _ => Interlocked.Increment(ref order), (_, _) => Interlocked.Increment(ref order));
+    public void AddDependent(IDependent dependent) => dependents.AddOrUpdate(dependent, _ => Interlocked.Increment(ref order), (_, _) => Interlocked.Increment(ref order));
 
     protected void EvaluateDependents() {
         foreach (var dependent in dependents.OrderBy(x => x.Value)) {
