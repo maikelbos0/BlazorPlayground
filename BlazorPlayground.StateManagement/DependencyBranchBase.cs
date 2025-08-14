@@ -2,7 +2,6 @@
 
 namespace BlazorPlayground.StateManagement;
 
-public abstract class DependencyBranchBase : DependencyBase {
 public abstract class DependencyBranchBase : IDependency {
     private readonly ConcurrentBag<IDependency> dependencies = [];
 
