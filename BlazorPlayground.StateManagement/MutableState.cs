@@ -1,7 +1,10 @@
-﻿namespace BlazorPlayground.StateManagement;
+﻿using System.Collections.Generic;
+
+namespace BlazorPlayground.StateManagement;
 
 public class MutableState<T> : DependencyRootBase {
     private readonly StateProvider stateProvider;
+    private readonly IEqualityComparer<T> equalityComparer;
     private T value;
 
     public T Value {
@@ -11,9 +14,12 @@ public class MutableState<T> : DependencyRootBase {
         }
     }
 
-    public MutableState(StateProvider stateProvider, T value) {
+    public MutableState(StateProvider stateProvider, T value) : this(stateProvider, value, null) { }
+
+    public MutableState(StateProvider stateProvider, T value, IEqualityComparer<T>? equalityComparer) {
         this.stateProvider = stateProvider;
         this.value = value;
+        this.equalityComparer = equalityComparer ?? EqualityComparer<T>.Default;
     }
 
     public void Update(ValueProvider<T> valueProvider) {
@@ -21,7 +27,9 @@ public class MutableState<T> : DependencyRootBase {
     }
 
     public void Set(T value) {
-        this.value = value;
-        EvaluateDependents();
+        if (!equalityComparer.Equals(this.value, value)) {
+            this.value = value;
+            EvaluateDependents();
+        }
     }
 }
