@@ -1,4 +1,6 @@
-﻿using Xunit;
+﻿using NSubstitute;
+using System.Collections.Generic;
+using Xunit;
 
 namespace BlazorPlayground.StateManagement.Tests;
 
@@ -8,6 +10,15 @@ public class StateProviderTests {
         var subject = new StateProvider();
 
         var result = subject.Mutable(42);
+
+        Assert.Equal(42, result.Value);
+    }
+
+    [Fact]
+    public void Mutable_With_IEqualityComparer() {
+        var subject = new StateProvider();
+
+        var result = subject.Mutable(42, Substitute.For<IEqualityComparer<int>>());
 
         Assert.Equal(42, result.Value);
     }

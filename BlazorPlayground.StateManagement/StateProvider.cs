@@ -11,6 +11,9 @@ public class StateProvider : IStateProvider, IDisposable {
     public MutableState<T> Mutable<T>(T value)
         => new(this, value);
 
+    public MutableState<T> Mutable<T>(T value, IEqualityComparer<T> equalityComparer)
+        => new(this, value, equalityComparer);
+
     public ComputedState<T> Computed<T>(Func<T> computation)
         => new(this, computation);
 
