@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Xunit;
 
@@ -97,6 +98,51 @@ public class DependencyGraphTests {
         };
 
         mutableState.Set(14);
+
+        Assert.Multiple([.. trackers.Select<ComputedStateCallTracker<int>, Action>(tracker => () => {
+            Assert.Equal(42, tracker.State.Value);
+            Assert.Equal(2, tracker.Calls);
+        })]);
+    }
+
+    [Fact]
+    public void EvaluateDependents_In_Transaction_Evaluates_Divergent_Chain_Correctly() {
+        var stateProvider = new StateProvider();
+        var mutableState1 = new MutableState<int>(stateProvider, 6);
+        var mutableState2 = new MutableState<int>(stateProvider, 6);
+        var computedState = new ComputedState<int>(stateProvider, () => mutableState1.Value + mutableState2.Value);
+
+        var tracker = new ComputedStateCallTracker<int>(stateProvider, () => computedState.Value * 3);
+
+        stateProvider.ExecuteTransaction(() => {
+            mutableState1.Set(7);
+            mutableState2.Set(7);
+        });
+
+        Assert.Equal(42, tracker.State.Value);
+        Assert.Equal(2, tracker.Calls);
+    }
+
+    [Fact]
+    public void EvaluateDependents_In_Transaction_Evaluates_Deep_Linked_Divergent_Chain_Correctly() {
+        var stateProvider = new StateProvider();
+        var mutableState1 = new MutableState<int>(stateProvider, 6);
+        var mutableState2 = new MutableState<int>(stateProvider, 6);
+        var computedState = new ComputedState<int>(stateProvider, () => mutableState1.Value + mutableState2.Value);
+
+        var trackers = new List<ComputedStateCallTracker<int>>() {
+            new(stateProvider, () => computedState.Value * 2 + mutableState1.Value + + mutableState2.Value),
+            new(stateProvider, () => computedState.Value * 2 + mutableState2.Value + + mutableState1.Value),
+            new(stateProvider, () => mutableState1.Value + computedState.Value * 2 + + mutableState2.Value),
+            new(stateProvider, () => mutableState2.Value + computedState.Value * 2 + + mutableState1.Value),
+            new(stateProvider, () => mutableState1.Value + mutableState2.Value + + computedState.Value * 2),
+            new(stateProvider, () => mutableState2.Value + mutableState1.Value + + computedState.Value * 2),
+        };
+
+        stateProvider.ExecuteTransaction(() => {
+            mutableState1.Set(7);
+            mutableState2.Set(7);
+        });
 
         Assert.Multiple([.. trackers.Select<ComputedStateCallTracker<int>, Action>(tracker => () => {
             Assert.Equal(42, tracker.State.Value);

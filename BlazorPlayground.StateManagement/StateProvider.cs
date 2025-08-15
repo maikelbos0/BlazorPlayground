@@ -7,7 +7,7 @@ namespace BlazorPlayground.StateManagement;
 
 public class StateProvider : IStateProvider, IDisposable {
     private readonly ThreadLocal<HashSet<IDependent>> trackedDependents = new(() => []);
-    private readonly ThreadLocal<Dictionary<IDependent, int>?> transactionDependents = new();
+    private readonly ThreadLocal<Dictionary<IDependent, uint>?> transactionDependents = new();
     private bool isDisposed = false;
 
     public MutableState<T> Mutable<T>(T value)
@@ -21,39 +21,6 @@ public class StateProvider : IStateProvider, IDisposable {
 
     public void Effect(Action effect)
         => _ = new Effect(this, effect);
-
-    public bool TryRegisterForTransaction(IEnumerable<KeyValuePair<IDependent, int>> dependents) {
-        if (transactionDependents.Value == null) {
-            return false;
-        }
-
-        foreach (var dependent in dependents) {
-            if (!transactionDependents.Value.TryAdd(dependent.Key, dependent.Value)) {
-                transactionDependents.Value[dependent.Key] += dependent.Value;
-            }
-        }
-
-        return true;
-    }
-
-    public void ExecuteTransaction(Action transaction) {
-        var isNested = true;
-
-        if (transactionDependents.Value == null) {
-            transactionDependents.Value = [];
-            isNested = false;
-        }
-
-        transaction();
-
-        if (!isNested) {
-            foreach (var dependent in transactionDependents.Value.OrderBy(x => x.Value)) {
-                dependent.Key.Evaluate();
-            }
-
-            transactionDependents.Value = null;
-        }
-    }
 
     public void BuildDependencyGraph(IDependent dependent, Action action) {
         trackedDependents.Value!.Add(dependent);
@@ -85,6 +52,39 @@ public class StateProvider : IStateProvider, IDisposable {
             if (disposing) {
                 trackedDependents.Dispose();
             }
+        }
+    }
+
+    public bool TryRegisterForTransaction(IEnumerable<KeyValuePair<IDependent, uint>> dependents) {
+        if (transactionDependents.Value == null) {
+            return false;
+        }
+
+        foreach (var dependent in dependents) {
+            if (!transactionDependents.Value.TryAdd(dependent.Key, dependent.Value)) {
+                transactionDependents.Value[dependent.Key] += dependent.Value;
+            }
+        }
+
+        return true;
+    }
+
+    public void ExecuteTransaction(Action transaction) {
+        var isNested = true;
+
+        if (transactionDependents.Value == null) {
+            transactionDependents.Value = [];
+            isNested = false;
+        }
+
+        transaction();
+
+        if (!isNested) {
+            foreach (var dependent in transactionDependents.Value.OrderBy(x => x.Value)) {
+                dependent.Key.Evaluate();
+            }
+
+            transactionDependents.Value = null;
         }
     }
 }

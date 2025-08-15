@@ -6,8 +6,8 @@ namespace BlazorPlayground.StateManagement;
 
 public abstract class DependencyRootBase : IDependency {
     protected readonly IStateProvider stateProvider;
-    private readonly ConcurrentDictionary<IDependent, int> dependents = new();
-    private int order = int.MinValue;
+    private readonly ConcurrentDictionary<IDependent, uint> dependents = new();
+    private uint order = uint.MinValue;
 
     protected DependencyRootBase(IStateProvider stateProvider) {
         this.stateProvider = stateProvider;

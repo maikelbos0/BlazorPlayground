@@ -54,9 +54,9 @@ public class StateProviderTests {
         var dependent2 = Substitute.For<IDependent>();
 
         Assert.NotNull(transactionDependentsInfo);
-        var transactionDependents = Assert.IsType<ThreadLocal<Dictionary<IDependent, int>>>(transactionDependentsInfo.GetValue(subject));
+        var transactionDependents = Assert.IsType<ThreadLocal<Dictionary<IDependent, uint>>>(transactionDependentsInfo.GetValue(subject));
 
-        Assert.False(subject.TryRegisterForTransaction(new Dictionary<IDependent, int>() {
+        Assert.False(subject.TryRegisterForTransaction(new Dictionary<IDependent, uint>() {
             { dependent1, 2 },
             { dependent2, 5 },
         }));
@@ -72,18 +72,18 @@ public class StateProviderTests {
         var dependent2 = Substitute.For<IDependent>();
 
         Assert.NotNull(transactionDependentsInfo);
-        var transactionDependents = Assert.IsType<ThreadLocal<Dictionary<IDependent, int>>>(transactionDependentsInfo.GetValue(subject));
+        var transactionDependents = Assert.IsType<ThreadLocal<Dictionary<IDependent, uint>>>(transactionDependentsInfo.GetValue(subject));
 
-        transactionDependents.Value = new();
+        transactionDependents.Value = [];
 
-        Assert.True(subject.TryRegisterForTransaction(new Dictionary<IDependent, int>() {
+        Assert.True(subject.TryRegisterForTransaction(new Dictionary<IDependent, uint>() {
             { dependent1, 2 },
             { dependent2, 5 },
         }));
 
         Assert.NotNull(transactionDependents.Value);
-        Assert.Equal(2, Assert.Contains(dependent1, transactionDependents.Value));
-        Assert.Equal(5, Assert.Contains(dependent2, transactionDependents.Value));
+        Assert.Equal(2u, Assert.Contains(dependent1, transactionDependents.Value));
+        Assert.Equal(5u, Assert.Contains(dependent2, transactionDependents.Value));
     }
 
     [Fact]
@@ -94,21 +94,21 @@ public class StateProviderTests {
         var dependent2 = Substitute.For<IDependent>();
 
         Assert.NotNull(transactionDependentsInfo);
-        var transactionDependents = Assert.IsType<ThreadLocal<Dictionary<IDependent, int>>>(transactionDependentsInfo.GetValue(subject));
+        var transactionDependents = Assert.IsType<ThreadLocal<Dictionary<IDependent, uint>>>(transactionDependentsInfo.GetValue(subject));
 
         transactionDependents.Value = new() {
             { dependent1, 1 },
             { dependent2, 4 }
         };
 
-        Assert.True(subject.TryRegisterForTransaction(new Dictionary<IDependent, int>() {
+        Assert.True(subject.TryRegisterForTransaction(new Dictionary<IDependent, uint>() {
             { dependent1, 2 },
             { dependent2, 5 },
         }));
 
         Assert.NotNull(transactionDependents.Value);
-        Assert.Equal(3, Assert.Contains(dependent1, transactionDependents.Value));
-        Assert.Equal(9, Assert.Contains(dependent2, transactionDependents.Value));
+        Assert.Equal(3u, Assert.Contains(dependent1, transactionDependents.Value));
+        Assert.Equal(9u, Assert.Contains(dependent2, transactionDependents.Value));
     }
 
     [Fact]
@@ -118,7 +118,7 @@ public class StateProviderTests {
         var dependent2 = Substitute.For<IDependent>();
 
         subject.ExecuteTransaction(() => {
-            Assert.True(subject.TryRegisterForTransaction(new Dictionary<IDependent, int>() {
+            Assert.True(subject.TryRegisterForTransaction(new Dictionary<IDependent, uint>() {
                 { dependent1, 2 },
                 { dependent2, 5 },
             }));
@@ -138,14 +138,14 @@ public class StateProviderTests {
 
         subject.ExecuteTransaction(() => {
             subject.ExecuteTransaction(() => {
-                Assert.True(subject.TryRegisterForTransaction(new Dictionary<IDependent, int>() {
+                Assert.True(subject.TryRegisterForTransaction(new Dictionary<IDependent, uint>() {
                     { dependent1, 2 },
                     { dependent2, 5 },
                 }));
             });
 
             subject.ExecuteTransaction(() => {
-                Assert.True(subject.TryRegisterForTransaction(new Dictionary<IDependent, int>() {
+                Assert.True(subject.TryRegisterForTransaction(new Dictionary<IDependent, uint>() {
                     { dependent1, 2 },
                     { dependent2, 5 },
                 }));
