@@ -110,4 +110,49 @@ public class StateProviderTests {
         Assert.Equal(3, Assert.Contains(dependent1, transactionDependents.Value));
         Assert.Equal(9, Assert.Contains(dependent2, transactionDependents.Value));
     }
+
+    [Fact]
+    public void ExecuteTransaction() {
+        var subject = new StateProvider();
+        var dependent1 = Substitute.For<IDependent>();
+        var dependent2 = Substitute.For<IDependent>();
+
+        subject.ExecuteTransaction(() => {
+            Assert.True(subject.TryRegisterForTransaction(new Dictionary<IDependent, int>() {
+                { dependent1, 2 },
+                { dependent2, 5 },
+            }));
+        });
+
+        Received.InOrder(() => {
+            dependent1.Evaluate();
+            dependent2.Evaluate();
+        });
+    }
+
+    [Fact]
+    public void ExecuteTransaction_Nested_Only_Executes_Once() {
+        var subject = new StateProvider();
+        var dependent1 = Substitute.For<IDependent>();
+        var dependent2 = Substitute.For<IDependent>();
+
+        subject.ExecuteTransaction(() => {
+            subject.ExecuteTransaction(() => {
+                Assert.True(subject.TryRegisterForTransaction(new Dictionary<IDependent, int>() {
+                    { dependent1, 2 },
+                    { dependent2, 5 },
+                }));
+            });
+
+            subject.ExecuteTransaction(() => {
+                Assert.True(subject.TryRegisterForTransaction(new Dictionary<IDependent, int>() {
+                    { dependent1, 2 },
+                    { dependent2, 5 },
+                }));
+            });
+        });
+
+        dependent1.Received(1).Evaluate();
+        dependent2.Received(1).Evaluate();
+    }
 }

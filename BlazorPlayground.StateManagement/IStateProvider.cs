@@ -11,4 +11,5 @@ public interface IStateProvider {
     void BuildDependencyGraph(IDependent dependent, Action action);
     void TrackDependency(IDependency dependency);
     bool TryRegisterForTransaction(IEnumerable<KeyValuePair<IDependent, int>> dependents);
+    void ExecuteTransaction(Action transaction);
 }

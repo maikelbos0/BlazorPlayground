@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 
 namespace BlazorPlayground.StateManagement;
@@ -33,6 +34,25 @@ public class StateProvider : IStateProvider, IDisposable {
         }
 
         return true;
+    }
+
+    public void ExecuteTransaction(Action transaction) {
+        var isNested = true;
+
+        if (transactionDependents.Value == null) {
+            transactionDependents.Value = [];
+            isNested = false;
+        }
+
+        transaction();
+
+        if (!isNested) {
+            foreach (var dependent in transactionDependents.Value.OrderBy(x => x.Value)) {
+                dependent.Key.Evaluate();
+            }
+
+            transactionDependents.Value = null;
+        }
     }
 
     public void BuildDependencyGraph(IDependent dependent, Action action) {
