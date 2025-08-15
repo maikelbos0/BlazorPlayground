@@ -5,14 +5,21 @@ using System.Threading;
 namespace BlazorPlayground.StateManagement;
 
 public abstract class DependencyRootBase : IDependency {
+    protected readonly IStateProvider stateProvider;
     private readonly ConcurrentDictionary<IDependent, int> dependents = new();
     private int order = int.MinValue;
+
+    protected DependencyRootBase(IStateProvider stateProvider) {
+        this.stateProvider = stateProvider;
+    }
 
     public void AddDependent(IDependent dependent) => dependents.AddOrUpdate(dependent, _ => Interlocked.Increment(ref order), (_, _) => Interlocked.Increment(ref order));
 
     protected void EvaluateDependents() {
-        foreach (var dependent in dependents.OrderBy(x => x.Value)) {
-            dependent.Key.Evaluate();
+        if (!stateProvider.TryRegisterForTransaction(dependents)) {
+            foreach (var dependent in dependents.OrderBy(x => x.Value)) {
+                dependent.Key.Evaluate();
+            }
         }
     }
 }
