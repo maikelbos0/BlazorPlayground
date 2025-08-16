@@ -1,19 +1,24 @@
-﻿using System.Collections.Concurrent;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 
 namespace BlazorPlayground.StateManagement;
 
 public abstract class DependencyRootBase : IDependency {
-    protected readonly IStateProvider stateProvider;
-    private readonly ConcurrentDictionary<IDependent, uint> dependents = new();
+    protected readonly StateProvider stateProvider;
+    private readonly Dictionary<IDependent, uint> dependents = new();
+    private Lock dependentsLock = new();
     private uint order = uint.MinValue;
 
-    protected DependencyRootBase(IStateProvider stateProvider) {
+    protected DependencyRootBase(StateProvider stateProvider) {
         this.stateProvider = stateProvider;
     }
 
-    public void AddDependent(IDependent dependent) => dependents.AddOrUpdate(dependent, _ => Interlocked.Increment(ref order), (_, _) => Interlocked.Increment(ref order));
+    public void AddDependent(IDependent dependent) {
+        lock (dependentsLock) {
+            dependents[dependent] = order++;
+        }
+    }
 
     protected void EvaluateDependents() {
         if (!stateProvider.TryRegisterForTransaction(dependents)) {
