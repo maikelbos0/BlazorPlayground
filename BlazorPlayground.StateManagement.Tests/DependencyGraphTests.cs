@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using Xunit;
 
@@ -131,12 +130,12 @@ public class DependencyGraphTests {
         var computedState = new ComputedState<int>(stateProvider, () => mutableState1.Value + mutableState2.Value);
 
         var trackers = new List<ComputedStateCallTracker<int>>() {
-            new(stateProvider, () => computedState.Value * 2 + mutableState1.Value + + mutableState2.Value),
-            new(stateProvider, () => computedState.Value * 2 + mutableState2.Value + + mutableState1.Value),
-            new(stateProvider, () => mutableState1.Value + computedState.Value * 2 + + mutableState2.Value),
-            new(stateProvider, () => mutableState2.Value + computedState.Value * 2 + + mutableState1.Value),
-            new(stateProvider, () => mutableState1.Value + mutableState2.Value + + computedState.Value * 2),
-            new(stateProvider, () => mutableState2.Value + mutableState1.Value + + computedState.Value * 2),
+            new(stateProvider, () => computedState.Value * 2 + mutableState1.Value + mutableState2.Value),
+            new(stateProvider, () => computedState.Value * 2 + mutableState2.Value + mutableState1.Value),
+            new(stateProvider, () => mutableState1.Value + computedState.Value * 2 + mutableState2.Value),
+            new(stateProvider, () => mutableState2.Value + computedState.Value * 2 + mutableState1.Value),
+            new(stateProvider, () => mutableState1.Value + mutableState2.Value + computedState.Value * 2),
+            new(stateProvider, () => mutableState2.Value + mutableState1.Value + computedState.Value * 2),
         };
 
         stateProvider.ExecuteTransaction(() => {
@@ -147,6 +146,31 @@ public class DependencyGraphTests {
         Assert.Multiple([.. trackers.Select<ComputedStateCallTracker<int>, Action>(tracker => () => {
             Assert.Equal(42, tracker.State.Value);
             Assert.Equal(2, tracker.Calls);
+        })]);
+    }
+
+    [Fact]
+    public void EvaluateDependents_With_Conditional_Gives_ExpectedResults() {
+        var stateProvider = new StateProvider();
+        var mutableBoolean = new MutableState<bool>(stateProvider, false);
+        var computedBoolean = new ComputedState<bool>(stateProvider, () => mutableBoolean.Value);
+        var mutableState1 = new MutableState<int>(stateProvider, 41);
+        var mutableState2 = new MutableState<int>(stateProvider, 41);
+
+        var trackers = new List<ComputedStateCallTracker<int>>() {
+            new(stateProvider, () => mutableBoolean.Value && computedBoolean.Value ? mutableState1.Value : mutableState2.Value),
+            new(stateProvider, () => mutableBoolean.Value && computedBoolean.Value ? mutableState2.Value : mutableState1.Value),
+            new(stateProvider, () => computedBoolean.Value && mutableBoolean.Value ? mutableState1.Value : mutableState2.Value),
+            new(stateProvider, () => computedBoolean.Value && mutableBoolean.Value ? mutableState2.Value : mutableState1.Value),
+        };
+
+        mutableBoolean.Set(true);
+        mutableState1.Set(42);
+        mutableState2.Set(42);
+
+        Assert.Multiple([.. trackers.Select<ComputedStateCallTracker<int>, Action>(tracker => () => {
+            Assert.Equal(42, tracker.State.Value);
+            Assert.Equal(4, tracker.Calls);
         })]);
     }
 }

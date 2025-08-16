@@ -15,7 +15,7 @@ public class ComputedState<T> : DependencyBranchBase, IDependent {
             return value;
         }
     }
-    
+
     public ComputedState(StateProvider stateProvider, Func<T> computation) {
         this.stateProvider = stateProvider;
         this.computation = computation;
@@ -23,8 +23,10 @@ public class ComputedState<T> : DependencyBranchBase, IDependent {
     }
 
     public void Evaluate() {
-        lock (valueLock) {
-            value = computation();
-        }
+        stateProvider.BuildDependencyGraph(this, () => {
+            lock (valueLock) {
+                value = computation();
+            }
+        });
     }
 }
