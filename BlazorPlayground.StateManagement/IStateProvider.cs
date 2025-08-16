@@ -10,6 +10,6 @@ public interface IStateProvider {
     MutableState<T> Mutable<T>(T value, IEqualityComparer<T> equalityComparer);
     void BuildDependencyGraph(IDependent dependent, Action action);
     void TrackDependency(IDependency dependency);
-    bool TryRegisterForTransaction(IEnumerable<KeyValuePair<IDependent, uint>> dependents);
+    bool TryRegisterForTransaction(IEnumerable<KeyValuePair<IDependent, nuint>> dependents);
     void ExecuteTransaction(Action transaction);
 }

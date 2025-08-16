@@ -54,9 +54,9 @@ public class StateProviderTests {
         var dependent2 = Substitute.For<IDependent>();
 
         Assert.NotNull(transactionDependentsInfo);
-        var transactionDependents = Assert.IsType<ThreadLocal<Dictionary<IDependent, uint>>>(transactionDependentsInfo.GetValue(subject));
+        var transactionDependents = Assert.IsType<ThreadLocal<Dictionary<IDependent, nuint>>>(transactionDependentsInfo.GetValue(subject));
 
-        Assert.False(subject.TryRegisterForTransaction(new Dictionary<IDependent, uint>() {
+        Assert.False(subject.TryRegisterForTransaction(new Dictionary<IDependent, nuint>() {
             { dependent1, 2 },
             { dependent2, 5 },
         }));
@@ -72,11 +72,11 @@ public class StateProviderTests {
         var dependent2 = Substitute.For<IDependent>();
 
         Assert.NotNull(transactionDependentsInfo);
-        var transactionDependents = Assert.IsType<ThreadLocal<Dictionary<IDependent, uint>>>(transactionDependentsInfo.GetValue(subject));
+        var transactionDependents = Assert.IsType<ThreadLocal<Dictionary<IDependent, nuint>>>(transactionDependentsInfo.GetValue(subject));
 
         transactionDependents.Value = [];
 
-        Assert.True(subject.TryRegisterForTransaction(new Dictionary<IDependent, uint>() {
+        Assert.True(subject.TryRegisterForTransaction(new Dictionary<IDependent, nuint>() {
             { dependent1, 2 },
             { dependent2, 5 },
         }));
@@ -94,14 +94,14 @@ public class StateProviderTests {
         var dependent2 = Substitute.For<IDependent>();
 
         Assert.NotNull(transactionDependentsInfo);
-        var transactionDependents = Assert.IsType<ThreadLocal<Dictionary<IDependent, uint>>>(transactionDependentsInfo.GetValue(subject));
+        var transactionDependents = Assert.IsType<ThreadLocal<Dictionary<IDependent, nuint>>>(transactionDependentsInfo.GetValue(subject));
 
         transactionDependents.Value = new() {
             { dependent1, 1 },
             { dependent2, 4 }
         };
 
-        Assert.True(subject.TryRegisterForTransaction(new Dictionary<IDependent, uint>() {
+        Assert.True(subject.TryRegisterForTransaction(new Dictionary<IDependent, nuint>() {
             { dependent1, 2 },
             { dependent2, 5 },
         }));
@@ -118,7 +118,7 @@ public class StateProviderTests {
         var dependent2 = Substitute.For<IDependent>();
 
         subject.ExecuteTransaction(() => {
-            Assert.True(subject.TryRegisterForTransaction(new Dictionary<IDependent, uint>() {
+            Assert.True(subject.TryRegisterForTransaction(new Dictionary<IDependent, nuint>() {
                 { dependent1, 2 },
                 { dependent2, 5 },
             }));
@@ -138,14 +138,14 @@ public class StateProviderTests {
 
         subject.ExecuteTransaction(() => {
             subject.ExecuteTransaction(() => {
-                Assert.True(subject.TryRegisterForTransaction(new Dictionary<IDependent, uint>() {
+                Assert.True(subject.TryRegisterForTransaction(new Dictionary<IDependent, nuint>() {
                     { dependent1, 2 },
                     { dependent2, 5 },
                 }));
             });
 
             subject.ExecuteTransaction(() => {
-                Assert.True(subject.TryRegisterForTransaction(new Dictionary<IDependent, uint>() {
+                Assert.True(subject.TryRegisterForTransaction(new Dictionary<IDependent, nuint>() {
                     { dependent1, 2 },
                     { dependent2, 5 },
                 }));

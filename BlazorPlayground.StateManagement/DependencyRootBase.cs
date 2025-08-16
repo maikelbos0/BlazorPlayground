@@ -6,9 +6,9 @@ namespace BlazorPlayground.StateManagement;
 
 public abstract class DependencyRootBase : IDependency {
     protected readonly StateProvider stateProvider;
-    private readonly Dictionary<IDependent, uint> dependents = new();
-    private Lock dependentsLock = new();
-    private uint order = uint.MinValue;
+    private readonly Dictionary<IDependent, nuint> dependents = [];
+    private readonly Lock dependentsLock = new();
+    private nuint order = nuint.MinValue;
 
     protected DependencyRootBase(StateProvider stateProvider) {
         this.stateProvider = stateProvider;

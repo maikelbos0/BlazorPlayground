@@ -7,7 +7,7 @@ namespace BlazorPlayground.StateManagement;
 
 public class StateProvider : IStateProvider, IDisposable {
     private readonly ThreadLocal<HashSet<IDependent>> trackedDependents = new(() => []);
-    private readonly ThreadLocal<Dictionary<IDependent, uint>?> transactionDependents = new();
+    private readonly ThreadLocal<Dictionary<IDependent, nuint>?> transactionDependents = new();
     private bool isDisposed = false;
 
     public MutableState<T> Mutable<T>(T value)
@@ -55,7 +55,7 @@ public class StateProvider : IStateProvider, IDisposable {
         }
     }
 
-    public bool TryRegisterForTransaction(IEnumerable<KeyValuePair<IDependent, uint>> dependents) {
+    public bool TryRegisterForTransaction(IEnumerable<KeyValuePair<IDependent, nuint>> dependents) {
         if (transactionDependents.Value == null) {
             return false;
         }
