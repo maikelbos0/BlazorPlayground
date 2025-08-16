@@ -19,7 +19,7 @@ public class ComputedState<T> : DependencyBranchBase, IDependent {
     public ComputedState(StateProvider stateProvider, Func<T> computation) {
         this.stateProvider = stateProvider;
         this.computation = computation;
-        stateProvider.BuildDependencyGraph(this, () => value = computation());
+        Evaluate();
     }
 
     public void Evaluate() {

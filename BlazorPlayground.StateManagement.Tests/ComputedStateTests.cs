@@ -22,4 +22,17 @@ public class ComputedStateTests {
 
         Assert.Equal(42, subject.Value);
     }
+
+    [Fact]
+    public void Evaluate_With_Conditional() {
+        var stateProvider = new StateProvider();
+        var mutableState1 = new MutableState<bool>(stateProvider, false);
+        var mutableState2 = new MutableState<int>(stateProvider, 41);
+        var subject = new ComputedState<int>(stateProvider, () => mutableState1.Value ? mutableState2.Value : 0);
+
+        mutableState1.Set(true);
+        mutableState2.Set(42);
+
+        Assert.Equal(42, subject.Value);
+    }
 }
