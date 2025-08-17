@@ -1,5 +1,5 @@
 ﻿namespace BlazorPlayground.StateManagement;
 
-public interface IEagerDependent2 {
+public interface IDependent2 {
     void Evaluate();
 }

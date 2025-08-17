@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 namespace BlazorPlayground.StateManagement;
 
 public class StateProvider2 {
-    private readonly ConcurrentBag<IEagerDependent2> eagerDependents = [];
+    private readonly ConcurrentBag<IDependent2> dependents = [];
     private uint version = uint.MinValue;
 
     public uint Version => version;
@@ -13,8 +13,8 @@ public class StateProvider2 {
     public void IncrementVersion() {
         Interlocked.Increment(ref version);
 
-        Parallel.ForEach(eagerDependents, eagerDependent => eagerDependent.Evaluate());
+        Parallel.ForEach(dependents, dependent => dependent.Evaluate());
     }
 
-    public void RegisterEagerDependent(IEagerDependent2 eagerDependent) => eagerDependents.Add(eagerDependent);
+    public void RegisterDependent(IDependent2 dependent) => dependents.Add(dependent);
 }

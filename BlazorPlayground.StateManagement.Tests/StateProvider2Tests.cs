@@ -15,14 +15,14 @@ public class StateProvider2Tests {
     }
 
     [Fact]
-    public void RegisterEagerDependent() {
+    public void RegisterDependent() {
         var subject = new StateProvider2();
-        var eagerDependent = Substitute.For<IEagerDependent2>();
+        var dependent = Substitute.For<IDependent2>();
 
-        subject.RegisterEagerDependent(eagerDependent);
+        subject.RegisterDependent(dependent);
         subject.IncrementVersion();
 
         // TODO more precise determining of dependents
-        eagerDependent.Received().Evaluate();
+        dependent.Received().Evaluate();
     }
 }
