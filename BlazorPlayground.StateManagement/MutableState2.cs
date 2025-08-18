@@ -2,17 +2,20 @@
 
 namespace BlazorPlayground.StateManagement;
 
-public class MutableState2<T> : IDependency2<T> {
+public class MutableState2<T> : DependencyBase2 {
     private readonly IEqualityComparer<T> equalityComparer;
-    private StateProvider2 stateProvider;
     private T value;
 
-    public T Value => value;
+    public T Value {
+        get {
+            stateProvider.TrackDependency(this);
+            return value;
+        }
+    }
 
     public MutableState2(StateProvider2 stateProvider, T value) : this(stateProvider, value, null) { }
 
-    public MutableState2(StateProvider2 stateProvider, T value, IEqualityComparer<T>? equalityComparer) {
-        this.stateProvider = stateProvider;
+    public MutableState2(StateProvider2 stateProvider, T value, IEqualityComparer<T>? equalityComparer) : base(stateProvider) {
         this.value = value;
         this.stateProvider.IncrementVersion();
         this.equalityComparer = equalityComparer ?? EqualityComparer<T>.Default;
@@ -26,6 +29,7 @@ public class MutableState2<T> : IDependency2<T> {
         if (!equalityComparer.Equals(this.value, value)) {
             this.value = value;
             stateProvider.IncrementVersion();
+            EvaluateDependents();
         }
     }
 }

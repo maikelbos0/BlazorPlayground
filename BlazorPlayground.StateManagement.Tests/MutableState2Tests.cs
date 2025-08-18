@@ -49,6 +49,20 @@ public class MutableState2Tests {
     }
 
     [Fact]
+    public void Set_Evaluates_Dependents() {
+        var stateProvider = new StateProvider2();
+        var subject = new MutableState2<int>(stateProvider, 41);
+        var dependent = Substitute.For<IDependent2>();
+        var version = stateProvider.Version;
+
+        stateProvider.BuildDependencyGraph(dependent, () => _ = subject.Value);
+
+        subject.Set(42);
+
+        dependent.Received(1).Evaluate();
+    }
+
+    [Fact]
     public void Set_Within_Transaction() {
         Assert.Fail("TODO: eager dependents");
         //var stateProvider = new StateProvider();
