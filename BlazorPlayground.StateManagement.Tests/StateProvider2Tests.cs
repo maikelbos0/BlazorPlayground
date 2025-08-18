@@ -9,9 +9,10 @@ public class StateProvider2Tests {
         var subject = new StateProvider2();
         var version = subject.Version;
 
-        subject.IncrementVersion();
+        var result = subject.IncrementVersion();
         
         Assert.Equal(version + 1, subject.Version);
+        Assert.Equal(subject.Version, result);
     }
 
     [Fact]
@@ -23,6 +24,6 @@ public class StateProvider2Tests {
         subject.IncrementVersion();
 
         // TODO more precise determining of dependents
-        dependent.Received().Evaluate();
+        dependent.Received(1).Evaluate();
     }
 }

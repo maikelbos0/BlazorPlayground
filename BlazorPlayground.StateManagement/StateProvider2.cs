@@ -2,7 +2,6 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace BlazorPlayground.StateManagement;
 
@@ -14,11 +13,7 @@ public class StateProvider2 {
 
     public uint Version => version;
 
-    public void IncrementVersion() {
-        Interlocked.Increment(ref version);
-
-        Parallel.ForEach(dependents, dependent => dependent.Evaluate());
-    }
+    public uint IncrementVersion() => Interlocked.Increment(ref version);
 
     public void RegisterDependent(IDependent2 dependent) => dependents.Add(dependent);
 

@@ -10,8 +10,8 @@ public class Effect2 : IDependent2 {
         this.stateProvider = stateProvider;
         this.effect = effect;
         this.stateProvider.RegisterDependent(this);
-        effect();
+        Evaluate();
     }
 
-    public void Evaluate() => effect();
+    public void Evaluate() => stateProvider.BuildDependencyGraph(this, effect);
 }
