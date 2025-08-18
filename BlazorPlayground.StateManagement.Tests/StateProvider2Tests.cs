@@ -1,5 +1,7 @@
 ﻿using NSubstitute;
 using System.Collections.Generic;
+using System.Reflection;
+using System.Threading;
 using Xunit;
 
 namespace BlazorPlayground.StateManagement.Tests;
@@ -53,5 +55,39 @@ public class StateProvider2Tests {
 
         Assert.Equal(version + 1, subject.Version);
         Assert.Equal(subject.Version, result);
+    }
+
+    [Fact]
+    public void ExecuteTransaction() {
+        var subject = new StateProvider2();
+        var dependent1 = Substitute.For<IDependent2>();
+        var dependent2 = Substitute.For<IDependent2>();
+
+        subject.ExecuteTransaction(() => {
+            Assert.True(subject.TryRegisterForTransaction([dependent1, dependent2]));
+        });
+
+        dependent1.Received(1).Evaluate();
+        dependent2.Received(1).Evaluate();
+    }
+
+    [Fact]
+    public void ExecuteTransaction_Nested_Only_Executes_Once() {
+        var subject = new StateProvider2();
+        var dependent1 = Substitute.For<IDependent2>();
+        var dependent2 = Substitute.For<IDependent2>();
+
+        subject.ExecuteTransaction(() => {
+            subject.ExecuteTransaction(() => {
+                Assert.True(subject.TryRegisterForTransaction([dependent1, dependent2]));
+            });
+
+            subject.ExecuteTransaction(() => {
+                Assert.True(subject.TryRegisterForTransaction([dependent1, dependent2]));
+            });
+        });
+
+        dependent1.Received(1).Evaluate();
+        dependent2.Received(1).Evaluate();
     }
 }

@@ -64,20 +64,19 @@ public class MutableState2Tests {
 
     [Fact]
     public void Set_Within_Transaction() {
-        Assert.Fail("TODO: eager dependents");
-        //var stateProvider = new StateProvider();
-        //var subject = new MutableState<int>(stateProvider, 41);
-        //var dependent = Substitute.For<IDependent>();
+        var stateProvider = new StateProvider2();
+        var subject = new MutableState2<int>(stateProvider, 41);
+        var dependent = Substitute.For<IDependent2>();
 
-        //subject.AddDependent(dependent);
+        subject.AddDependent(dependent);
 
-        //stateProvider.ExecuteTransaction(() => {
-        //    subject.Set(42);
+        stateProvider.ExecuteTransaction(() => {
+            subject.Set(42);
 
-        //    Assert.Equal(42, subject.Value);
-        //    dependent.DidNotReceive().Evaluate();
-        //});
+            Assert.Equal(42, subject.Value);
+            dependent.DidNotReceive().Evaluate();
+        });
 
-        //dependent.Received(1).Evaluate();
+        dependent.Received(1).Evaluate();
     }
 }

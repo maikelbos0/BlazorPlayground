@@ -19,11 +19,10 @@ public class DependencyBase2 {
     }
 
     protected void EvaluateDependents() {
-        // TODO transaction
-        //if (!stateProvider.TryRegisterForTransaction(dependents)) {
-        foreach (var dependent in dependents) {
-            dependent.Evaluate();
+        if (!stateProvider.TryRegisterForTransaction(dependents)) {
+            foreach (var dependent in dependents) {
+                dependent.Evaluate();
+            }
         }
-        //}
     }
 }

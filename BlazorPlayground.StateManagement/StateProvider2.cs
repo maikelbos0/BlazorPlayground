@@ -6,6 +6,7 @@ namespace BlazorPlayground.StateManagement;
 
 public class StateProvider2 {
     private readonly ThreadLocal<HashSet<IDependent2>> trackedDependents = new(() => []);
+    private readonly ThreadLocal<HashSet<IDependent2>?> transactionDependents = new();
 
     private uint version = uint.MinValue;
 
@@ -39,4 +40,35 @@ public class StateProvider2 {
         }
     }
 
+
+    public bool TryRegisterForTransaction(IEnumerable<IDependent2> dependents) {
+        if (transactionDependents.Value == null) {
+            return false;
+        }
+
+        foreach (var dependent in dependents) {
+            transactionDependents.Value.Add(dependent);
+        }
+
+        return true;
+    }
+
+    public void ExecuteTransaction(Action transaction) {
+        var isNested = true;
+
+        if (transactionDependents.Value == null) {
+            transactionDependents.Value = [];
+            isNested = false;
+        }
+
+        transaction();
+
+        if (!isNested) {
+            foreach (var dependent in transactionDependents.Value) {
+                dependent.Evaluate();
+            }
+
+            transactionDependents.Value = null;
+        }
+    }
 }
