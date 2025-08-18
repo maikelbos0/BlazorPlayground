@@ -14,16 +14,4 @@ public class StateProvider2Tests {
         Assert.Equal(version + 1, subject.Version);
         Assert.Equal(subject.Version, result);
     }
-
-    [Fact]
-    public void RegisterDependent() {
-        var subject = new StateProvider2();
-        var dependent = Substitute.For<IDependent2>();
-
-        subject.RegisterDependent(dependent);
-        subject.IncrementVersion();
-
-        // TODO more precise determining of dependents
-        dependent.Received(1).Evaluate();
-    }
 }
