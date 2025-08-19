@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace BlazorPlayground.StateManagement.Components;
 
-public abstract class StateManagedComponentBase : ComponentBase, IHandleEvent, IDependent {
+public abstract class StateManagedComponentBase : ComponentBase, IHandleEvent, IDependent2 {
     private static FieldInfo renderFragmentInfo = typeof(ComponentBase).GetField("_renderFragment", BindingFlags.Instance | BindingFlags.NonPublic)
         ?? throw new InvalidOperationException("The render fragment field cannot be found.");
 
@@ -11,7 +11,7 @@ public abstract class StateManagedComponentBase : ComponentBase, IHandleEvent, I
     private bool isEvaluating = false;
 
     [Inject]
-    public required IStateProvider StateProvider { get; set; }
+    public required IStateProvider2 StateProvider { get; set; }
 
     public StateManagedComponentBase() {
         var originalRenderFragment = (RenderFragment)(renderFragmentInfo.GetValue(this) ?? throw new InvalidOperationException("The render fragment field cannot be read."));

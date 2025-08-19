@@ -21,7 +21,7 @@ public class StateManagedComponentBaseTests {
 
     [Fact]
     public async Task HandleEventAsync() {
-        var stateProvider = Substitute.For<IStateProvider>();
+        var stateProvider = Substitute.For<IStateProvider2>();
         var result = 0;
         var workItem = new EventCallbackWorkItem((Action<int>)(value => result = value));
 
@@ -38,7 +38,7 @@ public class StateManagedComponentBaseTests {
     [InlineData(true, true)]
     [InlineData(false, false)]
     public void ShouldRender_Returns_Correct_Value(bool isEvaluating, bool expectedShouldRender) {
-        var stateProvider = Substitute.For<IStateProvider>();
+        var stateProvider = Substitute.For<IStateProvider2>();
         var subject = new StateManagedComponent() {
             StateProvider = stateProvider
         };
@@ -53,7 +53,7 @@ public class StateManagedComponentBaseTests {
 
     [Fact]
     public void RenderFragment_Builds_DependencyGraph() {
-        var stateProvider = Substitute.For<IStateProvider>();
+        var stateProvider = Substitute.For<IStateProvider2>();
         var subject = new StateManagedComponent() {
             StateProvider = stateProvider
         };
@@ -75,7 +75,7 @@ public class StateManagedComponentBaseTests {
 
     [Fact]
     public void RenderFragment_Builds_DependencyGraph_Only_First_Time() {
-        var stateProvider = Substitute.For<IStateProvider>();
+        var stateProvider = Substitute.For<IStateProvider2>();
         var subject = new StateManagedComponent() {
             StateProvider = stateProvider
         };
