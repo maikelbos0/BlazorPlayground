@@ -21,6 +21,7 @@ public class MutableState2<T> : DependencyBase2 {
     public MutableState2(StateProvider2 stateProvider, T value) : this(stateProvider, value, null) { }
 
     public MutableState2(StateProvider2 stateProvider, T value, IEqualityComparer<T>? equalityComparer) : base(stateProvider) {
+        this.stateProvider.IncrementVersion();
         this.value = value;
         this.equalityComparer = equalityComparer ?? EqualityComparer<T>.Default;
     }
