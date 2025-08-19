@@ -4,10 +4,9 @@ using System.Reflection;
 namespace BlazorPlayground.StateManagement.Components;
 
 public abstract class StateManagedComponentBase : ComponentBase, IHandleEvent, IDependent2 {
-    private static FieldInfo renderFragmentInfo = typeof(ComponentBase).GetField("_renderFragment", BindingFlags.Instance | BindingFlags.NonPublic)
+    private static readonly FieldInfo renderFragmentInfo = typeof(ComponentBase).GetField("_renderFragment", BindingFlags.Instance | BindingFlags.NonPublic)
         ?? throw new InvalidOperationException("The render fragment field cannot be found.");
 
-    private bool hasBuiltDependencyGraph = false;
     private bool isEvaluating = false;
 
     [Inject]
@@ -16,14 +15,8 @@ public abstract class StateManagedComponentBase : ComponentBase, IHandleEvent, I
     public StateManagedComponentBase() {
         var originalRenderFragment = (RenderFragment)(renderFragmentInfo.GetValue(this) ?? throw new InvalidOperationException("The render fragment field cannot be read."));
         RenderFragment renderFragment = builder => {
-            if (hasBuiltDependencyGraph) {
-                originalRenderFragment(builder);
-            }
-            else {
-                var stateProvider = StateProvider ?? throw new InvalidOperationException($"Cannot invoke {nameof(renderFragment)} before {nameof(StateManagedComponentBase)} has dependencies set.");
-                stateProvider.BuildDependencyGraph(this, () => originalRenderFragment(builder));
-                hasBuiltDependencyGraph = true;
-            }
+            var stateProvider = StateProvider ?? throw new InvalidOperationException($"Cannot invoke {nameof(renderFragment)} before {nameof(StateManagedComponentBase)} has dependencies set.");
+            stateProvider.BuildDependencyGraph(this, () => originalRenderFragment(builder));
         };
 
         renderFragmentInfo.SetValue(this, renderFragment);

@@ -74,7 +74,7 @@ public class StateManagedLayoutComponentBaseTests {
     }
 
     [Fact]
-    public void RenderFragment_Builds_DependencyGraph_Only_First_Time() {
+    public void RenderFragment_Builds_DependencyGraph_Every_Time() {
         var stateProvider = Substitute.For<IStateProvider2>();
         var subject = new StateManagedLayoutComponent() {
             StateProvider = stateProvider
@@ -92,7 +92,7 @@ public class StateManagedLayoutComponentBaseTests {
         renderFragment(new RenderTreeBuilder());
         renderFragment(new RenderTreeBuilder());
 
-        stateProvider.Received(1).BuildDependencyGraph(subject, Arg.Any<Action>());
+        stateProvider.Received(2).BuildDependencyGraph(subject, Arg.Any<Action>());
         Assert.Equal(2, subject.BuildRenderTreeInvocations);
     }
 }
