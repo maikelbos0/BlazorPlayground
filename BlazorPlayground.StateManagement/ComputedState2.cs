@@ -12,12 +12,10 @@ public class ComputedState2<T> {
 
     public T Value {
         get {
-            var expectedVersion = stateProvider.Version;
-
-            if (version != expectedVersion) {
-                lock (valueLock) {
+            lock (valueLock) {
+                if (version != stateProvider.Version) {
                     value = computation();
-                    version = expectedVersion;
+                    version = stateProvider.Version;
                 }
             }
 

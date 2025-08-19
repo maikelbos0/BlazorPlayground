@@ -1,15 +1,20 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
 
 namespace BlazorPlayground.StateManagement;
 
 public class MutableState2<T> : DependencyBase2 {
     private readonly IEqualityComparer<T> equalityComparer;
+    private readonly Lock valueLock = new();
     private T value;
 
     public T Value {
         get {
             stateProvider.TrackDependency(this);
-            return value;
+
+            lock (valueLock) {
+                return value;
+            }
         }
     }
 
@@ -17,7 +22,6 @@ public class MutableState2<T> : DependencyBase2 {
 
     public MutableState2(StateProvider2 stateProvider, T value, IEqualityComparer<T>? equalityComparer) : base(stateProvider) {
         this.value = value;
-        this.stateProvider.IncrementVersion();
         this.equalityComparer = equalityComparer ?? EqualityComparer<T>.Default;
     }
 
@@ -27,8 +31,11 @@ public class MutableState2<T> : DependencyBase2 {
 
     public void Set(T value) {
         if (!equalityComparer.Equals(this.value, value)) {
-            this.value = value;
-            stateProvider.IncrementVersion();
+            lock (valueLock) {
+                this.value = value;
+                stateProvider.IncrementVersion();
+            }
+
             EvaluateDependents();
         }
     }
