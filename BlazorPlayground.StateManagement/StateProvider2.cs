@@ -4,10 +4,10 @@ using System.Threading;
 
 namespace BlazorPlayground.StateManagement;
 
-public class StateProvider2 {
+public class StateProvider2 : IDisposable, IStateProvider2 {
     private readonly ThreadLocal<HashSet<IDependent2>> trackedDependents = new(() => []);
     private readonly ThreadLocal<HashSet<IDependent2>?> transactionDependents = new();
-
+    private bool isDisposed = false;
     private uint version = uint.MinValue;
 
     public uint Version => version;
@@ -69,6 +69,22 @@ public class StateProvider2 {
             }
 
             transactionDependents.Value = null;
+        }
+    }
+
+    public void Dispose() {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing) {
+        if (!isDisposed) {
+            isDisposed = true;
+
+            if (disposing) {
+                trackedDependents.Dispose();
+                transactionDependents.Dispose();
+            }
         }
     }
 }
