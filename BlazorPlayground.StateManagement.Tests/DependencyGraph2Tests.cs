@@ -45,6 +45,21 @@ public class DependencyGraph2Tests {
     }
 
     [Fact]
+    public void EvaluateDependents_Evaluates_Long_Chain_Correctly() {
+        var stateProvider = new StateProvider2();
+        var mutableState = new MutableState2<int>(stateProvider, 41);
+        var computedState1 = new ComputedState2<int>(stateProvider, () => mutableState.Value);
+        var computedState2 = new ComputedState2<int>(stateProvider, () => computedState1.Value);
+        var computedState3 = new ComputedState2<int>(stateProvider, () => computedState2.Value);
+        var tracker = new EffectCallTracker(stateProvider, () => computedState3.Value);
+
+        mutableState.Set(42);
+
+        Assert.Equal(42, tracker.Value);
+        Assert.Equal(2, tracker.Calls);
+    }
+
+    [Fact]
     public void EvaluateDependents_Evaluates_Deep_Linked_Chain_Correctly() {
         var stateProvider = new StateProvider2();
         var mutableState = new MutableState2<int>(stateProvider, 20);
