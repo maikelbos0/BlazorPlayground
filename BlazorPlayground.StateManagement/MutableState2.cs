@@ -3,9 +3,12 @@ using System.Threading;
 
 namespace BlazorPlayground.StateManagement;
 
-public class MutableState2<T> : DependencyBase2 {
-    private readonly IEqualityComparer<T> equalityComparer;
+public class MutableState2<T> : IDependency2 {
+    private readonly HashSet<IDependent2> dependents = [];
+    private readonly Lock dependentsLock = new();
+    private readonly IStateProvider2 stateProvider;
     private readonly Lock valueLock = new();
+    private readonly IEqualityComparer<T> equalityComparer;
     private T value;
 
     public T Value {
@@ -20,10 +23,11 @@ public class MutableState2<T> : DependencyBase2 {
 
     public MutableState2(IStateProvider2 stateProvider, T value) : this(stateProvider, value, null) { }
 
-    public MutableState2(IStateProvider2 stateProvider, T value, IEqualityComparer<T>? equalityComparer) : base(stateProvider) {
-        this.stateProvider.IncrementVersion();
-        this.value = value;
+    public MutableState2(IStateProvider2 stateProvider, T value, IEqualityComparer<T>? equalityComparer) {
+        this.stateProvider = stateProvider;
         this.equalityComparer = equalityComparer ?? EqualityComparer<T>.Default;
+        this.value = value;
+        this.stateProvider.IncrementVersion();
     }
 
     public void Update(ValueProvider<T> valueProvider) {
@@ -37,7 +41,17 @@ public class MutableState2<T> : DependencyBase2 {
                 stateProvider.IncrementVersion();
             }
 
-            EvaluateDependents();
+            if (!stateProvider.TryRegisterForTransaction(dependents)) {
+                foreach (var dependent in dependents) {
+                    dependent.Evaluate();
+                }
+            }
+        }
+    }
+
+    public void AddDependent(IDependent2 dependent) {
+        lock (dependentsLock) {
+            dependents.Add(dependent);
         }
     }
 }

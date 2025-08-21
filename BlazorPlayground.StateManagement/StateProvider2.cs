@@ -6,7 +6,7 @@ namespace BlazorPlayground.StateManagement;
 
 public class StateProvider2 : IDisposable, IStateProvider2 {
     private readonly ThreadLocal<HashSet<IDependent2>> trackedDependents = new(() => []);
-    private readonly ThreadLocal<HashSet<DependentDependencyBase2>> trackedDependentDependencies = new(() => []);
+    private readonly ThreadLocal<HashSet<IDependentDependency2>> trackedDependentDependencies = new(() => []);
     private readonly ThreadLocal<HashSet<IDependent2>?> transactionDependents = new();
     private bool isDisposed = false;
     private uint version = uint.MinValue;
@@ -35,7 +35,7 @@ public class StateProvider2 : IDisposable, IStateProvider2 {
         trackedDependents.Value.Remove(dependent);
     }
 
-    public void BuildDependencyGraph(DependentDependencyBase2 dependentDependency, Action action) {
+    public void BuildDependencyGraph(IDependentDependency2 dependentDependency, Action action) {
         trackedDependentDependencies.Value!.Add(dependentDependency);
 
         action();
