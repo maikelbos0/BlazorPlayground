@@ -1,12 +1,14 @@
 ﻿using NSubstitute;
 using System.Collections.Generic;
-using System.Reflection;
-using System.Threading;
 using Xunit;
 
 namespace BlazorPlayground.StateManagement.Tests;
 
 public class StateProvider2Tests {
+    private class DependentDependency : DependentDependencyBase2 {
+
+    }
+
     [Fact]
     public void Mutable() {
         var subject = new StateProvider2();
@@ -55,6 +57,37 @@ public class StateProvider2Tests {
 
         Assert.Equal(version + 1, subject.Version);
         Assert.Equal(subject.Version, result);
+    }
+
+    [Fact]
+    public void BuildDependencyGraph_TrackDependency() {
+        var subject = new StateProvider2();
+        var dependent = Substitute.For<IDependent2>();
+        var dependency = Substitute.For<IDependency2>();
+
+        subject.BuildDependencyGraph(dependent, () => {
+            subject.TrackDependency(dependency);
+        });
+
+        dependency.Received(1).AddDependent(dependent);
+    }
+
+    [Fact]
+    public void BuildDependencyGraph_TrackDependency_Via_DependentDependency() {
+        var subject = new StateProvider2();
+        var dependent = Substitute.For<IDependent2>();
+        var dependentDependency = Substitute.For<DependentDependencyBase2>();
+        var dependency = Substitute.For<IDependency2>();
+
+        subject.BuildDependencyGraph(dependentDependency, () => {
+            subject.TrackDependency(dependency);
+        });
+
+        subject.BuildDependencyGraph(dependent, () => {
+            subject.TrackDependency(dependentDependency);
+        });
+
+        dependency.Received(1).AddDependent(dependent);
     }
 
     [Fact]

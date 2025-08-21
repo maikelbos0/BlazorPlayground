@@ -6,9 +6,9 @@ namespace BlazorPlayground.StateManagement;
 public class DependencyBase2 : IDependency2 {
     private readonly HashSet<IDependent2> dependents = [];
     private readonly Lock dependentsLock = new();
-    protected readonly StateProvider2 stateProvider;
+    protected readonly IStateProvider2 stateProvider;
 
-    public DependencyBase2(StateProvider2 stateProvider) {
+    public DependencyBase2(IStateProvider2 stateProvider) {
         this.stateProvider = stateProvider;
     }
 

@@ -6,6 +6,16 @@ namespace BlazorPlayground.StateManagement.Tests;
 
 public class MutableState2Tests {
     [Fact]
+    public void Value_Tracks_Dependency() {
+        var stateProvider = Substitute.For<IStateProvider2>();
+        var subject = new MutableState2<int>(stateProvider, 42);
+
+        _ = subject.Value;
+
+        stateProvider.Received(1).TrackDependency(subject);
+    }
+
+    [Fact]
     public void Update() {
         var stateProvider = new StateProvider2();
         var subject = new MutableState2<int>(stateProvider, 41);

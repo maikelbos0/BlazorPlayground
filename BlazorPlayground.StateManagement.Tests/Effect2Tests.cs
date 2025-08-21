@@ -1,10 +1,12 @@
-﻿using Xunit;
+﻿using NSubstitute;
+using System;
+using Xunit;
 
 namespace BlazorPlayground.StateManagement.Tests;
 
 public class Effect2Tests {
     [Fact]
-    public void Constructor() {
+    public void Constructor_Evaluates() {
         var result = 0;
         var stateProvider = new StateProvider2();
         var subject = new Effect2(stateProvider, () => result = 42);
@@ -14,39 +16,24 @@ public class Effect2Tests {
 
     [Fact]
     public void Evaluate() {
+        var value = 41;
         var result = 0;
         var stateProvider = new StateProvider2();
-        var mutableState = new MutableState2<int>(stateProvider, 41);
-        var subject = new Effect2(stateProvider, () => result = mutableState.Value);
+        var subject = new Effect2(stateProvider, () => result = value);
 
-        mutableState.Set(42);
+        value = 42;
+        subject.Evaluate();
 
         Assert.Equal(42, result);
     }
 
     [Fact]
-    public void Evaluate_With_Conditional() {
-        var result = 0;
-        var stateProvider = new StateProvider2();
-        var mutableState = new MutableState2<bool>(stateProvider, false);
-        var computedState = new ComputedState2<int>(stateProvider, () => mutableState.Value ? 42 : 0);
-        var subject = new Effect2(stateProvider, () => result = mutableState.Value ? computedState.Value : 0);
+    public void Evaluate_Builds_Dependency_Graph() {
+        var stateProvider = Substitute.For<IStateProvider2>();
+        var subject = new Effect2(stateProvider, () => { });
 
-        mutableState.Set(true);
+        subject.Evaluate();
 
-        Assert.Equal(42, result);
-    }
-
-    [Fact]
-    public void Does_Not_Evaluate_When_Unrelated_State_Updates() {
-        var evaluations = 0;
-
-        var stateProvider = new StateProvider2();
-        var mutableState = new MutableState2<int>(stateProvider, 41);
-        var subject = new Effect2(stateProvider, () => evaluations++);
-
-        mutableState.Set(42);
-
-        Assert.Equal(1, evaluations);
+        stateProvider.Received(2).BuildDependencyGraph(subject, Arg.Any<Action>());
     }
 }

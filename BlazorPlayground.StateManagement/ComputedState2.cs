@@ -4,7 +4,7 @@ using System.Threading;
 namespace BlazorPlayground.StateManagement;
 
 public class ComputedState2<T> : DependentDependencyBase2 {
-    private readonly StateProvider2 stateProvider;
+    private readonly IStateProvider2 stateProvider;
     private readonly Func<T> computation;
     private readonly Lock valueLock = new();
     private uint version = uint.MinValue;
@@ -32,7 +32,7 @@ public class ComputedState2<T> : DependentDependencyBase2 {
         }
     }
 
-    public ComputedState2(StateProvider2 stateProvider, Func<T> computation) {
+    public ComputedState2(IStateProvider2 stateProvider, Func<T> computation) {
         this.stateProvider = stateProvider;
         this.computation = computation;
     }
