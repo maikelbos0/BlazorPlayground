@@ -12,7 +12,8 @@ public interface IStateProvider2 {
     void Effect(Action effect);
     uint IncrementVersion();
     void BuildDependencyGraph(IDependent2 dependent, Action action);
-    void TrackDependency(DependencyBase2 dependency);
+    void BuildDependencyGraph(DependentDependencyBase2 dependentDependency, Action action);
+    void TrackDependency(IDependency2 dependency);
     bool TryRegisterForTransaction(IEnumerable<IDependent2> dependents);
     void ExecuteTransaction(Action transaction);
 }

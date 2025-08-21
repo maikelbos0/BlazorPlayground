@@ -3,7 +3,7 @@ using System.Threading;
 
 namespace BlazorPlayground.StateManagement;
 
-public class DependencyBase2 {
+public class DependencyBase2 : IDependency2 {
     private readonly HashSet<IDependent2> dependents = [];
     private readonly Lock dependentsLock = new();
     protected readonly StateProvider2 stateProvider;

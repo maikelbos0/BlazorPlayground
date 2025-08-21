@@ -3,7 +3,7 @@ using System.Threading;
 
 namespace BlazorPlayground.StateManagement;
 
-public class ComputedState2<T> {
+public class ComputedState2<T> : DependentDependencyBase2 {
     private readonly StateProvider2 stateProvider;
     private readonly Func<T> computation;
     private readonly Lock valueLock = new();
@@ -12,11 +12,20 @@ public class ComputedState2<T> {
 
     public T Value {
         get {
-            lock (valueLock) {
-                if (version != stateProvider.Version) {
-                    value = computation();
-                    version = stateProvider.Version;
-                }
+            stateProvider.TrackDependency(this);
+
+            var currentVersion = version;
+            var expectedVersion = stateProvider.Version;
+
+            if (currentVersion != expectedVersion) {
+                stateProvider.BuildDependencyGraph(this, () => {
+                    var newValue = computation();
+
+                    lock (valueLock) {
+                        value = newValue;
+                        version = expectedVersion;
+                    }
+                });
             }
 
             return value;

@@ -14,13 +14,12 @@ public class Effect2Tests {
 
     [Fact]
     public void Evaluate() {
-        var value = 41;
         var result = 0;
         var stateProvider = new StateProvider2();
-        var subject = new Effect2(stateProvider, () => result = value);
+        var mutableState = new MutableState2<int>(stateProvider, 41);
+        var subject = new Effect2(stateProvider, () => result = mutableState.Value);
 
-        value = 42;
-        subject.Evaluate();
+        mutableState.Set(42);
 
         Assert.Equal(42, result);
     }
@@ -29,12 +28,11 @@ public class Effect2Tests {
     public void Evaluate_With_Conditional() {
         var result = 0;
         var stateProvider = new StateProvider2();
-        var mutableState1 = new MutableState2<bool>(stateProvider, false);
-        var mutableState2 = new MutableState2<int>(stateProvider, 41);
-        var subject = new Effect2(stateProvider, () => result = mutableState1.Value ? mutableState2.Value : 0);
+        var mutableState = new MutableState2<bool>(stateProvider, false);
+        var computedState = new ComputedState2<int>(stateProvider, () => mutableState.Value ? 42 : 0);
+        var subject = new Effect2(stateProvider, () => result = mutableState.Value ? computedState.Value : 0);
 
-        mutableState1.Set(true);
-        mutableState2.Set(42);
+        mutableState.Set(true);
 
         Assert.Equal(42, result);
     }
