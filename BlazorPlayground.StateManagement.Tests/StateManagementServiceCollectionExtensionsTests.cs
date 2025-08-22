@@ -8,18 +8,6 @@ public class StateManagementServiceCollectionExtensionsTests {
     public void AddStateProvider() {
         var subject = new ServiceCollection();
 
-        subject.AddStateProvider();
-
-        var result = Assert.Single(subject);
-        Assert.Equal(ServiceLifetime.Singleton, result.Lifetime);
-        Assert.Equal(typeof(IStateProvider), result.ServiceType);
-        Assert.Equal(typeof(StateProvider), result.ImplementationType);
-    }
-
-    [Fact]
-    public void AddStateProvider2() {
-        var subject = new ServiceCollection();
-
         subject.AddStateProvider2();
 
         var result = Assert.Single(subject);

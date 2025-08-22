@@ -8,7 +8,6 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddHttpLogging(o => { });
 
-builder.Services.AddStateProvider();
 builder.Services.AddStateProvider2();
 
 var app = builder.Build();
