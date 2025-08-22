@@ -4,10 +4,10 @@ using Xunit;
 
 namespace BlazorPlayground.StateManagement.Tests;
 
-public class StateProvider2Tests {
+public class StateProviderTests {
     [Fact]
     public void Mutable() {
-        var subject = new StateProvider2();
+        var subject = new StateProvider();
 
         var result = subject.Mutable(42);
 
@@ -16,7 +16,7 @@ public class StateProvider2Tests {
 
     [Fact]
     public void Mutable_With_IEqualityComparer() {
-        var subject = new StateProvider2();
+        var subject = new StateProvider();
 
         var result = subject.Mutable(42, Substitute.For<IEqualityComparer<int>>());
 
@@ -25,7 +25,7 @@ public class StateProvider2Tests {
 
     [Fact]
     public void Computed() {
-        var subject = new StateProvider2();
+        var subject = new StateProvider();
         var mutableState = subject.Mutable(42);
 
         var result = subject.Computed(() => mutableState.Value);
@@ -36,7 +36,7 @@ public class StateProvider2Tests {
     [Fact]
     public void Effect() {
         var result = 41;
-        var subject = new StateProvider2();
+        var subject = new StateProvider();
         var mutableState = subject.Mutable(42);
 
         subject.Effect(() => result = mutableState.Value);
@@ -46,7 +46,7 @@ public class StateProvider2Tests {
 
     [Fact]
     public void IncrementVersion() {
-        var subject = new StateProvider2();
+        var subject = new StateProvider();
         var version = subject.Version;
 
         var result = subject.IncrementVersion();
@@ -57,9 +57,9 @@ public class StateProvider2Tests {
 
     [Fact]
     public void BuildDependencyGraph_TrackDependency_Dependent() {
-        var subject = new StateProvider2();
-        var dependent = Substitute.For<IDependent2>();
-        var dependency = Substitute.For<IDependency2>();
+        var subject = new StateProvider();
+        var dependent = Substitute.For<IDependent>();
+        var dependency = Substitute.For<IDependency>();
 
         subject.BuildDependencyGraph(dependent, () => {
             subject.TrackDependency(dependency);
@@ -70,9 +70,9 @@ public class StateProvider2Tests {
 
     [Fact]
     public void BuildDependencyGraph_TrackDependency_DependentDependency() {
-        var subject = new StateProvider2();
-        var dependentDependency = Substitute.For<IDependentDependency2>();
-        var dependency = Substitute.For<IDependency2>();
+        var subject = new StateProvider();
+        var dependentDependency = Substitute.For<IDependentDependency>();
+        var dependency = Substitute.For<IDependency>();
 
         subject.BuildDependencyGraph(dependentDependency, () => {
             subject.TrackDependency(dependency);
@@ -83,9 +83,9 @@ public class StateProvider2Tests {
 
     [Fact]
     public void ExecuteTransaction() {
-        var subject = new StateProvider2();
-        var dependent1 = Substitute.For<IDependent2>();
-        var dependent2 = Substitute.For<IDependent2>();
+        var subject = new StateProvider();
+        var dependent1 = Substitute.For<IDependent>();
+        var dependent2 = Substitute.For<IDependent>();
 
         subject.ExecuteTransaction(() => {
             Assert.True(subject.TryRegisterForTransaction([dependent1, dependent2]));
@@ -97,9 +97,9 @@ public class StateProvider2Tests {
 
     [Fact]
     public void ExecuteTransaction_Nested_Only_Executes_Once() {
-        var subject = new StateProvider2();
-        var dependent1 = Substitute.For<IDependent2>();
-        var dependent2 = Substitute.For<IDependent2>();
+        var subject = new StateProvider();
+        var dependent1 = Substitute.For<IDependent>();
+        var dependent2 = Substitute.For<IDependent>();
 
         subject.ExecuteTransaction(() => {
             subject.ExecuteTransaction(() => {

@@ -12,7 +12,7 @@ public class StateManagementServiceCollectionExtensionsTests {
 
         var result = Assert.Single(subject);
         Assert.Equal(ServiceLifetime.Singleton, result.Lifetime);
-        Assert.Equal(typeof(IStateProvider2), result.ServiceType);
-        Assert.Equal(typeof(StateProvider2), result.ImplementationType);
+        Assert.Equal(typeof(IStateProvider), result.ServiceType);
+        Assert.Equal(typeof(StateProvider), result.ImplementationType);
     }
 }

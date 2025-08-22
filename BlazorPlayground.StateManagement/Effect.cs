@@ -2,11 +2,11 @@
 
 namespace BlazorPlayground.StateManagement;
 
-public class Effect2 : IDependent2 {
-    private readonly IStateProvider2 stateProvider;
+public class Effect : IDependent {
+    private readonly IStateProvider stateProvider;
     private readonly Action effect;
 
-    public Effect2(IStateProvider2 stateProvider, Action effect) {
+    public Effect(IStateProvider stateProvider, Action effect) {
         this.stateProvider = stateProvider;
         this.effect = effect;
         Evaluate();

@@ -3,10 +3,10 @@ using System.Threading;
 
 namespace BlazorPlayground.StateManagement;
 
-public class MutableState2<T> : IDependency2 {
-    private readonly HashSet<IDependent2> dependents = [];
+public class MutableState<T> : IDependency {
+    private readonly HashSet<IDependent> dependents = [];
     private readonly Lock dependentsLock = new();
-    private readonly IStateProvider2 stateProvider;
+    private readonly IStateProvider stateProvider;
     private readonly Lock valueLock = new();
     private readonly IEqualityComparer<T> equalityComparer;
     private T value;
@@ -21,9 +21,9 @@ public class MutableState2<T> : IDependency2 {
         }
     }
 
-    public MutableState2(IStateProvider2 stateProvider, T value) : this(stateProvider, value, null) { }
+    public MutableState(IStateProvider stateProvider, T value) : this(stateProvider, value, null) { }
 
-    public MutableState2(IStateProvider2 stateProvider, T value, IEqualityComparer<T>? equalityComparer) {
+    public MutableState(IStateProvider stateProvider, T value, IEqualityComparer<T>? equalityComparer) {
         this.stateProvider = stateProvider;
         this.equalityComparer = equalityComparer ?? EqualityComparer<T>.Default;
         this.value = value;
@@ -49,7 +49,7 @@ public class MutableState2<T> : IDependency2 {
         }
     }
 
-    public void AddDependent(IDependent2 dependent) {
+    public void AddDependent(IDependent dependent) {
         lock (dependentsLock) {
             dependents.Add(dependent);
         }

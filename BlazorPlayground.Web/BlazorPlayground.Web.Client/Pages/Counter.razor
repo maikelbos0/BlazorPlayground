@@ -17,8 +17,8 @@
 
 @code {
 	private int Value { get; set; }
-	[NotNull] private MutableState2<int>? Count { get; set; }
-	[NotNull] private ComputedState2<int>? DoubleCount { get; set; }
+	[NotNull] private MutableState<int>? Count { get; set; }
+	[NotNull] private ComputedState<int>? DoubleCount { get; set; }
 
 	protected override void OnInitialized() {
 		base.OnInitialized();

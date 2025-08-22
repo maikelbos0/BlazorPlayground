@@ -7,7 +7,7 @@ namespace Microsoft.Extensions.DependencyInjection;
 
 public static class StateManagementServiceCollectionExtensions {
     public static IServiceCollection AddStateProvider2(this IServiceCollection services) {
-        services.TryAddSingleton<IStateProvider2, StateProvider2>();
+        services.TryAddSingleton<IStateProvider, StateProvider>();
         return services;
     }
 }

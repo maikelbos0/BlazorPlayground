@@ -4,10 +4,10 @@ using System.Threading;
 
 namespace BlazorPlayground.StateManagement;
 
-public class ComputedState2<T> : IDependentDependency2 {
-    private readonly HashSet<IDependency2> dependencies = [];
+public class ComputedState<T> : IDependentDependency {
+    private readonly HashSet<IDependency> dependencies = [];
     private readonly Lock dependenciesLock = new();
-    private readonly IStateProvider2 stateProvider;
+    private readonly IStateProvider stateProvider;
     private readonly Func<T> computation;
     private readonly Lock valueLock = new();
     private uint version = uint.MinValue;
@@ -35,18 +35,18 @@ public class ComputedState2<T> : IDependentDependency2 {
         }
     }
 
-    public ComputedState2(IStateProvider2 stateProvider, Func<T> computation) {
+    public ComputedState(IStateProvider stateProvider, Func<T> computation) {
         this.stateProvider = stateProvider;
         this.computation = computation;
     }
 
-    public void AddDependent(IDependent2 dependent) {
+    public void AddDependent(IDependent dependent) {
         foreach (var dependency in dependencies) {
             dependency.AddDependent(dependent);
         }
     }
 
-    public void AddDependency(IDependency2 dependency) {
+    public void AddDependency(IDependency dependency) {
         lock (dependenciesLock) {
             dependencies.Add(dependency);
         }

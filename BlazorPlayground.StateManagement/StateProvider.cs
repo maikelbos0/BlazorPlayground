@@ -4,30 +4,30 @@ using System.Threading;
 
 namespace BlazorPlayground.StateManagement;
 
-public class StateProvider2 : IDisposable, IStateProvider2 {
-    private readonly ThreadLocal<HashSet<IDependent2>> trackedDependents = new(() => []);
-    private readonly ThreadLocal<HashSet<IDependentDependency2>> trackedDependentDependencies = new(() => []);
-    private readonly ThreadLocal<HashSet<IDependent2>?> transactionDependents = new();
+public class StateProvider : IDisposable, IStateProvider {
+    private readonly ThreadLocal<HashSet<IDependent>> trackedDependents = new(() => []);
+    private readonly ThreadLocal<HashSet<IDependentDependency>> trackedDependentDependencies = new(() => []);
+    private readonly ThreadLocal<HashSet<IDependent>?> transactionDependents = new();
     private bool isDisposed = false;
     private uint version = uint.MinValue;
 
     public uint Version => version;
 
-    public MutableState2<T> Mutable<T>(T value)
+    public MutableState<T> Mutable<T>(T value)
         => new(this, value);
 
-    public MutableState2<T> Mutable<T>(T value, IEqualityComparer<T> equalityComparer)
+    public MutableState<T> Mutable<T>(T value, IEqualityComparer<T> equalityComparer)
         => new(this, value, equalityComparer);
 
-    public ComputedState2<T> Computed<T>(Func<T> computation)
+    public ComputedState<T> Computed<T>(Func<T> computation)
         => new(this, computation);
 
     public void Effect(Action effect)
-        => _ = new Effect2(this, effect);
+        => _ = new Effect(this, effect);
 
     public uint IncrementVersion() => Interlocked.Increment(ref version);
 
-    public void BuildDependencyGraph(IDependent2 dependent, Action action) {
+    public void BuildDependencyGraph(IDependent dependent, Action action) {
         trackedDependents.Value!.Add(dependent);
 
         action();
@@ -35,7 +35,7 @@ public class StateProvider2 : IDisposable, IStateProvider2 {
         trackedDependents.Value.Remove(dependent);
     }
 
-    public void BuildDependencyGraph(IDependentDependency2 dependentDependency, Action action) {
+    public void BuildDependencyGraph(IDependentDependency dependentDependency, Action action) {
         trackedDependentDependencies.Value!.Add(dependentDependency);
 
         action();
@@ -43,7 +43,7 @@ public class StateProvider2 : IDisposable, IStateProvider2 {
         trackedDependentDependencies.Value.Remove(dependentDependency);
     }
 
-    public void TrackDependency(IDependency2 dependency) {
+    public void TrackDependency(IDependency dependency) {
         foreach (var dependentDependency in trackedDependentDependencies.Value!) {
             dependentDependency.AddDependency(dependency);
         }
@@ -53,7 +53,7 @@ public class StateProvider2 : IDisposable, IStateProvider2 {
         }
     }
 
-    public bool TryRegisterForTransaction(IEnumerable<IDependent2> dependents) {
+    public bool TryRegisterForTransaction(IEnumerable<IDependent> dependents) {
         if (transactionDependents.Value == null) {
             return false;
         }

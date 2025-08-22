@@ -4,12 +4,12 @@ using Xunit;
 
 namespace BlazorPlayground.StateManagement.Tests;
 
-public class Effect2Tests {
+public class EffectTests {
     [Fact]
     public void Constructor_Evaluates() {
         var result = 0;
-        var stateProvider = new StateProvider2();
-        var subject = new Effect2(stateProvider, () => result = 42);
+        var stateProvider = new StateProvider();
+        var subject = new Effect(stateProvider, () => result = 42);
 
         Assert.Equal(42, result);
     }
@@ -18,8 +18,8 @@ public class Effect2Tests {
     public void Evaluate() {
         var value = 41;
         var result = 0;
-        var stateProvider = new StateProvider2();
-        var subject = new Effect2(stateProvider, () => result = value);
+        var stateProvider = new StateProvider();
+        var subject = new Effect(stateProvider, () => result = value);
 
         value = 42;
         subject.Evaluate();
@@ -29,8 +29,8 @@ public class Effect2Tests {
 
     [Fact]
     public void Evaluate_Builds_Dependency_Graph() {
-        var stateProvider = Substitute.For<IStateProvider2>();
-        var subject = new Effect2(stateProvider, () => { });
+        var stateProvider = Substitute.For<IStateProvider>();
+        var subject = new Effect(stateProvider, () => { });
 
         subject.Evaluate();
 
