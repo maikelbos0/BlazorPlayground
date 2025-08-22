@@ -8,22 +8,30 @@
 
 <h1>Counter</h1>
 
+<p role="status">Current value: @Value</p>
 <p role="status">Current count: @Count.Value</p>
 <p role="status">Double count: @DoubleCount.Value</p>
 
+<button class="btn btn-primary" @onclick="IncrementValue">I don't update on render</button>
 <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
 
 @code {
-	[NotNull] private MutableState<int>? Count { get; set; }
-	[NotNull] private ComputedState<int>? DoubleCount { get; set; }
+	private int Value { get; set; }
+	[NotNull] private MutableState2<int>? Count { get; set; }
+	[NotNull] private ComputedState2<int>? DoubleCount { get; set; }
 
 	protected override void OnInitialized() {
 		base.OnInitialized();
 		Count = StateProvider.Mutable(0);
 		DoubleCount = StateProvider.Computed(() => Count.Value * 2);
+		StateProvider.Effect(() => Console.WriteLine(DoubleCount.Value));
 	}
 
 	private void IncrementCount() {
 		Count.Update(count => count + 1);
+	}
+
+	private void IncrementValue() {
+		Value++;
 	}
 }
