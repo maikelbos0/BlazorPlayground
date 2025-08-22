@@ -23,7 +23,7 @@ public class StateProvider : IDisposable, IStateProvider {
         => new(this, computation);
 
     public void Effect(Action effect)
-        => _ = new Effect(this, effect);
+        => _ = new EffectHandler(this, effect);
 
     public uint IncrementVersion() => Interlocked.Increment(ref version);
 

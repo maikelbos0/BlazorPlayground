@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 
 namespace BlazorPlayground.StateManagement;
@@ -30,7 +31,7 @@ public class MutableState<T> : IDependency {
         this.stateProvider.IncrementVersion();
     }
 
-    public void Update(ValueProvider<T> valueProvider) {
+    public void Update(Func<T, T> valueProvider) {
         Set(valueProvider(value));
     }
 

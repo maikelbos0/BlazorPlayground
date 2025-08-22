@@ -12,7 +12,7 @@ public class DependencyGraphTests {
         
 
         public EffectCallTracker(StateProvider stateProvider, Func<int> valueProvider) {
-            new Effect(stateProvider, () => {
+            new EffectHandler(stateProvider, () => {
                 Calls++;
                 Value = valueProvider();
             });
