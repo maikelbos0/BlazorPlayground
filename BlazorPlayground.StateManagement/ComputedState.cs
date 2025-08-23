@@ -5,7 +5,7 @@ using System.Threading;
 namespace BlazorPlayground.StateManagement;
 
 public class ComputedState<T> : IDependentDependency {
-    private readonly HashSet<IDependency> dependencies = [];
+    private readonly HashSet<WeakReference<IDependency>> dependencies = new(WeakReferenceEqualityComparer<IDependency>.Instance);
     private readonly Lock dependenciesLock = new();
     private readonly IStateProvider stateProvider;
     private readonly Func<T> computation;
@@ -41,16 +41,27 @@ public class ComputedState<T> : IDependentDependency {
     }
 
     public void AddDependent(IDependent dependent) {
+        var activeDependencies = new List<IDependency>(dependencies.Count);
+
         lock (dependenciesLock) {
-        foreach (var dependency in dependencies) {
-            dependency.AddDependent(dependent);
+            foreach (var dependency in dependencies) {
+                if (dependency.TryGetTarget(out var activeDependency)) {
+                    activeDependencies.Add(activeDependency);
+                }
+                else {
+                    dependencies.Remove(dependency);
+                }
+            }
         }
-    }
+
+        foreach (var activeDependency in activeDependencies) {
+            activeDependency.AddDependent(dependent);
+        }
     }
 
     public void AddDependency(IDependency dependency) {
         lock (dependenciesLock) {
-            dependencies.Add(dependency);
+            dependencies.Add(new WeakReference<IDependency>(dependency));
         }
     }
 }

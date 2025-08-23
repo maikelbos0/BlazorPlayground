@@ -56,8 +56,8 @@ public class MutableState<T> : IDependency {
             }
 
             if (!stateProvider.TryRegisterForTransaction(activeDependents)) {
-                foreach (var dependent in activeDependents) {
-                    dependent.Evaluate();
+                foreach (var activeDependent in activeDependents) {
+                    activeDependent.Evaluate();
                 }
             }
         }
