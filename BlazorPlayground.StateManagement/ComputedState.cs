@@ -41,9 +41,11 @@ public class ComputedState<T> : IDependentDependency {
     }
 
     public void AddDependent(IDependent dependent) {
+        lock (dependenciesLock) {
         foreach (var dependency in dependencies) {
             dependency.AddDependent(dependent);
         }
+    }
     }
 
     public void AddDependency(IDependency dependency) {

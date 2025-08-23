@@ -42,12 +42,14 @@ public class MutableState<T> : IDependency {
                 stateProvider.IncrementVersion();
             }
 
+            lock (dependentsLock) {
             if (!stateProvider.TryRegisterForTransaction(dependents)) {
                 foreach (var dependent in dependents) {
                     dependent.Evaluate();
                 }
             }
         }
+    }
     }
 
     public void AddDependent(IDependent dependent) {
