@@ -12,6 +12,8 @@ public abstract class StateManagedComponentBase : ComponentBase, IHandleEvent, I
     [Inject]
     public required IStateProvider StateProvider { get; set; }
 
+    public virtual DependentPriority Priority => DependentPriority.Lowest;
+
     public StateManagedComponentBase() {
         var originalRenderFragment = (RenderFragment)(renderFragmentInfo.GetValue(this) ?? throw new InvalidOperationException("The render fragment field cannot be read."));
         RenderFragment renderFragment = builder => {

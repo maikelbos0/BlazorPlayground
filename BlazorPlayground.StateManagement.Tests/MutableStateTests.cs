@@ -62,14 +62,22 @@ public class MutableStateTests {
     public void Set_Evaluates_Dependents() {
         var stateProvider = new StateProvider();
         var subject = new MutableState<int>(stateProvider, 41);
-        var dependent = Substitute.For<IDependent>();
+        var dependent1 = Substitute.For<IDependent>();
+        var dependent2 = Substitute.For<IDependent>();
         var version = stateProvider.Version;
 
-        stateProvider.BuildDependencyGraph(dependent, () => _ = subject.Value);
+        dependent1.Priority.Returns(DependentPriority.Low);
+        dependent2.Priority.Returns(DependentPriority.High);
+
+        stateProvider.BuildDependencyGraph(dependent1, () => _ = subject.Value);
+        stateProvider.BuildDependencyGraph(dependent2, () => _ = subject.Value);
 
         subject.Set(42);
 
-        dependent.Received(1).Evaluate();
+        Received.InOrder(() => {
+            dependent2.Evaluate();
+            dependent1.Evaluate();
+        });
     }
 
     [Fact]

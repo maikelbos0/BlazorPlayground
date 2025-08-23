@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 
 namespace BlazorPlayground.StateManagement;
@@ -56,7 +57,7 @@ public class MutableState<T> : IDependency {
             }
 
             if (!stateProvider.TryRegisterForTransaction(activeDependents)) {
-                foreach (var activeDependent in activeDependents) {
+                foreach (var activeDependent in activeDependents.OrderByDescending(activeDependent => activeDependent.Priority)) {
                     activeDependent.Evaluate();
                 }
             }

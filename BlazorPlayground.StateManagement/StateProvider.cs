@@ -22,8 +22,11 @@ public class StateProvider : IDisposable, IStateProvider {
     public ComputedState<T> Computed<T>(Func<T> computation)
         => new(this, computation);
 
-    public void Effect(Action effect)
+    public EffectHandler Effect(Action effect)
         => _ = new EffectHandler(this, effect);
+
+    public EffectHandler Effect(Action effect, DependentPriority priority)
+        => _ = new EffectHandler(this, effect, priority);
 
     public uint IncrementVersion() => Interlocked.Increment(ref version);
 

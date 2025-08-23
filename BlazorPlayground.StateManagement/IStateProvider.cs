@@ -9,7 +9,8 @@ public interface IStateProvider {
     MutableState<T> Mutable<T>(T value);
     MutableState<T> Mutable<T>(T value, IEqualityComparer<T> equalityComparer);
     ComputedState<T> Computed<T>(Func<T> computation);
-    void Effect(Action effect);
+    EffectHandler Effect(Action effect, DependentPriority priority);
+    EffectHandler Effect(Action effect);
     uint IncrementVersion();
     void BuildDependencyGraph(IDependent dependent, Action action);
     void BuildDependencyGraph(IDependentDependency dependentDependency, Action action);

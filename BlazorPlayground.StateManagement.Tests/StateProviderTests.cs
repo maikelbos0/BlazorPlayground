@@ -15,7 +15,7 @@ public class StateProviderTests {
     }
 
     [Fact]
-    public void Mutable_With_IEqualityComparer() {
+    public void Mutable_With_EqualityComparer() {
         var subject = new StateProvider();
 
         var result = subject.Mutable(42, Substitute.For<IEqualityComparer<int>>());
@@ -39,9 +39,22 @@ public class StateProviderTests {
         var subject = new StateProvider();
         var mutableState = subject.Mutable(42);
 
-        subject.Effect(() => result = mutableState.Value);
+        var effectHandler = subject.Effect(() => result = mutableState.Value);
 
         Assert.Equal(42, result);
+        Assert.Equal(DependentPriority.Medium, effectHandler.Priority);
+    }
+
+    [Fact]
+    public void Effect_With_Priority() {
+        var result = 41;
+        var subject = new StateProvider();
+        var mutableState = subject.Mutable(42);
+
+        var effectHandler = subject.Effect(() => result = mutableState.Value, DependentPriority.Highest);
+
+        Assert.Equal(42, result);
+        Assert.Equal(DependentPriority.Highest, effectHandler.Priority);
     }
 
     [Fact]
