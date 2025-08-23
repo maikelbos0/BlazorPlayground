@@ -5,7 +5,7 @@ using System.Threading;
 namespace BlazorPlayground.StateManagement;
 
 public class MutableState<T> : IDependency {
-    private readonly HashSet<IDependent> dependents = [];
+    private readonly HashSet<WeakReference<IDependent>> dependents = new(WeakReferenceEqualityComparer<IDependent>.Instance);
     private readonly Lock dependentsLock = new();
     private readonly IStateProvider stateProvider;
     private readonly Lock valueLock = new();
@@ -42,19 +42,30 @@ public class MutableState<T> : IDependency {
                 stateProvider.IncrementVersion();
             }
 
+            var activeDependents = new List<IDependent>(dependents.Count);
+
             lock (dependentsLock) {
-            if (!stateProvider.TryRegisterForTransaction(dependents)) {
                 foreach (var dependent in dependents) {
+                    if (dependent.TryGetTarget(out var activeDependent)) {
+                        activeDependents.Add(activeDependent);
+                    }
+                    else {
+                        dependents.Remove(dependent);
+                    }
+                }
+            }
+
+            if (!stateProvider.TryRegisterForTransaction(activeDependents)) {
+                foreach (var dependent in activeDependents) {
                     dependent.Evaluate();
                 }
             }
         }
     }
-    }
 
     public void AddDependent(IDependent dependent) {
         lock (dependentsLock) {
-            dependents.Add(dependent);
+            dependents.Add(new WeakReference<IDependent>(dependent));
         }
     }
 }
