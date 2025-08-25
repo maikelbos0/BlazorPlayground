@@ -1,5 +1,6 @@
 ﻿using NSubstitute;
 using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace BlazorPlayground.StateManagement.Tests;
@@ -59,18 +60,21 @@ public class MutableStateTests {
     }
 
     [Fact]
-    public void Set_Evaluates_Dependents() {
+    public void Set_Evaluates_Active_Dependents() {
         var stateProvider = new StateProvider();
         var subject = new MutableState<int>(stateProvider, 41);
         var dependent1 = Substitute.For<IDependent>();
         var dependent2 = Substitute.For<IDependent>();
+        var dependent3 = Substitute.For<IDependent>();
         var version = stateProvider.Version;
 
         dependent1.Priority.Returns(DependentPriority.Low);
         dependent2.Priority.Returns(DependentPriority.High);
+        dependent3.IsDisposed.Returns(true);
 
         stateProvider.BuildDependencyGraph(dependent1, () => _ = subject.Value);
         stateProvider.BuildDependencyGraph(dependent2, () => _ = subject.Value);
+        stateProvider.BuildDependencyGraph(dependent3, () => _ = subject.Value);
 
         subject.Set(42);
 
@@ -78,23 +82,32 @@ public class MutableStateTests {
             dependent2.Evaluate();
             dependent1.Evaluate();
         });
+
+        dependent3.DidNotReceive().Evaluate();
     }
 
     [Fact]
-    public void Set_Within_Transaction() {
-        var stateProvider = new StateProvider();
+    public void Set_Within_Transaction_Registers_Active_Dependents() {
+        var stateProvider = Substitute.For<IStateProvider>();
         var subject = new MutableState<int>(stateProvider, 41);
-        var dependent = Substitute.For<IDependent>();
+        var dependent1 = Substitute.For<IDependent>();
+        var dependent2 = Substitute.For<IDependent>();
+        var dependent3 = Substitute.For<IDependent>();
 
-        subject.AddDependent(dependent);
+        dependent3.IsDisposed.Returns(true);
 
-        stateProvider.ExecuteTransaction(() => {
-            subject.Set(42);
+        stateProvider.TryRegisterForTransaction(Arg.Any<IEnumerable<IDependent>>()).Returns(true);
 
-            Assert.Equal(42, subject.Value);
-            dependent.DidNotReceive().Evaluate();
-        });
+        subject.AddDependent(dependent1);
+        subject.AddDependent(dependent2);
+        subject.AddDependent(dependent3);
 
-        dependent.Received(1).Evaluate();
+        subject.Set(42);
+
+        stateProvider.Received(1).TryRegisterForTransaction(Arg.Is<IEnumerable<IDependent>>(dependents => dependents.Count() == 2 && dependents.Contains(dependent1) && dependents.Contains(dependent2)));
+
+        dependent1.DidNotReceive().Evaluate();
+        dependent2.DidNotReceive().Evaluate();
+        dependent3.DidNotReceive().Evaluate();
     }
 }

@@ -47,7 +47,7 @@ public class MutableState<T> : IDependency {
 
             lock (dependentsLock) {
                 foreach (var dependent in dependents) {
-                    if (dependent.TryGetTarget(out var activeDependent)) {
+                    if (dependent.TryGetTarget(out var activeDependent) && !activeDependent.IsDisposed) {
                         activeDependents.Add(activeDependent);
                     }
                     else {
