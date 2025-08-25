@@ -24,8 +24,7 @@ public class StateManagedLayoutComponentBaseTests {
         var stateProvider = Substitute.For<IStateProvider>();
         var result = 0;
         var workItem = new EventCallbackWorkItem((Action<int>)(value => result = value));
-
-        var subject = new StateManagedLayoutComponent() {
+        using var subject = new StateManagedLayoutComponent() {
             StateProvider = stateProvider
         };
 
@@ -39,7 +38,7 @@ public class StateManagedLayoutComponentBaseTests {
     [InlineData(false, false)]
     public void ShouldRender_Returns_Correct_Value(bool isEvaluating, bool expectedShouldRender) {
         var stateProvider = Substitute.For<IStateProvider>();
-        var subject = new StateManagedLayoutComponent() {
+        using var subject = new StateManagedLayoutComponent() {
             StateProvider = stateProvider
         };
 
@@ -54,7 +53,7 @@ public class StateManagedLayoutComponentBaseTests {
     [Fact]
     public void RenderFragment_Builds_DependencyGraph() {
         var stateProvider = Substitute.For<IStateProvider>();
-        var subject = new StateManagedLayoutComponent() {
+        using var subject = new StateManagedLayoutComponent() {
             StateProvider = stateProvider
         };
 
@@ -76,7 +75,7 @@ public class StateManagedLayoutComponentBaseTests {
     [Fact]
     public void RenderFragment_Builds_DependencyGraph_Every_Time() {
         var stateProvider = Substitute.For<IStateProvider>();
-        var subject = new StateManagedLayoutComponent() {
+        using var subject = new StateManagedLayoutComponent() {
             StateProvider = stateProvider
         };
 
@@ -94,5 +93,17 @@ public class StateManagedLayoutComponentBaseTests {
 
         stateProvider.Received(2).BuildDependencyGraph(subject, Arg.Any<Action>());
         Assert.Equal(2, subject.BuildRenderTreeInvocations);
+    }
+
+    [Fact]
+    public void Dispose() {
+        var stateProvider = new StateProvider();
+        var subject = new StateManagedLayoutComponent() {
+            StateProvider = stateProvider
+        };
+
+        subject.Dispose();
+
+        Assert.True(subject.IsDisposed);
     }
 }

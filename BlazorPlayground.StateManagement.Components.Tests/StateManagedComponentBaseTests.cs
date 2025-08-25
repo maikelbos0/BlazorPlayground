@@ -24,8 +24,7 @@ public class StateManagedComponentBaseTests {
         var stateProvider = Substitute.For<IStateProvider>();
         var result = 0;
         var workItem = new EventCallbackWorkItem((Action<int>)(value => result = value));
-
-        var subject = new StateManagedComponent() {
+        using var subject = new StateManagedComponent() {
             StateProvider = stateProvider
         };
 
@@ -39,7 +38,7 @@ public class StateManagedComponentBaseTests {
     [InlineData(false, false)]
     public void ShouldRender_Returns_Correct_Value(bool isEvaluating, bool expectedShouldRender) {
         var stateProvider = Substitute.For<IStateProvider>();
-        var subject = new StateManagedComponent() {
+        using var subject = new StateManagedComponent() {
             StateProvider = stateProvider
         };
 
@@ -54,7 +53,7 @@ public class StateManagedComponentBaseTests {
     [Fact]
     public void RenderFragment_Builds_DependencyGraph() {
         var stateProvider = Substitute.For<IStateProvider>();
-        var subject = new StateManagedComponent() {
+        using var subject = new StateManagedComponent() {
             StateProvider = stateProvider
         };
 
@@ -76,7 +75,7 @@ public class StateManagedComponentBaseTests {
     [Fact]
     public void RenderFragment_Builds_DependencyGraph_Every_Time() {
         var stateProvider = Substitute.For<IStateProvider>();
-        var subject = new StateManagedComponent() {
+        using var subject = new StateManagedComponent() {
             StateProvider = stateProvider
         };
 
@@ -94,5 +93,17 @@ public class StateManagedComponentBaseTests {
 
         stateProvider.Received(2).BuildDependencyGraph(subject, Arg.Any<Action>());
         Assert.Equal(2, subject.BuildRenderTreeInvocations);
+    }
+
+    [Fact]
+    public void Dispose() {
+        var stateProvider = new StateProvider();
+        var subject = new StateManagedComponent() {
+            StateProvider = stateProvider
+        };
+
+        subject.Dispose();
+
+        Assert.True(subject.IsDisposed);
     }
 }

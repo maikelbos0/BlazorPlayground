@@ -9,7 +9,7 @@ public class EffectHandlerTests {
     public void Constructor_Evaluates() {
         var result = 0;
         var stateProvider = new StateProvider();
-        var subject = new EffectHandler(stateProvider, () => result = 42);
+        using var subject = new EffectHandler(stateProvider, () => result = 42);
 
         Assert.Equal(42, result);
     }
@@ -19,7 +19,7 @@ public class EffectHandlerTests {
         var value = 41;
         var result = 0;
         var stateProvider = new StateProvider();
-        var subject = new EffectHandler(stateProvider, () => result = value);
+        using var subject = new EffectHandler(stateProvider, () => result = value);
 
         value = 42;
         subject.Evaluate();
@@ -30,10 +30,20 @@ public class EffectHandlerTests {
     [Fact]
     public void Evaluate_Builds_Dependency_Graph() {
         var stateProvider = Substitute.For<IStateProvider>();
-        var subject = new EffectHandler(stateProvider, () => { });
+        using var subject = new EffectHandler(stateProvider, () => { });
 
         subject.Evaluate();
 
         stateProvider.Received(2).BuildDependencyGraph(subject, Arg.Any<Action>());
+    }
+
+    [Fact]
+    public void Dispose() {
+        var stateProvider = new StateProvider();
+        var subject = new EffectHandler(stateProvider, () => { });
+
+        subject.Dispose();
+
+        Assert.True(subject.IsDisposed);
     }
 }

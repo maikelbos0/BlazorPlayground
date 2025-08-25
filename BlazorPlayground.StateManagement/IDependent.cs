@@ -1,6 +1,10 @@
-﻿namespace BlazorPlayground.StateManagement;
+﻿using System;
 
-public interface IDependent {
+namespace BlazorPlayground.StateManagement;
+
+public interface IDependent : IDisposable {
+    bool IsDisposed { get; }
+
     DependentPriority Priority { get; }
 
     void Evaluate();
