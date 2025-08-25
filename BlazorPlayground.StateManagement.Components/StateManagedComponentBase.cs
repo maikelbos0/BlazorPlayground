@@ -38,14 +38,8 @@ public abstract class StateManagedComponentBase : ComponentBase, IHandleEvent, I
     Task IHandleEvent.HandleEventAsync(EventCallbackWorkItem item, object? arg)
         => item.InvokeAsync(arg);
 
-    public void Dispose() {
-        Dispose(true);
+    public virtual void Dispose() {
+        isDisposed = true;
         GC.SuppressFinalize(this);
-    }
-
-    protected virtual void Dispose(bool disposing) {
-        if (!isDisposed) {
-            isDisposed = true;
-        }
     }
 }

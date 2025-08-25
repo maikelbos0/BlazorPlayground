@@ -10,7 +10,7 @@
 <h1>Counter</h1>
 
 <p role="status">Current value: @Value</p>
-<p role="status">Current count: @Count.Value</p>
+<p role="status">Current count: @State.Counter.Value</p>
 <p role="status">Double count: @DoubleCount.Value</p>
 
 <button class="btn btn-primary" @onclick="IncrementValue">I don't update on render</button>
@@ -18,13 +18,13 @@
 
 @code {
 	private int Value { get; set; }
-	[NotNull] private MutableState<int>? Count { get; set; }
 	[NotNull] private ComputedState<int>? DoubleCount { get; set; }
+	[NotNull] private EffectHandler? WriteToConsole { get; set; }
 
 	protected override void OnInitialized() {
 		base.OnInitialized();
 		DoubleCount = StateProvider.Computed(() => State.Counter.Value * 2);
-		StateProvider.Effect(() => Console.WriteLine(DoubleCount.Value));
+		WriteToConsole = StateProvider.Effect(() => Console.WriteLine(DoubleCount.Value));
 	}
 
 	private void IncrementCount() {
@@ -33,5 +33,11 @@
 
 	private void IncrementValue() {
 		Value++;
+	}
+
+	public override void Dispose()
+	{
+		base.Dispose();
+		WriteToConsole.Dispose();
 	}
 }

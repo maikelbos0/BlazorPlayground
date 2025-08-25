@@ -8,7 +8,6 @@ public class StateProvider : IDisposable, IStateProvider {
     private readonly ThreadLocal<HashSet<IDependent>> trackedDependents = new(() => []);
     private readonly ThreadLocal<HashSet<IDependentDependency>> trackedDependentDependencies = new(() => []);
     private readonly ThreadLocal<HashSet<IDependent>?> transactionDependents = new();
-    private bool isDisposed = false;
     private uint version = uint.MinValue;
 
     public uint Version => version;
@@ -79,6 +78,7 @@ public class StateProvider : IDisposable, IStateProvider {
         transaction();
 
         if (!isNested) {
+            // TODO ordering!
             foreach (var dependent in transactionDependents.Value) {
                 dependent.Evaluate();
             }
@@ -88,18 +88,8 @@ public class StateProvider : IDisposable, IStateProvider {
     }
 
     public void Dispose() {
-        Dispose(true);
+        trackedDependents.Dispose();
+        transactionDependents.Dispose();
         GC.SuppressFinalize(this);
-    }
-
-    protected virtual void Dispose(bool disposing) {
-        if (!isDisposed) {
-            isDisposed = true;
-
-            if (disposing) {
-                trackedDependents.Dispose();
-                transactionDependents.Dispose();
-            }
-        }
     }
 }

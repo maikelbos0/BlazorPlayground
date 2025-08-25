@@ -23,13 +23,7 @@ public class EffectHandler : IDependent {
     public void Evaluate() => stateProvider.BuildDependencyGraph(this, effect);
 
     public void Dispose() {
-        Dispose(true);
+        isDisposed = true;
         GC.SuppressFinalize(this);
-    }
-
-    protected virtual void Dispose(bool disposing) {
-        if (!isDisposed) {
-            isDisposed = true;
-        }
     }
 }
