@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 
 namespace BlazorPlayground.StateManagement;
@@ -78,9 +79,8 @@ public class StateProvider : IDisposable, IStateProvider {
         transaction();
 
         if (!isNested) {
-            // TODO ordering!
-            foreach (var dependent in transactionDependents.Value) {
-                dependent.Evaluate();
+            foreach (var transactionDependent in transactionDependents.Value.OrderByDescending(transactionDependent => transactionDependent.Priority)) {
+                transactionDependent.Evaluate();
             }
 
             transactionDependents.Value = null;

@@ -100,12 +100,17 @@ public class StateProviderTests {
         var dependent1 = Substitute.For<IDependent>();
         var dependent2 = Substitute.For<IDependent>();
 
+        dependent1.Priority.Returns(DependentPriority.Medium);
+        dependent2.Priority.Returns(DependentPriority.Highest);
+
         subject.ExecuteTransaction(() => {
             Assert.True(subject.TryRegisterForTransaction([dependent1, dependent2]));
         });
 
-        dependent1.Received(1).Evaluate();
-        dependent2.Received(1).Evaluate();
+        Received.InOrder(() => {
+            dependent2.Evaluate();
+            dependent1.Evaluate();
+        });
     }
 
     [Fact]
@@ -114,6 +119,9 @@ public class StateProviderTests {
         var dependent1 = Substitute.For<IDependent>();
         var dependent2 = Substitute.For<IDependent>();
 
+        dependent1.Priority.Returns(DependentPriority.Medium);
+        dependent2.Priority.Returns(DependentPriority.Highest);
+
         subject.ExecuteTransaction(() => {
             subject.ExecuteTransaction(() => {
                 Assert.True(subject.TryRegisterForTransaction([dependent1, dependent2]));
@@ -124,7 +132,9 @@ public class StateProviderTests {
             });
         });
 
-        dependent1.Received(1).Evaluate();
-        dependent2.Received(1).Evaluate();
+        Received.InOrder(() => {
+            dependent2.Evaluate();
+            dependent1.Evaluate();
+        });
     }
 }
