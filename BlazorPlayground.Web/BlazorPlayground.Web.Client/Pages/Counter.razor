@@ -2,6 +2,7 @@
 @using BlazorPlayground.StateManagement.Components;
 @using System.Diagnostics.CodeAnalysis
 @inherits StateManagedComponentBase
+@inject ApplicationState State
 @page "/counter"
 
 <PageTitle>Counter</PageTitle>
@@ -22,13 +23,12 @@
 
 	protected override void OnInitialized() {
 		base.OnInitialized();
-		Count = StateProvider.Mutable(0);
-		DoubleCount = StateProvider.Computed(() => Count.Value * 2);
+		DoubleCount = StateProvider.Computed(() => State.Counter.Value * 2);
 		StateProvider.Effect(() => Console.WriteLine(DoubleCount.Value));
 	}
 
 	private void IncrementCount() {
-		Count.Update(count => count + 1);
+		State.Counter.Update(count => count + 1);
 	}
 
 	private void IncrementValue() {

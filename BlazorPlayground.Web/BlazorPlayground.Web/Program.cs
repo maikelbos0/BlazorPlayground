@@ -1,3 +1,4 @@
+using BlazorPlayground.Web.Client;
 using BlazorPlayground.Web.Components;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +10,7 @@ builder.Services.AddRazorComponents()
 builder.Services.AddHttpLogging(o => { });
 
 builder.Services.AddStateProvider2();
+builder.Services.AddSingleton<ApplicationState>();
 
 var app = builder.Build();
 

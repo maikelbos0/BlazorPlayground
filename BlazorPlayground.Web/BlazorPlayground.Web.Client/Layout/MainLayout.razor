@@ -1,5 +1,6 @@
 ﻿@using BlazorPlayground.StateManagement.Components;
 @inherits StateManagedLayoutComponentBase
+@inject ApplicationState State;
 
 <div class="page">
     <div class="sidebar">
@@ -9,6 +10,7 @@
     <main>
         <div class="top-row px-4">
             <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+            <button class="btn btn-primary ms-3" @onclick="IncrementCount">Click me</button>
         </div>
 
         <article class="content px-4">
@@ -22,3 +24,9 @@
     <a href="." class="reload">Reload</a>
     <span class="dismiss">🗙</span>
 </div>
+
+@code {
+    private void IncrementCount() {
+        State.Counter.Update(count => count + 1);
+    }
+}
