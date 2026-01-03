@@ -3,15 +3,18 @@
 namespace BlazorPlayground.Graphics {
     public interface IShapeWithOpacity { }
 
-    public static class ShapeWithOpacity {
+    public static class ShapeWithOpacityExtensions {
         private class Data {
             public int Opacity { get; set; } = DrawSettings.DefaultOpacity;
         }
 
-        private static readonly ConditionalWeakTable<IShapeWithOpacity, Data> shapes = new();
+        private static readonly ConditionalWeakTable<IShapeWithOpacity, Data> shapes = [];
 
-        public static void SetOpacity(this IShapeWithOpacity shape, int opacity) => shapes.GetOrCreateValue(shape).Opacity = Math.Max(Math.Min(opacity, DrawSettings.MaximumOpacity), DrawSettings.MinimumOpacity);
-
-        public static int GetOpacity(this IShapeWithOpacity shape) => shapes.GetOrCreateValue(shape).Opacity;
+        extension(IShapeWithOpacity shape) {
+            public int Opacity {
+                get => shapes.GetOrCreateValue(shape).Opacity;
+                set => shapes.GetOrCreateValue(shape).Opacity = Math.Max(Math.Min(value, DrawSettings.MaximumOpacity), DrawSettings.MinimumOpacity);
+            }
+        }
     }
 }

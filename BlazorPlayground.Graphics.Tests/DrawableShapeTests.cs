@@ -22,7 +22,7 @@ namespace BlazorPlayground.Graphics.Tests {
         public void CreateSvgElement_Opacity() {
             var shape = new Rectangle(new Point(100, 200), new Point(150, 250));
 
-            shape.SetOpacity(50);
+            shape.Opacity = 50;
 
             var result = shape.CreateSvgElement();
 

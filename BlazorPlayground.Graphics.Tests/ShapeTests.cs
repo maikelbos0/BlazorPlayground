@@ -72,11 +72,11 @@ namespace BlazorPlayground.Graphics.Tests {
         public void Clone_SetOpacity() {
             var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250));
 
-            polygon.SetOpacity(50);
+            polygon.Opacity = 50;
 
             var result = polygon.Clone();
 
-            Assert.Equal(50, Assert.IsAssignableFrom<IShapeWithOpacity>(result).GetOpacity());
+            Assert.Equal(50, Assert.IsAssignableFrom<IShapeWithOpacity>(result).Opacity);
         }
 
         [Fact]

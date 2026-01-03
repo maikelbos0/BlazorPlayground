@@ -16,7 +16,7 @@ public abstract class DrawableShape : Shape {
         builder.OpenElement(1, ElementName);
 
         if (this is IShapeWithOpacity shapeWithOpacity) {
-            builder.AddAttribute(2, "opacity", (shapeWithOpacity.GetOpacity() / 100.0).ToString(CultureInfo.InvariantCulture));
+            builder.AddAttribute(2, "opacity", (shapeWithOpacity.Opacity / 100.0).ToString(CultureInfo.InvariantCulture));
         }
 
         if (this is IShapeWithFill shapeWithFill) {
@@ -54,7 +54,7 @@ public abstract class DrawableShape : Shape {
 
     private IEnumerable<XAttribute> CreateSvgAttributes() {
         if (this is IShapeWithOpacity shapeWithOpacity) {
-            yield return new XAttribute("opacity", shapeWithOpacity.GetOpacity() / 100.0);
+            yield return new XAttribute("opacity", shapeWithOpacity.Opacity / 100.0);
         }
 
         if (this is IShapeWithFill shapeWithFill) {

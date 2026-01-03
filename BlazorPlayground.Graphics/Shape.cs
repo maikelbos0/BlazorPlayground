@@ -32,7 +32,7 @@ namespace BlazorPlayground.Graphics {
             var clone = CreateClone();
 
             if (this is IShapeWithOpacity shapeWithOpacity && clone is IShapeWithOpacity cloneWithOpacity) {
-                cloneWithOpacity.SetOpacity(shapeWithOpacity.GetOpacity());
+                cloneWithOpacity.Opacity = shapeWithOpacity.Opacity;
             }
 
             if (this is IShapeWithFill shapeWithFill && clone is IShapeWithFill cloneWithFill) {

@@ -72,7 +72,7 @@ public class GameAssetFactory {
 
     private static double GetOpacity(DrawableShape shape) {
         if (shape is IShapeWithOpacity shapeWithOpacity) {
-            return shapeWithOpacity.GetOpacity() / 100.0;
+            return shapeWithOpacity.Opacity / 100.0;
         }
 
         return DefaultOpacity;

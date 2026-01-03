@@ -743,7 +743,7 @@ public class CanvasTests {
 
         var shape = canvas.CreateShape();
 
-        Assert.Equal(50, Assert.IsAssignableFrom<IShapeWithOpacity>(shape).GetOpacity());
+        Assert.Equal(50, Assert.IsAssignableFrom<IShapeWithOpacity>(shape).Opacity);
     }
 
     [Fact]
@@ -988,7 +988,7 @@ public class CanvasTests {
 
         canvas.ApplyOpacityToSelectedShape();
 
-        Assert.Equal(45, Assert.IsAssignableFrom<IShapeWithOpacity>(canvas.SelectedShape).GetOpacity());
+        Assert.Equal(45, Assert.IsAssignableFrom<IShapeWithOpacity>(canvas.SelectedShape).Opacity);
     }
 
     [Fact]

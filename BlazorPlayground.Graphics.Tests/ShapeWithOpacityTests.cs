@@ -9,12 +9,12 @@ namespace BlazorPlayground.Graphics.Tests {
         [InlineData(45, 45)]
         [InlineData(DrawSettings.MaximumOpacity, DrawSettings.MaximumOpacity)]
         [InlineData(DrawSettings.MaximumOpacity + 1, DrawSettings.MaximumOpacity)]
-        public void SetOpacity(int opacity, int expectedOpacity) {
+        public void Opacity(int opacity, int expectedOpacity) {
             var shape = Substitute.For<IShapeWithOpacity>();
 
-            shape.SetOpacity(opacity);
+            shape.Opacity = opacity;
 
-            Assert.Equal(expectedOpacity, shape.GetOpacity());
+            Assert.Equal(expectedOpacity, shape.Opacity);
         }
     }
 }

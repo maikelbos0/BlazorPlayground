@@ -30,7 +30,7 @@ public class GameAssetFactoryTests {
         rectangle.SetStroke(new Color(0, 0, 255, 1));
         rectangle.SetStrokeOpacity(80);
         rectangle.SetStrokeWidth(2);
-        rectangle.SetOpacity(90);
+        rectangle.Opacity = 90;
 
         var result = subject.GetGameAsset([rectangle]);
 

@@ -27,7 +27,7 @@ namespace BlazorPlayground.Graphics {
             var shape = CreateShape(element);
 
             if (shape != null && SetAnchors(shape, element)) {
-                (shape as IShapeWithOpacity)?.SetOpacity(ParseOpacity(element.Attribute("opacity")?.Value));
+                (shape as IShapeWithOpacity)?.Opacity = ParseOpacity(element.Attribute("opacity")?.Value);
                 (shape as IShapeWithFill)?.Fill = ParsePaintServer(element.Attribute("fill")?.Value);
                 (shape as IShapeWithFill)?.FillOpacity = ParseOpacity(element.Attribute("fill-opacity")?.Value);
                 (shape as IShapeWithStroke)?.SetStroke(ParsePaintServer(element.Attribute("stroke")?.Value));
