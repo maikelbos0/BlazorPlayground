@@ -43,8 +43,8 @@ public class GameAssetFactory {
     }
 
     private static string GetFillColor(DrawableShape shape) {
-        if (shape is IShapeWithFill shapeWithFill && shapeWithFill.GetFill() is Color fillColor) {
-            var fillOpacity = shapeWithFill.GetFillOpacity() / 100.0;
+        if (shape is IShapeWithFill shapeWithFill && shapeWithFill.Fill is Color fillColor) {
+            var fillOpacity = shapeWithFill.FillOpacity / 100.0;
 
             return new Color(fillColor.Red, fillColor.Green, fillColor.Blue, fillColor.Alpha * fillOpacity).ToString();
         }

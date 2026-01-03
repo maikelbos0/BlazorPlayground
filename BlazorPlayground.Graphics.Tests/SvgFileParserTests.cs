@@ -210,21 +210,21 @@ namespace BlazorPlayground.Graphics.Tests {
         public void Parse_Fill_None() {
             var result = SvgFileParser.Parse(XElement.Parse("<ellipse fill=\"none\" stroke=\"#000000\" stroke-width=\"1\" cx=\"250\" cy=\"150\" rx=\"100\" ry=\"50\" data-shape-type=\"Ellipse\" data-shape-anchor-0=\"250,150\" data-shape-anchor-1=\"350,200\"/>"));
 
-            Assert.Equal(PaintServer.None, Assert.IsAssignableFrom<IShapeWithFill>(result).GetFill());
+            Assert.Equal(PaintServer.None, Assert.IsAssignableFrom<IShapeWithFill>(result).Fill);
         }
 
         [Fact]
         public void Parse_Fill_Color() {
             var result = SvgFileParser.Parse(XElement.Parse("<ellipse fill=\"#ffff00\" stroke=\"#000000\" stroke-width=\"1\" cx=\"250\" cy=\"150\" rx=\"100\" ry=\"50\" data-shape-type=\"Ellipse\" data-shape-anchor-0=\"250,150\" data-shape-anchor-1=\"350,200\"/>"));
 
-            PaintServerAssert.Equal(new Color(255, 255, 0, 1), Assert.IsAssignableFrom<IShapeWithFill>(result).GetFill());
+            PaintServerAssert.Equal(new Color(255, 255, 0, 1), Assert.IsAssignableFrom<IShapeWithFill>(result).Fill);
         }
 
         [Fact]
         public void Parse_Fill_Default() {
             var result = SvgFileParser.Parse(XElement.Parse("<ellipse stroke=\"#000000\" stroke-width=\"1\" cx=\"250\" cy=\"150\" rx=\"100\" ry=\"50\" data-shape-type=\"Ellipse\" data-shape-anchor-0=\"250,150\" data-shape-anchor-1=\"350,200\"/>"));
 
-            Assert.Equal(PaintServer.None, Assert.IsAssignableFrom<IShapeWithFill>(result).GetFill());
+            Assert.Equal(PaintServer.None, Assert.IsAssignableFrom<IShapeWithFill>(result).Fill);
         }
 
         [Theory]
@@ -237,7 +237,7 @@ namespace BlazorPlayground.Graphics.Tests {
         public void Parse_FillOpacity(string fillOpacity, int expectedFillOpacity) {
             var result = SvgFileParser.Parse(XElement.Parse($"<ellipse opacity=\"1\" fill=\"#ffff00\" fill-opacity=\"{fillOpacity}\" stroke=\"#ffff00\" stroke-width=\"1\" cx=\"250\" cy=\"150\" rx=\"100\" ry=\"50\" data-shape-type=\"Ellipse\" data-shape-anchor-0=\"250,150\" data-shape-anchor-1=\"350,200\"/>"));
 
-            Assert.Equal(expectedFillOpacity, Assert.IsAssignableFrom<IShapeWithFill>(result).GetFillOpacity());
+            Assert.Equal(expectedFillOpacity, Assert.IsAssignableFrom<IShapeWithFill>(result).FillOpacity);
         }
 
         [Fact]

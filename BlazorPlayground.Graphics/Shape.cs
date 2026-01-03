@@ -36,8 +36,8 @@ namespace BlazorPlayground.Graphics {
             }
 
             if (this is IShapeWithFill shapeWithFill && clone is IShapeWithFill cloneWithFill) {
-                cloneWithFill.SetFill(shapeWithFill.GetFill());
-                cloneWithFill.SetFillOpacity(shapeWithFill.GetFillOpacity());
+                cloneWithFill.Fill = shapeWithFill.Fill;
+                cloneWithFill.FillOpacity = shapeWithFill.FillOpacity;
             }
 
             if (this is IShapeWithStroke shapeWithStroke && clone is IShapeWithStroke cloneWithStroke) {

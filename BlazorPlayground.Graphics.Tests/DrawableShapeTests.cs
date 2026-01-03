@@ -33,7 +33,7 @@ namespace BlazorPlayground.Graphics.Tests {
         public void CreateSvgElement_Fill() {
             var shape = new Rectangle(new Point(100, 200), new Point(150, 250));
 
-            shape.SetFill(new Color(255, 255, 0, 1));
+            shape.Fill = new Color(255, 255, 0, 1);
 
             var result = shape.CreateSvgElement();
 
@@ -44,7 +44,7 @@ namespace BlazorPlayground.Graphics.Tests {
         public void CreateSvgElement_FillOpacity() {
             var shape = new Rectangle(new Point(100, 200), new Point(150, 250));
 
-            shape.SetFillOpacity(50);
+            shape.FillOpacity = 50;
 
             var result = shape.CreateSvgElement();
 

@@ -83,22 +83,22 @@ namespace BlazorPlayground.Graphics.Tests {
         public void Clone_SetFill() {
             var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250));
 
-            polygon.SetFill(new Color(255, 0, 255, 1));
+            polygon.Fill = new Color(255, 0, 255, 1);
 
             var result = polygon.Clone();
 
-            PaintServerAssert.Equal(new Color(255, 0, 255, 1), Assert.IsAssignableFrom<IShapeWithFill>(result).GetFill());
+            PaintServerAssert.Equal(new Color(255, 0, 255, 1), Assert.IsAssignableFrom<IShapeWithFill>(result).Fill);
         }
 
         [Fact]
         public void Clone_SetFillOpacity() {
             var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250));
 
-            polygon.SetFillOpacity(50);
+            polygon.FillOpacity = 50;
 
             var result = polygon.Clone();
 
-            Assert.Equal(50, Assert.IsAssignableFrom<IShapeWithFill>(result).GetFillOpacity());
+            Assert.Equal(50, Assert.IsAssignableFrom<IShapeWithFill>(result).FillOpacity);
         }
 
         [Fact]

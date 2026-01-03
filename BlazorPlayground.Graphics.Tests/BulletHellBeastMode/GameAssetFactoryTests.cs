@@ -25,8 +25,8 @@ public class GameAssetFactoryTests {
         var subject = new GameAssetFactory(geometryFactory);
         var rectangle = new Rectangle(new(-10, -10), new(50, -30));
 
-        rectangle.SetFill(new Color(255, 0, 0, 1));
-        rectangle.SetFillOpacity(50);
+        rectangle.Fill = new Color(255, 0, 0, 1);
+        rectangle.FillOpacity = 50;
         rectangle.SetStroke(new Color(0, 0, 255, 1));
         rectangle.SetStrokeOpacity(80);
         rectangle.SetStrokeWidth(2);

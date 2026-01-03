@@ -3,20 +3,24 @@
 namespace BlazorPlayground.Graphics {
     public interface IShapeWithFill { }
 
-    public static class ShapeWithFill {
+    public static class ShapeWithFillExtensions {
         private class Data {
             public IPaintServer Fill { get; set; } = PaintServer.None;
             public int FillOpacity { get; set; } = DrawSettings.DefaultOpacity;
         }
 
-        private static readonly ConditionalWeakTable<IShapeWithFill, Data> shapes = new();
+        private static readonly ConditionalWeakTable<IShapeWithFill, Data> shapes = [];
 
-        public static void SetFill(this IShapeWithFill shape, IPaintServer fill) => shapes.GetOrCreateValue(shape).Fill = fill;
+        extension(IShapeWithFill shape) {
+            public IPaintServer Fill {
+                get => shapes.GetOrCreateValue(shape).Fill;
+                set => shapes.GetOrCreateValue(shape).Fill = value;
+            }
 
-        public static IPaintServer GetFill(this IShapeWithFill shape) => shapes.GetOrCreateValue(shape).Fill;
-
-        public static void SetFillOpacity(this IShapeWithFill shape, int fillOpacity) => shapes.GetOrCreateValue(shape).FillOpacity = Math.Max(Math.Min(fillOpacity, DrawSettings.MaximumOpacity), DrawSettings.MinimumOpacity);
-
-        public static int GetFillOpacity(this IShapeWithFill shape) => shapes.GetOrCreateValue(shape).FillOpacity;
+            public int FillOpacity {
+                get => shapes.GetOrCreateValue(shape).FillOpacity;
+                set => shapes.GetOrCreateValue(shape).FillOpacity = Math.Max(Math.Min(value, DrawSettings.MaximumOpacity), DrawSettings.MinimumOpacity);
+            }
+        }
     }
 }

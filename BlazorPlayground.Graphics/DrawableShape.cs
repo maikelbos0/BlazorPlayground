@@ -20,8 +20,8 @@ public abstract class DrawableShape : Shape {
         }
 
         if (this is IShapeWithFill shapeWithFill) {
-            builder.AddAttribute(3, "fill", shapeWithFill.GetFill());
-            builder.AddAttribute(4, "fill-opacity", (shapeWithFill.GetFillOpacity() / 100.0).ToString(CultureInfo.InvariantCulture));
+            builder.AddAttribute(3, "fill", shapeWithFill.Fill);
+            builder.AddAttribute(4, "fill-opacity", (shapeWithFill.FillOpacity / 100.0).ToString(CultureInfo.InvariantCulture));
         }
 
         if (this is IShapeWithStroke shapeWithStroke) {
@@ -58,8 +58,8 @@ public abstract class DrawableShape : Shape {
         }
 
         if (this is IShapeWithFill shapeWithFill) {
-            yield return new XAttribute("fill", shapeWithFill.GetFill());
-            yield return new XAttribute("fill-opacity", shapeWithFill.GetFillOpacity() / 100.0);
+            yield return new XAttribute("fill", shapeWithFill.Fill);
+            yield return new XAttribute("fill-opacity", shapeWithFill.FillOpacity / 100.0);
         }
 
         if (this is IShapeWithStroke shapeWithStroke) {

@@ -759,7 +759,7 @@ public class CanvasTests {
 
         var shape = canvas.CreateShape();
 
-        PaintServerAssert.Equal(new Color(255, 255, 0, 1), Assert.IsAssignableFrom<IShapeWithFill>(shape).GetFill());
+        PaintServerAssert.Equal(new Color(255, 255, 0, 1), Assert.IsAssignableFrom<IShapeWithFill>(shape).Fill);
     }
 
     [Fact]
@@ -774,7 +774,7 @@ public class CanvasTests {
 
         var shape = canvas.CreateShape();
 
-        Assert.Equal(50, Assert.IsAssignableFrom<IShapeWithFill>(shape).GetFillOpacity());
+        Assert.Equal(50, Assert.IsAssignableFrom<IShapeWithFill>(shape).FillOpacity);
     }
 
     [Fact]
@@ -1002,7 +1002,7 @@ public class CanvasTests {
 
         canvas.ApplyFillToSelectedShape();
 
-        PaintServerAssert.Equal(new Color(255, 255, 0, 1), Assert.IsAssignableFrom<IShapeWithFill>(canvas.SelectedShape).GetFill());
+        PaintServerAssert.Equal(new Color(255, 255, 0, 1), Assert.IsAssignableFrom<IShapeWithFill>(canvas.SelectedShape).Fill);
     }
 
     [Fact]
@@ -1015,7 +1015,7 @@ public class CanvasTests {
 
         canvas.ApplyFillOpacityToSelectedShape();
 
-        Assert.Equal(50, Assert.IsAssignableFrom<IShapeWithFill>(canvas.SelectedShape).GetFillOpacity());
+        Assert.Equal(50, Assert.IsAssignableFrom<IShapeWithFill>(canvas.SelectedShape).FillOpacity);
     }
 
     [Fact]

@@ -206,8 +206,8 @@ public class Canvas {
         var shape = CurrentShapeDefinition.Construct(SnappedStartPoint, SnappedEndPoint);
 
         (shape as IShapeWithOpacity)?.SetOpacity(DrawSettings.Opacity);
-        (shape as IShapeWithFill)?.SetFill(DrawSettings.FillPaintManager.Server);
-        (shape as IShapeWithFill)?.SetFillOpacity(DrawSettings.FillOpacity);
+        (shape as IShapeWithFill)?.Fill = DrawSettings.FillPaintManager.Server;
+        (shape as IShapeWithFill)?.FillOpacity = DrawSettings.FillOpacity;
         (shape as IShapeWithStroke)?.SetStroke(DrawSettings.StrokePaintManager.Server);
         (shape as IShapeWithStroke)?.SetStrokeWidth(DrawSettings.StrokeWidth);
         (shape as IShapeWithStroke)?.SetStrokeOpacity(DrawSettings.StrokeOpacity);
@@ -235,11 +235,11 @@ public class Canvas {
     }
 
     public void ApplyFillToSelectedShape() {
-        (SelectedShape as IShapeWithFill)?.SetFill(DrawSettings.FillPaintManager.Server);
+        (SelectedShape as IShapeWithFill)?.Fill = DrawSettings.FillPaintManager.Server;
     }
 
     public void ApplyFillOpacityToSelectedShape() {
-        (SelectedShape as IShapeWithFill)?.SetFillOpacity(DrawSettings.FillOpacity);
+        (SelectedShape as IShapeWithFill)?.FillOpacity = DrawSettings.FillOpacity;
     }
 
     public void ApplyStrokeToSelectedShape() {

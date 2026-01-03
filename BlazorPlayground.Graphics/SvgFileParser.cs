@@ -28,8 +28,8 @@ namespace BlazorPlayground.Graphics {
 
             if (shape != null && SetAnchors(shape, element)) {
                 (shape as IShapeWithOpacity)?.SetOpacity(ParseOpacity(element.Attribute("opacity")?.Value));
-                (shape as IShapeWithFill)?.SetFill(ParsePaintServer(element.Attribute("fill")?.Value));
-                (shape as IShapeWithFill)?.SetFillOpacity(ParseOpacity(element.Attribute("fill-opacity")?.Value));
+                (shape as IShapeWithFill)?.Fill = ParsePaintServer(element.Attribute("fill")?.Value);
+                (shape as IShapeWithFill)?.FillOpacity = ParseOpacity(element.Attribute("fill-opacity")?.Value);
                 (shape as IShapeWithStroke)?.SetStroke(ParsePaintServer(element.Attribute("stroke")?.Value));
                 (shape as IShapeWithStroke)?.SetStrokeWidth(ParseDimension(element.Attribute("stroke-width")?.Value, DrawSettings.MinimumStrokeWidth, DrawSettings.DefaultStrokeWidth));
                 (shape as IShapeWithStroke)?.SetStrokeOpacity(ParseOpacity(element.Attribute("stroke-opacity")?.Value));
