@@ -1,4 +1,7 @@
-﻿namespace BlazorPlayground.Graphics {
+﻿using System;
+using System.Collections.Generic;
+
+namespace BlazorPlayground.Graphics {
     public class ShapeDefinition {
         public delegate Shape Constructor(Point startPoint, Point endPoint);
 

@@ -1,4 +1,6 @@
-﻿namespace BlazorPlayground.Graphics;
+﻿using System;
+
+namespace BlazorPlayground.Graphics;
 
 public record Color(byte Red, byte Green, byte Blue, double Alpha) : IPaintServer {
     public Color ContrastingColor => (Red + Green + Blue) * Alpha + 255 * 3 * (1 - Alpha) > 381 ? new Color(0, 0, 0, 1) : new Color(255, 255, 255, 1);

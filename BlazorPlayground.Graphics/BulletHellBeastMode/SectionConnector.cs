@@ -1,4 +1,6 @@
-﻿using Coordinate = BlazorPlayground.BulletHellBeastMode.Vector<BlazorPlayground.BulletHellBeastMode.CoordinateType>;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Coordinate = BlazorPlayground.BulletHellBeastMode.Vector<BlazorPlayground.BulletHellBeastMode.CoordinateType>;
 
 namespace BlazorPlayground.Graphics.BulletHellBeastMode;
 

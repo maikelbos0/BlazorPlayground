@@ -1,4 +1,6 @@
-﻿namespace BlazorPlayground.Graphics {
+﻿using System;
+
+namespace BlazorPlayground.Graphics {
     public class Anchor {
         private readonly Func<Shape, Point> get;
         private readonly Action<Shape, Point> set;

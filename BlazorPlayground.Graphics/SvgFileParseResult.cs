@@ -1,4 +1,6 @@
-﻿namespace BlazorPlayground.Graphics {
+﻿using System;
+
+namespace BlazorPlayground.Graphics {
     public record SvgFileParseResult {
         private readonly Canvas? canvas;
 

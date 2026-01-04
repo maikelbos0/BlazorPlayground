@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Xml.Linq;
 

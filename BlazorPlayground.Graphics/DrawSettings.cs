@@ -1,4 +1,6 @@
-﻿namespace BlazorPlayground.Graphics {
+﻿using System;
+
+namespace BlazorPlayground.Graphics {
     public class DrawSettings {
         public const int DefaultOpacity = 100;
         public const int MinimumOpacity = 0;
