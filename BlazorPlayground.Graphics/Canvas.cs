@@ -211,7 +211,7 @@ public class Canvas {
         (shape as IShapeWithStroke)?.Stroke = DrawSettings.StrokePaintManager.Server;
         (shape as IShapeWithStroke)?.StrokeWidth = DrawSettings.StrokeWidth;
         (shape as IShapeWithStroke)?.StrokeOpacity = DrawSettings.StrokeOpacity;
-        (shape as IShapeWithStrokeLinecap)?.SetStrokeLinecap(DrawSettings.StrokeLinecap);
+        (shape as IShapeWithStrokeLinecap)?.StrokeLinecap = DrawSettings.StrokeLinecap;
         (shape as IShapeWithStrokeLinejoin)?.SetStrokeLinejoin(DrawSettings.StrokeLinejoin);
         (shape as IShapeWithSides)?.Sides = DrawSettings.Sides;
 
@@ -255,7 +255,7 @@ public class Canvas {
     }
 
     public void ApplyStrokeLinecapToSelectedShape() {
-        (SelectedShape as IShapeWithStrokeLinecap)?.SetStrokeLinecap(DrawSettings.StrokeLinecap);
+        (SelectedShape as IShapeWithStrokeLinecap)?.StrokeLinecap = DrawSettings.StrokeLinecap;
     }
 
     public void ApplyStrokeLinejoinToSelectedShape() {

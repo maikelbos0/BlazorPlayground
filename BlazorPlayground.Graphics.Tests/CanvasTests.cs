@@ -835,7 +835,7 @@ public class CanvasTests {
 
         var shape = canvas.CreateShape();
 
-        Assert.Equal(Linecap.Square, Assert.IsAssignableFrom<IShapeWithStrokeLinecap>(shape).GetStrokeLinecap());
+        Assert.Equal(Linecap.Square, Assert.IsAssignableFrom<IShapeWithStrokeLinecap>(shape).StrokeLinecap);
     }
 
     [Fact]
@@ -1068,7 +1068,7 @@ public class CanvasTests {
 
         canvas.ApplyStrokeLinecapToSelectedShape();
 
-        Assert.Equal(Linecap.Round, Assert.IsAssignableFrom<IShapeWithStrokeLinecap>(canvas.SelectedShape).GetStrokeLinecap());
+        Assert.Equal(Linecap.Round, Assert.IsAssignableFrom<IShapeWithStrokeLinecap>(canvas.SelectedShape).StrokeLinecap);
     }
 
     [Fact]

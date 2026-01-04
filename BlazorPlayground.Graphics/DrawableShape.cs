@@ -31,7 +31,7 @@ public abstract class DrawableShape : Shape {
         }
 
         if (this is IShapeWithStrokeLinecap shapeWithStrokeLinecap) {
-            builder.AddAttribute(8, "stroke-linecap", shapeWithStrokeLinecap.GetStrokeLinecap().ToString().ToLower());
+            builder.AddAttribute(8, "stroke-linecap", shapeWithStrokeLinecap.StrokeLinecap.ToString().ToLower());
         }
 
         if (this is IShapeWithStrokeLinejoin shapeWithStrokeLinejoin) {
@@ -69,7 +69,7 @@ public abstract class DrawableShape : Shape {
         }
 
         if (this is IShapeWithStrokeLinecap shapeWithStrokeLinecap) {
-            yield return new XAttribute("stroke-linecap", shapeWithStrokeLinecap.GetStrokeLinecap().ToString().ToLower());
+            yield return new XAttribute("stroke-linecap", shapeWithStrokeLinecap.StrokeLinecap.ToString().ToLower());
         }
 
         if (this is IShapeWithStrokeLinejoin shapeWithStrokeLinejoin) {

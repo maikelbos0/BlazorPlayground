@@ -138,11 +138,11 @@ namespace BlazorPlayground.Graphics.Tests {
         public void Clone_SetStrokeLinecap() {
             var line = new Line(new Point(100, 150), new Point(200, 250));
 
-            line.SetStrokeLinecap(Linecap.Square);
+            line.StrokeLinecap = Linecap.Square;
 
             var result = line.Clone();
 
-            Assert.Equal(Linecap.Square, Assert.IsAssignableFrom<IShapeWithStrokeLinecap>(result).GetStrokeLinecap());
+            Assert.Equal(Linecap.Square, Assert.IsAssignableFrom<IShapeWithStrokeLinecap>(result).StrokeLinecap);
         }
 
         [Fact]

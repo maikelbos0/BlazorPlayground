@@ -3,16 +3,18 @@
 namespace BlazorPlayground.Graphics {
     public interface IShapeWithStrokeLinecap { }
 
-    public static class ShapeWithStrokeLinecap {
+    public static class ShapeWithStrokeLinecapExtensions {
         private class Data {
             public Linecap StrokeLinecap { get; set; }
         }
 
         private static readonly ConditionalWeakTable<IShapeWithStrokeLinecap, Data> shapes = new();
 
-
-        public static void SetStrokeLinecap(this IShapeWithStrokeLinecap shape, Linecap strokeLinecap) => shapes.GetOrCreateValue(shape).StrokeLinecap = strokeLinecap;
-
-        public static Linecap GetStrokeLinecap(this IShapeWithStrokeLinecap shape) => shapes.GetOrCreateValue(shape).StrokeLinecap;
+        extension (IShapeWithStrokeLinecap shape) {
+            public Linecap StrokeLinecap {
+                get => shapes.GetOrCreateValue(shape).StrokeLinecap;
+                set => shapes.GetOrCreateValue(shape).StrokeLinecap = value;
+            }
+        }
     }
 }

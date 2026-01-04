@@ -296,7 +296,7 @@ namespace BlazorPlayground.Graphics.Tests {
         public void Parse_Null_StrokeLinecap() {
             var result = SvgFileParser.Parse(XElement.Parse("<line stroke=\"#000000\" stroke-width=\"1\" x1=\"50\" y1=\"50\" x2=\"150\" y2=\"100\" data-shape-type=\"Line\" data-shape-anchor-0=\"50,50\" data-shape-anchor-1=\"150,100\"/>"));
 
-            Assert.Equal(DrawSettings.DefaultStrokeLinecap, Assert.IsAssignableFrom<IShapeWithStrokeLinecap>(result).GetStrokeLinecap());
+            Assert.Equal(DrawSettings.DefaultStrokeLinecap, Assert.IsAssignableFrom<IShapeWithStrokeLinecap>(result).StrokeLinecap);
         }
 
         [Theory]
@@ -310,7 +310,7 @@ namespace BlazorPlayground.Graphics.Tests {
         public void Parse_StrokeLinecap(string strokeLinecap, Linecap expectedStrokeLinecap) {
             var result = SvgFileParser.Parse(XElement.Parse($"<line stroke=\"#000000\" stroke-width=\"1\" stroke-linecap=\"{strokeLinecap}\" x1=\"50\" y1=\"50\" x2=\"150\" y2=\"100\" data-shape-type=\"Line\" data-shape-anchor-0=\"50,50\" data-shape-anchor-1=\"150,100\"/>"));
 
-            Assert.Equal(expectedStrokeLinecap, Assert.IsAssignableFrom<IShapeWithStrokeLinecap>(result).GetStrokeLinecap());
+            Assert.Equal(expectedStrokeLinecap, Assert.IsAssignableFrom<IShapeWithStrokeLinecap>(result).StrokeLinecap);
         }
 
         [Fact]

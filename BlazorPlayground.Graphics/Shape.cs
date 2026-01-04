@@ -47,7 +47,7 @@ namespace BlazorPlayground.Graphics {
             }
 
             if (this is IShapeWithStrokeLinecap shapeWithStrokeLinecap && clone is IShapeWithStrokeLinecap cloneWithStrokeLinecap) {
-                cloneWithStrokeLinecap.SetStrokeLinecap(shapeWithStrokeLinecap.GetStrokeLinecap());
+                cloneWithStrokeLinecap.StrokeLinecap = shapeWithStrokeLinecap.StrokeLinecap;
             }
 
             if (this is IShapeWithStrokeLinejoin shapeWithStrokeLinejoin && clone is IShapeWithStrokeLinejoin cloneWithStrokeLinejoin) {

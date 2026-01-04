@@ -88,7 +88,7 @@ namespace BlazorPlayground.Graphics.Tests {
         public void CreateSvgElement_StrokeLinecap() {
             var shape = new Line(new Point(100, 200), new Point(150, 250));
 
-            shape.SetStrokeLinecap(Linecap.Square);
+            shape.StrokeLinecap = Linecap.Square;
 
             var result = shape.CreateSvgElement();
 
