@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
 
 namespace BlazorPlayground.StateManagement.Components;
 
