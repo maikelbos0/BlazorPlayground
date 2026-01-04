@@ -11,9 +11,9 @@ namespace BlazorPlayground.Graphics.Tests {
         public void StrokeWidth(int strokeWidth, int expectedStrokeWidth) {
             var shape = Substitute.For<IShapeWithStroke>();
 
-            shape.SetStrokeWidth(strokeWidth);
+            shape.StrokeWidth = strokeWidth;
 
-            Assert.Equal(expectedStrokeWidth, shape.GetStrokeWidth());
+            Assert.Equal(expectedStrokeWidth, shape.StrokeWidth);
         }
 
         [Theory]
@@ -22,12 +22,12 @@ namespace BlazorPlayground.Graphics.Tests {
         [InlineData(45, 45)]
         [InlineData(DrawSettings.MaximumOpacity, DrawSettings.MaximumOpacity)]
         [InlineData(DrawSettings.MaximumOpacity + 1, DrawSettings.MaximumOpacity)]
-        public void SetStrokeOpacity(int opacity, int expectedOpacity) {
+        public void StrokeOpacity(int opacity, int expectedOpacity) {
             var shape = Substitute.For<IShapeWithStroke>();
 
-            shape.SetStrokeOpacity(opacity);
+            shape.StrokeOpacity = opacity;
 
-            Assert.Equal(expectedOpacity, shape.GetStrokeOpacity());
+            Assert.Equal(expectedOpacity, shape.StrokeOpacity);
         }
     }
 }

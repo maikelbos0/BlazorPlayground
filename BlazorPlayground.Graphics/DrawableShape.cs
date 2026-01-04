@@ -25,9 +25,9 @@ public abstract class DrawableShape : Shape {
         }
 
         if (this is IShapeWithStroke shapeWithStroke) {
-            builder.AddAttribute(5, "stroke", shapeWithStroke.GetStroke());
-            builder.AddAttribute(6, "stroke-width", shapeWithStroke.GetStrokeWidth());
-            builder.AddAttribute(7, "stroke-opacity", (shapeWithStroke.GetStrokeOpacity() / 100.0).ToString(CultureInfo.InvariantCulture));
+            builder.AddAttribute(5, "stroke", shapeWithStroke.Stroke);
+            builder.AddAttribute(6, "stroke-width", shapeWithStroke.StrokeWidth);
+            builder.AddAttribute(7, "stroke-opacity", (shapeWithStroke.StrokeOpacity / 100.0).ToString(CultureInfo.InvariantCulture));
         }
 
         if (this is IShapeWithStrokeLinecap shapeWithStrokeLinecap) {
@@ -63,9 +63,9 @@ public abstract class DrawableShape : Shape {
         }
 
         if (this is IShapeWithStroke shapeWithStroke) {
-            yield return new XAttribute("stroke", shapeWithStroke.GetStroke());
-            yield return new XAttribute("stroke-width", shapeWithStroke.GetStrokeWidth());
-            yield return new XAttribute("stroke-opacity", shapeWithStroke.GetStrokeOpacity() / 100.0);
+            yield return new XAttribute("stroke", shapeWithStroke.Stroke);
+            yield return new XAttribute("stroke-width", shapeWithStroke.StrokeWidth);
+            yield return new XAttribute("stroke-opacity", shapeWithStroke.StrokeOpacity / 100.0);
         }
 
         if (this is IShapeWithStrokeLinecap shapeWithStrokeLinecap) {

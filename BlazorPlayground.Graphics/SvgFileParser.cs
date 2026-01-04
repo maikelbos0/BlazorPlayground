@@ -30,9 +30,9 @@ namespace BlazorPlayground.Graphics {
                 (shape as IShapeWithOpacity)?.Opacity = ParseOpacity(element.Attribute("opacity")?.Value);
                 (shape as IShapeWithFill)?.Fill = ParsePaintServer(element.Attribute("fill")?.Value);
                 (shape as IShapeWithFill)?.FillOpacity = ParseOpacity(element.Attribute("fill-opacity")?.Value);
-                (shape as IShapeWithStroke)?.SetStroke(ParsePaintServer(element.Attribute("stroke")?.Value));
-                (shape as IShapeWithStroke)?.SetStrokeWidth(ParseDimension(element.Attribute("stroke-width")?.Value, DrawSettings.MinimumStrokeWidth, DrawSettings.DefaultStrokeWidth));
-                (shape as IShapeWithStroke)?.SetStrokeOpacity(ParseOpacity(element.Attribute("stroke-opacity")?.Value));
+                (shape as IShapeWithStroke)?.Stroke = ParsePaintServer(element.Attribute("stroke")?.Value);
+                (shape as IShapeWithStroke)?.StrokeWidth = ParseDimension(element.Attribute("stroke-width")?.Value, DrawSettings.MinimumStrokeWidth, DrawSettings.DefaultStrokeWidth);
+                (shape as IShapeWithStroke)?.StrokeOpacity = ParseOpacity(element.Attribute("stroke-opacity")?.Value);
                 (shape as IShapeWithStrokeLinecap)?.SetStrokeLinecap(ParseEnum(element.Attribute("stroke-linecap")?.Value, DrawSettings.DefaultStrokeLinecap));
                 (shape as IShapeWithStrokeLinejoin)?.SetStrokeLinejoin(ParseEnum(element.Attribute("stroke-linejoin")?.Value, DrawSettings.DefaultStrokeLinejoin));
                 (shape as IShapeWithSides)?.Sides = ParseDimension(element.Attribute("data-shape-sides")?.Value, DrawSettings.MinimumSides, DrawSettings.DefaultSides);

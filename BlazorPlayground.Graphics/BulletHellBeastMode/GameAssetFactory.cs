@@ -53,8 +53,8 @@ public class GameAssetFactory {
     }
 
     private static string GetStrokeColor(DrawableShape shape) {
-        if (shape is IShapeWithStroke shapeWithStroke && shapeWithStroke.GetStroke() is Color strokeColor) {
-            var strokeOpacity = shapeWithStroke.GetStrokeOpacity() / 100.0;
+        if (shape is IShapeWithStroke shapeWithStroke && shapeWithStroke.Stroke is Color strokeColor) {
+            var strokeOpacity = shapeWithStroke.StrokeOpacity / 100.0;
 
             return new Color(strokeColor.Red, strokeColor.Green, strokeColor.Blue, strokeColor.Alpha * strokeOpacity).ToString();
         }
@@ -64,7 +64,7 @@ public class GameAssetFactory {
 
     private static int GetStrokeWidth(DrawableShape shape) {
         if (shape is IShapeWithStroke shapeWithStroke) {
-            return shapeWithStroke.GetStrokeWidth();
+            return shapeWithStroke.StrokeWidth;
         }
 
         return DefaultStrokeWidth;

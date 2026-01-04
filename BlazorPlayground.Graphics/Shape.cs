@@ -41,9 +41,9 @@ namespace BlazorPlayground.Graphics {
             }
 
             if (this is IShapeWithStroke shapeWithStroke && clone is IShapeWithStroke cloneWithStroke) {
-                cloneWithStroke.SetStroke(shapeWithStroke.GetStroke());
-                cloneWithStroke.SetStrokeWidth(shapeWithStroke.GetStrokeWidth());
-                cloneWithStroke.SetStrokeOpacity(shapeWithStroke.GetStrokeOpacity());
+                cloneWithStroke.Stroke = shapeWithStroke.Stroke;
+                cloneWithStroke.StrokeWidth = shapeWithStroke.StrokeWidth;
+                cloneWithStroke.StrokeOpacity = shapeWithStroke.StrokeOpacity;
             }
 
             if (this is IShapeWithStrokeLinecap shapeWithStrokeLinecap && clone is IShapeWithStrokeLinecap cloneWithStrokeLinecap) {

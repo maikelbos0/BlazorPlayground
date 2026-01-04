@@ -105,33 +105,33 @@ namespace BlazorPlayground.Graphics.Tests {
         public void Clone_SetStroke() {
             var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250));
 
-            polygon.SetStroke(new Color(255, 0, 255, 1));
+            polygon.Stroke = new Color(255, 0, 255, 1);
 
             var result = polygon.Clone();
 
-            PaintServerAssert.Equal(new Color(255, 0, 255, 1), Assert.IsAssignableFrom<IShapeWithStroke>(result).GetStroke());
+            PaintServerAssert.Equal(new Color(255, 0, 255, 1), Assert.IsAssignableFrom<IShapeWithStroke>(result).Stroke);
         }
 
         [Fact]
         public void Clone_SetStrokeWidth() {
             var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250));
 
-            polygon.SetStrokeWidth(10);
+            polygon.StrokeWidth = 10;
 
             var result = polygon.Clone();
 
-            Assert.Equal(10, Assert.IsAssignableFrom<IShapeWithStroke>(result).GetStrokeWidth());
+            Assert.Equal(10, Assert.IsAssignableFrom<IShapeWithStroke>(result).StrokeWidth);
         }
 
         [Fact]
         public void Clone_SetStrokeOpacity() {
             var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250));
 
-            polygon.SetStrokeOpacity(50);
+            polygon.StrokeOpacity = 50;
 
             var result = polygon.Clone();
 
-            Assert.Equal(50, Assert.IsAssignableFrom<IShapeWithStroke>(result).GetStrokeOpacity());
+            Assert.Equal(50, Assert.IsAssignableFrom<IShapeWithStroke>(result).StrokeOpacity);
         }
 
         [Fact]

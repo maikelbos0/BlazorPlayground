@@ -55,7 +55,7 @@ namespace BlazorPlayground.Graphics.Tests {
         public void CreateSvgElement_Stroke() {
             var shape = new Rectangle(new Point(100, 200), new Point(150, 250));
 
-            shape.SetStroke(new Color(255, 255, 0, 1));
+            shape.Stroke = new Color(255, 255, 0, 1);
 
             var result = shape.CreateSvgElement();
 
@@ -66,7 +66,7 @@ namespace BlazorPlayground.Graphics.Tests {
         public void CreateSvgElement_StrokeWidth() {
             var shape = new Rectangle(new Point(100, 200), new Point(150, 250));
 
-            shape.SetStrokeWidth(10);
+            shape.StrokeWidth = 10;
 
             var result = shape.CreateSvgElement();
 
@@ -77,7 +77,7 @@ namespace BlazorPlayground.Graphics.Tests {
         public void CreateSvgElement_StrokeOpacity() {
             var shape = new Rectangle(new Point(100, 200), new Point(150, 250));
 
-            shape.SetStrokeOpacity(50);
+            shape.StrokeOpacity = 50;
 
             var result = shape.CreateSvgElement();
 

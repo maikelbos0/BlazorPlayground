@@ -790,7 +790,7 @@ public class CanvasTests {
 
         var shape = canvas.CreateShape();
 
-        PaintServerAssert.Equal(new Color(255, 0, 0, 1), Assert.IsAssignableFrom<IShapeWithStroke>(shape).GetStroke());
+        PaintServerAssert.Equal(new Color(255, 0, 0, 1), Assert.IsAssignableFrom<IShapeWithStroke>(shape).Stroke);
     }
 
     [Fact]
@@ -805,7 +805,7 @@ public class CanvasTests {
 
         var shape = canvas.CreateShape();
 
-        Assert.Equal(10, Assert.IsAssignableFrom<IShapeWithStroke>(shape).GetStrokeWidth());
+        Assert.Equal(10, Assert.IsAssignableFrom<IShapeWithStroke>(shape).StrokeWidth);
     }
 
     [Fact]
@@ -820,7 +820,7 @@ public class CanvasTests {
 
         var shape = canvas.CreateShape();
 
-        Assert.Equal(50, Assert.IsAssignableFrom<IShapeWithStroke>(shape).GetStrokeOpacity());
+        Assert.Equal(50, Assert.IsAssignableFrom<IShapeWithStroke>(shape).StrokeOpacity);
     }
 
     [Fact]
@@ -1029,7 +1029,7 @@ public class CanvasTests {
 
         canvas.ApplyStrokeToSelectedShape();
 
-        PaintServerAssert.Equal(new Color(255, 255, 0, 1), Assert.IsAssignableFrom<IShapeWithStroke>(canvas.SelectedShape).GetStroke());
+        PaintServerAssert.Equal(new Color(255, 255, 0, 1), Assert.IsAssignableFrom<IShapeWithStroke>(canvas.SelectedShape).Stroke);
     }
 
     [Fact]
@@ -1042,7 +1042,7 @@ public class CanvasTests {
 
         canvas.ApplyStrokeOpacityToSelectedShape();
 
-        Assert.Equal(50, Assert.IsAssignableFrom<IShapeWithStroke>(canvas.SelectedShape).GetStrokeOpacity());
+        Assert.Equal(50, Assert.IsAssignableFrom<IShapeWithStroke>(canvas.SelectedShape).StrokeOpacity);
     }
 
     [Fact]
@@ -1055,7 +1055,7 @@ public class CanvasTests {
 
         canvas.ApplyStrokeWidthToSelectedShape();
 
-        Assert.Equal(5, Assert.IsAssignableFrom<IShapeWithStroke>(canvas.SelectedShape).GetStrokeWidth());
+        Assert.Equal(5, Assert.IsAssignableFrom<IShapeWithStroke>(canvas.SelectedShape).StrokeWidth);
     }
 
     [Fact]

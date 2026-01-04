@@ -208,9 +208,9 @@ public class Canvas {
         (shape as IShapeWithOpacity)?.Opacity = DrawSettings.Opacity;
         (shape as IShapeWithFill)?.Fill = DrawSettings.FillPaintManager.Server;
         (shape as IShapeWithFill)?.FillOpacity = DrawSettings.FillOpacity;
-        (shape as IShapeWithStroke)?.SetStroke(DrawSettings.StrokePaintManager.Server);
-        (shape as IShapeWithStroke)?.SetStrokeWidth(DrawSettings.StrokeWidth);
-        (shape as IShapeWithStroke)?.SetStrokeOpacity(DrawSettings.StrokeOpacity);
+        (shape as IShapeWithStroke)?.Stroke = DrawSettings.StrokePaintManager.Server;
+        (shape as IShapeWithStroke)?.StrokeWidth = DrawSettings.StrokeWidth;
+        (shape as IShapeWithStroke)?.StrokeOpacity = DrawSettings.StrokeOpacity;
         (shape as IShapeWithStrokeLinecap)?.SetStrokeLinecap(DrawSettings.StrokeLinecap);
         (shape as IShapeWithStrokeLinejoin)?.SetStrokeLinejoin(DrawSettings.StrokeLinejoin);
         (shape as IShapeWithSides)?.Sides = DrawSettings.Sides;
@@ -243,15 +243,15 @@ public class Canvas {
     }
 
     public void ApplyStrokeToSelectedShape() {
-        (SelectedShape as IShapeWithStroke)?.SetStroke(DrawSettings.StrokePaintManager.Server);
+        (SelectedShape as IShapeWithStroke)?.Stroke = DrawSettings.StrokePaintManager.Server;
     }
 
     public void ApplyStrokeWidthToSelectedShape() {
-        (SelectedShape as IShapeWithStroke)?.SetStrokeWidth(DrawSettings.StrokeWidth);
+        (SelectedShape as IShapeWithStroke)?.StrokeWidth = DrawSettings.StrokeWidth;
     }
 
     public void ApplyStrokeOpacityToSelectedShape() {
-        (SelectedShape as IShapeWithStroke)?.SetStrokeOpacity(DrawSettings.StrokeOpacity);
+        (SelectedShape as IShapeWithStroke)?.StrokeOpacity = DrawSettings.StrokeOpacity;
     }
 
     public void ApplyStrokeLinecapToSelectedShape() {
