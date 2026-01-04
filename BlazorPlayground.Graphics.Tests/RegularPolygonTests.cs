@@ -16,7 +16,7 @@ public class RegularPolygonTests {
     public void GetSnapPoints() {
         var square = new RegularPolygon(new Point(100, 100), new Point(50, 50));
 
-        square.SetSides(4);
+        square.Sides = 4;
 
         var result = square.GetSnapPoints();
 
@@ -32,7 +32,7 @@ public class RegularPolygonTests {
     public void GetPoints_Square_0_Degrees() {
         var square = new RegularPolygon(new Point(100, 100), new Point(50, 50));
 
-        square.SetSides(4);
+        square.Sides = 4;
 
         var result = square.GetPoints().ToList();
 
@@ -47,7 +47,7 @@ public class RegularPolygonTests {
     public void GetPoints_Square_45_Degrees() {
         var square = new RegularPolygon(new Point(100, 100), new Point(50, 100));
 
-        square.SetSides(4);
+        square.Sides = 4;
 
         var result = square.GetPoints().ToList();
 
@@ -62,7 +62,7 @@ public class RegularPolygonTests {
     public void GetPoints_Square_22_Degrees() {
         var square = new RegularPolygon(new Point(100, 100), new Point(50, 120));
 
-        square.SetSides(4);
+        square.Sides = 4;
 
         var result = square.GetPoints().ToList();
 
@@ -77,7 +77,7 @@ public class RegularPolygonTests {
     public void GetPoints_Square_112_Degrees() {
         var square = new RegularPolygon(new Point(100, 100), new Point(150, 120));
 
-        square.SetSides(4);
+        square.Sides = 4;
 
         var result = square.GetPoints().ToList();
 
@@ -92,7 +92,7 @@ public class RegularPolygonTests {
     public void GetPoints_Triangle() {
         var triangle = new RegularPolygon(new Point(100, 100), new Point(100, 50));
 
-        triangle.SetSides(3);
+        triangle.Sides = 3;
 
         var result = triangle.GetPoints().ToList();
 
@@ -107,7 +107,7 @@ public class RegularPolygonTests {
     public void GetPoints_Hexagon() {
         var hexagon = new RegularPolygon(new Point(100, 100), new Point(100, 50));
 
-        hexagon.SetSides(6);
+        hexagon.Sides = 6;
 
         var result = hexagon.GetPoints().ToList();
 
@@ -125,7 +125,7 @@ public class RegularPolygonTests {
     public void GetAttributes() {
         var polygon = new RegularPolygon(new Point(100, 100), new Point(50, 50));
 
-        polygon.SetSides(4);
+        polygon.Sides = 4;
 
         var attributes = polygon.GetAttributes();
 
@@ -176,7 +176,7 @@ public class RegularPolygonTests {
         var geometryFactory = new GeometryFactory(new PrecisionModel(10));
         var subject = new RegularPolygon(new(50, 50), new(50, 100));
 
-        subject.SetSides(3);
+        subject.Sides = 3;
 
         var result = subject.GetGeometry(geometryFactory, new(-100, -100));
 

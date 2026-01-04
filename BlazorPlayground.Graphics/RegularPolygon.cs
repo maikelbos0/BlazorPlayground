@@ -26,9 +26,9 @@ public class RegularPolygon : DrawableShape, IShapeWithOpacity, IShapeWithFill, 
         var vector = RadiusPoint - CenterPoint;
         var radius = Math.Sqrt(Math.Pow(vector.X, 2) + Math.Pow(vector.Y, 2));
         var startingAngle = Math.Atan2(vector.Y, vector.X);
-        var pointAngle = Math.PI / this.GetSides() * 2;
+        var pointAngle = Math.PI / this.Sides * 2;
 
-        for (var i = 0; i < this.GetSides(); i++) {
+        for (var i = 0; i < this.Sides; i++) {
             var angle = startingAngle + pointAngle * i;
 
             yield return CenterPoint + new Point(radius * Math.Cos(angle), radius * Math.Sin(angle));
@@ -42,7 +42,7 @@ public class RegularPolygon : DrawableShape, IShapeWithOpacity, IShapeWithFill, 
     protected override Shape CreateClone() => new RegularPolygon(CenterPoint, RadiusPoint);
 
     public override Geometry GetGeometry(GeometryFactory geometryFactory, Point origin) {
-        var coordinates = new Coordinate[this.GetSides() + 1];
+        var coordinates = new Coordinate[this.Sides + 1];
 
         foreach (var (point, i) in GetPoints().Select((point, i) => (point, i))) {
             coordinates[i] = geometryFactory.GetCoordinate(point.X, point.Y, origin);

@@ -340,7 +340,7 @@ namespace BlazorPlayground.Graphics.Tests {
         public void Parse_Null_Sides() {
             var result = SvgFileParser.Parse(XElement.Parse("<polygon fill=\"none\" stroke=\"#000000\" stroke-width=\"1\" stroke-linejoin=\"miter\" points=\"600,300 438.39745962155615,193.30127018922198 611.6025403784438,106.69872981077803\" data-shape-type=\"RegularPolygon\" data-shape-anchor-0=\"550,200\" data-shape-anchor-1=\"600,300\"/>"));
 
-            Assert.Equal(DrawSettings.DefaultSides, Assert.IsAssignableFrom<IShapeWithSides>(result).GetSides());
+            Assert.Equal(DrawSettings.DefaultSides, Assert.IsAssignableFrom<IShapeWithSides>(result).Sides);
         }
 
         [Theory]
@@ -351,7 +351,7 @@ namespace BlazorPlayground.Graphics.Tests {
         public void Parse_Sides(string sides, int expectedSides) {
             var result = SvgFileParser.Parse(XElement.Parse($"<polygon fill=\"none\" stroke=\"#000000\" stroke-width=\"1\" stroke-linejoin=\"miter\" points=\"600,300 438.39745962155615,193.30127018922198 611.6025403784438,106.69872981077803\" data-shape-type=\"RegularPolygon\" data-shape-anchor-0=\"550,200\" data-shape-anchor-1=\"600,300\" data-shape-sides=\"{sides}\"/>"));
 
-            Assert.Equal(expectedSides, Assert.IsAssignableFrom<IShapeWithSides>(result).GetSides());
+            Assert.Equal(expectedSides, Assert.IsAssignableFrom<IShapeWithSides>(result).Sides);
         }
     }
 }

@@ -865,7 +865,7 @@ public class CanvasTests {
 
         var shape = canvas.CreateShape();
 
-        Assert.Equal(5, Assert.IsAssignableFrom<IShapeWithSides>(shape).GetSides());
+        Assert.Equal(5, Assert.IsAssignableFrom<IShapeWithSides>(shape).Sides);
     }
 
     [Fact]
@@ -1094,7 +1094,7 @@ public class CanvasTests {
 
         canvas.ApplySidesToSelectedShape();
 
-        Assert.Equal(5, Assert.IsAssignableFrom<IShapeWithSides>(canvas.SelectedShape).GetSides());
+        Assert.Equal(5, Assert.IsAssignableFrom<IShapeWithSides>(canvas.SelectedShape).Sides);
     }
 
     [Fact]

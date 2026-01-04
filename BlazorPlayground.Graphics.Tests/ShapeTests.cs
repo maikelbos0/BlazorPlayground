@@ -160,11 +160,11 @@ namespace BlazorPlayground.Graphics.Tests {
         public void Clone_SetSides() {
             var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250));
 
-            polygon.SetSides(5);
+            polygon.Sides = 5;
 
             var result = polygon.Clone();
 
-            Assert.Equal(5, Assert.IsAssignableFrom<IShapeWithSides>(result).GetSides());
+            Assert.Equal(5, Assert.IsAssignableFrom<IShapeWithSides>(result).Sides);
         }
     }
 }

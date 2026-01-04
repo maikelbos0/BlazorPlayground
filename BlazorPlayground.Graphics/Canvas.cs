@@ -213,7 +213,7 @@ public class Canvas {
         (shape as IShapeWithStroke)?.SetStrokeOpacity(DrawSettings.StrokeOpacity);
         (shape as IShapeWithStrokeLinecap)?.SetStrokeLinecap(DrawSettings.StrokeLinecap);
         (shape as IShapeWithStrokeLinejoin)?.SetStrokeLinejoin(DrawSettings.StrokeLinejoin);
-        (shape as IShapeWithSides)?.SetSides(DrawSettings.Sides);
+        (shape as IShapeWithSides)?.Sides = DrawSettings.Sides;
 
         return shape;
     }
@@ -263,7 +263,7 @@ public class Canvas {
     }
 
     public void ApplySidesToSelectedShape() {
-        (SelectedShape as IShapeWithSides)?.SetSides(DrawSettings.Sides);
+        (SelectedShape as IShapeWithSides)?.Sides = DrawSettings.Sides;
     }
 
     public void MoveSelectedShapeToBack() {

@@ -55,7 +55,7 @@ namespace BlazorPlayground.Graphics {
             }
 
             if (this is IShapeWithSides shapeWithSides && clone is IShapeWithSides cloneWithSides) {
-                cloneWithSides.SetSides(shapeWithSides.GetSides());
+                cloneWithSides.Sides = shapeWithSides.Sides;
             }
 
             return clone;

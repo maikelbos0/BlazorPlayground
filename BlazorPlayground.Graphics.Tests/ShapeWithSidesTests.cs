@@ -11,9 +11,9 @@ namespace BlazorPlayground.Graphics.Tests {
         public void Sides(int sides, int expectedSides) {
             var shape = Substitute.For<IShapeWithSides>();
 
-            shape.SetSides(sides);
+            shape.Sides = sides;
 
-            Assert.Equal(expectedSides, shape.GetSides());
+            Assert.Equal(expectedSides, shape.Sides);
         }
     }
 }

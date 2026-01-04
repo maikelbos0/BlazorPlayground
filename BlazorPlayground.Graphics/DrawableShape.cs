@@ -89,7 +89,7 @@ public abstract class DrawableShape : Shape {
         }
 
         if (this is IShapeWithSides shapeWithSides) {
-            yield return new XAttribute("data-shape-sides", shapeWithSides.GetSides());
+            yield return new XAttribute("data-shape-sides", shapeWithSides.Sides);
         }
     }
 

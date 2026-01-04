@@ -35,7 +35,7 @@ namespace BlazorPlayground.Graphics {
                 (shape as IShapeWithStroke)?.SetStrokeOpacity(ParseOpacity(element.Attribute("stroke-opacity")?.Value));
                 (shape as IShapeWithStrokeLinecap)?.SetStrokeLinecap(ParseEnum(element.Attribute("stroke-linecap")?.Value, DrawSettings.DefaultStrokeLinecap));
                 (shape as IShapeWithStrokeLinejoin)?.SetStrokeLinejoin(ParseEnum(element.Attribute("stroke-linejoin")?.Value, DrawSettings.DefaultStrokeLinejoin));
-                (shape as IShapeWithSides)?.SetSides(ParseDimension(element.Attribute("data-shape-sides")?.Value, DrawSettings.MinimumSides, DrawSettings.DefaultSides));
+                (shape as IShapeWithSides)?.Sides = ParseDimension(element.Attribute("data-shape-sides")?.Value, DrawSettings.MinimumSides, DrawSettings.DefaultSides);
                 
                 return shape;
             }
