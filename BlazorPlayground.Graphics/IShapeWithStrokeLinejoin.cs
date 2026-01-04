@@ -8,7 +8,7 @@ namespace BlazorPlayground.Graphics {
             public Linejoin StrokeLinejoin { get; set; }
         }
 
-        private static readonly ConditionalWeakTable<IShapeWithStrokeLinejoin, Data> shapes = new();
+        private static readonly ConditionalWeakTable<IShapeWithStrokeLinejoin, Data> shapes = [];
 
         extension(IShapeWithStrokeLinejoin shape) {
             public Linejoin StrokeLinejoin {

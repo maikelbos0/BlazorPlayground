@@ -19,7 +19,7 @@ namespace BlazorPlayground.Graphics {
 
             public int FillOpacity {
                 get => shapes.GetOrCreateValue(shape).FillOpacity;
-                set => shapes.GetOrCreateValue(shape).FillOpacity = Math.Max(Math.Min(value, DrawSettings.MaximumOpacity), DrawSettings.MinimumOpacity);
+                set => shapes.GetOrCreateValue(shape).FillOpacity = Math.Clamp(value, DrawSettings.MinimumOpacity, DrawSettings.MaximumOpacity);
             }
         }
     }

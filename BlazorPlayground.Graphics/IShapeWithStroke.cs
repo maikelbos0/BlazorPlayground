@@ -25,7 +25,7 @@ namespace BlazorPlayground.Graphics {
 
             public int StrokeOpacity {
                 get => shapes.GetOrCreateValue(shape).StrokeOpacity;
-                set => shapes.GetOrCreateValue(shape).StrokeOpacity = Math.Max(Math.Min(value, DrawSettings.MaximumOpacity), DrawSettings.MinimumOpacity);
+                set => shapes.GetOrCreateValue(shape).StrokeOpacity = Math.Clamp(value, DrawSettings.MinimumOpacity, DrawSettings.MaximumOpacity);
             }
         }
     }

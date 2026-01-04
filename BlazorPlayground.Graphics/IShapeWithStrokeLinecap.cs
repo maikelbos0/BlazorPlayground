@@ -8,7 +8,7 @@ namespace BlazorPlayground.Graphics {
             public Linecap StrokeLinecap { get; set; }
         }
 
-        private static readonly ConditionalWeakTable<IShapeWithStrokeLinecap, Data> shapes = new();
+        private static readonly ConditionalWeakTable<IShapeWithStrokeLinecap, Data> shapes = [];
 
         extension (IShapeWithStrokeLinecap shape) {
             public Linecap StrokeLinecap {

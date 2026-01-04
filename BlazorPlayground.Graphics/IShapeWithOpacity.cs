@@ -13,7 +13,7 @@ namespace BlazorPlayground.Graphics {
         extension(IShapeWithOpacity shape) {
             public int Opacity {
                 get => shapes.GetOrCreateValue(shape).Opacity;
-                set => shapes.GetOrCreateValue(shape).Opacity = Math.Max(Math.Min(value, DrawSettings.MaximumOpacity), DrawSettings.MinimumOpacity);
+                set => shapes.GetOrCreateValue(shape).Opacity = Math.Clamp(value, DrawSettings.MinimumOpacity, DrawSettings.MaximumOpacity);
             }
         }
     }
