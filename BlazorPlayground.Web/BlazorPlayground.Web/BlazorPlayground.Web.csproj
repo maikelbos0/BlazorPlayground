@@ -6,6 +6,10 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 	</PropertyGroup>
 
+	<PropertyGroup>
+		<NoWarn>$(NoWarn);IDE0290</NoWarn>
+	</PropertyGroup>
+
 	<ItemGroup>
 		<ProjectReference Include="..\BlazorPlayground.Web.Client\BlazorPlayground.Web.Client.csproj" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.1" />
