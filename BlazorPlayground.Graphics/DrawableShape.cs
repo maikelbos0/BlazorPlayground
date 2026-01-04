@@ -35,7 +35,7 @@ public abstract class DrawableShape : Shape {
         }
 
         if (this is IShapeWithStrokeLinejoin shapeWithStrokeLinejoin) {
-            builder.AddAttribute(9, "stroke-linejoin", shapeWithStrokeLinejoin.GetStrokeLinejoin().ToString().ToLower());
+            builder.AddAttribute(9, "stroke-linejoin", shapeWithStrokeLinejoin.StrokeLinejoin.ToString().ToLower());
         }
         
         builder.AddMultipleAttributes(10, GetAttributes());
@@ -73,7 +73,7 @@ public abstract class DrawableShape : Shape {
         }
 
         if (this is IShapeWithStrokeLinejoin shapeWithStrokeLinejoin) {
-            yield return new XAttribute("stroke-linejoin", shapeWithStrokeLinejoin.GetStrokeLinejoin().ToString().ToLower());
+            yield return new XAttribute("stroke-linejoin", shapeWithStrokeLinejoin.StrokeLinejoin.ToString().ToLower());
         }
 
         foreach (var attribute in GetAttributes()) {

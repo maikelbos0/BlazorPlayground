@@ -99,7 +99,7 @@ namespace BlazorPlayground.Graphics.Tests {
         public void CreateSvgElement_StrokeLinejoin() {
             var shape = new Rectangle(new Point(100, 200), new Point(150, 250));
 
-            shape.SetStrokeLinejoin(Linejoin.Arcs);
+            shape.StrokeLinejoin = Linejoin.Arcs;
 
             var result = shape.CreateSvgElement();
 

@@ -51,7 +51,7 @@ namespace BlazorPlayground.Graphics {
             }
 
             if (this is IShapeWithStrokeLinejoin shapeWithStrokeLinejoin && clone is IShapeWithStrokeLinejoin cloneWithStrokeLinejoin) {
-                cloneWithStrokeLinejoin.SetStrokeLinejoin(shapeWithStrokeLinejoin.GetStrokeLinejoin());
+                cloneWithStrokeLinejoin.StrokeLinejoin = shapeWithStrokeLinejoin.StrokeLinejoin;
             }
 
             if (this is IShapeWithSides shapeWithSides && clone is IShapeWithSides cloneWithSides) {

@@ -149,11 +149,11 @@ namespace BlazorPlayground.Graphics.Tests {
         public void Clone_SetStrokeLinejoin() {
             var rectangle = new Rectangle(new Point(100, 150), new Point(200, 250));
 
-            rectangle.SetStrokeLinejoin(Linejoin.Arcs);
+            rectangle.StrokeLinejoin = Linejoin.Arcs;
 
             var result = rectangle.Clone();
 
-            Assert.Equal(Linejoin.Arcs, Assert.IsAssignableFrom<IShapeWithStrokeLinejoin>(result).GetStrokeLinejoin());
+            Assert.Equal(Linejoin.Arcs, Assert.IsAssignableFrom<IShapeWithStrokeLinejoin>(result).StrokeLinejoin);
         }
 
         [Fact]

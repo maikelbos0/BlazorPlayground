@@ -212,7 +212,7 @@ public class Canvas {
         (shape as IShapeWithStroke)?.StrokeWidth = DrawSettings.StrokeWidth;
         (shape as IShapeWithStroke)?.StrokeOpacity = DrawSettings.StrokeOpacity;
         (shape as IShapeWithStrokeLinecap)?.StrokeLinecap = DrawSettings.StrokeLinecap;
-        (shape as IShapeWithStrokeLinejoin)?.SetStrokeLinejoin(DrawSettings.StrokeLinejoin);
+        (shape as IShapeWithStrokeLinejoin)?.StrokeLinejoin = DrawSettings.StrokeLinejoin;
         (shape as IShapeWithSides)?.Sides = DrawSettings.Sides;
 
         return shape;
@@ -259,7 +259,7 @@ public class Canvas {
     }
 
     public void ApplyStrokeLinejoinToSelectedShape() {
-        (SelectedShape as IShapeWithStrokeLinejoin)?.SetStrokeLinejoin(DrawSettings.StrokeLinejoin);
+        (SelectedShape as IShapeWithStrokeLinejoin)?.StrokeLinejoin = DrawSettings.StrokeLinejoin;
     }
 
     public void ApplySidesToSelectedShape() {

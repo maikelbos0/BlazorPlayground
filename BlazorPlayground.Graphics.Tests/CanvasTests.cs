@@ -850,7 +850,7 @@ public class CanvasTests {
 
         var shape = canvas.CreateShape();
 
-        Assert.Equal(Linejoin.Arcs, Assert.IsAssignableFrom<IShapeWithStrokeLinejoin>(shape).GetStrokeLinejoin());
+        Assert.Equal(Linejoin.Arcs, Assert.IsAssignableFrom<IShapeWithStrokeLinejoin>(shape).StrokeLinejoin);
     }
 
     [Fact]
@@ -1081,7 +1081,7 @@ public class CanvasTests {
 
         canvas.ApplyStrokeLinejoinToSelectedShape();
 
-        Assert.Equal(Linejoin.Round, Assert.IsAssignableFrom<IShapeWithStrokeLinejoin>(canvas.SelectedShape).GetStrokeLinejoin());
+        Assert.Equal(Linejoin.Round, Assert.IsAssignableFrom<IShapeWithStrokeLinejoin>(canvas.SelectedShape).StrokeLinejoin);
     }
 
     [Fact]
