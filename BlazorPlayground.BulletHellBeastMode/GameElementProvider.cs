@@ -26,11 +26,11 @@ public class GameElementProvider : IGameElementProvider {
     }
 
     public async Task<Ship> CreateShip(Coordinate position)
-        => new Ship(position, await GetGameElementSections(ShipAssetName));
+        => new(position, await GetGameElementSections(ShipAssetName));
 
     private async Task<List<GameElementSection>> GetGameElementSections(string assetName) {
         var asset = await httpClient.GetFromJsonAsync<GameAsset>($"{AssetLocation}/{assetName}.json", jsonSerializerOptions) ?? throw new NullReferenceException();
 
-        return asset.Sections.Select(section => new GameElementSection(section.Geometry, section.FillColor, section.StrokeColor, section.StrokeWidth, section.Opacity)).ToList();
+        return [.. asset.Sections.Select(section => new GameElementSection(section.Geometry, section.FillColor, section.StrokeColor, section.StrokeWidth, section.Opacity))];
     }
 }

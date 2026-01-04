@@ -5,6 +5,10 @@
 		<Nullable>enable</Nullable>
 		<IsPackable>false</IsPackable>
 	</PropertyGroup>
+	
+	<PropertyGroup>
+		<NoWarn>1701;1702;IDE0290</NoWarn>
+	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="coverlet.msbuild" Version="6.0.4">
