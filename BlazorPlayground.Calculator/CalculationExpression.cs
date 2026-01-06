@@ -1,70 +1,70 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace BlazorPlayground.Calculator {
-    public class CalculationExpression {
-        public CalculationExpression() {
-            Groups = new();
-            Groups.Push(new());
+namespace BlazorPlayground.Calculator;
+
+public class CalculationExpression {
+    public CalculationExpression() {
+        Groups = new();
+        Groups.Push(new());
+    }
+
+    internal Stack<SymbolGroup> Groups { get; }
+    internal SymbolGroup CurrentGroup => Groups.Peek();
+
+    public bool TryAppend(char character) {
+        if (character == '(') {
+            return OpenGroup();
+        }
+        else if (character == ')') {
+            return CloseGroup();
         }
 
-        internal Stack<SymbolGroup> Groups { get; }
-        internal SymbolGroup CurrentGroup => Groups.Peek();
+        var symbol = SymbolFactory.GetSymbol(character);
 
-        public bool TryAppend(char character) {
-            if (character == '(') {
-                return OpenGroup();
-            }
-            else if (character == ')') {
-                return CloseGroup();
-            }
+        return CurrentGroup.TryAppend(symbol);
+    }
 
-            var symbol = SymbolFactory.GetSymbol(character);
+    internal bool OpenGroup() {
+        var group = new SymbolGroup();
+        var success = CurrentGroup.TryAppend(group);
 
-            return CurrentGroup.TryAppend(symbol);
+        if (success) {
+            Groups.Push(group);
         }
 
-        internal bool OpenGroup() {
-            var group = new SymbolGroup();
-            var success = CurrentGroup.TryAppend(group);
+        return success;
+    }
 
-            if (success) {
-                Groups.Push(group);
-            }
-
-            return success;
+    internal bool CloseGroup() {
+        if (Groups.Count == 1) {
+            return false;
         }
 
-        internal bool CloseGroup() {
-            if (Groups.Count == 1) {
-                return false;
-            }
+        Groups.Pop().Close();
 
-            Groups.Pop().Close();
+        return true;
+    }
 
-            return true;
-        }
+    public void Clear() {
+        Groups.Clear();
+        Groups.Push(new());
+    }
 
-        public void Clear() {
-            Groups.Clear();
-            Groups.Push(new());
-        }
+    public decimal Evaluate() {
+        while (CloseGroup()) { }
 
-        public decimal Evaluate() {
-            while (CloseGroup()) { }
+        var value = Groups.Pop().Evaluate();
 
-            var value = Groups.Pop().Evaluate();
+        Groups.Push(new());
+        CurrentGroup.TryAppend(new LiteralNumber(value));
 
-            Groups.Push(new());
-            CurrentGroup.TryAppend(new LiteralNumber(value));
+        return value;
+    }
 
-            return value;
-        }
+    override public string ToString() {
+        var value = Groups.Last().ToString();
 
-        override public string ToString() {
-            var value = Groups.Last().ToString();
-
-            return value.Substring(1, value.Length - 1 - Groups.Count);
-        }
+        return value.Substring(1, value.Length - 1 - Groups.Count);
     }
 }

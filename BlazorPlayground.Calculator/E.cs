@@ -1,9 +1,9 @@
 ﻿using System;
 
-namespace BlazorPlayground.Calculator {
-    internal class E : EvaluatableSymbol {
-        internal override decimal Evaluate() => (decimal)Math.E;
+namespace BlazorPlayground.Calculator;
 
-        public override string ToString() => "e";
-    }
+internal class E : EvaluatableSymbol {
+    internal override decimal Evaluate() => (decimal)Math.E;
+
+    public override string ToString() => "e";
 }

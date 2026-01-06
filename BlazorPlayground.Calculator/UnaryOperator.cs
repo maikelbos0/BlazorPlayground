@@ -1,20 +1,19 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 
-namespace BlazorPlayground.Calculator {
-    internal abstract class UnaryOperator : EvaluatableSymbol {
-        internal EvaluatableSymbol? Symbol { get; set; }
+namespace BlazorPlayground.Calculator;
 
-        internal override abstract decimal Evaluate();
+internal abstract class UnaryOperator : EvaluatableSymbol {
+    internal EvaluatableSymbol? Symbol { get; set; }
 
-        public override bool TryAppendTo(IList<ISymbol> symbols) {
-            if (symbols.Count > 0 && symbols.Last() is EvaluatableSymbol symbol) {
-                Symbol = symbol;
-                symbols[^1] = this;
-                return true;
-            }
+    internal override abstract decimal Evaluate();
 
-            return false;
+    public override bool TryAppendTo(IList<ISymbol> symbols) {
+        if (symbols.Count > 0 && symbols[^1] is EvaluatableSymbol symbol) {
+            Symbol = symbol;
+            symbols[^1] = this;
+            return true;
         }
+
+        return false;
     }
 }

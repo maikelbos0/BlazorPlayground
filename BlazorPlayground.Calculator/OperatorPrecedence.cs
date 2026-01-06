@@ -1,6 +1,6 @@
-﻿namespace BlazorPlayground.Calculator {
-    internal enum OperatorPrecedence {
-        High,
-        Low
-    }
+﻿namespace BlazorPlayground.Calculator;
+
+internal enum OperatorPrecedence {
+    High,
+    Low
 }

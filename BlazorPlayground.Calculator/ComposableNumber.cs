@@ -2,56 +2,56 @@
 using System.Globalization;
 using System.Linq;
 
-namespace BlazorPlayground.Calculator {
-    internal class ComposableNumber : EvaluatableSymbol {
-        private static readonly HashSet<char> decimalSeparators = new() { '.', ',' };
+namespace BlazorPlayground.Calculator;
 
-        internal List<char> Characters { get; } = new();
+internal class ComposableNumber : EvaluatableSymbol {
+    private static readonly HashSet<char> decimalSeparators = ['.', ','];
 
-        internal bool TryAppend(char character) {
-            if (!char.IsDigit(character) && !decimalSeparators.Contains(character)) {
-                return false;
-            }
+    internal List<char> Characters { get; } = [];
 
-            if (!char.IsDigit(character) && decimalSeparators.Any(s => Characters.Contains(s))) {
-                return false;
-            }
-
-            Characters.Add(character);
-            return true;
+    internal bool TryAppend(char character) {
+        if (!char.IsDigit(character) && !decimalSeparators.Contains(character)) {
+            return false;
         }
 
-        internal bool TryRemoveCharacter() {
-            if (Characters.Count == 0) {
-                return false;
-            }
-
-            Characters.RemoveAt(Characters.Count - 1);
-            return true;
+        if (!char.IsDigit(character) && decimalSeparators.Any(Characters.Contains)) {
+            return false;
         }
 
-        internal override decimal Evaluate() {
-            if (Characters.Any()) {
-                return decimal.Parse(new string(Characters.Select(Normalize).ToArray()), CultureInfo.InvariantCulture);
-            }
+        Characters.Add(character);
+        return true;
+    }
 
-            return 0M;
+    internal bool TryRemoveCharacter() {
+        if (Characters.Count == 0) {
+            return false;
         }
 
-        private char Normalize(char character) {
-            if (decimalSeparators.Contains(character)) {
-                return '.';
-            }
+        Characters.RemoveAt(Characters.Count - 1);
+        return true;
+    }
 
-            return character;
+    internal override decimal Evaluate() {
+        if (Characters.Count != 0) {
+            return decimal.Parse(new string([.. Characters.Select(Normalize)]), CultureInfo.InvariantCulture);
         }
 
-        override public string ToString() {
-            if (Characters.Any()) {
-                return new string(Characters.ToArray());
-            }
+        return 0M;
+    }
 
-            return $"0";
+    private char Normalize(char character) {
+        if (decimalSeparators.Contains(character)) {
+            return '.';
         }
+
+        return character;
+    }
+
+    override public string ToString() {
+        if (Characters.Count != 0) {
+            return new string([.. Characters]);
+        }
+
+        return $"0";
     }
 }

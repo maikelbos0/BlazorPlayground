@@ -1,20 +1,20 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace BlazorPlayground.Calculator {
-    internal class Backspace : ISymbol {
-        public bool TryAppendTo(IList<ISymbol> symbols) {
-            var symbol = symbols.LastOrDefault();
+namespace BlazorPlayground.Calculator;
 
-            while (symbol is UnaryOperator op) {
-                symbol = op.Symbol;
-            }
+internal class Backspace : ISymbol {
+    public bool TryAppendTo(IList<ISymbol> symbols) {
+        var symbol = symbols.LastOrDefault();
 
-            if (symbol is ComposableNumber number) {
-                return number.TryRemoveCharacter();
-            }
-
-            return false;
+        while (symbol is UnaryOperator op) {
+            symbol = op.Symbol;
         }
+
+        if (symbol is ComposableNumber number) {
+            return number.TryRemoveCharacter();
+        }
+
+        return false;
     }
 }

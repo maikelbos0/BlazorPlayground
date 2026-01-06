@@ -1,9 +1,9 @@
-﻿namespace BlazorPlayground.Calculator {
-    internal class DivisionOperator : BinaryOperator {
-        internal DivisionOperator(char character) : base(character) { }
+﻿namespace BlazorPlayground.Calculator;
 
-        public override OperatorPrecedence Precedence => OperatorPrecedence.High;
+internal class DivisionOperator : BinaryOperator {
+    internal DivisionOperator(char character) : base(character) { }
 
-        public override decimal Invoke(decimal left, decimal right) => left / right;
-    }
+    public override OperatorPrecedence Precedence => OperatorPrecedence.High;
+
+    public override decimal Invoke(decimal left, decimal right) => left / right;
 }

@@ -1,14 +1,14 @@
-﻿namespace BlazorPlayground.Calculator {
-    internal class ModulusOperator : BinaryOperator {
-        public ModulusOperator(char character) : base(character) {
-        }
+﻿namespace BlazorPlayground.Calculator;
 
-        public override OperatorPrecedence Precedence => OperatorPrecedence.High;
+internal class ModulusOperator : BinaryOperator {
+    public ModulusOperator(char character) : base(character) {
+    }
 
-        public override decimal Invoke(decimal left, decimal right) => left % right;
+    public override OperatorPrecedence Precedence => OperatorPrecedence.High;
 
-        public override string ToString() {
-            return "mod";
-        }
+    public override decimal Invoke(decimal left, decimal right) => left % right;
+
+    public override string ToString() {
+        return "mod";
     }
 }
