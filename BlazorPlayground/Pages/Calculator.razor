@@ -123,7 +123,7 @@
 
 @code {
     private string errorClass = "";
-    private CancellationTokenSource clearErrorCancellationTokenSource;
+    private CancellationTokenSource? clearErrorCancellationTokenSource;
     private CalculationExpression expression = new CalculationExpression();
 
     private async Task HandleKey(string s) {

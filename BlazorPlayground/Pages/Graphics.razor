@@ -328,7 +328,7 @@
         <ShapeRenderer Shape="selectedShape" IsSelected="true" />
 
         if (anchorShape != null) {
-            foreach (var anchor in anchorShape?.Anchors) {
+            foreach (var anchor in anchorShape.Anchors) {
                 var point = anchor.Get(anchorShape);
 
                 <rect @key="anchor" class="shape-anchor" x="@((point.X - 5).ToString(CultureInfo.InvariantCulture))" y="@((point.Y - 5).ToString(CultureInfo.InvariantCulture))" width="10" height="10" @onmousedown="args => Canvas.SelectAnchor(anchor)" />
@@ -338,16 +338,19 @@
 </svg>
 
 @code {
-    private IJSObjectReference ModuleReference { get; set; }
+    private IJSObjectReference ModuleReference {
+        get => field ?? throw new InvalidOperationException($"{nameof(ModuleReference)} is only available after first render");
+        set => field = value; 
+    }
     private bool ShowSaveGameElementPathModal { get; set; } = false;
     private int GameElementPathOriginX { get; set; } = 0;
     private int GameElementPathOriginY { get; set; } = 0;
     private bool ShowLoadModal { get; set; } = false;
-    private string FileLoadError { get; set; }
+    private string? FileLoadError { get; set; }
     private bool FileLoadHasError => !string.IsNullOrWhiteSpace(FileLoadError);
-    private IBrowserFile FileToLoad { get; set; }
+    private IBrowserFile? FileToLoad { get; set; }
     private Guid FileLoadKey { get; set; }
-    private string FileName { get; set; }
+    private string? FileName { get; set; }
     private Canvas Canvas { get; set; } = new Canvas();
 
     protected override async Task OnAfterRenderAsync(bool firstRender) {
