@@ -1,19 +1,19 @@
 ﻿using Xunit;
 
-namespace BlazorPlayground.Calculator.Tests {
-    public class DivisionOperatorTests {
-        [Fact]
-        public void DivisionOperator_Invoke_Succeeds() {
-            var op = new DivisionOperator('/');
+namespace BlazorPlayground.Calculator.Tests;
 
-            Assert.Equal(3.1M, op.Invoke(16.12M, 5.2M));
-        }
+public class DivisionOperatorTests {
+    [Fact]
+    public void DivisionOperator_Invoke_Succeeds() {
+        var op = new DivisionOperator('/');
 
-        [Fact]
-        public void DivisionOperator_ToString_Succeeds() {
-            var op = new DivisionOperator('?');
+        Assert.Equal(3.1M, op.Invoke(16.12M, 5.2M));
+    }
 
-            Assert.Equal("?", op.ToString());
-        }
+    [Fact]
+    public void DivisionOperator_ToString_Succeeds() {
+        var op = new DivisionOperator('?');
+
+        Assert.Equal("?", op.ToString());
     }
 }

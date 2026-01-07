@@ -1,19 +1,19 @@
 ﻿using Xunit;
 
-namespace BlazorPlayground.Calculator.Tests {
-    public class AdditionOperatorTests {
-        [Fact]
-        public void AdditionOperator_Invoke_Succeeds() {
-            var op = new AdditionOperator('+');
+namespace BlazorPlayground.Calculator.Tests;
 
-            Assert.Equal(15.5M, op.Invoke(9.4M, 6.1M));
-        }
+public class AdditionOperatorTests {
+    [Fact]
+    public void AdditionOperator_Invoke_Succeeds() {
+        var op = new AdditionOperator('+');
 
-        [Fact]
-        public void AdditionOperator_ToString_Succeeds() {
-            var op = new AdditionOperator('?');
+        Assert.Equal(15.5M, op.Invoke(9.4M, 6.1M));
+    }
 
-            Assert.Equal("?", op.ToString());
-        }
+    [Fact]
+    public void AdditionOperator_ToString_Succeeds() {
+        var op = new AdditionOperator('?');
+
+        Assert.Equal("?", op.ToString());
     }
 }

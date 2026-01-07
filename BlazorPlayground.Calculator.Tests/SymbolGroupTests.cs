@@ -1,96 +1,96 @@
 ﻿using Xunit;
 
-namespace BlazorPlayground.Calculator.Tests {
-    public class SymbolGroupTests {
-        [Fact]
-        public void SymbolGroup_TryAppend_Calls_Symbol_TryAppendTo() {
-            var group = new SymbolGroup();
-            var literalNumber = new LiteralNumber(0);
+namespace BlazorPlayground.Calculator.Tests;
 
-            Assert.True(group.TryAppend(literalNumber));
-            Assert.Equal(literalNumber, Assert.Single(group.Symbols));
-        }
+public class SymbolGroupTests {
+    [Fact]
+    public void SymbolGroup_TryAppend_Calls_Symbol_TryAppendTo() {
+        var group = new SymbolGroup();
+        var literalNumber = new LiteralNumber(0);
 
-        [Fact]
-        public void SymbolGroup_Close_Removes_Trailing_Operators() {
-            var group = new SymbolGroup();
+        Assert.True(group.TryAppend(literalNumber));
+        Assert.Equal(literalNumber, Assert.Single(group.Symbols));
+    }
 
-            group.Symbols.Add(new LiteralNumber(1));
-            group.Symbols.Add(new AdditionOperator('+'));
-            group.Symbols.Add(new LiteralNumber(1));
-            group.Symbols.Add(new AdditionOperator('+'));
-            group.Symbols.Add(new AdditionOperator('+'));
+    [Fact]
+    public void SymbolGroup_Close_Removes_Trailing_Operators() {
+        var group = new SymbolGroup();
 
-            group.Close();
+        group.Symbols.Add(new LiteralNumber(1));
+        group.Symbols.Add(new AdditionOperator('+'));
+        group.Symbols.Add(new LiteralNumber(1));
+        group.Symbols.Add(new AdditionOperator('+'));
+        group.Symbols.Add(new AdditionOperator('+'));
 
-            Assert.Equal(3, group.Symbols.Count);
-        }
+        group.Close();
 
-        [Fact]
-        public void SymbolGroup_Close_Adds_Zero_When_Empty() {
-            var group = new SymbolGroup();
+        Assert.Equal(3, group.Symbols.Count);
+    }
 
-            group.Close();
+    [Fact]
+    public void SymbolGroup_Close_Adds_Zero_When_Empty() {
+        var group = new SymbolGroup();
 
-            Assert.Equal(0, Assert.IsType<LiteralNumber>(Assert.Single(group.Symbols)).Value);
-        }
+        group.Close();
 
-        [Fact]
-        public void SymbolGroup_Can_Evaluate_Empty_Group() {
-            var group = new SymbolGroup();
+        Assert.Equal(0, Assert.IsType<LiteralNumber>(Assert.Single(group.Symbols)).Value);
+    }
 
-            Assert.Equal(0M, group.Evaluate());
-        }
+    [Fact]
+    public void SymbolGroup_Can_Evaluate_Empty_Group() {
+        var group = new SymbolGroup();
 
-        [Fact]
-        public void SymbolGroup_Can_Evaluate_Simple_Expression() {
-            var group = new SymbolGroup();
+        Assert.Equal(0M, group.Evaluate());
+    }
 
-            group.Symbols.Add(new LiteralNumber(2.8M));
-            group.Symbols.Add(new DivisionOperator('/'));
-            group.Symbols.Add(new LiteralNumber(1.6M));
+    [Fact]
+    public void SymbolGroup_Can_Evaluate_Simple_Expression() {
+        var group = new SymbolGroup();
 
-            Assert.Equal(1.75M, group.Evaluate());
-        }
+        group.Symbols.Add(new LiteralNumber(2.8M));
+        group.Symbols.Add(new DivisionOperator('/'));
+        group.Symbols.Add(new LiteralNumber(1.6M));
 
-        [Fact]
-        public void SymbolGroup_Can_Evaluate_Expression_With_Multiple_Same_Precedence_Operators() {
-            var group = new SymbolGroup();
+        Assert.Equal(1.75M, group.Evaluate());
+    }
 
-            group.Symbols.Add(new LiteralNumber(2.8M));
-            group.Symbols.Add(new DivisionOperator('/'));
-            group.Symbols.Add(new LiteralNumber(1.6M));
-            group.Symbols.Add(new MultiplicationOperator('*'));
-            group.Symbols.Add(new LiteralNumber(3.2M));
+    [Fact]
+    public void SymbolGroup_Can_Evaluate_Expression_With_Multiple_Same_Precedence_Operators() {
+        var group = new SymbolGroup();
 
-            Assert.Equal(5.6M, group.Evaluate());
-        }
+        group.Symbols.Add(new LiteralNumber(2.8M));
+        group.Symbols.Add(new DivisionOperator('/'));
+        group.Symbols.Add(new LiteralNumber(1.6M));
+        group.Symbols.Add(new MultiplicationOperator('*'));
+        group.Symbols.Add(new LiteralNumber(3.2M));
 
-        [Fact]
-        public void SymbolGroup_Can_Evaluate_Expression_With_Multiple_Different_Precedence_Operators() {
-            var group = new SymbolGroup();
+        Assert.Equal(5.6M, group.Evaluate());
+    }
 
-            group.Symbols.Add(new LiteralNumber(2.8M));
-            group.Symbols.Add(new AdditionOperator('+'));
-            group.Symbols.Add(new LiteralNumber(1.2M));
-            group.Symbols.Add(new MultiplicationOperator('*'));
-            group.Symbols.Add(new LiteralNumber(3.2M));
-            group.Symbols.Add(new AdditionOperator('+'));
-            group.Symbols.Add(new LiteralNumber(2.8M));
+    [Fact]
+    public void SymbolGroup_Can_Evaluate_Expression_With_Multiple_Different_Precedence_Operators() {
+        var group = new SymbolGroup();
 
-            Assert.Equal(9.44M, group.Evaluate());
-        }
+        group.Symbols.Add(new LiteralNumber(2.8M));
+        group.Symbols.Add(new AdditionOperator('+'));
+        group.Symbols.Add(new LiteralNumber(1.2M));
+        group.Symbols.Add(new MultiplicationOperator('*'));
+        group.Symbols.Add(new LiteralNumber(3.2M));
+        group.Symbols.Add(new AdditionOperator('+'));
+        group.Symbols.Add(new LiteralNumber(2.8M));
 
-        [Fact]
-        public void SymbolGroup_ToString_Succeeds() {
-            var group = new SymbolGroup();
+        Assert.Equal(9.44M, group.Evaluate());
+    }
 
-            group.Symbols.Add(new LiteralNumber(2.8M));
-            group.Symbols.Add(new AdditionOperator('+'));
-            group.Symbols.Add(new LiteralNumber(1.2M));
-            group.Symbols.Add(new AdditionOperator('*'));
+    [Fact]
+    public void SymbolGroup_ToString_Succeeds() {
+        var group = new SymbolGroup();
 
-            Assert.Equal("(2.8 + 1.2 *)", group.ToString());
-        }
+        group.Symbols.Add(new LiteralNumber(2.8M));
+        group.Symbols.Add(new AdditionOperator('+'));
+        group.Symbols.Add(new LiteralNumber(1.2M));
+        group.Symbols.Add(new AdditionOperator('*'));
+
+        Assert.Equal("(2.8 + 1.2 *)", group.ToString());
     }
 }

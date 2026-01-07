@@ -1,20 +1,20 @@
 ﻿using System;
 using Xunit;
 
-namespace BlazorPlayground.Calculator.Tests {
-    public class PiTests {
-        [Fact]
-        public void Pi_Evaluate_Returns_Pi() {
-            var pi = new Pi();
+namespace BlazorPlayground.Calculator.Tests;
 
-            Assert.Equal((decimal)Math.PI, pi.Evaluate());
-        }
+public class PiTests {
+    [Fact]
+    public void Pi_Evaluate_Returns_Pi() {
+        var pi = new Pi();
 
-        [Fact]
-        public void Pi_ToString_Succeeds() {
-            var pi = new Pi();
+        Assert.Equal((decimal)Math.PI, pi.Evaluate());
+    }
 
-            Assert.Equal("π", pi.ToString());
-        }
+    [Fact]
+    public void Pi_ToString_Succeeds() {
+        var pi = new Pi();
+
+        Assert.Equal("π", pi.ToString());
     }
 }

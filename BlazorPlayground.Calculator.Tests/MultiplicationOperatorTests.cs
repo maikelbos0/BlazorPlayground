@@ -1,19 +1,19 @@
 ﻿using Xunit;
 
-namespace BlazorPlayground.Calculator.Tests {
-    public class MultiplicationOperatorTests {
-        [Fact]
-        public void MultiplicationOperator_Invoke_Succeeds() {
-            var op = new MultiplicationOperator('*');
+namespace BlazorPlayground.Calculator.Tests;
 
-            Assert.Equal(16.12M, op.Invoke(5.2M, 3.1M));
-        }
+public class MultiplicationOperatorTests {
+    [Fact]
+    public void MultiplicationOperator_Invoke_Succeeds() {
+        var op = new MultiplicationOperator('*');
 
-        [Fact]
-        public void MultiplicationOperator_ToString_Succeeds() {
-            var op = new MultiplicationOperator('?');
+        Assert.Equal(16.12M, op.Invoke(5.2M, 3.1M));
+    }
 
-            Assert.Equal("?", op.ToString());
-        }
+    [Fact]
+    public void MultiplicationOperator_ToString_Succeeds() {
+        var op = new MultiplicationOperator('?');
+
+        Assert.Equal("?", op.ToString());
     }
 }
