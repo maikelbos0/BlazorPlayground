@@ -23,14 +23,14 @@ public class GameAssetFactoryTests {
     public void GetGameAssetFromSingleDrawableShape() {
         var geometryFactory = new GeometryFactory(new PrecisionModel(10));
         var subject = new GameAssetFactory(geometryFactory);
-        var rectangle = new Rectangle(new(-10, -10), new(50, -30));
-
-        rectangle.Fill = new Color(255, 0, 0, 1);
-        rectangle.FillOpacity = 50;
-        rectangle.Stroke = new Color(0, 0, 255, 1);
-        rectangle.StrokeOpacity = 80;
-        rectangle.StrokeWidth = 2;
-        rectangle.Opacity = 90;
+        var rectangle = new Rectangle(new(-10, -10), new(50, -30)) {
+            Fill = new Color(255, 0, 0, 1),
+            FillOpacity = 50,
+            Stroke = new Color(0, 0, 255, 1),
+            StrokeOpacity = 80,
+            StrokeWidth = 2,
+            Opacity = 90
+        };
 
         var result = subject.GetGameAsset([rectangle]);
 

@@ -1,33 +1,33 @@
 ﻿using NSubstitute;
 using Xunit;
 
-namespace BlazorPlayground.Graphics.Tests {
-    public class ShapeWithStrokeTests {
-        [Theory]
-        [InlineData(-1, DrawSettings.MinimumStrokeWidth)]
-        [InlineData(DrawSettings.MinimumStrokeWidth - 1, DrawSettings.MinimumStrokeWidth)]
-        [InlineData(DrawSettings.MinimumStrokeWidth, DrawSettings.MinimumStrokeWidth)]
-        [InlineData(DrawSettings.MinimumStrokeWidth + 1, DrawSettings.MinimumStrokeWidth + 1)]
-        public void StrokeWidth(int strokeWidth, int expectedStrokeWidth) {
-            var shape = Substitute.For<IShapeWithStroke>();
+namespace BlazorPlayground.Graphics.Tests;
 
-            shape.StrokeWidth = strokeWidth;
+public class ShapeWithStrokeTests {
+    [Theory]
+    [InlineData(-1, DrawSettings.MinimumStrokeWidth)]
+    [InlineData(DrawSettings.MinimumStrokeWidth - 1, DrawSettings.MinimumStrokeWidth)]
+    [InlineData(DrawSettings.MinimumStrokeWidth, DrawSettings.MinimumStrokeWidth)]
+    [InlineData(DrawSettings.MinimumStrokeWidth + 1, DrawSettings.MinimumStrokeWidth + 1)]
+    public void StrokeWidth(int strokeWidth, int expectedStrokeWidth) {
+        var shape = Substitute.For<IShapeWithStroke>();
 
-            Assert.Equal(expectedStrokeWidth, shape.StrokeWidth);
-        }
+        shape.StrokeWidth = strokeWidth;
 
-        [Theory]
-        [InlineData(DrawSettings.MinimumOpacity - 1, DrawSettings.MinimumOpacity)]
-        [InlineData(DrawSettings.MinimumOpacity, DrawSettings.MinimumOpacity)]
-        [InlineData(45, 45)]
-        [InlineData(DrawSettings.MaximumOpacity, DrawSettings.MaximumOpacity)]
-        [InlineData(DrawSettings.MaximumOpacity + 1, DrawSettings.MaximumOpacity)]
-        public void StrokeOpacity(int opacity, int expectedOpacity) {
-            var shape = Substitute.For<IShapeWithStroke>();
+        Assert.Equal(expectedStrokeWidth, shape.StrokeWidth);
+    }
 
-            shape.StrokeOpacity = opacity;
+    [Theory]
+    [InlineData(DrawSettings.MinimumOpacity - 1, DrawSettings.MinimumOpacity)]
+    [InlineData(DrawSettings.MinimumOpacity, DrawSettings.MinimumOpacity)]
+    [InlineData(45, 45)]
+    [InlineData(DrawSettings.MaximumOpacity, DrawSettings.MaximumOpacity)]
+    [InlineData(DrawSettings.MaximumOpacity + 1, DrawSettings.MaximumOpacity)]
+    public void StrokeOpacity(int opacity, int expectedOpacity) {
+        var shape = Substitute.For<IShapeWithStroke>();
 
-            Assert.Equal(expectedOpacity, shape.StrokeOpacity);
-        }
+        shape.StrokeOpacity = opacity;
+
+        Assert.Equal(expectedOpacity, shape.StrokeOpacity);
     }
 }

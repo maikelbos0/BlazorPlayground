@@ -1,109 +1,109 @@
 ﻿using Xunit;
 
-namespace BlazorPlayground.Graphics.Tests {
-    public class DrawableShapeTests {
-        [Fact]
-        public void CreateSvgElement() {
-            var shape = new Line(new Point(100, 200), new Point(150, 250));
+namespace BlazorPlayground.Graphics.Tests;
 
-            var result = shape.CreateSvgElement();
+public class DrawableShapeTests {
+    [Fact]
+    public void CreateSvgElement() {
+        var shape = new Line(new Point(100, 200), new Point(150, 250));
 
-            Assert.Equal(shape.ElementName, result.Name);
-            Assert.Equal("100", result.Attribute("x1")?.Value);
-            Assert.Equal("200", result.Attribute("y1")?.Value);
-            Assert.Equal("150", result.Attribute("x2")?.Value);
-            Assert.Equal("250", result.Attribute("y2")?.Value);
-            Assert.Equal("Line", result.Attribute("data-shape-type")?.Value);
-            Assert.Equal("100,200", result.Attribute("data-shape-anchor-0")?.Value);
-            Assert.Equal("150,250", result.Attribute("data-shape-anchor-1")?.Value);
-        }
+        var result = shape.CreateSvgElement();
 
-        [Fact]
-        public void CreateSvgElement_Opacity() {
-            var shape = new Rectangle(new Point(100, 200), new Point(150, 250));
+        Assert.Equal(shape.ElementName, result.Name);
+        Assert.Equal("100", result.Attribute("x1")?.Value);
+        Assert.Equal("200", result.Attribute("y1")?.Value);
+        Assert.Equal("150", result.Attribute("x2")?.Value);
+        Assert.Equal("250", result.Attribute("y2")?.Value);
+        Assert.Equal("Line", result.Attribute("data-shape-type")?.Value);
+        Assert.Equal("100,200", result.Attribute("data-shape-anchor-0")?.Value);
+        Assert.Equal("150,250", result.Attribute("data-shape-anchor-1")?.Value);
+    }
 
-            shape.Opacity = 50;
+    [Fact]
+    public void CreateSvgElement_Opacity() {
+        var shape = new Rectangle(new Point(100, 200), new Point(150, 250)) {
+            Opacity = 50
+        };
 
-            var result = shape.CreateSvgElement();
+        var result = shape.CreateSvgElement();
 
-            Assert.Equal("0.5", result.Attribute("opacity")?.Value);
-        }
+        Assert.Equal("0.5", result.Attribute("opacity")?.Value);
+    }
 
-        [Fact]
-        public void CreateSvgElement_Fill() {
-            var shape = new Rectangle(new Point(100, 200), new Point(150, 250));
+    [Fact]
+    public void CreateSvgElement_Fill() {
+        var shape = new Rectangle(new Point(100, 200), new Point(150, 250)) {
+            Fill = new Color(255, 255, 0, 1)
+        };
 
-            shape.Fill = new Color(255, 255, 0, 1);
+        var result = shape.CreateSvgElement();
 
-            var result = shape.CreateSvgElement();
+        Assert.Equal("#FFFF00", result.Attribute("fill")?.Value);
+    }
 
-            Assert.Equal("#FFFF00", result.Attribute("fill")?.Value);
-        }
+    [Fact]
+    public void CreateSvgElement_FillOpacity() {
+        var shape = new Rectangle(new Point(100, 200), new Point(150, 250)) {
+            FillOpacity = 50
+        };
 
-        [Fact]
-        public void CreateSvgElement_FillOpacity() {
-            var shape = new Rectangle(new Point(100, 200), new Point(150, 250));
+        var result = shape.CreateSvgElement();
 
-            shape.FillOpacity = 50;
+        Assert.Equal("0.5", result.Attribute("fill-opacity")?.Value);
+    }
 
-            var result = shape.CreateSvgElement();
+    [Fact]
+    public void CreateSvgElement_Stroke() {
+        var shape = new Rectangle(new Point(100, 200), new Point(150, 250)) {
+            Stroke = new Color(255, 255, 0, 1)
+        };
 
-            Assert.Equal("0.5", result.Attribute("fill-opacity")?.Value);
-        }
+        var result = shape.CreateSvgElement();
 
-        [Fact]
-        public void CreateSvgElement_Stroke() {
-            var shape = new Rectangle(new Point(100, 200), new Point(150, 250));
+        Assert.Equal("#FFFF00", result.Attribute("stroke")?.Value);
+    }
 
-            shape.Stroke = new Color(255, 255, 0, 1);
+    [Fact]
+    public void CreateSvgElement_StrokeWidth() {
+        var shape = new Rectangle(new Point(100, 200), new Point(150, 250)) {
+            StrokeWidth = 10
+        };
 
-            var result = shape.CreateSvgElement();
+        var result = shape.CreateSvgElement();
 
-            Assert.Equal("#FFFF00", result.Attribute("stroke")?.Value);
-        }
+        Assert.Equal("10", result.Attribute("stroke-width")?.Value);
+    }
 
-        [Fact]
-        public void CreateSvgElement_StrokeWidth() {
-            var shape = new Rectangle(new Point(100, 200), new Point(150, 250));
+    [Fact]
+    public void CreateSvgElement_StrokeOpacity() {
+        var shape = new Rectangle(new Point(100, 200), new Point(150, 250)) {
+            StrokeOpacity = 50
+        };
 
-            shape.StrokeWidth = 10;
+        var result = shape.CreateSvgElement();
 
-            var result = shape.CreateSvgElement();
+        Assert.Equal("0.5", result.Attribute("stroke-opacity")?.Value);
+    }
 
-            Assert.Equal("10", result.Attribute("stroke-width")?.Value);
-        }
+    [Fact]
+    public void CreateSvgElement_StrokeLinecap() {
+        var shape = new Line(new Point(100, 200), new Point(150, 250)) {
+            StrokeLinecap = Linecap.Square
+        };
 
-        [Fact]
-        public void CreateSvgElement_StrokeOpacity() {
-            var shape = new Rectangle(new Point(100, 200), new Point(150, 250));
+        var result = shape.CreateSvgElement();
 
-            shape.StrokeOpacity = 50;
+        Assert.Equal("square", result.Attribute("stroke-linecap")?.Value);
+    }
 
-            var result = shape.CreateSvgElement();
+    [Fact]
+    public void CreateSvgElement_StrokeLinejoin() {
+        var shape = new Rectangle(new Point(100, 200), new Point(150, 250)) {
+            StrokeLinejoin = Linejoin.Arcs
+        };
 
-            Assert.Equal("0.5", result.Attribute("stroke-opacity")?.Value);
-        }
+        var result = shape.CreateSvgElement();
 
-        [Fact]
-        public void CreateSvgElement_StrokeLinecap() {
-            var shape = new Line(new Point(100, 200), new Point(150, 250));
-
-            shape.StrokeLinecap = Linecap.Square;
-
-            var result = shape.CreateSvgElement();
-
-            Assert.Equal("square", result.Attribute("stroke-linecap")?.Value);
-        }
-
-        [Fact]
-        public void CreateSvgElement_StrokeLinejoin() {
-            var shape = new Rectangle(new Point(100, 200), new Point(150, 250));
-
-            shape.StrokeLinejoin = Linejoin.Arcs;
-
-            var result = shape.CreateSvgElement();
-
-            Assert.Equal("arcs", result.Attribute("stroke-linejoin")?.Value);
-        }
+        Assert.Equal("arcs", result.Attribute("stroke-linejoin")?.Value);
     }
 }

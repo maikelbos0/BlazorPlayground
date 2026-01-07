@@ -1,170 +1,170 @@
 ﻿using Xunit;
 
-namespace BlazorPlayground.Graphics.Tests {
-    public class ShapeTests {
-        [Fact]
-        public void Definition() {
-            var shape = new Line(new Point(100, 150), new Point(200, 250));
+namespace BlazorPlayground.Graphics.Tests;
 
-            Assert.Equal(ShapeDefinition.Get(typeof(Line)), shape.Definition);
-        }
+public class ShapeTests {
+    [Fact]
+    public void Definition() {
+        var shape = new Line(new Point(100, 150), new Point(200, 250));
 
-        [Fact]
-        public void Transform() {
-            var shape = new Line(new Point(100, 150), new Point(200, 250));
+        Assert.Equal(ShapeDefinition.Get(typeof(Line)), shape.Definition);
+    }
 
-            shape.Transform(new Point(10, 20), false, 50, false, new[] { new Point(50, 50) });
+    [Fact]
+    public void Transform() {
+        var shape = new Line(new Point(100, 150), new Point(200, 250));
 
-            PointAssert.Equal(new Point(110, 170), shape.StartPoint);
-            PointAssert.Equal(new Point(210, 270), shape.EndPoint);
-        }
+        shape.Transform(new Point(10, 20), false, 50, false, [new Point(50, 50)]);
 
-        [Fact]
-        public void Transform_With_SnapToGrid() {
-            var shape = new Line(new Point(105, 205), new Point(155, 255));
+        PointAssert.Equal(new Point(110, 170), shape.StartPoint);
+        PointAssert.Equal(new Point(210, 270), shape.EndPoint);
+    }
 
-            shape.Transform(new Point(50, 50), true, 50, false, new[] { new Point(151, 251) });
+    [Fact]
+    public void Transform_With_SnapToGrid() {
+        var shape = new Line(new Point(105, 205), new Point(155, 255));
 
-            PointAssert.Equal(new Point(150, 250), shape.StartPoint);
-            PointAssert.Equal(new Point(200, 300), shape.EndPoint);
-        }
+        shape.Transform(new Point(50, 50), true, 50, false, [new Point(151, 251)]);
 
-        [Fact]
-        public void Transform_With_SnapToShapes() {
-            var shape = new Line(new Point(105, 205), new Point(155, 255));
+        PointAssert.Equal(new Point(150, 250), shape.StartPoint);
+        PointAssert.Equal(new Point(200, 300), shape.EndPoint);
+    }
 
-            shape.Transform(new Point(50, 50), false, 50, true, new[] { new Point(151, 251) });
+    [Fact]
+    public void Transform_With_SnapToShapes() {
+        var shape = new Line(new Point(105, 205), new Point(155, 255));
 
-            PointAssert.Equal(new Point(151, 251), shape.StartPoint);
-            PointAssert.Equal(new Point(201, 301), shape.EndPoint);
-        }
+        shape.Transform(new Point(50, 50), false, 50, true, [new Point(151, 251)]);
 
-        [Fact]
-        public void Transform_With_SnapToGrid_And_SnapToShapes_Grid() {
-            var shape = new Line(new Point(105, 205), new Point(155, 255));
+        PointAssert.Equal(new Point(151, 251), shape.StartPoint);
+        PointAssert.Equal(new Point(201, 301), shape.EndPoint);
+    }
 
-            shape.Transform(new Point(50, 50), true, 50, true, new[] { new Point(149, 249) });
+    [Fact]
+    public void Transform_With_SnapToGrid_And_SnapToShapes_Grid() {
+        var shape = new Line(new Point(105, 205), new Point(155, 255));
 
-            PointAssert.Equal(new Point(150, 250), shape.StartPoint);
-            PointAssert.Equal(new Point(200, 300), shape.EndPoint);
-        }
+        shape.Transform(new Point(50, 50), true, 50, true, [new Point(149, 249)]);
 
-        [Fact]
-        public void Transform_With_SnapToGrid_And_SnapToShapes_Points() {
-            var shape = new Line(new Point(105, 205), new Point(155, 255));
+        PointAssert.Equal(new Point(150, 250), shape.StartPoint);
+        PointAssert.Equal(new Point(200, 300), shape.EndPoint);
+    }
 
-            shape.Transform(new Point(50, 50), true, 50, true, new[] { new Point(151, 251) });
+    [Fact]
+    public void Transform_With_SnapToGrid_And_SnapToShapes_Points() {
+        var shape = new Line(new Point(105, 205), new Point(155, 255));
 
-            PointAssert.Equal(new Point(151, 251), shape.StartPoint);
-            PointAssert.Equal(new Point(201, 301), shape.EndPoint);
-        }
+        shape.Transform(new Point(50, 50), true, 50, true, [new Point(151, 251)]);
 
-        [Fact]
-        public void Clone() {
-            var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250));
+        PointAssert.Equal(new Point(151, 251), shape.StartPoint);
+        PointAssert.Equal(new Point(201, 301), shape.EndPoint);
+    }
 
-            var result = polygon.Clone();
+    [Fact]
+    public void Clone() {
+        var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250));
 
-            Assert.NotSame(polygon, result);
-        }
+        var result = polygon.Clone();
 
-        [Fact]
-        public void Clone_SetOpacity() {
-            var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250));
+        Assert.NotSame(polygon, result);
+    }
 
-            polygon.Opacity = 50;
+    [Fact]
+    public void Clone_SetOpacity() {
+        var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250)) {
+            Opacity = 50
+        };
 
-            var result = polygon.Clone();
+        var result = polygon.Clone();
 
-            Assert.Equal(50, Assert.IsAssignableFrom<IShapeWithOpacity>(result).Opacity);
-        }
+        Assert.Equal(50, Assert.IsType<IShapeWithOpacity>(result, exactMatch: false).Opacity);
+    }
 
-        [Fact]
-        public void Clone_SetFill() {
-            var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250));
+    [Fact]
+    public void Clone_SetFill() {
+        var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250)) {
+            Fill = new Color(255, 0, 255, 1)
+        };
 
-            polygon.Fill = new Color(255, 0, 255, 1);
+        var result = polygon.Clone();
 
-            var result = polygon.Clone();
+        PaintServerAssert.Equal(new Color(255, 0, 255, 1), Assert.IsType<IShapeWithFill>(result, exactMatch: false).Fill);
+    }
 
-            PaintServerAssert.Equal(new Color(255, 0, 255, 1), Assert.IsAssignableFrom<IShapeWithFill>(result).Fill);
-        }
+    [Fact]
+    public void Clone_SetFillOpacity() {
+        var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250)) {
+            FillOpacity = 50
+        };
 
-        [Fact]
-        public void Clone_SetFillOpacity() {
-            var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250));
+        var result = polygon.Clone();
 
-            polygon.FillOpacity = 50;
+        Assert.Equal(50, Assert.IsType<IShapeWithFill>(result, exactMatch: false).FillOpacity);
+    }
 
-            var result = polygon.Clone();
+    [Fact]
+    public void Clone_SetStroke() {
+        var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250)) {
+            Stroke = new Color(255, 0, 255, 1)
+        };
 
-            Assert.Equal(50, Assert.IsAssignableFrom<IShapeWithFill>(result).FillOpacity);
-        }
+        var result = polygon.Clone();
 
-        [Fact]
-        public void Clone_SetStroke() {
-            var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250));
+        PaintServerAssert.Equal(new Color(255, 0, 255, 1), Assert.IsType<IShapeWithStroke>(result, exactMatch: false).Stroke);
+    }
 
-            polygon.Stroke = new Color(255, 0, 255, 1);
+    [Fact]
+    public void Clone_SetStrokeWidth() {
+        var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250)) {
+            StrokeWidth = 10
+        };
 
-            var result = polygon.Clone();
+        var result = polygon.Clone();
 
-            PaintServerAssert.Equal(new Color(255, 0, 255, 1), Assert.IsAssignableFrom<IShapeWithStroke>(result).Stroke);
-        }
+        Assert.Equal(10, Assert.IsType<IShapeWithStroke>(result, exactMatch: false).StrokeWidth);
+    }
 
-        [Fact]
-        public void Clone_SetStrokeWidth() {
-            var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250));
+    [Fact]
+    public void Clone_SetStrokeOpacity() {
+        var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250)) {
+            StrokeOpacity = 50
+        };
 
-            polygon.StrokeWidth = 10;
+        var result = polygon.Clone();
 
-            var result = polygon.Clone();
+        Assert.Equal(50, Assert.IsType<IShapeWithStroke>(result, exactMatch: false).StrokeOpacity);
+    }
 
-            Assert.Equal(10, Assert.IsAssignableFrom<IShapeWithStroke>(result).StrokeWidth);
-        }
+    [Fact]
+    public void Clone_SetStrokeLinecap() {
+        var line = new Line(new Point(100, 150), new Point(200, 250)) {
+            StrokeLinecap = Linecap.Square
+        };
 
-        [Fact]
-        public void Clone_SetStrokeOpacity() {
-            var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250));
+        var result = line.Clone();
 
-            polygon.StrokeOpacity = 50;
+        Assert.Equal(Linecap.Square, Assert.IsType<IShapeWithStrokeLinecap>(result, exactMatch: false).StrokeLinecap);
+    }
 
-            var result = polygon.Clone();
+    [Fact]
+    public void Clone_SetStrokeLinejoin() {
+        var rectangle = new Rectangle(new Point(100, 150), new Point(200, 250)) {
+            StrokeLinejoin = Linejoin.Arcs
+        };
 
-            Assert.Equal(50, Assert.IsAssignableFrom<IShapeWithStroke>(result).StrokeOpacity);
-        }
+        var result = rectangle.Clone();
 
-        [Fact]
-        public void Clone_SetStrokeLinecap() {
-            var line = new Line(new Point(100, 150), new Point(200, 250));
+        Assert.Equal(Linejoin.Arcs, Assert.IsType<IShapeWithStrokeLinejoin>(result, exactMatch: false).StrokeLinejoin);
+    }
 
-            line.StrokeLinecap = Linecap.Square;
+    [Fact]
+    public void Clone_SetSides() {
+        var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250)) {
+            Sides = 5
+        };
 
-            var result = line.Clone();
+        var result = polygon.Clone();
 
-            Assert.Equal(Linecap.Square, Assert.IsAssignableFrom<IShapeWithStrokeLinecap>(result).StrokeLinecap);
-        }
-
-        [Fact]
-        public void Clone_SetStrokeLinejoin() {
-            var rectangle = new Rectangle(new Point(100, 150), new Point(200, 250));
-
-            rectangle.StrokeLinejoin = Linejoin.Arcs;
-
-            var result = rectangle.Clone();
-
-            Assert.Equal(Linejoin.Arcs, Assert.IsAssignableFrom<IShapeWithStrokeLinejoin>(result).StrokeLinejoin);
-        }
-
-        [Fact]
-        public void Clone_SetSides() {
-            var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250));
-
-            polygon.Sides = 5;
-
-            var result = polygon.Clone();
-
-            Assert.Equal(5, Assert.IsAssignableFrom<IShapeWithSides>(result).Sides);
-        }
+        Assert.Equal(5, Assert.IsType<IShapeWithSides>(result, exactMatch: false).Sides);
     }
 }

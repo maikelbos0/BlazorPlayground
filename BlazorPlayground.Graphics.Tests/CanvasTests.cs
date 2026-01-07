@@ -219,10 +219,10 @@ public class CanvasTests {
     public void Snap_ToNothing() {
         var canvas = new Canvas() {
             GridSize = 50,
-            Shapes = new List<Shape>() {
+            Shapes = [
                 new Line(new Point(45, 45), new Point(60, 60)),
                 new Rectangle(new Point(20, 20), new Point(30, 30))
-            }
+            ]
         };
 
         PointAssert.Equal(new Point(35, 35), canvas.Snap(new Point(35, 35)));
@@ -233,7 +233,7 @@ public class CanvasTests {
         var canvas = new Canvas() {
             SnapToGrid = true,
             GridSize = 50,
-            Shapes = new List<Shape>() {
+            Shapes = {
                 new Line(new Point(45, 45), new Point(60, 60)),
                 new Rectangle(new Point(20, 20), new Point(30, 30))
             }
@@ -247,7 +247,7 @@ public class CanvasTests {
         var canvas = new Canvas() {
             GridSize = 50,
             SnapToShapes = true,
-            Shapes = new List<Shape>() {
+            Shapes = {
                 new Line(new Point(45, 45), new Point(60, 60)),
                 new Rectangle(new Point(20, 20), new Point(30, 30))
             }
@@ -262,7 +262,7 @@ public class CanvasTests {
             SnapToGrid = true,
             GridSize = 16,
             SnapToShapes = true,
-            Shapes = new List<Shape>() {
+            Shapes = {
                 new Line(new Point(45, 45), new Point(60, 60)),
                 new Rectangle(new Point(20, 20), new Point(30, 30))
             }
@@ -277,7 +277,7 @@ public class CanvasTests {
             SnapToGrid = true,
             GridSize = 50,
             SnapToShapes = true,
-            Shapes = new List<Shape>() {
+            Shapes = {
                 new Line(new Point(45, 45), new Point(60, 60)),
                 new Rectangle(new Point(20, 20), new Point(30, 30))
             }
@@ -290,7 +290,7 @@ public class CanvasTests {
     public void GetStaticShapes_With_SelectedShape() {
         var selectedShape = new Line(new Point(100, 100), new Point(200, 100));
         var canvas = new Canvas() {
-            Shapes = new List<Shape>() {
+            Shapes = {
                 selectedShape,
                 new Line(new Point(100, 100), new Point(100, 200)),
                 new Rectangle(new Point(50, 50), new Point(150, 150))
@@ -307,7 +307,7 @@ public class CanvasTests {
     [Fact]
     public void GetStaticShapes_Without_SelectedShape() {
         var canvas = new Canvas() {
-            Shapes = new List<Shape>() {
+            Shapes = {
                 new Line(new Point(100, 100), new Point(100, 200)),
                 new Rectangle(new Point(50, 50), new Point(150, 150))
             }
@@ -320,7 +320,7 @@ public class CanvasTests {
     public void GetSnapPoints() {
         var selectedShape = new Line(new Point(100, 100), new Point(200, 100));
         var canvas = new Canvas() {
-            Shapes = new List<Shape>() {
+            Shapes = {
                 selectedShape,
                 new Line(new Point(100, 100), new Point(100, 200)),
                 new Rectangle(new Point(50, 50), new Point(150, 150))
@@ -743,7 +743,7 @@ public class CanvasTests {
 
         var shape = canvas.CreateShape();
 
-        Assert.Equal(50, Assert.IsAssignableFrom<IShapeWithOpacity>(shape).Opacity);
+        Assert.Equal(50, Assert.IsType<IShapeWithOpacity>(shape, false).Opacity);
     }
 
     [Fact]
@@ -759,7 +759,7 @@ public class CanvasTests {
 
         var shape = canvas.CreateShape();
 
-        PaintServerAssert.Equal(new Color(255, 255, 0, 1), Assert.IsAssignableFrom<IShapeWithFill>(shape).Fill);
+        PaintServerAssert.Equal(new Color(255, 255, 0, 1), Assert.IsType<IShapeWithFill>(shape, false).Fill);
     }
 
     [Fact]
@@ -774,7 +774,7 @@ public class CanvasTests {
 
         var shape = canvas.CreateShape();
 
-        Assert.Equal(50, Assert.IsAssignableFrom<IShapeWithFill>(shape).FillOpacity);
+        Assert.Equal(50, Assert.IsType<IShapeWithFill>(shape, exactMatch: false).FillOpacity);
     }
 
     [Fact]
@@ -790,7 +790,7 @@ public class CanvasTests {
 
         var shape = canvas.CreateShape();
 
-        PaintServerAssert.Equal(new Color(255, 0, 0, 1), Assert.IsAssignableFrom<IShapeWithStroke>(shape).Stroke);
+        PaintServerAssert.Equal(new Color(255, 0, 0, 1), Assert.IsType<IShapeWithStroke>(shape, exactMatch: false).Stroke);
     }
 
     [Fact]
@@ -805,7 +805,7 @@ public class CanvasTests {
 
         var shape = canvas.CreateShape();
 
-        Assert.Equal(10, Assert.IsAssignableFrom<IShapeWithStroke>(shape).StrokeWidth);
+        Assert.Equal(10, Assert.IsType<IShapeWithStroke>(shape, exactMatch: false).StrokeWidth);
     }
 
     [Fact]
@@ -820,7 +820,7 @@ public class CanvasTests {
 
         var shape = canvas.CreateShape();
 
-        Assert.Equal(50, Assert.IsAssignableFrom<IShapeWithStroke>(shape).StrokeOpacity);
+        Assert.Equal(50, Assert.IsType<IShapeWithStroke>(shape, exactMatch: false).StrokeOpacity);
     }
 
     [Fact]
@@ -835,7 +835,7 @@ public class CanvasTests {
 
         var shape = canvas.CreateShape();
 
-        Assert.Equal(Linecap.Square, Assert.IsAssignableFrom<IShapeWithStrokeLinecap>(shape).StrokeLinecap);
+        Assert.Equal(Linecap.Square, Assert.IsType<IShapeWithStrokeLinecap>(shape, exactMatch: false).StrokeLinecap);
     }
 
     [Fact]
@@ -850,7 +850,7 @@ public class CanvasTests {
 
         var shape = canvas.CreateShape();
 
-        Assert.Equal(Linejoin.Arcs, Assert.IsAssignableFrom<IShapeWithStrokeLinejoin>(shape).StrokeLinejoin);
+        Assert.Equal(Linejoin.Arcs, Assert.IsType<IShapeWithStrokeLinejoin>(shape, exactMatch: false).StrokeLinejoin);
     }
 
     [Fact]
@@ -865,7 +865,7 @@ public class CanvasTests {
 
         var shape = canvas.CreateShape();
 
-        Assert.Equal(5, Assert.IsAssignableFrom<IShapeWithSides>(shape).Sides);
+        Assert.Equal(5, Assert.IsType<IShapeWithSides>(shape, exactMatch: false).Sides);
     }
 
     [Fact]
@@ -965,7 +965,7 @@ public class CanvasTests {
         var selectedShape = new Line(new Point(100, 100), new Point(200, 200));
         var shape = new Line(new Point(200, 200), new Point(100, 200));
         var canvas = new Canvas() {
-            Shapes = new List<Shape>() {
+            Shapes = {
                 selectedShape,
                 shape
             },
@@ -988,7 +988,7 @@ public class CanvasTests {
 
         canvas.ApplyOpacityToSelectedShape();
 
-        Assert.Equal(45, Assert.IsAssignableFrom<IShapeWithOpacity>(canvas.SelectedShape).Opacity);
+        Assert.Equal(45, Assert.IsType<IShapeWithOpacity>(canvas.SelectedShape, exactMatch: false).Opacity);
     }
 
     [Fact]
@@ -1002,7 +1002,7 @@ public class CanvasTests {
 
         canvas.ApplyFillToSelectedShape();
 
-        PaintServerAssert.Equal(new Color(255, 255, 0, 1), Assert.IsAssignableFrom<IShapeWithFill>(canvas.SelectedShape).Fill);
+        PaintServerAssert.Equal(new Color(255, 255, 0, 1), Assert.IsType<IShapeWithFill>(canvas.SelectedShape, exactMatch: false).Fill);
     }
 
     [Fact]
@@ -1015,7 +1015,7 @@ public class CanvasTests {
 
         canvas.ApplyFillOpacityToSelectedShape();
 
-        Assert.Equal(50, Assert.IsAssignableFrom<IShapeWithFill>(canvas.SelectedShape).FillOpacity);
+        Assert.Equal(50, Assert.IsType<IShapeWithFill>(canvas.SelectedShape, exactMatch: false).FillOpacity);
     }
 
     [Fact]
@@ -1029,7 +1029,7 @@ public class CanvasTests {
 
         canvas.ApplyStrokeToSelectedShape();
 
-        PaintServerAssert.Equal(new Color(255, 255, 0, 1), Assert.IsAssignableFrom<IShapeWithStroke>(canvas.SelectedShape).Stroke);
+        PaintServerAssert.Equal(new Color(255, 255, 0, 1), Assert.IsType<IShapeWithStroke>(canvas.SelectedShape, exactMatch: false).Stroke);
     }
 
     [Fact]
@@ -1042,7 +1042,7 @@ public class CanvasTests {
 
         canvas.ApplyStrokeOpacityToSelectedShape();
 
-        Assert.Equal(50, Assert.IsAssignableFrom<IShapeWithStroke>(canvas.SelectedShape).StrokeOpacity);
+        Assert.Equal(50, Assert.IsType<IShapeWithStroke>(canvas.SelectedShape, exactMatch: false).StrokeOpacity);
     }
 
     [Fact]
@@ -1055,7 +1055,7 @@ public class CanvasTests {
 
         canvas.ApplyStrokeWidthToSelectedShape();
 
-        Assert.Equal(5, Assert.IsAssignableFrom<IShapeWithStroke>(canvas.SelectedShape).StrokeWidth);
+        Assert.Equal(5, Assert.IsType<IShapeWithStroke>(canvas.SelectedShape, exactMatch: false).StrokeWidth);
     }
 
     [Fact]
@@ -1068,7 +1068,7 @@ public class CanvasTests {
 
         canvas.ApplyStrokeLinecapToSelectedShape();
 
-        Assert.Equal(Linecap.Round, Assert.IsAssignableFrom<IShapeWithStrokeLinecap>(canvas.SelectedShape).StrokeLinecap);
+        Assert.Equal(Linecap.Round, Assert.IsType<IShapeWithStrokeLinecap>(canvas.SelectedShape, exactMatch: false).StrokeLinecap);
     }
 
     [Fact]
@@ -1081,7 +1081,7 @@ public class CanvasTests {
 
         canvas.ApplyStrokeLinejoinToSelectedShape();
 
-        Assert.Equal(Linejoin.Round, Assert.IsAssignableFrom<IShapeWithStrokeLinejoin>(canvas.SelectedShape).StrokeLinejoin);
+        Assert.Equal(Linejoin.Round, Assert.IsType<IShapeWithStrokeLinejoin>(canvas.SelectedShape, exactMatch: false).StrokeLinejoin);
     }
 
     [Fact]
@@ -1094,7 +1094,7 @@ public class CanvasTests {
 
         canvas.ApplySidesToSelectedShape();
 
-        Assert.Equal(5, Assert.IsAssignableFrom<IShapeWithSides>(canvas.SelectedShape).Sides);
+        Assert.Equal(5, Assert.IsType<IShapeWithSides>(canvas.SelectedShape, exactMatch: false).Sides);
     }
 
     [Fact]

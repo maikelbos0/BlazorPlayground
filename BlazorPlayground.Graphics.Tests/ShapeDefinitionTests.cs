@@ -1,212 +1,212 @@
 ﻿using System;
 using Xunit;
 
-namespace BlazorPlayground.Graphics.Tests {
-    public class ShapeDefinitionTests {
-        [Theory]
-        [InlineData(typeof(Line), "Line")]
-        [InlineData(typeof(Rectangle), "Rectangle")]
-        [InlineData(typeof(Circle), "Circle")]
-        [InlineData(typeof(Ellipse), "Ellipse")]
-        [InlineData(typeof(RegularPolygon), "Regular polygon")]
-        [InlineData(typeof(QuadraticBezier), "Quadratic bezier")]
-        [InlineData(typeof(CubicBezier), "Cubic bezier")]
-        public void Get(Type type, string expectedName) {
-            var definition = ShapeDefinition.Get(type);
+namespace BlazorPlayground.Graphics.Tests;
 
-            Assert.Equal(expectedName, definition.Name);
-        }
+public class ShapeDefinitionTests {
+    [Theory]
+    [InlineData(typeof(Line), "Line")]
+    [InlineData(typeof(Rectangle), "Rectangle")]
+    [InlineData(typeof(Circle), "Circle")]
+    [InlineData(typeof(Ellipse), "Ellipse")]
+    [InlineData(typeof(RegularPolygon), "Regular polygon")]
+    [InlineData(typeof(QuadraticBezier), "Quadratic bezier")]
+    [InlineData(typeof(CubicBezier), "Cubic bezier")]
+    public void Get(Type type, string expectedName) {
+        var definition = ShapeDefinition.Get(type);
 
-        [Fact]
-        public void Get_By_Shape() {
-            var shape = new Line(new Point(100, 200), new Point(150, 250));
+        Assert.Equal(expectedName, definition.Name);
+    }
 
-            var definition = ShapeDefinition.Get(shape);
+    [Fact]
+    public void Get_By_Shape() {
+        var shape = new Line(new Point(100, 200), new Point(150, 250));
 
-            Assert.Equal(ShapeDefinition.Get(typeof(Line)), definition);
-        }
+        var definition = ShapeDefinition.Get(shape);
 
-        [Fact]
-        public void None() {
-            Assert.Null(ShapeDefinition.None.Type);
-            Assert.False(ShapeDefinition.None.UseOpacity);
-            Assert.False(ShapeDefinition.None.UseFill);
-            Assert.False(ShapeDefinition.None.UseStroke);
-            Assert.False(ShapeDefinition.None.UseStrokeLinejoin);
-            Assert.False(ShapeDefinition.None.UseStrokeLinecap);
-            Assert.False(ShapeDefinition.None.UseSides);
-            Assert.False(ShapeDefinition.None.AutoSelect);
+        Assert.Equal(ShapeDefinition.Get(typeof(Line)), definition);
+    }
 
-            Assert.Throws<InvalidOperationException>(() => ShapeDefinition.None.Construct(new Point(100, 200), new Point(150, 250)));
-        }
+    [Fact]
+    public void None() {
+        Assert.Null(ShapeDefinition.None.Type);
+        Assert.False(ShapeDefinition.None.UseOpacity);
+        Assert.False(ShapeDefinition.None.UseFill);
+        Assert.False(ShapeDefinition.None.UseStroke);
+        Assert.False(ShapeDefinition.None.UseStrokeLinejoin);
+        Assert.False(ShapeDefinition.None.UseStrokeLinecap);
+        Assert.False(ShapeDefinition.None.UseSides);
+        Assert.False(ShapeDefinition.None.AutoSelect);
 
-        [Fact]
-        public void Line() {
-            var definition = Assert.Single(ShapeDefinition.Values, d => d.Name == "Line");
+        Assert.Throws<InvalidOperationException>(() => ShapeDefinition.None.Construct(new Point(100, 200), new Point(150, 250)));
+    }
 
-            Assert.Equal(typeof(Line), definition.Type);
-            Assert.True(definition.UseOpacity);
-            Assert.False(definition.UseFill);
-            Assert.True(definition.UseStroke);
-            Assert.False(definition.UseStrokeLinejoin);
-            Assert.True(definition.UseStrokeLinecap);
-            Assert.False(definition.UseSides);
-            Assert.False(definition.AutoSelect);
+    [Fact]
+    public void Line() {
+        var definition = Assert.Single(ShapeDefinition.Values, d => d.Name == "Line");
 
-            var shape = Assert.IsType<Line>(definition.Construct(new Point(100, 200), new Point(150, 250)));
+        Assert.Equal(typeof(Line), definition.Type);
+        Assert.True(definition.UseOpacity);
+        Assert.False(definition.UseFill);
+        Assert.True(definition.UseStroke);
+        Assert.False(definition.UseStrokeLinejoin);
+        Assert.True(definition.UseStrokeLinecap);
+        Assert.False(definition.UseSides);
+        Assert.False(definition.AutoSelect);
 
-            PointAssert.Equal(new Point(100, 200), shape.StartPoint);
-            PointAssert.Equal(new Point(150, 250), shape.EndPoint);
-        }
+        var shape = Assert.IsType<Line>(definition.Construct(new Point(100, 200), new Point(150, 250)));
 
-        [Fact]
-        public void Rectangle() {
-            var definition = Assert.Single(ShapeDefinition.Values, d => d.Name == "Rectangle");
+        PointAssert.Equal(new Point(100, 200), shape.StartPoint);
+        PointAssert.Equal(new Point(150, 250), shape.EndPoint);
+    }
 
-            Assert.Equal(typeof(Rectangle), definition.Type);
-            Assert.True(definition.UseOpacity);
-            Assert.True(definition.UseFill);
-            Assert.True(definition.UseStroke);
-            Assert.True(definition.UseStrokeLinejoin);
-            Assert.False(definition.UseStrokeLinecap);
-            Assert.False(definition.UseSides);
-            Assert.False(definition.AutoSelect);
+    [Fact]
+    public void Rectangle() {
+        var definition = Assert.Single(ShapeDefinition.Values, d => d.Name == "Rectangle");
 
-            var shape = Assert.IsType<Rectangle>(definition.Construct(new Point(100, 200), new Point(150, 250)));
+        Assert.Equal(typeof(Rectangle), definition.Type);
+        Assert.True(definition.UseOpacity);
+        Assert.True(definition.UseFill);
+        Assert.True(definition.UseStroke);
+        Assert.True(definition.UseStrokeLinejoin);
+        Assert.False(definition.UseStrokeLinecap);
+        Assert.False(definition.UseSides);
+        Assert.False(definition.AutoSelect);
 
-            PointAssert.Equal(new Point(100, 200), shape.StartPoint);
-            PointAssert.Equal(new Point(150, 250), shape.EndPoint);
-        }
+        var shape = Assert.IsType<Rectangle>(definition.Construct(new Point(100, 200), new Point(150, 250)));
 
-        [Fact]
-        public void Circle() {
-            var definition = Assert.Single(ShapeDefinition.Values, d => d.Name == "Circle");
+        PointAssert.Equal(new Point(100, 200), shape.StartPoint);
+        PointAssert.Equal(new Point(150, 250), shape.EndPoint);
+    }
 
-            Assert.Equal(typeof(Circle), definition.Type);
-            Assert.True(definition.UseOpacity);
-            Assert.True(definition.UseFill);
-            Assert.True(definition.UseStroke);
-            Assert.False(definition.UseStrokeLinejoin);
-            Assert.False(definition.UseStrokeLinecap);
-            Assert.False(definition.UseSides);
-            Assert.False(definition.AutoSelect);
+    [Fact]
+    public void Circle() {
+        var definition = Assert.Single(ShapeDefinition.Values, d => d.Name == "Circle");
 
-            var shape = Assert.IsType<Circle>(definition.Construct(new Point(100, 200), new Point(150, 250)));
+        Assert.Equal(typeof(Circle), definition.Type);
+        Assert.True(definition.UseOpacity);
+        Assert.True(definition.UseFill);
+        Assert.True(definition.UseStroke);
+        Assert.False(definition.UseStrokeLinejoin);
+        Assert.False(definition.UseStrokeLinecap);
+        Assert.False(definition.UseSides);
+        Assert.False(definition.AutoSelect);
 
-            PointAssert.Equal(new Point(100, 200), shape.CenterPoint);
-            PointAssert.Equal(new Point(150, 250), shape.RadiusPoint);
-        }
+        var shape = Assert.IsType<Circle>(definition.Construct(new Point(100, 200), new Point(150, 250)));
 
-        [Fact]
-        public void Ellipse() {
-            var definition = Assert.Single(ShapeDefinition.Values, d => d.Name == "Ellipse");
+        PointAssert.Equal(new Point(100, 200), shape.CenterPoint);
+        PointAssert.Equal(new Point(150, 250), shape.RadiusPoint);
+    }
 
-            Assert.Equal(typeof(Ellipse), definition.Type);
-            Assert.True(definition.UseOpacity);
-            Assert.True(definition.UseFill);
-            Assert.True(definition.UseStroke);
-            Assert.False(definition.UseStrokeLinejoin);
-            Assert.False(definition.UseStrokeLinecap);
-            Assert.False(definition.UseSides);
-            Assert.False(definition.AutoSelect);
+    [Fact]
+    public void Ellipse() {
+        var definition = Assert.Single(ShapeDefinition.Values, d => d.Name == "Ellipse");
 
-            var shape = Assert.IsType<Ellipse>(definition.Construct(new Point(100, 200), new Point(150, 250)));
+        Assert.Equal(typeof(Ellipse), definition.Type);
+        Assert.True(definition.UseOpacity);
+        Assert.True(definition.UseFill);
+        Assert.True(definition.UseStroke);
+        Assert.False(definition.UseStrokeLinejoin);
+        Assert.False(definition.UseStrokeLinecap);
+        Assert.False(definition.UseSides);
+        Assert.False(definition.AutoSelect);
 
-            PointAssert.Equal(new Point(100, 200), shape.CenterPoint);
-            PointAssert.Equal(new Point(150, 250), shape.RadiusPoint);
-        }
+        var shape = Assert.IsType<Ellipse>(definition.Construct(new Point(100, 200), new Point(150, 250)));
 
-        [Fact]
-        public void RegularPolygon() {
-            var definition = Assert.Single(ShapeDefinition.Values, d => d.Name == "Regular polygon");
+        PointAssert.Equal(new Point(100, 200), shape.CenterPoint);
+        PointAssert.Equal(new Point(150, 250), shape.RadiusPoint);
+    }
 
-            Assert.Equal(typeof(RegularPolygon), definition.Type);
-            Assert.True(definition.UseOpacity);
-            Assert.True(definition.UseFill);
-            Assert.True(definition.UseStroke);
-            Assert.True(definition.UseStrokeLinejoin);
-            Assert.False(definition.UseStrokeLinecap);
-            Assert.True(definition.UseSides);
-            Assert.False(definition.AutoSelect);
+    [Fact]
+    public void RegularPolygon() {
+        var definition = Assert.Single(ShapeDefinition.Values, d => d.Name == "Regular polygon");
 
-            var shape = Assert.IsType<RegularPolygon>(definition.Construct(new Point(100, 200), new Point(150, 250)));
+        Assert.Equal(typeof(RegularPolygon), definition.Type);
+        Assert.True(definition.UseOpacity);
+        Assert.True(definition.UseFill);
+        Assert.True(definition.UseStroke);
+        Assert.True(definition.UseStrokeLinejoin);
+        Assert.False(definition.UseStrokeLinecap);
+        Assert.True(definition.UseSides);
+        Assert.False(definition.AutoSelect);
 
-            PointAssert.Equal(new Point(100, 200), shape.CenterPoint);
-            PointAssert.Equal(new Point(150, 250), shape.RadiusPoint);
-        }
+        var shape = Assert.IsType<RegularPolygon>(definition.Construct(new Point(100, 200), new Point(150, 250)));
 
-        [Fact]
-        public void QuadraticBezier() {
-            var definition = Assert.Single(ShapeDefinition.Values, d => d.Name == "Quadratic bezier");
+        PointAssert.Equal(new Point(100, 200), shape.CenterPoint);
+        PointAssert.Equal(new Point(150, 250), shape.RadiusPoint);
+    }
 
-            Assert.Equal(typeof(QuadraticBezier), definition.Type);
-            Assert.True(definition.UseOpacity);
-            Assert.True(definition.UseFill);
-            Assert.True(definition.UseStroke);
-            Assert.False(definition.UseStrokeLinejoin);
-            Assert.True(definition.UseStrokeLinecap);
-            Assert.False(definition.UseSides);
-            Assert.True(definition.AutoSelect);
+    [Fact]
+    public void QuadraticBezier() {
+        var definition = Assert.Single(ShapeDefinition.Values, d => d.Name == "Quadratic bezier");
 
-            var shape = Assert.IsType<QuadraticBezier>(definition.Construct(new Point(100, 200), new Point(150, 250)));
+        Assert.Equal(typeof(QuadraticBezier), definition.Type);
+        Assert.True(definition.UseOpacity);
+        Assert.True(definition.UseFill);
+        Assert.True(definition.UseStroke);
+        Assert.False(definition.UseStrokeLinejoin);
+        Assert.True(definition.UseStrokeLinecap);
+        Assert.False(definition.UseSides);
+        Assert.True(definition.AutoSelect);
 
-            PointAssert.Equal(new Point(100, 200), shape.StartPoint);
-            PointAssert.Equal(new Point(150, 250), shape.EndPoint);
-        }
+        var shape = Assert.IsType<QuadraticBezier>(definition.Construct(new Point(100, 200), new Point(150, 250)));
 
-        [Fact]
-        public void CubicBezier() {
-            var definition = Assert.Single(ShapeDefinition.Values, d => d.Name == "Cubic bezier");
+        PointAssert.Equal(new Point(100, 200), shape.StartPoint);
+        PointAssert.Equal(new Point(150, 250), shape.EndPoint);
+    }
 
-            Assert.Equal(typeof(CubicBezier), definition.Type);
-            Assert.True(definition.UseOpacity);
-            Assert.True(definition.UseFill);
-            Assert.True(definition.UseStroke);
-            Assert.False(definition.UseStrokeLinejoin);
-            Assert.True(definition.UseStrokeLinecap);
-            Assert.False(definition.UseSides);
-            Assert.True(definition.AutoSelect);
+    [Fact]
+    public void CubicBezier() {
+        var definition = Assert.Single(ShapeDefinition.Values, d => d.Name == "Cubic bezier");
 
-            var shape = Assert.IsType<CubicBezier>(definition.Construct(new Point(100, 200), new Point(150, 250)));
+        Assert.Equal(typeof(CubicBezier), definition.Type);
+        Assert.True(definition.UseOpacity);
+        Assert.True(definition.UseFill);
+        Assert.True(definition.UseStroke);
+        Assert.False(definition.UseStrokeLinejoin);
+        Assert.True(definition.UseStrokeLinecap);
+        Assert.False(definition.UseSides);
+        Assert.True(definition.AutoSelect);
 
-            PointAssert.Equal(new Point(100, 200), shape.StartPoint);
-            PointAssert.Equal(new Point(150, 250), shape.EndPoint);
-        }
+        var shape = Assert.IsType<CubicBezier>(definition.Construct(new Point(100, 200), new Point(150, 250)));
 
-        [Fact]
-        public void ClosedPath() {
-            var definition = Assert.Single(ShapeDefinition.Values, d => d.Name == "Closed path");
+        PointAssert.Equal(new Point(100, 200), shape.StartPoint);
+        PointAssert.Equal(new Point(150, 250), shape.EndPoint);
+    }
 
-            Assert.Equal(typeof(ClosedPath), definition.Type);
-            Assert.True(definition.UseOpacity);
-            Assert.True(definition.UseFill);
-            Assert.True(definition.UseStroke);
-            Assert.True(definition.UseStrokeLinejoin);
-            Assert.False(definition.UseStrokeLinecap);
-            Assert.False(definition.UseSides);
-            Assert.True(definition.AutoSelect);
+    [Fact]
+    public void ClosedPath() {
+        var definition = Assert.Single(ShapeDefinition.Values, d => d.Name == "Closed path");
 
-            var shape = Assert.IsType<ClosedPath>(definition.Construct(new Point(100, 200), new Point(150, 250)));
+        Assert.Equal(typeof(ClosedPath), definition.Type);
+        Assert.True(definition.UseOpacity);
+        Assert.True(definition.UseFill);
+        Assert.True(definition.UseStroke);
+        Assert.True(definition.UseStrokeLinejoin);
+        Assert.False(definition.UseStrokeLinecap);
+        Assert.False(definition.UseSides);
+        Assert.True(definition.AutoSelect);
 
-            Assert.Equal(2, shape.Points.Count);
-            PointAssert.Equal(new Point(100, 200), shape.Points[0]);
-            PointAssert.Equal(new Point(150, 250), shape.Points[1]);
-        }
+        var shape = Assert.IsType<ClosedPath>(definition.Construct(new Point(100, 200), new Point(150, 250)));
 
-        [Fact]
-        public void RawShape() {
-            var definition = Assert.Single(ShapeDefinition.Values, d => d.Name == "Raw shape");
+        Assert.Equal(2, shape.Points.Count);
+        PointAssert.Equal(new Point(100, 200), shape.Points[0]);
+        PointAssert.Equal(new Point(150, 250), shape.Points[1]);
+    }
 
-            Assert.Equal(typeof(RawShape), definition.Type);
-            Assert.False(definition.UseOpacity);
-            Assert.False(definition.UseFill);
-            Assert.False(definition.UseStroke);
-            Assert.False(definition.UseStrokeLinejoin);
-            Assert.False(definition.UseStrokeLinecap);
-            Assert.False(definition.UseSides);
-            Assert.False(definition.AutoSelect);
+    [Fact]
+    public void RawShape() {
+        var definition = Assert.Single(ShapeDefinition.Values, d => d.Name == "Raw shape");
 
-            Assert.Throws<InvalidOperationException>(() => definition.Construct(new Point(100, 200), new Point(150, 250)));
-        }
+        Assert.Equal(typeof(RawShape), definition.Type);
+        Assert.False(definition.UseOpacity);
+        Assert.False(definition.UseFill);
+        Assert.False(definition.UseStroke);
+        Assert.False(definition.UseStrokeLinejoin);
+        Assert.False(definition.UseStrokeLinecap);
+        Assert.False(definition.UseSides);
+        Assert.False(definition.AutoSelect);
+
+        Assert.Throws<InvalidOperationException>(() => definition.Construct(new Point(100, 200), new Point(150, 250)));
     }
 }
