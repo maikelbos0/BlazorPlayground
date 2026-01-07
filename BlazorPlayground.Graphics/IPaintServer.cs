@@ -1,3 +1,3 @@
-﻿namespace BlazorPlayground.Graphics {
-    public interface IPaintServer { }
-}
+﻿namespace BlazorPlayground.Graphics;
+
+public interface IPaintServer { }

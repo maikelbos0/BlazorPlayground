@@ -4,125 +4,125 @@ using System.Globalization;
 using System.Linq;
 using System.Xml.Linq;
 
-namespace BlazorPlayground.Graphics {
-    public static class SvgFileParser {
-        public static SvgFileParseResult Parse(string contents) {
-            try {
-                var graphicsElement = XElement.Parse(contents);
+namespace BlazorPlayground.Graphics;
 
-                if (graphicsElement.Name.ToString().ToLower() != "svg") {
-                    return new SvgFileParseResult("The provided file is not a valid svg file.");
-                }
+public static class SvgFileParser {
+    public static SvgFileParseResult Parse(string contents) {
+        try {
+            var graphicsElement = XElement.Parse(contents);
 
-                return new SvgFileParseResult(new Canvas() {
-                    Shapes = graphicsElement.Elements().Select(Parse).ToList(),
-                    Width = ParseDimension(graphicsElement.Attribute("width")?.Value, Canvas.MinimumWidth, Canvas.DefaultWidth),
-                    Height = ParseDimension(graphicsElement.Attribute("height")?.Value, Canvas.MinimumHeight, Canvas.DefaultHeight)
-                });
-            }
-            catch {
+            if (!graphicsElement.Name.ToString().Equals("svg", StringComparison.OrdinalIgnoreCase)) {
                 return new SvgFileParseResult("The provided file is not a valid svg file.");
             }
+
+            return new SvgFileParseResult(new Canvas() {
+                Shapes = [.. graphicsElement.Elements().Select(Parse)],
+                Width = ParseDimension(graphicsElement.Attribute("width")?.Value, Canvas.MinimumWidth, Canvas.DefaultWidth),
+                Height = ParseDimension(graphicsElement.Attribute("height")?.Value, Canvas.MinimumHeight, Canvas.DefaultHeight)
+            });
+        }
+        catch {
+            return new SvgFileParseResult("The provided file is not a valid svg file.");
+        }
+    }
+
+    internal static Shape Parse(XElement element) {
+        var shape = CreateShape(element);
+
+        if (shape != null && SetAnchors(shape, element)) {
+            (shape as IShapeWithOpacity)?.Opacity = ParseOpacity(element.Attribute("opacity")?.Value);
+            (shape as IShapeWithFill)?.Fill = ParsePaintServer(element.Attribute("fill")?.Value);
+            (shape as IShapeWithFill)?.FillOpacity = ParseOpacity(element.Attribute("fill-opacity")?.Value);
+            (shape as IShapeWithStroke)?.Stroke = ParsePaintServer(element.Attribute("stroke")?.Value);
+            (shape as IShapeWithStroke)?.StrokeWidth = ParseDimension(element.Attribute("stroke-width")?.Value, DrawSettings.MinimumStrokeWidth, DrawSettings.DefaultStrokeWidth);
+            (shape as IShapeWithStroke)?.StrokeOpacity = ParseOpacity(element.Attribute("stroke-opacity")?.Value);
+            (shape as IShapeWithStrokeLinecap)?.StrokeLinecap = ParseEnum(element.Attribute("stroke-linecap")?.Value, DrawSettings.DefaultStrokeLinecap);
+            (shape as IShapeWithStrokeLinejoin)?.StrokeLinejoin = ParseEnum(element.Attribute("stroke-linejoin")?.Value, DrawSettings.DefaultStrokeLinejoin);
+            (shape as IShapeWithSides)?.Sides = ParseDimension(element.Attribute("data-shape-sides")?.Value, DrawSettings.MinimumSides, DrawSettings.DefaultSides);
+            
+            return shape;
         }
 
-        internal static Shape Parse(XElement element) {
-            var shape = CreateShape(element);
+        return new RawShape(element);
+    }
 
-            if (shape != null && SetAnchors(shape, element)) {
-                (shape as IShapeWithOpacity)?.Opacity = ParseOpacity(element.Attribute("opacity")?.Value);
-                (shape as IShapeWithFill)?.Fill = ParsePaintServer(element.Attribute("fill")?.Value);
-                (shape as IShapeWithFill)?.FillOpacity = ParseOpacity(element.Attribute("fill-opacity")?.Value);
-                (shape as IShapeWithStroke)?.Stroke = ParsePaintServer(element.Attribute("stroke")?.Value);
-                (shape as IShapeWithStroke)?.StrokeWidth = ParseDimension(element.Attribute("stroke-width")?.Value, DrawSettings.MinimumStrokeWidth, DrawSettings.DefaultStrokeWidth);
-                (shape as IShapeWithStroke)?.StrokeOpacity = ParseOpacity(element.Attribute("stroke-opacity")?.Value);
-                (shape as IShapeWithStrokeLinecap)?.StrokeLinecap = ParseEnum(element.Attribute("stroke-linecap")?.Value, DrawSettings.DefaultStrokeLinecap);
-                (shape as IShapeWithStrokeLinejoin)?.StrokeLinejoin = ParseEnum(element.Attribute("stroke-linejoin")?.Value, DrawSettings.DefaultStrokeLinejoin);
-                (shape as IShapeWithSides)?.Sides = ParseDimension(element.Attribute("data-shape-sides")?.Value, DrawSettings.MinimumSides, DrawSettings.DefaultSides);
-                
-                return shape;
-            }
+    private static Shape? CreateShape(XElement element) {
+        var shapeTypeName = element.Attribute("data-shape-type")?.Value;
+        var shapeType = Type.GetType($"BlazorPlayground.Graphics.{shapeTypeName}");
 
-            return new RawShape(element);
+        if (shapeType == null) {
+            return null;
         }
 
-        private static Shape? CreateShape(XElement element) {
-            var shapeTypeName = element.Attribute("data-shape-type")?.Value;
-            var shapeType = Type.GetType($"BlazorPlayground.Graphics.{shapeTypeName}");
+        return (Shape?)Activator.CreateInstance(shapeType, true);
+    }
 
-            if (shapeType == null) {
-                return null;
-            }
+    private static bool SetAnchors(Shape shape, XElement element) {
+        int i;
 
-            return (Shape?)Activator.CreateInstance(shapeType, true);
-        }
-
-        private static bool SetAnchors(Shape shape, XElement element) {
-            int i;
-
-            for (i = 0; i < shape.Anchors.Count; i++) {
-                if (!TryParseAnchor(element.Attribute($"data-shape-anchor-{i}")?.Value, out var point)) {
-                    return false;
-                }
-
-                shape.Anchors[i].Set(shape, point);
-            }
-
-            if (shape is IExtensibleShape extensibleShape) {
-                while (TryParseAnchor(element.Attribute($"data-shape-anchor-{i++}")?.Value, out var point)) {
-                    extensibleShape.AddPoint(point);
-                }
-            }
-
-            return true;
-        }
-
-        private static bool TryParseAnchor(string? anchorText, [NotNullWhen(true)] out Point? point) {
-            var coordinates = anchorText?.Split(',');
-
-            if (coordinates == null
-                    || coordinates.Length != 2
-                    || !double.TryParse(coordinates[0], NumberStyles.Any, CultureInfo.InvariantCulture, out var x)
-                    || !double.TryParse(coordinates[1], NumberStyles.Any, CultureInfo.InvariantCulture, out var y)) {
-
-                point = null;
+        for (i = 0; i < shape.Anchors.Count; i++) {
+            if (!TryParseAnchor(element.Attribute($"data-shape-anchor-{i}")?.Value, out var point)) {
                 return false;
             }
 
-            point = new Point(x, y);
-            return true;
+            shape.Anchors[i].Set(shape, point);
         }
 
-        private static int ParseOpacity(string? opacityValue) {
-            if (opacityValue != null && double.TryParse(opacityValue, NumberStyles.Any, CultureInfo.InvariantCulture, out var opacity) && opacity * 100 >= DrawSettings.MinimumOpacity && opacity * 100 <= DrawSettings.MaximumOpacity) {
-                return (int)(opacity * 100);
-            }
-
-            return DrawSettings.DefaultOpacity;
-        }
-
-        private static IPaintServer ParsePaintServer(string? paintServer) {
-            if (paintServer == PaintServer.None.ToString() || string.IsNullOrWhiteSpace(paintServer)) {
-                return PaintServer.None;
-            }
-            else {
-                return PaintManager.ParseColor(paintServer);
+        if (shape is IExtensibleShape extensibleShape) {
+            while (TryParseAnchor(element.Attribute($"data-shape-anchor-{i++}")?.Value, out var point)) {
+                extensibleShape.AddPoint(point);
             }
         }
 
-        private static int ParseDimension(string? dimensionValue, int minimumValue, int defaultValue) {
-            if (dimensionValue != null && int.TryParse(dimensionValue, out var dimension) && dimension >= minimumValue) {
-                return dimension;
-            }
+        return true;
+    }
 
-            return defaultValue;
+    private static bool TryParseAnchor(string? anchorText, [NotNullWhen(true)] out Point? point) {
+        var coordinates = anchorText?.Split(',');
+
+        if (coordinates == null
+                || coordinates.Length != 2
+                || !double.TryParse(coordinates[0], NumberStyles.Any, CultureInfo.InvariantCulture, out var x)
+                || !double.TryParse(coordinates[1], NumberStyles.Any, CultureInfo.InvariantCulture, out var y)) {
+
+            point = null;
+            return false;
         }
 
-        private static TEnum ParseEnum<TEnum>(string? enumValue, TEnum defaultValue) where TEnum : struct, Enum {
-            if (enumValue != null && Enum.TryParse<TEnum>(enumValue, true, out var value)) {
-                return value;
-            };
+        point = new Point(x, y);
+        return true;
+    }
 
-            return defaultValue;
+    private static int ParseOpacity(string? opacityValue) {
+        if (opacityValue != null && double.TryParse(opacityValue, NumberStyles.Any, CultureInfo.InvariantCulture, out var opacity) && opacity * 100 >= DrawSettings.MinimumOpacity && opacity * 100 <= DrawSettings.MaximumOpacity) {
+            return (int)(opacity * 100);
         }
+
+        return DrawSettings.DefaultOpacity;
+    }
+
+    private static IPaintServer ParsePaintServer(string? paintServer) {
+        if (paintServer == PaintServer.None.ToString() || string.IsNullOrWhiteSpace(paintServer)) {
+            return PaintServer.None;
+        }
+        else {
+            return PaintManager.ParseColor(paintServer);
+        }
+    }
+
+    private static int ParseDimension(string? dimensionValue, int minimumValue, int defaultValue) {
+        if (dimensionValue != null && int.TryParse(dimensionValue, out var dimension) && dimension >= minimumValue) {
+            return dimension;
+        }
+
+        return defaultValue;
+    }
+
+    private static TEnum ParseEnum<TEnum>(string? enumValue, TEnum defaultValue) where TEnum : struct, Enum {
+        if (enumValue != null && Enum.TryParse<TEnum>(enumValue, true, out var value)) {
+            return value;
+        };
+
+        return defaultValue;
     }
 }

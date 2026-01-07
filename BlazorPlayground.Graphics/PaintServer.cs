@@ -1,13 +1,13 @@
-﻿namespace BlazorPlayground.Graphics {
-    public class PaintServer : IPaintServer {
-        private readonly string value;
+﻿namespace BlazorPlayground.Graphics;
 
-        public static PaintServer None { get; } = new PaintServer("none");
+public class PaintServer : IPaintServer {
+    private readonly string value;
 
-        private PaintServer(string value) {
-            this.value = value;
-        }
+    public static PaintServer None { get; } = new("none");
 
-        public override string ToString() => value;
+    private PaintServer(string value) {
+        this.value = value;
     }
+
+    public override string ToString() => value;
 }

@@ -21,13 +21,13 @@ public class GameAssetFactory {
     public GameAsset GetGameAsset(IEnumerable<DrawableShape> shapes) {
         var origin = GetOrigin(shapes);
 
-        return new GameAsset(shapes.Select(shape => new GameAssetSection(
+        return new GameAsset([.. shapes.Select(shape => new GameAssetSection(
                 shape.GetGeometry(geometryFactory, origin),
                 GetFillColor(shape),
                 GetStrokeColor(shape),
                 GetStrokeWidth(shape),
                 GetOpacity(shape)
-            )).ToList());
+            ))]);
     }
 
     public static Point GetOrigin(IEnumerable<DrawableShape> shapes) {

@@ -5,24 +5,24 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Xml.Linq;
 
-namespace BlazorPlayground.Graphics {
-    public class RawShape : Shape {
-        private readonly XElement element;
+namespace BlazorPlayground.Graphics;
 
-        public RawShape(XElement element) {
-            this.element = element;
-        }
+public class RawShape : Shape {
+    private readonly XElement element;
 
-        public override IReadOnlyList<Anchor> Anchors => new ReadOnlyCollection<Anchor>(Array.Empty<Anchor>());
+    public RawShape(XElement element) {
+        this.element = element;
+    }
 
-        public override IReadOnlyList<Point> GetSnapPoints() => Array.Empty<Point>();
+    public override IReadOnlyList<Anchor> Anchors => new ReadOnlyCollection<Anchor>(Array.Empty<Anchor>());
 
-        protected override Shape CreateClone() => new RawShape(new XElement(element));
+    public override IReadOnlyList<Point> GetSnapPoints() => [];
 
-        public override XElement CreateSvgElement() => new(element);
+    protected override Shape CreateClone() => new RawShape(new XElement(element));
 
-        public override void BuildRenderTree(RenderTreeBuilder builder) {
-            builder.AddContent(1, new MarkupString(element.ToString()));
-        }
+    public override XElement CreateSvgElement() => new(element);
+
+    public override void BuildRenderTree(RenderTreeBuilder builder) {
+        builder.AddContent(1, new MarkupString(element.ToString()));
     }
 }

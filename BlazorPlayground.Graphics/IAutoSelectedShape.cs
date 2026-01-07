@@ -1,3 +1,3 @@
-﻿namespace BlazorPlayground.Graphics {
-    public interface IAutoSelectedShape { }
-}
+﻿namespace BlazorPlayground.Graphics;
+
+public interface IAutoSelectedShape { }

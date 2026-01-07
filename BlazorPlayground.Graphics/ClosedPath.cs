@@ -39,7 +39,7 @@ public class ClosedPath : DrawableShape, IShapeWithOpacity, IShapeWithFill, ISha
     public override IReadOnlyList<Point> GetSnapPoints() => Points.AsReadOnly();
 
     protected override Shape CreateClone() => new ClosedPath() {
-        Points = new(Points)
+        Points = [.. Points]
     };
 
     public void AddPoint(Point endPoint) => Points.Add(endPoint);

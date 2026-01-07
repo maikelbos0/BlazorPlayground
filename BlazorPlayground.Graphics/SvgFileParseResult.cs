@@ -1,19 +1,19 @@
 ﻿using System;
 
-namespace BlazorPlayground.Graphics {
-    public record SvgFileParseResult {
-        private readonly Canvas? canvas;
+namespace BlazorPlayground.Graphics;
 
-        public Canvas Canvas => canvas ?? throw new InvalidOperationException($"{nameof(Canvas)} is only available when {nameof(IsSuccess)} is true.");
-        public bool IsSuccess => canvas != null;
-        public string? ErrorMessage { get; }
+public record SvgFileParseResult {
+    private readonly Canvas? canvas;
 
-        public SvgFileParseResult(string errorMessage) {
-            ErrorMessage = errorMessage;
-        }
+    public Canvas Canvas => canvas ?? throw new InvalidOperationException($"{nameof(Canvas)} is only available when {nameof(IsSuccess)} is true.");
+    public bool IsSuccess => canvas != null;
+    public string? ErrorMessage { get; }
 
-        public SvgFileParseResult(Canvas canvas) {
-            this.canvas = canvas;
-        }
+    public SvgFileParseResult(string errorMessage) {
+        ErrorMessage = errorMessage;
+    }
+
+    public SvgFileParseResult(Canvas canvas) {
+        this.canvas = canvas;
     }
 }

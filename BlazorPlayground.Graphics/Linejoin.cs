@@ -1,8 +1,8 @@
-﻿namespace BlazorPlayground.Graphics {
-    public enum Linejoin {
-        Arcs,
-        Bevel,
-        Miter,
-        Round
-    }
+﻿namespace BlazorPlayground.Graphics;
+
+public enum Linejoin {
+    Arcs,
+    Bevel,
+    Miter,
+    Round
 }

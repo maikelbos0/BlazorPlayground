@@ -1,6 +1,6 @@
-﻿namespace BlazorPlayground.Graphics {
-    public enum PaintMode {
-        None,
-        Color
-    }
+﻿namespace BlazorPlayground.Graphics;
+
+public enum PaintMode {
+    None,
+    Color
 }

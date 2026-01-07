@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using System.Globalization;
 
-namespace BlazorPlayground.Graphics {
-    public class ShapeAttributeCollection : IEnumerable<KeyValuePair<string, object>> {
-        private readonly Dictionary<string, object> attributes = new();
+namespace BlazorPlayground.Graphics;
 
-        public void Add(string key, double value) => attributes.Add(key, value.ToString(CultureInfo.InvariantCulture));
+public class ShapeAttributeCollection : IEnumerable<KeyValuePair<string, object>> {
+    private readonly Dictionary<string, object> attributes = [];
 
-        public void Add(string key, string value) => attributes.Add(key, value);
+    public void Add(string key, double value) => attributes.Add(key, value.ToString(CultureInfo.InvariantCulture));
 
-        public IEnumerator<KeyValuePair<string, object>> GetEnumerator() => attributes.GetEnumerator();
+    public void Add(string key, string value) => attributes.Add(key, value);
 
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-    }
+    public IEnumerator<KeyValuePair<string, object>> GetEnumerator() => attributes.GetEnumerator();
+
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }

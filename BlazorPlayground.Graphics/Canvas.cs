@@ -46,7 +46,7 @@ public class Canvas {
     public bool ShowGrid { get; set; } = false;
     public bool SnapToGrid { get; set; } = false;
     public bool SnapToShapes { get; set; } = false;
-    public List<Shape> Shapes { get; set; } = new List<Shape>();
+    public List<Shape> Shapes { get; set; } = [];
     public Point? StartPoint { get; set; }
     public Point? SnappedStartPoint => Snap(StartPoint);
     public Point? EndPoint { get; set; }
