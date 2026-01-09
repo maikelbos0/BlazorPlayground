@@ -5,35 +5,37 @@ namespace BlazorPlayground.Graphics.Tests;
 
 public class SvgFileParserTests {
     [Fact]
-    public void Parse_Invalid_Xml() {
-        var result = SvgFileParser.Parse("<>");
+    public void TryParse_Invalid_Xml() {
+        var result = SvgFileParser.TryParse("<>", out var canvas);
 
-        Assert.False(result.IsSuccess);
-        Assert.Equal("The provided file is not a valid svg file.", result.ErrorMessage);
+        Assert.False(result);
+        Assert.Null(canvas);
     }
 
     [Fact]
-    public void Parse_Invalid_Svg() {
-        var result = SvgFileParser.Parse("<test></test>");
+    public void TryParse_Invalid_Svg() {
+        var result = SvgFileParser.TryParse("<test></test>", out var canvas);
 
-        Assert.False(result.IsSuccess);
-        Assert.Equal("The provided file is not a valid svg file.", result.ErrorMessage);
+        Assert.False(result);
+        Assert.Null(canvas);
     }
 
     [Fact]
-    public void Parse_Valid_Svg() {
-        var result = SvgFileParser.Parse("<svg><g><line x1=\"100\" y1=\"150\" x2=\"200\" y2=\"250\" stroke=\"black\" /></g><line x1=\"200\" y1=\"250\" x2=\"300\" y2=\"350\" stroke=\"black\" /></svg>");
+    public void TryParse_Valid_Svg() {
+        var result = SvgFileParser.TryParse("<svg><g><line x1=\"100\" y1=\"150\" x2=\"200\" y2=\"250\" stroke=\"black\" /></g><line x1=\"200\" y1=\"250\" x2=\"300\" y2=\"350\" stroke=\"black\" /></svg>", out var canvas);
 
-        Assert.True(result.IsSuccess);
-
-        Assert.Equal(2, result.Canvas.Shapes.Count);
+        Assert.True(result);
+        Assert.NotNull(canvas);
+        Assert.Equal(2, canvas.Shapes.Count);
     }
 
     [Fact]
-    public void Parse_Null_Canvas_Height() {
-        var result = SvgFileParser.Parse("<svg></svg>");
+    public void TryParse_Null_Canvas_Height() {
+        var result = SvgFileParser.TryParse("<svg></svg>", out var canvas);
 
-        Assert.Equal(Canvas.DefaultHeight, result.Canvas.Height);
+        Assert.True(result);
+        Assert.NotNull(canvas);
+        Assert.Equal(Canvas.DefaultHeight, canvas.Height);
     }
 
     [Theory]
@@ -41,17 +43,21 @@ public class SvgFileParserTests {
     [InlineData("0", Canvas.DefaultHeight)]
     [InlineData("foo", Canvas.DefaultHeight)]
     [InlineData("600", 600)]
-    public void Parse_Canvas_Height(string height, int expectedHeight) {
-        var result = SvgFileParser.Parse($"<svg width=\"500\" height=\"{height}\"></svg>");
+    public void TryParse_Canvas_Height(string height, int expectedHeight) {
+        var result = SvgFileParser.TryParse($"<svg width=\"500\" height=\"{height}\"></svg>", out var canvas);
 
-        Assert.Equal(expectedHeight, result.Canvas.Height);
+        Assert.True(result);
+        Assert.NotNull(canvas);
+        Assert.Equal(expectedHeight, canvas.Height);
     }
 
     [Fact]
-    public void Parse_Null_Canvas_Width() {
-        var result = SvgFileParser.Parse("<svg></svg>");
+    public void TryParse_Null_Canvas_Width() {
+        var result = SvgFileParser.TryParse("<svg></svg>", out var canvas);
 
-        Assert.Equal(Canvas.DefaultWidth, result.Canvas.Width);
+        Assert.True(result);
+        Assert.NotNull(canvas);
+        Assert.Equal(Canvas.DefaultWidth, canvas.Width);
     }
 
     [Theory]
@@ -59,10 +65,12 @@ public class SvgFileParserTests {
     [InlineData("0", Canvas.DefaultWidth)]
     [InlineData("foo", Canvas.DefaultWidth)]
     [InlineData("600", 600)]
-    public void Parse_Canvas_Width(string width, int expectedWidth) {
-        var result = SvgFileParser.Parse($"<svg width=\"{width}\" height=\"500\"></svg>");
+    public void TryParse_Canvas_Width(string width, int expectedWidth) {
+        var result = SvgFileParser.TryParse($"<svg width=\"{width}\" height=\"500\"></svg>", out var canvas);
 
-        Assert.Equal(expectedWidth, result.Canvas.Width);
+        Assert.True(result);
+        Assert.NotNull(canvas);
+        Assert.Equal(expectedWidth, canvas.Width);
     }
 
     [Fact]

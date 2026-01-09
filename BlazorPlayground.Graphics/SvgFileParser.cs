@@ -7,23 +7,24 @@ using System.Xml.Linq;
 namespace BlazorPlayground.Graphics;
 
 public static class SvgFileParser {
-    public static SvgFileParseResult Parse(string contents) {
+    public static bool TryParse(string contents, [NotNullWhen(true)] out Canvas? canvas) {
         try {
             var graphicsElement = XElement.Parse(contents);
 
-            if (!graphicsElement.Name.ToString().Equals("svg", StringComparison.OrdinalIgnoreCase)) {
-                return new SvgFileParseResult("The provided file is not a valid svg file.");
-            }
+            if (graphicsElement.Name.ToString().Equals("svg", StringComparison.OrdinalIgnoreCase)) {
 
-            return new SvgFileParseResult(new Canvas() {
-                Shapes = [.. graphicsElement.Elements().Select(Parse)],
-                Width = ParseDimension(graphicsElement.Attribute("width")?.Value, Canvas.MinimumWidth, Canvas.DefaultWidth),
-                Height = ParseDimension(graphicsElement.Attribute("height")?.Value, Canvas.MinimumHeight, Canvas.DefaultHeight)
-            });
+                canvas = new Canvas() {
+                    Shapes = [.. graphicsElement.Elements().Select(Parse)],
+                    Width = ParseDimension(graphicsElement.Attribute("width")?.Value, Canvas.MinimumWidth, Canvas.DefaultWidth),
+                    Height = ParseDimension(graphicsElement.Attribute("height")?.Value, Canvas.MinimumHeight, Canvas.DefaultHeight)
+                };
+                return true;
+            }
         }
-        catch {
-            return new SvgFileParseResult("The provided file is not a valid svg file.");
-        }
+        catch { }
+
+        canvas = null;
+        return false;
     }
 
     internal static Shape Parse(XElement element) {
@@ -39,7 +40,7 @@ public static class SvgFileParser {
             (shape as IShapeWithStrokeLinecap)?.StrokeLinecap = ParseEnum(element.Attribute("stroke-linecap")?.Value, DrawSettings.DefaultStrokeLinecap);
             (shape as IShapeWithStrokeLinejoin)?.StrokeLinejoin = ParseEnum(element.Attribute("stroke-linejoin")?.Value, DrawSettings.DefaultStrokeLinejoin);
             (shape as IShapeWithSides)?.Sides = ParseDimension(element.Attribute("data-shape-sides")?.Value, DrawSettings.MinimumSides, DrawSettings.DefaultSides);
-            
+
             return shape;
         }
 
@@ -121,7 +122,7 @@ public static class SvgFileParser {
     private static TEnum ParseEnum<TEnum>(string? enumValue, TEnum defaultValue) where TEnum : struct, Enum {
         if (enumValue != null && Enum.TryParse<TEnum>(enumValue, true, out var value)) {
             return value;
-        };
+        }
 
         return defaultValue;
     }
