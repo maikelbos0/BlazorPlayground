@@ -204,28 +204,28 @@ public class SvgFileParserTests {
     public void Parse_Opacity(string opacity, int expectedOpacity) {
         var result = SvgFileParser.Parse(XElement.Parse($"<ellipse opacity=\"{opacity}\" fill=\"none\" stroke=\"#ffff00\" stroke-width=\"1\" cx=\"250\" cy=\"150\" rx=\"100\" ry=\"50\" data-shape-type=\"Ellipse\" data-shape-anchor-0=\"250,150\" data-shape-anchor-1=\"350,200\"/>"));
 
-        Assert.Equal(expectedOpacity, Assert.IsType<IShapeWithOpacity>(result, exactMatch: false).Opacity);
+        Assert.Equal(expectedOpacity, Assert.IsType<IShapeWithOpacity>(result, false).Opacity);
     }
 
     [Fact]
     public void Parse_Fill_None() {
         var result = SvgFileParser.Parse(XElement.Parse("<ellipse fill=\"none\" stroke=\"#000000\" stroke-width=\"1\" cx=\"250\" cy=\"150\" rx=\"100\" ry=\"50\" data-shape-type=\"Ellipse\" data-shape-anchor-0=\"250,150\" data-shape-anchor-1=\"350,200\"/>"));
 
-        Assert.Equal(PaintServer.None, Assert.IsType<IShapeWithFill>(result, exactMatch: false).Fill);
+        Assert.Equal(PaintServer.None, Assert.IsType<IShapeWithFill>(result, false).Fill);
     }
 
     [Fact]
     public void Parse_Fill_Color() {
         var result = SvgFileParser.Parse(XElement.Parse("<ellipse fill=\"#ffff00\" stroke=\"#000000\" stroke-width=\"1\" cx=\"250\" cy=\"150\" rx=\"100\" ry=\"50\" data-shape-type=\"Ellipse\" data-shape-anchor-0=\"250,150\" data-shape-anchor-1=\"350,200\"/>"));
 
-        PaintServerAssert.Equal(new Color(255, 255, 0, 1), Assert.IsType<IShapeWithFill>(result, exactMatch: false).Fill);
+        PaintServerAssert.Equal(new Color(255, 255, 0, 1), Assert.IsType<IShapeWithFill>(result, false).Fill);
     }
 
     [Fact]
     public void Parse_Fill_Default() {
         var result = SvgFileParser.Parse(XElement.Parse("<ellipse stroke=\"#000000\" stroke-width=\"1\" cx=\"250\" cy=\"150\" rx=\"100\" ry=\"50\" data-shape-type=\"Ellipse\" data-shape-anchor-0=\"250,150\" data-shape-anchor-1=\"350,200\"/>"));
 
-        Assert.Equal(PaintServer.None, Assert.IsType<IShapeWithFill>(result, exactMatch: false).Fill);
+        Assert.Equal(PaintServer.None, Assert.IsType<IShapeWithFill>(result, false).Fill);
     }
 
     [Theory]
@@ -238,35 +238,35 @@ public class SvgFileParserTests {
     public void Parse_FillOpacity(string fillOpacity, int expectedFillOpacity) {
         var result = SvgFileParser.Parse(XElement.Parse($"<ellipse opacity=\"1\" fill=\"#ffff00\" fill-opacity=\"{fillOpacity}\" stroke=\"#ffff00\" stroke-width=\"1\" cx=\"250\" cy=\"150\" rx=\"100\" ry=\"50\" data-shape-type=\"Ellipse\" data-shape-anchor-0=\"250,150\" data-shape-anchor-1=\"350,200\"/>"));
 
-        Assert.Equal(expectedFillOpacity, Assert.IsType<IShapeWithFill>(result, exactMatch: false).FillOpacity);
+        Assert.Equal(expectedFillOpacity, Assert.IsType<IShapeWithFill>(result, false).FillOpacity);
     }
 
     [Fact]
     public void Parse_Stroke_None() {
         var result = SvgFileParser.Parse(XElement.Parse("<ellipse fill=\"none\" stroke=\"none\" stroke-width=\"1\" cx=\"250\" cy=\"150\" rx=\"100\" ry=\"50\" data-shape-type=\"Ellipse\" data-shape-anchor-0=\"250,150\" data-shape-anchor-1=\"350,200\"/>"));
 
-        Assert.Equal(PaintServer.None, Assert.IsType<IShapeWithStroke>(result, exactMatch: false).Stroke);
+        Assert.Equal(PaintServer.None, Assert.IsType<IShapeWithStroke>(result, false).Stroke);
     }
 
     [Fact]
     public void Parse_Stroke_Color() {
         var result = SvgFileParser.Parse(XElement.Parse("<ellipse fill=\"none\" stroke=\"#ffff00\" stroke-width=\"1\" cx=\"250\" cy=\"150\" rx=\"100\" ry=\"50\" data-shape-type=\"Ellipse\" data-shape-anchor-0=\"250,150\" data-shape-anchor-1=\"350,200\"/>"));
 
-        PaintServerAssert.Equal(new Color(255, 255, 0, 1), Assert.IsType<IShapeWithStroke>(result, exactMatch: false).Stroke);
+        PaintServerAssert.Equal(new Color(255, 255, 0, 1), Assert.IsType<IShapeWithStroke>(result, false).Stroke);
     }
 
     [Fact]
     public void Parse_Stroke_Default() {
         var result = SvgFileParser.Parse(XElement.Parse("<ellipse stroke=\"none\" stroke-width=\"1\" cx=\"250\" cy=\"150\" rx=\"100\" ry=\"50\" data-shape-type=\"Ellipse\" data-shape-anchor-0=\"250,150\" data-shape-anchor-1=\"350,200\"/>"));
 
-        Assert.Equal(PaintServer.None, Assert.IsType<IShapeWithStroke>(result, exactMatch: false).Stroke);
+        Assert.Equal(PaintServer.None, Assert.IsType<IShapeWithStroke>(result, false).Stroke);
     }
 
     [Fact]
     public void Parse_Null_StrokeWidth() {
         var result = SvgFileParser.Parse(XElement.Parse("<ellipse fill=\"none\" stroke=\"none\" cx=\"250\" cy=\"150\" rx=\"100\" ry=\"50\" data-shape-type=\"Ellipse\" data-shape-anchor-0=\"250,150\" data-shape-anchor-1=\"350,200\"/>"));
 
-        Assert.Equal(DrawSettings.DefaultStrokeWidth, Assert.IsType<IShapeWithStroke>(result, exactMatch: false).StrokeWidth);
+        Assert.Equal(DrawSettings.DefaultStrokeWidth, Assert.IsType<IShapeWithStroke>(result, false).StrokeWidth);
     }
 
     [Theory]
@@ -276,8 +276,8 @@ public class SvgFileParserTests {
     [InlineData("5", 5)]
     public void Parse_StrokeWidth(string strokeWidth, int expectedStrokeWidth) {
         var result = SvgFileParser.Parse(XElement.Parse($"<ellipse fill=\"none\" stroke=\"#ffff00\" stroke-width=\"{strokeWidth}\" cx=\"250\" cy=\"150\" rx=\"100\" ry=\"50\" data-shape-type=\"Ellipse\" data-shape-anchor-0=\"250,150\" data-shape-anchor-1=\"350,200\"/>"));
-        
-        Assert.Equal(expectedStrokeWidth, Assert.IsType<IShapeWithStroke>(result, exactMatch: false).StrokeWidth);
+
+        Assert.Equal(expectedStrokeWidth, Assert.IsType<IShapeWithStroke>(result, false).StrokeWidth);
     }
 
     [Theory]
@@ -290,14 +290,14 @@ public class SvgFileParserTests {
     public void Parse_StrokeOpacity(string strokeOpacity, int expectedStrokeOpacity) {
         var result = SvgFileParser.Parse(XElement.Parse($"<ellipse opacity=\"1\" fill=\"#ffff00\" stroke=\"#ffff00\" stroke-width=\"1\" stroke-opacity=\"{strokeOpacity}\" cx=\"250\" cy=\"150\" rx=\"100\" ry=\"50\" data-shape-type=\"Ellipse\" data-shape-anchor-0=\"250,150\" data-shape-anchor-1=\"350,200\"/>"));
 
-        Assert.Equal(expectedStrokeOpacity, Assert.IsType<IShapeWithStroke>(result, exactMatch: false).StrokeOpacity);
+        Assert.Equal(expectedStrokeOpacity, Assert.IsType<IShapeWithStroke>(result, false).StrokeOpacity);
     }
 
     [Fact]
     public void Parse_Null_StrokeLinecap() {
         var result = SvgFileParser.Parse(XElement.Parse("<line stroke=\"#000000\" stroke-width=\"1\" x1=\"50\" y1=\"50\" x2=\"150\" y2=\"100\" data-shape-type=\"Line\" data-shape-anchor-0=\"50,50\" data-shape-anchor-1=\"150,100\"/>"));
 
-        Assert.Equal(DrawSettings.DefaultStrokeLinecap, Assert.IsType<IShapeWithStrokeLinecap>(result, exactMatch: false).StrokeLinecap);
+        Assert.Equal(DrawSettings.DefaultStrokeLinecap, Assert.IsType<IShapeWithStrokeLinecap>(result, false).StrokeLinecap);
     }
 
     [Theory]
@@ -311,14 +311,14 @@ public class SvgFileParserTests {
     public void Parse_StrokeLinecap(string strokeLinecap, Linecap expectedStrokeLinecap) {
         var result = SvgFileParser.Parse(XElement.Parse($"<line stroke=\"#000000\" stroke-width=\"1\" stroke-linecap=\"{strokeLinecap}\" x1=\"50\" y1=\"50\" x2=\"150\" y2=\"100\" data-shape-type=\"Line\" data-shape-anchor-0=\"50,50\" data-shape-anchor-1=\"150,100\"/>"));
 
-        Assert.Equal(expectedStrokeLinecap, Assert.IsType<IShapeWithStrokeLinecap>(result, exactMatch: false).StrokeLinecap);
+        Assert.Equal(expectedStrokeLinecap, Assert.IsType<IShapeWithStrokeLinecap>(result, false).StrokeLinecap);
     }
 
     [Fact]
     public void Parse_Null_StrokeLinejoin() {
         var result = SvgFileParser.Parse(XElement.Parse("<rect fill=\"none\" stroke=\"#000000\" stroke-width=\"1\" x=\"250\" y=\"150\" width=\"100\" height=\"150\" data-shape-type=\"Rectangle\" data-shape-anchor-0=\"250,150\" data-shape-anchor-1=\"350,300\"/>"));
 
-        Assert.Equal(DrawSettings.DefaultStrokeLinejoin, Assert.IsType<IShapeWithStrokeLinejoin>(result, exactMatch: false).StrokeLinejoin);
+        Assert.Equal(DrawSettings.DefaultStrokeLinejoin, Assert.IsType<IShapeWithStrokeLinejoin>(result, false).StrokeLinejoin);
     }
     // TODO add stroke/fill opacity
     [Theory]
@@ -334,14 +334,14 @@ public class SvgFileParserTests {
     public void Parse_StrokeLinejoin(string strokeLinejoin, Linejoin expectedStrokeLinejoin) {
         var result = SvgFileParser.Parse(XElement.Parse($"<rect fill=\"none\" stroke=\"#000000\" stroke-width=\"1\" stroke-linejoin=\"{strokeLinejoin}\" x=\"250\" y=\"150\" width=\"100\" height=\"150\" data-shape-type=\"Rectangle\" data-shape-anchor-0=\"250,150\" data-shape-anchor-1=\"350,300\"/>"));
 
-        Assert.Equal(expectedStrokeLinejoin, Assert.IsType<IShapeWithStrokeLinejoin>(result, exactMatch: false).StrokeLinejoin);
+        Assert.Equal(expectedStrokeLinejoin, Assert.IsType<IShapeWithStrokeLinejoin>(result, false).StrokeLinejoin);
     }
 
     [Fact]
     public void Parse_Null_Sides() {
         var result = SvgFileParser.Parse(XElement.Parse("<polygon fill=\"none\" stroke=\"#000000\" stroke-width=\"1\" stroke-linejoin=\"miter\" points=\"600,300 438.39745962155615,193.30127018922198 611.6025403784438,106.69872981077803\" data-shape-type=\"RegularPolygon\" data-shape-anchor-0=\"550,200\" data-shape-anchor-1=\"600,300\"/>"));
 
-        Assert.Equal(DrawSettings.DefaultSides, Assert.IsType<IShapeWithSides>(result, exactMatch: false).Sides);
+        Assert.Equal(DrawSettings.DefaultSides, Assert.IsType<IShapeWithSides>(result, false).Sides);
     }
 
     [Theory]
@@ -352,6 +352,6 @@ public class SvgFileParserTests {
     public void Parse_Sides(string sides, int expectedSides) {
         var result = SvgFileParser.Parse(XElement.Parse($"<polygon fill=\"none\" stroke=\"#000000\" stroke-width=\"1\" stroke-linejoin=\"miter\" points=\"600,300 438.39745962155615,193.30127018922198 611.6025403784438,106.69872981077803\" data-shape-type=\"RegularPolygon\" data-shape-anchor-0=\"550,200\" data-shape-anchor-1=\"600,300\" data-shape-sides=\"{sides}\"/>"));
 
-        Assert.Equal(expectedSides, Assert.IsType<IShapeWithSides>(result, exactMatch: false).Sides);
+        Assert.Equal(expectedSides, Assert.IsType<IShapeWithSides>(result, false).Sides);
     }
 }

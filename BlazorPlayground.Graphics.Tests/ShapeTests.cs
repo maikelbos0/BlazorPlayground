@@ -77,7 +77,7 @@ public class ShapeTests {
 
         var result = polygon.Clone();
 
-        Assert.Equal(50, Assert.IsType<IShapeWithOpacity>(result, exactMatch: false).Opacity);
+        Assert.Equal(50, Assert.IsType<IShapeWithOpacity>(result, false).Opacity);
     }
 
     [Fact]
@@ -88,7 +88,7 @@ public class ShapeTests {
 
         var result = polygon.Clone();
 
-        PaintServerAssert.Equal(new Color(255, 0, 255, 1), Assert.IsType<IShapeWithFill>(result, exactMatch: false).Fill);
+        PaintServerAssert.Equal(new Color(255, 0, 255, 1), Assert.IsType<IShapeWithFill>(result, false).Fill);
     }
 
     [Fact]
@@ -99,7 +99,7 @@ public class ShapeTests {
 
         var result = polygon.Clone();
 
-        Assert.Equal(50, Assert.IsType<IShapeWithFill>(result, exactMatch: false).FillOpacity);
+        Assert.Equal(50, Assert.IsType<IShapeWithFill>(result, false).FillOpacity);
     }
 
     [Fact]
@@ -110,7 +110,7 @@ public class ShapeTests {
 
         var result = polygon.Clone();
 
-        PaintServerAssert.Equal(new Color(255, 0, 255, 1), Assert.IsType<IShapeWithStroke>(result, exactMatch: false).Stroke);
+        PaintServerAssert.Equal(new Color(255, 0, 255, 1), Assert.IsType<IShapeWithStroke>(result, false).Stroke);
     }
 
     [Fact]
@@ -121,7 +121,7 @@ public class ShapeTests {
 
         var result = polygon.Clone();
 
-        Assert.Equal(10, Assert.IsType<IShapeWithStroke>(result, exactMatch: false).StrokeWidth);
+        Assert.Equal(10, Assert.IsType<IShapeWithStroke>(result, false).StrokeWidth);
     }
 
     [Fact]
@@ -132,7 +132,7 @@ public class ShapeTests {
 
         var result = polygon.Clone();
 
-        Assert.Equal(50, Assert.IsType<IShapeWithStroke>(result, exactMatch: false).StrokeOpacity);
+        Assert.Equal(50, Assert.IsType<IShapeWithStroke>(result, false).StrokeOpacity);
     }
 
     [Fact]
@@ -143,7 +143,7 @@ public class ShapeTests {
 
         var result = line.Clone();
 
-        Assert.Equal(Linecap.Square, Assert.IsType<IShapeWithStrokeLinecap>(result, exactMatch: false).StrokeLinecap);
+        Assert.Equal(Linecap.Square, Assert.IsType<IShapeWithStrokeLinecap>(result, false).StrokeLinecap);
     }
 
     [Fact]
@@ -154,7 +154,7 @@ public class ShapeTests {
 
         var result = rectangle.Clone();
 
-        Assert.Equal(Linejoin.Arcs, Assert.IsType<IShapeWithStrokeLinejoin>(result, exactMatch: false).StrokeLinejoin);
+        Assert.Equal(Linejoin.Arcs, Assert.IsType<IShapeWithStrokeLinejoin>(result, false).StrokeLinejoin);
     }
 
     [Fact]
@@ -165,6 +165,6 @@ public class ShapeTests {
 
         var result = polygon.Clone();
 
-        Assert.Equal(5, Assert.IsType<IShapeWithSides>(result, exactMatch: false).Sides);
+        Assert.Equal(5, Assert.IsType<IShapeWithSides>(result, false).Sides);
     }
 }
