@@ -28,9 +28,7 @@ public static class SvgFileParser {
     }
 
     internal static Shape Parse(XElement element) {
-        var shape = CreateShape(element);
-
-        if (shape != null && SetAnchors(shape, element)) {
+        if (TryCreateShape(element, out var shape) && TrySetAnchors(shape, element)) {
             (shape as IShapeWithOpacity)?.Opacity = ParseOpacity(element.Attribute("opacity")?.Value);
             (shape as IShapeWithFill)?.Fill = ParsePaintServer(element.Attribute("fill")?.Value);
             (shape as IShapeWithFill)?.FillOpacity = ParseOpacity(element.Attribute("fill-opacity")?.Value);
@@ -47,18 +45,20 @@ public static class SvgFileParser {
         return new RawShape(element);
     }
 
-    private static Shape? CreateShape(XElement element) {
+    private static bool TryCreateShape(XElement element, [NotNullWhen(true)] out Shape? shape) {
         var shapeTypeName = element.Attribute("data-shape-type")?.Value;
         var shapeType = Type.GetType($"BlazorPlayground.Graphics.{shapeTypeName}");
 
         if (shapeType == null) {
-            return null;
+            shape = null;
+            return false;
         }
 
-        return (Shape?)Activator.CreateInstance(shapeType, true);
+        shape = (Shape?)Activator.CreateInstance(shapeType, true);
+        return shape != null;
     }
 
-    private static bool SetAnchors(Shape shape, XElement element) {
+    private static bool TrySetAnchors(Shape shape, XElement element) {
         int i;
 
         for (i = 0; i < shape.Anchors.Count; i++) {
