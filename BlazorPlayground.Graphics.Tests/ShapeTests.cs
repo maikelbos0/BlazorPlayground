@@ -70,7 +70,7 @@ public class ShapeTests {
     }
 
     [Fact]
-    public void Clone_SetOpacity() {
+    public void Clone_Opacity() {
         var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250)) {
             Opacity = 50
         };
@@ -81,7 +81,7 @@ public class ShapeTests {
     }
 
     [Fact]
-    public void Clone_SetFill() {
+    public void Clone_Fill() {
         var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250)) {
             Fill = new Color(255, 0, 255, 1)
         };
@@ -92,7 +92,7 @@ public class ShapeTests {
     }
 
     [Fact]
-    public void Clone_SetFillOpacity() {
+    public void Clone_FillOpacity() {
         var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250)) {
             FillOpacity = 50
         };
@@ -103,7 +103,7 @@ public class ShapeTests {
     }
 
     [Fact]
-    public void Clone_SetStroke() {
+    public void Clone_Stroke() {
         var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250)) {
             Stroke = new Color(255, 0, 255, 1)
         };
@@ -114,7 +114,7 @@ public class ShapeTests {
     }
 
     [Fact]
-    public void Clone_SetStrokeWidth() {
+    public void Clone_StrokeWidth() {
         var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250)) {
             StrokeWidth = 10
         };
@@ -125,7 +125,7 @@ public class ShapeTests {
     }
 
     [Fact]
-    public void Clone_SetStrokeOpacity() {
+    public void Clone_StrokeOpacity() {
         var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250)) {
             StrokeOpacity = 50
         };
@@ -136,7 +136,7 @@ public class ShapeTests {
     }
 
     [Fact]
-    public void Clone_SetStrokeLinecap() {
+    public void Clone_StrokeLinecap() {
         var line = new Line(new Point(100, 150), new Point(200, 250)) {
             StrokeLinecap = Linecap.Square
         };
@@ -147,7 +147,7 @@ public class ShapeTests {
     }
 
     [Fact]
-    public void Clone_SetStrokeLinejoin() {
+    public void Clone_StrokeLinejoin() {
         var rectangle = new Rectangle(new Point(100, 150), new Point(200, 250)) {
             StrokeLinejoin = Linejoin.Arcs
         };
@@ -158,7 +158,7 @@ public class ShapeTests {
     }
 
     [Fact]
-    public void Clone_SetSides() {
+    public void Clone_Sides() {
         var polygon = new RegularPolygon(new Point(100, 150), new Point(200, 250)) {
             Sides = 5
         };

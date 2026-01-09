@@ -328,7 +328,7 @@ public class SvgFileParserTests {
 
         Assert.Equal(DrawSettings.DefaultStrokeLinejoin, Assert.IsType<IShapeWithStrokeLinejoin>(result, false).StrokeLinejoin);
     }
-    // TODO add stroke/fill opacity
+    
     [Theory]
     [InlineData("", DrawSettings.DefaultStrokeLinejoin)]
     [InlineData("foo", DrawSettings.DefaultStrokeLinejoin)]
