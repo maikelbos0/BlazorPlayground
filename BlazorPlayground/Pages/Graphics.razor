@@ -412,15 +412,14 @@
         }
 
         var data = await new StreamReader(FileToLoad.OpenReadStream()).ReadToEndAsync();
-        var deserializationResult = SvgFileParser.Parse(data);
 
-        if (deserializationResult.IsSuccess) {
+        if (SvgFileParser.TryParse(data, out var canvas)) {
             FileName = Path.GetFileName(FileToLoad.Name);
-            Canvas = deserializationResult.Canvas;
+            Canvas = canvas;
             ToggleLoadModal(false);
         }
         else {
-            FileLoadError = deserializationResult.ErrorMessage;
+            FileLoadError = "The provided file is not a valid SVG file.";
         }
     }
 }
