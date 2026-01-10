@@ -88,7 +88,7 @@ public class ShapeTests {
 
         var result = polygon.Clone();
 
-        PaintServerAssert.Equal(new Color(255, 0, 255, 1), Assert.IsType<IShapeWithFill>(result, false).Fill);
+        Assert.Equal(new Color(255, 0, 255, 1), Assert.IsType<IShapeWithFill>(result, false).Fill);
     }
 
     [Fact]
@@ -110,7 +110,7 @@ public class ShapeTests {
 
         var result = polygon.Clone();
 
-        PaintServerAssert.Equal(new Color(255, 0, 255, 1), Assert.IsType<IShapeWithStroke>(result, false).Stroke);
+        Assert.Equal(new Color(255, 0, 255, 1), Assert.IsType<IShapeWithStroke>(result, false).Stroke);
     }
 
     [Fact]

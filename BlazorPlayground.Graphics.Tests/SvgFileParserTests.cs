@@ -226,7 +226,7 @@ public class SvgFileParserTests {
     public void Parse_Fill_Color() {
         var result = SvgFileParser.Parse(XElement.Parse("<ellipse fill=\"#ffff00\" stroke=\"#000000\" stroke-width=\"1\" cx=\"250\" cy=\"150\" rx=\"100\" ry=\"50\" data-shape-type=\"Ellipse\" data-shape-anchor-0=\"250,150\" data-shape-anchor-1=\"350,200\"/>"));
 
-        PaintServerAssert.Equal(new Color(255, 255, 0, 1), Assert.IsType<IShapeWithFill>(result, false).Fill);
+        Assert.Equal(new Color(255, 255, 0, 1), Assert.IsType<IShapeWithFill>(result, false).Fill);
     }
 
     [Fact]
@@ -260,7 +260,7 @@ public class SvgFileParserTests {
     public void Parse_Stroke_Color() {
         var result = SvgFileParser.Parse(XElement.Parse("<ellipse fill=\"none\" stroke=\"#ffff00\" stroke-width=\"1\" cx=\"250\" cy=\"150\" rx=\"100\" ry=\"50\" data-shape-type=\"Ellipse\" data-shape-anchor-0=\"250,150\" data-shape-anchor-1=\"350,200\"/>"));
 
-        PaintServerAssert.Equal(new Color(255, 255, 0, 1), Assert.IsType<IShapeWithStroke>(result, false).Stroke);
+        Assert.Equal(new Color(255, 255, 0, 1), Assert.IsType<IShapeWithStroke>(result, false).Stroke);
     }
 
     [Fact]

@@ -758,7 +758,7 @@ public class CanvasTests {
 
         var shape = canvas.CreateShape();
 
-        PaintServerAssert.Equal(new Color(255, 255, 0, 1), Assert.IsType<IShapeWithFill>(shape, false).Fill);
+        Assert.Equal(new Color(255, 255, 0, 1), Assert.IsType<IShapeWithFill>(shape, false).Fill);
     }
 
     [Fact]
@@ -789,7 +789,7 @@ public class CanvasTests {
 
         var shape = canvas.CreateShape();
 
-        PaintServerAssert.Equal(new Color(255, 0, 0, 1), Assert.IsType<IShapeWithStroke>(shape, false).Stroke);
+        Assert.Equal(new Color(255, 0, 0, 1), Assert.IsType<IShapeWithStroke>(shape, false).Stroke);
     }
 
     [Fact]
@@ -1001,7 +1001,7 @@ public class CanvasTests {
 
         canvas.ApplyFillToSelectedShape();
 
-        PaintServerAssert.Equal(new Color(255, 255, 0, 1), Assert.IsType<IShapeWithFill>(canvas.SelectedShape, false).Fill);
+        Assert.Equal(new Color(255, 255, 0, 1), Assert.IsType<IShapeWithFill>(canvas.SelectedShape, false).Fill);
     }
 
     [Fact]
@@ -1028,7 +1028,7 @@ public class CanvasTests {
 
         canvas.ApplyStrokeToSelectedShape();
 
-        PaintServerAssert.Equal(new Color(255, 255, 0, 1), Assert.IsType<IShapeWithStroke>(canvas.SelectedShape, false).Stroke);
+        Assert.Equal(new Color(255, 255, 0, 1), Assert.IsType<IShapeWithStroke>(canvas.SelectedShape, false).Stroke);
     }
 
     [Fact]

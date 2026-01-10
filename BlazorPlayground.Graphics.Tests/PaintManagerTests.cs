@@ -63,7 +63,7 @@ public class PaintManagerTests {
         };
 
         Assert.Equal("red", manager.ColorValue);
-        PaintServerAssert.Equal(new Color(255, 0, 0, 1), manager.Color);
+        Assert.Equal(new Color(255, 0, 0, 1), manager.Color);
     }
 
     [Fact]
