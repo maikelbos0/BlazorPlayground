@@ -72,10 +72,8 @@ public class ClosedPath : DrawableShape, IShapeWithOpacity, IShapeWithFill, ISha
 
     public override BoundingBox GetBoundingBox() {
         return new(
-            Points.Min(point => point.X),
-            Points.Max(point => point.X),
-            Points.Min(point => point.Y),
-            Points.Max(point => point.Y)
+            new(Points.Min(point => point.X), Points.Min(point => point.Y)),
+            new(Points.Max(point => point.X), Points.Max(point => point.Y))
         );
     }
 }

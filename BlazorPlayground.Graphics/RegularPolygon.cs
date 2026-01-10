@@ -60,10 +60,8 @@ public class RegularPolygon : DrawableShape, IShapeWithOpacity, IShapeWithFill, 
         var radius = (CenterPoint - RadiusPoint).Distance;
 
         return new(
-            CenterPoint.X - radius,
-            CenterPoint.X + radius,
-            CenterPoint.Y - radius,
-            CenterPoint.Y + radius
+            new(CenterPoint.X - radius, CenterPoint.Y - radius),
+            new(CenterPoint.X + radius, CenterPoint.Y + radius)
         );
     }
 }

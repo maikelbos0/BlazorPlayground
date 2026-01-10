@@ -120,7 +120,6 @@ public class CubicBezierTests {
 
         var result = subject.GetBoundingBox();
 
-        BoundingBoxAssert.Equal(new(30, 50, 50, 100), result);
-
+        Assert.Equal(new(new(30, 50), new(50, 100)), result);
     }
 }

@@ -1,3 +1,4 @@
 ﻿namespace BlazorPlayground.Graphics;
 
-public record BoundingBox(double MinX, double MaxX, double MinY, double MaxY);
+public record BoundingBox(Point Min, Point Max);
+

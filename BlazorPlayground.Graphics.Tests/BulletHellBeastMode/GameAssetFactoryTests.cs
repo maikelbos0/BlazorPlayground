@@ -51,7 +51,7 @@ public class GameAssetFactoryTests {
         var subject = new GameAssetFactory(geometryFactory);
         var shape = Substitute.For<DrawableShape>();
         shape.GetGeometry(geometryFactory, Arg.Any<Point>()).Returns(Polygon.Empty);
-        shape.GetBoundingBox().Returns(new BoundingBox(0, 0, 0, 0));
+        shape.GetBoundingBox().Returns(new BoundingBox(new(0, 0), new(0, 0)));
 
         var result = subject.GetGameAsset([shape]);
 

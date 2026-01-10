@@ -39,7 +39,7 @@ public class ClosedPathTests {
 
     [Fact]
     public void GetAttributes() {
-        var closedPath = new ClosedPath(new Point(100, 150), new Point(200, 250)) { 
+        var closedPath = new ClosedPath(new Point(100, 150), new Point(200, 250)) {
             Points = {
                 new(200, 50)
             }
@@ -172,6 +172,6 @@ public class ClosedPathTests {
 
         var result = subject.GetBoundingBox();
 
-        BoundingBoxAssert.Equal(new(30, 70, 20, 100), result);
+        Assert.Equal(new(new(30, 20), new(70, 100)), result);
     }
 }

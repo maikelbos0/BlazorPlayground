@@ -65,10 +65,8 @@ public class Ellipse : DrawableShape, IShapeWithOpacity, IShapeWithFill, IShapeW
         var radiusY = Math.Abs(CenterPoint.Y - RadiusPoint.Y);
 
         return new(
-            CenterPoint.X - radiusX,
-            CenterPoint.X + radiusX,
-            CenterPoint.Y - radiusY,
-            CenterPoint.Y + radiusY
+            new(CenterPoint.X - radiusX, CenterPoint.Y - radiusY),
+            new(CenterPoint.X + radiusX, CenterPoint.Y + radiusY)
         );
     }
 }

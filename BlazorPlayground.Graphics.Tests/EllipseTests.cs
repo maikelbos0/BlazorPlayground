@@ -94,6 +94,6 @@ public class EllipseTests {
 
         var result = subject.GetBoundingBox();
 
-        BoundingBoxAssert.Equal(new(10, 50, 0, 100), result);
+        Assert.Equal(new(new(10, 0), new(50, 100)), result);
     }
 }

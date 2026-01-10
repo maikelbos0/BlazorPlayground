@@ -91,6 +91,6 @@ public class CircleTests {
 
         var result = subject.GetBoundingBox();
 
-        BoundingBoxAssert.Equal(new(-23.9, 83.9, -3.9, 103.9), result);
+        Assert.Equal(new(new(-23.852, -3.852), new(83.852, 103.852)), result);
     }
 }

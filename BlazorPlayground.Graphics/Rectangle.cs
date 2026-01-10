@@ -44,9 +44,7 @@ public class Rectangle : DrawableShape, IShapeWithOpacity, IShapeWithFill, IShap
 
     public override BoundingBox GetBoundingBox()
         => new(
-            Math.Min(StartPoint.X, EndPoint.X),
-            Math.Max(StartPoint.X, EndPoint.X),
-            Math.Min(StartPoint.Y, EndPoint.Y),
-            Math.Max(StartPoint.Y, EndPoint.Y)
+            new(Math.Min(StartPoint.X, EndPoint.X), Math.Min(StartPoint.Y, EndPoint.Y)),
+            new(Math.Max(StartPoint.X, EndPoint.X), Math.Max(StartPoint.Y, EndPoint.Y))
         );
 }

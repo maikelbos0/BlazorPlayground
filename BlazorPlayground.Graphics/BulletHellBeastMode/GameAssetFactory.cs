@@ -35,8 +35,8 @@ public class GameAssetFactory {
 
         if (boundingBoxes.Count > 0) {
             return new(
-                (boundingBoxes.Max(boundingBox => boundingBox.MaxX) + boundingBoxes.Min(boundingBox => boundingBox.MinX)) / 2,
-                (boundingBoxes.Max(boundingBox => boundingBox.MaxY) + boundingBoxes.Min(boundingBox => boundingBox.MinY)) / 2
+                (boundingBoxes.Max(boundingBox => boundingBox.Max.X) + boundingBoxes.Min(boundingBox => boundingBox.Min.X)) / 2,
+                (boundingBoxes.Max(boundingBox => boundingBox.Max.Y) + boundingBoxes.Min(boundingBox => boundingBox.Min.Y)) / 2
             );
         }
         else {
