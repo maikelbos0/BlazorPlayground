@@ -6,16 +6,22 @@ using Xunit;
 namespace BlazorPlayground.StateManagement.Tests;
 
 public class DependencyGraphTests {
-    private class EffectCallTracker {
+    private sealed class EffectCallTracker : IDisposable {
+        private readonly EffectHandler effectHandler;
+
         public int Value { get; set; }
         public int Calls { get; private set; }
         
 
         public EffectCallTracker(StateProvider stateProvider, Func<int> valueProvider) {
-            new EffectHandler(stateProvider, () => {
+            effectHandler = new EffectHandler(stateProvider, () => {
                 Calls++;
                 Value = valueProvider();
             });
+        }
+
+        public void Dispose() {
+            effectHandler.Dispose();
         }
     }
 

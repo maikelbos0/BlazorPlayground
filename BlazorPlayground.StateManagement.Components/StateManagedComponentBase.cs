@@ -10,14 +10,13 @@ public abstract class StateManagedComponentBase : ComponentBase, IHandleEvent, I
         ?? throw new InvalidOperationException("The render fragment field cannot be found.");
 
     private bool isEvaluating = false;
-    private bool isDisposed = false;
 
     [Inject]
     public required IStateProvider StateProvider { get; set; }
 
     public virtual DependentPriority Priority => DependentPriority.Lowest;
     
-    public bool IsDisposed => isDisposed;
+    public bool IsDisposed { get; private set; }
 
     public StateManagedComponentBase() {
         var originalRenderFragment = (RenderFragment)(renderFragmentInfo.GetValue(this) ?? throw new InvalidOperationException("The render fragment field cannot be read."));
@@ -41,7 +40,7 @@ public abstract class StateManagedComponentBase : ComponentBase, IHandleEvent, I
         => item.InvokeAsync(arg);
 
     public virtual void Dispose() {
-        isDisposed = true;
+        IsDisposed = true;
         GC.SuppressFinalize(this);
     }
 }

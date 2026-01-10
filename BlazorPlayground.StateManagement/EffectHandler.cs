@@ -5,11 +5,10 @@ namespace BlazorPlayground.StateManagement;
 public class EffectHandler : IDependent {
     private readonly IStateProvider stateProvider;
     private readonly Action effect;
-    private bool isDisposed = false;
 
     public DependentPriority Priority { get; }
 
-    public bool IsDisposed => isDisposed;
+    public bool IsDisposed { get; private set; }
 
     public EffectHandler(IStateProvider stateProvider, Action effect) : this(stateProvider, effect, DependentPriority.Medium) { }
 
@@ -23,7 +22,7 @@ public class EffectHandler : IDependent {
     public void Evaluate() => stateProvider.BuildDependencyGraph(this, effect);
 
     public void Dispose() {
-        isDisposed = true;
+        IsDisposed = true;
         GC.SuppressFinalize(this);
     }
 }
