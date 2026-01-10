@@ -21,9 +21,9 @@ public class ClosedPathTests {
         var result = closedPath.GetSnapPoints();
 
         Assert.Equal(3, result.Count);
-        PointAssert.Contains(result, new Point(100, 150));
-        PointAssert.Contains(result, new Point(200, 250));
-        PointAssert.Contains(result, new Point(200, 50));
+        Assert.Contains(new Point(100, 150), result);
+        Assert.Contains(new Point(200, 250), result);
+        Assert.Contains(new Point(200, 50), result);
     }
 
     [Fact]
@@ -61,9 +61,9 @@ public class ClosedPathTests {
         var result = closedPath.Anchors;
 
         Assert.Equal(3, result.Count);
-        PointAssert.Equal(new Point(100, 150), result[0].Get(closedPath));
-        PointAssert.Equal(new Point(200, 250), result[1].Get(closedPath));
-        PointAssert.Equal(new Point(200, 50), result[2].Get(closedPath));
+        Assert.Equal(new Point(100, 150), result[0].Get(closedPath));
+        Assert.Equal(new Point(200, 250), result[1].Get(closedPath));
+        Assert.Equal(new Point(200, 50), result[2].Get(closedPath));
     }
 
     [Fact]
@@ -78,9 +78,9 @@ public class ClosedPathTests {
         result[0].Set(closedPath, new Point(110, 160));
         result[1].Set(closedPath, new Point(210, 260));
         result[2].Set(closedPath, new Point(210, 60));
-        PointAssert.Equal(new Point(110, 160), closedPath.Points[0]);
-        PointAssert.Equal(new Point(210, 260), closedPath.Points[1]);
-        PointAssert.Equal(new Point(210, 60), closedPath.Points[2]);
+        Assert.Equal(new Point(110, 160), closedPath.Points[0]);
+        Assert.Equal(new Point(210, 260), closedPath.Points[1]);
+        Assert.Equal(new Point(210, 60), closedPath.Points[2]);
     }
 
     [Fact]
@@ -105,7 +105,7 @@ public class ClosedPathTests {
         closedPath.AddPoint(new(200, 50));
 
         Assert.Equal(3, closedPath.Points.Count);
-        PointAssert.Equal(new Point(200, 50), closedPath.Points[^1]);
+        Assert.Equal(new Point(200, 50), closedPath.Points[^1]);
     }
 
     [Fact]

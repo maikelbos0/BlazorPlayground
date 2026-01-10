@@ -21,11 +21,11 @@ public class RegularPolygonTests {
         var result = square.GetSnapPoints();
 
         Assert.Equal(5, result.Count);
-        PointAssert.Contains(result, new Point(50, 50));
-        PointAssert.Contains(result, new Point(150, 50));
-        PointAssert.Contains(result, new Point(150, 150));
-        PointAssert.Contains(result, new Point(50, 150));
-        PointAssert.Contains(result, new Point(100, 100));
+        Assert.Contains(new Point(50, 50), result);
+        Assert.Contains(new Point(150, 50), result);
+        Assert.Contains(new Point(150, 150), result);
+        Assert.Contains(new Point(50, 150), result);
+        Assert.Contains(new Point(100, 100), result);
     }
 
     [Fact]
@@ -37,10 +37,10 @@ public class RegularPolygonTests {
         var result = square.GetPoints().ToList();
 
         Assert.Equal(4, result.Count);
-        PointAssert.Equal(new Point(50, 50), result[0]);
-        PointAssert.Equal(new Point(150, 50), result[1]);
-        PointAssert.Equal(new Point(150, 150), result[2]);
-        PointAssert.Equal(new Point(50, 150), result[3]);
+        Assert.Equal(new Point(50, 50), result[0]);
+        Assert.Equal(new Point(150, 50), result[1]);
+        Assert.Equal(new Point(150, 150), result[2]);
+        Assert.Equal(new Point(50, 150), result[3]);
     }
 
     [Fact]
@@ -52,10 +52,10 @@ public class RegularPolygonTests {
         var result = square.GetPoints().ToList();
 
         Assert.Equal(4, result.Count);
-        PointAssert.Equal(new Point(50, 100), result[0]);
-        PointAssert.Equal(new Point(100, 50), result[1]);
-        PointAssert.Equal(new Point(150, 100), result[2]);
-        PointAssert.Equal(new Point(100, 150), result[3]);
+        Assert.Equal(new Point(50, 100), result[0]);
+        Assert.Equal(new Point(100, 50), result[1]);
+        Assert.Equal(new Point(150, 100), result[2]);
+        Assert.Equal(new Point(100, 150), result[3]);
     }
 
     [Fact]
@@ -67,10 +67,10 @@ public class RegularPolygonTests {
         var result = square.GetPoints().ToList();
 
         Assert.Equal(4, result.Count);
-        PointAssert.Equal(new Point(50, 120), result[0]);
-        PointAssert.Equal(new Point(80, 50), result[1]);
-        PointAssert.Equal(new Point(150, 80), result[2]);
-        PointAssert.Equal(new Point(120, 150), result[3]);
+        Assert.Equal(new Point(50, 120), result[0]);
+        Assert.Equal(new Point(80, 50), result[1]);
+        Assert.Equal(new Point(150, 80), result[2]);
+        Assert.Equal(new Point(120, 150), result[3]);
     }
 
     [Fact]
@@ -82,10 +82,10 @@ public class RegularPolygonTests {
         var result = square.GetPoints().ToList();
 
         Assert.Equal(4, result.Count);
-        PointAssert.Equal(new Point(150, 120), result[0]);
-        PointAssert.Equal(new Point(80, 150), result[1]);
-        PointAssert.Equal(new Point(50, 80), result[2]);
-        PointAssert.Equal(new Point(120, 50), result[3]);
+        Assert.Equal(new Point(150, 120), result[0]);
+        Assert.Equal(new Point(80, 150), result[1]);
+        Assert.Equal(new Point(50, 80), result[2]);
+        Assert.Equal(new Point(120, 50), result[3]);
     }
 
     [Fact]
@@ -98,9 +98,9 @@ public class RegularPolygonTests {
 
         Assert.Equal(3, result.Count);
 
-        PointAssert.Equal(new Point(100, 50), result[0]);
-        PointAssert.Equal(new Point(143.3, 125), result[1]);
-        PointAssert.Equal(new Point(56.7, 125), result[2]);
+        Assert.Equal(new Point(100, 50), result[0]);
+        Assert.Equal(new Point(143.301, 125), result[1]);
+        Assert.Equal(new Point(56.699, 125), result[2]);
     }
 
     [Fact]
@@ -113,12 +113,12 @@ public class RegularPolygonTests {
 
         Assert.Equal(6, result.Count);
 
-        PointAssert.Equal(new Point(100, 50), result[0]);
-        PointAssert.Equal(new Point(143.3, 75), result[1]);
-        PointAssert.Equal(new Point(143.3, 125), result[2]);
-        PointAssert.Equal(new Point(100, 150), result[3]);
-        PointAssert.Equal(new Point(56.7, 125), result[4]);
-        PointAssert.Equal(new Point(56.7, 75), result[5]);
+        Assert.Equal(new Point(100, 50), result[0]);
+        Assert.Equal(new Point(143.301, 75), result[1]);
+        Assert.Equal(new Point(143.301, 125), result[2]);
+        Assert.Equal(new Point(100, 150), result[3]);
+        Assert.Equal(new Point(56.699, 125), result[4]);
+        Assert.Equal(new Point(56.699, 75), result[5]);
     }
 
     [Fact]
@@ -131,7 +131,7 @@ public class RegularPolygonTests {
 
         var attribute = Assert.Single(attributes);
         Assert.Equal("points", attribute.Key);
-        Assert.Equal("50,49.99999999999999 150,49.99999999999999 150,150 50,150", attribute.Value);
+        Assert.Equal("50,50 150,50 150,150 50,150", attribute.Value);
     }
 
     [Fact]
@@ -141,8 +141,8 @@ public class RegularPolygonTests {
         var result = polygon.Anchors;
 
         Assert.Equal(2, result.Count);
-        PointAssert.Equal(new Point(100, 150), result[0].Get(polygon));
-        PointAssert.Equal(new Point(200, 250), result[1].Get(polygon));
+        Assert.Equal(new Point(100, 150), result[0].Get(polygon));
+        Assert.Equal(new Point(200, 250), result[1].Get(polygon));
     }
 
     [Fact]
@@ -154,8 +154,8 @@ public class RegularPolygonTests {
         Assert.Equal(2, result.Count);
         result[0].Set(polygon, new Point(110, 160));
         result[1].Set(polygon, new Point(210, 260));
-        PointAssert.Equal(new Point(110, 160), polygon.CenterPoint);
-        PointAssert.Equal(new Point(210, 260), polygon.RadiusPoint);
+        Assert.Equal(new Point(110, 160), polygon.CenterPoint);
+        Assert.Equal(new Point(210, 260), polygon.RadiusPoint);
     }
 
     [Fact]
@@ -167,8 +167,8 @@ public class RegularPolygonTests {
         var resultPolygon = Assert.IsType<RegularPolygon>(result);
 
         Assert.NotSame(polygon, resultPolygon);
-        PointAssert.Equal(new Point(100, 150), resultPolygon.CenterPoint);
-        PointAssert.Equal(new Point(200, 250), resultPolygon.RadiusPoint);
+        Assert.Equal(new Point(100, 150), resultPolygon.CenterPoint);
+        Assert.Equal(new Point(200, 250), resultPolygon.RadiusPoint);
     }
 
     [Fact]

@@ -56,8 +56,8 @@ public class ShapeDefinitionTests {
 
         var shape = Assert.IsType<Line>(definition.Construct(new Point(100, 200), new Point(150, 250)));
 
-        PointAssert.Equal(new Point(100, 200), shape.StartPoint);
-        PointAssert.Equal(new Point(150, 250), shape.EndPoint);
+        Assert.Equal(new Point(100, 200), shape.StartPoint);
+        Assert.Equal(new Point(150, 250), shape.EndPoint);
     }
 
     [Fact]
@@ -75,8 +75,8 @@ public class ShapeDefinitionTests {
 
         var shape = Assert.IsType<Rectangle>(definition.Construct(new Point(100, 200), new Point(150, 250)));
 
-        PointAssert.Equal(new Point(100, 200), shape.StartPoint);
-        PointAssert.Equal(new Point(150, 250), shape.EndPoint);
+        Assert.Equal(new Point(100, 200), shape.StartPoint);
+        Assert.Equal(new Point(150, 250), shape.EndPoint);
     }
 
     [Fact]
@@ -94,8 +94,8 @@ public class ShapeDefinitionTests {
 
         var shape = Assert.IsType<Circle>(definition.Construct(new Point(100, 200), new Point(150, 250)));
 
-        PointAssert.Equal(new Point(100, 200), shape.CenterPoint);
-        PointAssert.Equal(new Point(150, 250), shape.RadiusPoint);
+        Assert.Equal(new Point(100, 200), shape.CenterPoint);
+        Assert.Equal(new Point(150, 250), shape.RadiusPoint);
     }
 
     [Fact]
@@ -113,8 +113,8 @@ public class ShapeDefinitionTests {
 
         var shape = Assert.IsType<Ellipse>(definition.Construct(new Point(100, 200), new Point(150, 250)));
 
-        PointAssert.Equal(new Point(100, 200), shape.CenterPoint);
-        PointAssert.Equal(new Point(150, 250), shape.RadiusPoint);
+        Assert.Equal(new Point(100, 200), shape.CenterPoint);
+        Assert.Equal(new Point(150, 250), shape.RadiusPoint);
     }
 
     [Fact]
@@ -132,8 +132,8 @@ public class ShapeDefinitionTests {
 
         var shape = Assert.IsType<RegularPolygon>(definition.Construct(new Point(100, 200), new Point(150, 250)));
 
-        PointAssert.Equal(new Point(100, 200), shape.CenterPoint);
-        PointAssert.Equal(new Point(150, 250), shape.RadiusPoint);
+        Assert.Equal(new Point(100, 200), shape.CenterPoint);
+        Assert.Equal(new Point(150, 250), shape.RadiusPoint);
     }
 
     [Fact]
@@ -151,8 +151,8 @@ public class ShapeDefinitionTests {
 
         var shape = Assert.IsType<QuadraticBezier>(definition.Construct(new Point(100, 200), new Point(150, 250)));
 
-        PointAssert.Equal(new Point(100, 200), shape.StartPoint);
-        PointAssert.Equal(new Point(150, 250), shape.EndPoint);
+        Assert.Equal(new Point(100, 200), shape.StartPoint);
+        Assert.Equal(new Point(150, 250), shape.EndPoint);
     }
 
     [Fact]
@@ -170,8 +170,8 @@ public class ShapeDefinitionTests {
 
         var shape = Assert.IsType<CubicBezier>(definition.Construct(new Point(100, 200), new Point(150, 250)));
 
-        PointAssert.Equal(new Point(100, 200), shape.StartPoint);
-        PointAssert.Equal(new Point(150, 250), shape.EndPoint);
+        Assert.Equal(new Point(100, 200), shape.StartPoint);
+        Assert.Equal(new Point(150, 250), shape.EndPoint);
     }
 
     [Fact]
@@ -190,8 +190,8 @@ public class ShapeDefinitionTests {
         var shape = Assert.IsType<ClosedPath>(definition.Construct(new Point(100, 200), new Point(150, 250)));
 
         Assert.Equal(2, shape.Points.Count);
-        PointAssert.Equal(new Point(100, 200), shape.Points[0]);
-        PointAssert.Equal(new Point(150, 250), shape.Points[1]);
+        Assert.Equal(new Point(100, 200), shape.Points[0]);
+        Assert.Equal(new Point(150, 250), shape.Points[1]);
     }
 
     [Fact]

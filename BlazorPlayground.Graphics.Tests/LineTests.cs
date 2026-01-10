@@ -19,8 +19,8 @@ public class LineTests {
         var result = line.GetSnapPoints();
 
         Assert.Equal(2, result.Count);
-        PointAssert.Contains(result, new Point(100, 150));
-        PointAssert.Contains(result, new Point(200, 250));
+        Assert.Contains(new Point(100, 150), result);
+        Assert.Contains(new Point(200, 250), result);
     }
 
     [Fact]
@@ -43,8 +43,8 @@ public class LineTests {
         var result = line.Anchors;
 
         Assert.Equal(2, result.Count);
-        PointAssert.Equal(new Point(100, 150), result[0].Get(line));
-        PointAssert.Equal(new Point(200, 250), result[1].Get(line));
+        Assert.Equal(new Point(100, 150), result[0].Get(line));
+        Assert.Equal(new Point(200, 250), result[1].Get(line));
     }
 
     [Fact]
@@ -56,8 +56,8 @@ public class LineTests {
         Assert.Equal(2, result.Count);
         result[0].Set(line, new Point(110, 160));
         result[1].Set(line, new Point(210, 260));
-        PointAssert.Equal(new Point(110, 160), line.StartPoint);
-        PointAssert.Equal(new Point(210, 260), line.EndPoint);
+        Assert.Equal(new Point(110, 160), line.StartPoint);
+        Assert.Equal(new Point(210, 260), line.EndPoint);
     }
 
     [Fact]
@@ -69,8 +69,8 @@ public class LineTests {
         var resultLine = Assert.IsType<Line>(result);
 
         Assert.NotSame(line, resultLine);
-        PointAssert.Equal(new Point(100, 150), resultLine.StartPoint);
-        PointAssert.Equal(new Point(200, 250), resultLine.EndPoint);
+        Assert.Equal(new Point(100, 150), resultLine.StartPoint);
+        Assert.Equal(new Point(200, 250), resultLine.EndPoint);
     }
 
     [Fact]

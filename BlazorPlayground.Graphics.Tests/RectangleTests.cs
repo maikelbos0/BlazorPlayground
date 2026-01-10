@@ -19,10 +19,10 @@ public class RectangleTests {
         var result = rectangle.GetSnapPoints();
 
         Assert.Equal(4, result.Count);
-        PointAssert.Contains(result, new Point(100, 150));
-        PointAssert.Contains(result, new Point(200, 150));
-        PointAssert.Contains(result, new Point(100, 250));
-        PointAssert.Contains(result, new Point(200, 250));
+        Assert.Contains(new Point(100, 150), result);
+        Assert.Contains(new Point(200, 150), result);
+        Assert.Contains(new Point(100, 250), result);
+        Assert.Contains(new Point(200, 250), result);
     }
 
     [Fact]
@@ -45,8 +45,8 @@ public class RectangleTests {
         var result = rectangle.Anchors;
 
         Assert.Equal(2, result.Count);
-        PointAssert.Equal(new Point(100, 150), result[0].Get(rectangle));
-        PointAssert.Equal(new Point(200, 250), result[1].Get(rectangle));
+        Assert.Equal(new Point(100, 150), result[0].Get(rectangle));
+        Assert.Equal(new Point(200, 250), result[1].Get(rectangle));
     }
 
     [Fact]
@@ -58,8 +58,8 @@ public class RectangleTests {
         Assert.Equal(2, result.Count);
         result[0].Set(rectangle, new Point(110, 160));
         result[1].Set(rectangle, new Point(210, 260));
-        PointAssert.Equal(new Point(110, 160), rectangle.StartPoint);
-        PointAssert.Equal(new Point(210, 260), rectangle.EndPoint);
+        Assert.Equal(new Point(110, 160), rectangle.StartPoint);
+        Assert.Equal(new Point(210, 260), rectangle.EndPoint);
     }
 
     [Fact]
@@ -71,8 +71,8 @@ public class RectangleTests {
         var resultRectangle = Assert.IsType<Rectangle>(result);
 
         Assert.NotSame(rectangle, resultRectangle);
-        PointAssert.Equal(new Point(100, 150), resultRectangle.StartPoint);
-        PointAssert.Equal(new Point(200, 250), resultRectangle.EndPoint);
+        Assert.Equal(new Point(100, 150), resultRectangle.StartPoint);
+        Assert.Equal(new Point(200, 250), resultRectangle.EndPoint);
     }
 
     [Fact]

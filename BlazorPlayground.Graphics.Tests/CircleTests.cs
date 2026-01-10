@@ -19,11 +19,11 @@ public class CircleTests {
         var result = circle.GetSnapPoints();
 
         Assert.Equal(5, result.Count);
-        PointAssert.Contains(result, new Point(100, 150));
-        PointAssert.Contains(result, new Point(200, 200));
-        PointAssert.Contains(result, new Point(0, 100));
-        PointAssert.Contains(result, new Point(150, 50));
-        PointAssert.Contains(result, new Point(50, 250));
+        Assert.Contains(new Point(100, 150), result);
+        Assert.Contains(new Point(200, 200), result);
+        Assert.Contains(new Point(0, 100), result);
+        Assert.Contains(new Point(150, 50), result);
+        Assert.Contains(new Point(50, 250), result);
     }
 
     [Fact]
@@ -45,8 +45,8 @@ public class CircleTests {
         var result = circle.Anchors;
 
         Assert.Equal(2, result.Count);
-        PointAssert.Equal(new Point(100, 150), result[0].Get(circle));
-        PointAssert.Equal(new Point(200, 250), result[1].Get(circle));
+        Assert.Equal(new Point(100, 150), result[0].Get(circle));
+        Assert.Equal(new Point(200, 250), result[1].Get(circle));
     }
 
     [Fact]
@@ -58,8 +58,8 @@ public class CircleTests {
         Assert.Equal(2, result.Count);
         result[0].Set(circle, new Point(110, 160));
         result[1].Set(circle, new Point(210, 260));
-        PointAssert.Equal(new Point(110, 160), circle.CenterPoint);
-        PointAssert.Equal(new Point(210, 260), circle.RadiusPoint);
+        Assert.Equal(new Point(110, 160), circle.CenterPoint);
+        Assert.Equal(new Point(210, 260), circle.RadiusPoint);
     }
 
     [Fact]
@@ -71,8 +71,8 @@ public class CircleTests {
         var resultCircle = Assert.IsType<Circle>(result);
 
         Assert.NotSame(circle, result);
-        PointAssert.Equal(new Point(100, 150), resultCircle.CenterPoint);
-        PointAssert.Equal(new Point(200, 250), resultCircle.RadiusPoint);
+        Assert.Equal(new Point(100, 150), resultCircle.CenterPoint);
+        Assert.Equal(new Point(200, 250), resultCircle.RadiusPoint);
     }
 
     [Fact]

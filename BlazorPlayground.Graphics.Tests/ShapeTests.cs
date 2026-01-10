@@ -16,8 +16,8 @@ public class ShapeTests {
 
         shape.Transform(new Point(10, 20), false, 50, false, [new Point(50, 50)]);
 
-        PointAssert.Equal(new Point(110, 170), shape.StartPoint);
-        PointAssert.Equal(new Point(210, 270), shape.EndPoint);
+        Assert.Equal(new Point(110, 170), shape.StartPoint);
+        Assert.Equal(new Point(210, 270), shape.EndPoint);
     }
 
     [Fact]
@@ -26,8 +26,8 @@ public class ShapeTests {
 
         shape.Transform(new Point(50, 50), true, 50, false, [new Point(151, 251)]);
 
-        PointAssert.Equal(new Point(150, 250), shape.StartPoint);
-        PointAssert.Equal(new Point(200, 300), shape.EndPoint);
+        Assert.Equal(new Point(150, 250), shape.StartPoint);
+        Assert.Equal(new Point(200, 300), shape.EndPoint);
     }
 
     [Fact]
@@ -36,8 +36,8 @@ public class ShapeTests {
 
         shape.Transform(new Point(50, 50), false, 50, true, [new Point(151, 251)]);
 
-        PointAssert.Equal(new Point(151, 251), shape.StartPoint);
-        PointAssert.Equal(new Point(201, 301), shape.EndPoint);
+        Assert.Equal(new Point(151, 251), shape.StartPoint);
+        Assert.Equal(new Point(201, 301), shape.EndPoint);
     }
 
     [Fact]
@@ -46,8 +46,8 @@ public class ShapeTests {
 
         shape.Transform(new Point(50, 50), true, 50, true, [new Point(149, 249)]);
 
-        PointAssert.Equal(new Point(150, 250), shape.StartPoint);
-        PointAssert.Equal(new Point(200, 300), shape.EndPoint);
+        Assert.Equal(new Point(150, 250), shape.StartPoint);
+        Assert.Equal(new Point(200, 300), shape.EndPoint);
     }
 
     [Fact]
@@ -56,8 +56,8 @@ public class ShapeTests {
 
         shape.Transform(new Point(50, 50), true, 50, true, [new Point(151, 251)]);
 
-        PointAssert.Equal(new Point(151, 251), shape.StartPoint);
-        PointAssert.Equal(new Point(201, 301), shape.EndPoint);
+        Assert.Equal(new Point(151, 251), shape.StartPoint);
+        Assert.Equal(new Point(201, 301), shape.EndPoint);
     }
 
     [Fact]

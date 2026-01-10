@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components.Web;
 using NSubstitute;
-using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
@@ -105,7 +104,7 @@ public class CanvasTests {
         };
 
         Assert.NotNull(canvas.SnappedStartPoint);
-        PointAssert.Equal(new Point(expectedX, expectedY), canvas.SnappedStartPoint!);
+        Assert.Equal(new Point(expectedX, expectedY), canvas.SnappedStartPoint!);
     }
 
     [Fact]
@@ -127,7 +126,7 @@ public class CanvasTests {
         };
 
         Assert.NotNull(canvas.SnappedEndPoint);
-        PointAssert.Equal(new Point(expectedX, expectedY), canvas.SnappedEndPoint!);
+        Assert.Equal(new Point(expectedX, expectedY), canvas.SnappedEndPoint!);
     }
 
     [Fact]
@@ -180,7 +179,7 @@ public class CanvasTests {
         };
 
         Assert.NotNull(canvas.Delta);
-        PointAssert.Equal(new Point(25, 25), canvas.Delta!);
+        Assert.Equal(new Point(25, 25), canvas.Delta!);
     }
 
     [Fact]
@@ -225,7 +224,7 @@ public class CanvasTests {
             ]
         };
 
-        PointAssert.Equal(new Point(35, 35), canvas.Snap(new Point(35, 35)));
+        Assert.Equal(new Point(35, 35), canvas.Snap(new Point(35, 35)));
     }
 
     [Fact]
@@ -239,7 +238,7 @@ public class CanvasTests {
             }
         };
 
-        PointAssert.Equal(new Point(50, 50), canvas.Snap(new Point(35, 35)));
+        Assert.Equal(new Point(50, 50), canvas.Snap(new Point(35, 35)));
     }
 
     [Fact]
@@ -253,7 +252,7 @@ public class CanvasTests {
             }
         };
 
-        PointAssert.Equal(new Point(30, 30), canvas.Snap(new Point(35, 35)));
+        Assert.Equal(new Point(30, 30), canvas.Snap(new Point(35, 35)));
     }
 
     [Fact]
@@ -268,7 +267,7 @@ public class CanvasTests {
             }
         };
 
-        PointAssert.Equal(new Point(32, 32), canvas.Snap(new Point(35, 35)));
+        Assert.Equal(new Point(32, 32), canvas.Snap(new Point(35, 35)));
     }
 
     [Fact]
@@ -283,7 +282,7 @@ public class CanvasTests {
             }
         };
 
-        PointAssert.Equal(new Point(30, 30), canvas.Snap(new Point(35, 35)));
+        Assert.Equal(new Point(30, 30), canvas.Snap(new Point(35, 35)));
     }
 
     [Fact]
@@ -332,13 +331,13 @@ public class CanvasTests {
         var result = canvas.GetSnapPoints();
 
         Assert.Equal(6, result.Count);
-        PointAssert.Contains(result, new Point(100, 100));
-        PointAssert.Contains(result, new Point(100, 200));
-        PointAssert.Contains(result, new Point(50, 150));
-        PointAssert.Contains(result, new Point(50, 50));
-        PointAssert.Contains(result, new Point(150, 50));
-        PointAssert.Contains(result, new Point(150, 150));
-        PointAssert.DoesNotContain(result, new Point(200, 100));
+        Assert.Contains(new Point(100, 100), result);
+        Assert.Contains(new Point(100, 200), result);
+        Assert.Contains(new Point(50, 150), result);
+        Assert.Contains(new Point(50, 50), result);
+        Assert.Contains(new Point(150, 50), result);
+        Assert.Contains(new Point(150, 150), result);
+        Assert.DoesNotContain(new Point(200, 100), result);
     }
 
     [Fact]
@@ -482,7 +481,7 @@ public class CanvasTests {
 
         canvas.StartActionExecution(new MouseEventArgs() { OffsetX = 200, OffsetY = 300, CtrlKey = true });
 
-        PointAssert.Equal(new Point(100, 150), canvas.StartPoint);
+        Assert.Equal(new Point(100, 150), canvas.StartPoint);
         Assert.True(canvas.IsSecondaryAction);
     }
 
@@ -504,7 +503,7 @@ public class CanvasTests {
 
         canvas.UpdateActionExecution(new MouseEventArgs() { OffsetX = 400, OffsetY = 500 });
 
-        PointAssert.Equal(new Point(200, 250), canvas.EndPoint);
+        Assert.Equal(new Point(200, 250), canvas.EndPoint);
     }
 
     [Fact]
@@ -727,8 +726,8 @@ public class CanvasTests {
         var shape = canvas.CreateShape();
         var line = Assert.IsType<Line>(shape);
 
-        PointAssert.Equal(new Point(150, 250), line.StartPoint);
-        PointAssert.Equal(new Point(200, 300), line.EndPoint);
+        Assert.Equal(new Point(150, 250), line.StartPoint);
+        Assert.Equal(new Point(200, 300), line.EndPoint);
     }
 
     [Fact]
@@ -881,8 +880,8 @@ public class CanvasTests {
 
         canvas.TransformSelectedShape();
 
-        PointAssert.Equal(new Point(125, 150), shape.StartPoint);
-        PointAssert.Equal(new Point(225, 250), shape.EndPoint);
+        Assert.Equal(new Point(125, 150), shape.StartPoint);
+        Assert.Equal(new Point(225, 250), shape.EndPoint);
     }
 
     [Fact]
@@ -904,8 +903,8 @@ public class CanvasTests {
 
         canvas.TransformSelectedShape();
 
-        PointAssert.Equal(new Point(100, 100), shape.StartPoint);
-        PointAssert.Equal(new Point(200, 200), shape.EndPoint);
+        Assert.Equal(new Point(100, 100), shape.StartPoint);
+        Assert.Equal(new Point(200, 200), shape.EndPoint);
     }
 
     [Fact]
@@ -921,8 +920,8 @@ public class CanvasTests {
 
         canvas.TransformSelectedShapeAnchor();
 
-        PointAssert.Equal(new Point(125, 150), shape.StartPoint);
-        PointAssert.Equal(new Point(200, 200), shape.EndPoint);
+        Assert.Equal(new Point(125, 150), shape.StartPoint);
+        Assert.Equal(new Point(200, 200), shape.EndPoint);
     }
 
     [Fact]
@@ -943,8 +942,8 @@ public class CanvasTests {
 
         canvas.TransformSelectedShapeAnchor();
 
-        PointAssert.Equal(new Point(100, 100), shape.StartPoint);
-        PointAssert.Equal(new Point(200, 200), shape.EndPoint);
+        Assert.Equal(new Point(100, 100), shape.StartPoint);
+        Assert.Equal(new Point(200, 200), shape.EndPoint);
     }
 
     [Fact]
@@ -956,8 +955,8 @@ public class CanvasTests {
 
         canvas.TransformSelectedShapeAnchor();
 
-        PointAssert.Equal(new Point(100, 100), shape.StartPoint);
-        PointAssert.Equal(new Point(200, 200), shape.EndPoint);
+        Assert.Equal(new Point(100, 100), shape.StartPoint);
+        Assert.Equal(new Point(200, 200), shape.EndPoint);
     }
 
     [Fact]

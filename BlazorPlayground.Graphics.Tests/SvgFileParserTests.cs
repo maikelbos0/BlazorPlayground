@@ -121,8 +121,8 @@ public class SvgFileParserTests {
 
         var line = Assert.IsType<Line>(result);
 
-        PointAssert.Equal(new Point(50, 50), line.StartPoint);
-        PointAssert.Equal(new Point(150, 100), line.EndPoint);
+        Assert.Equal(new Point(50, 50), line.StartPoint);
+        Assert.Equal(new Point(150, 100), line.EndPoint);
     }
 
     [Fact]
@@ -131,8 +131,8 @@ public class SvgFileParserTests {
 
         var rectangle = Assert.IsType<Rectangle>(result);
 
-        PointAssert.Equal(new Point(250, 150), rectangle.StartPoint);
-        PointAssert.Equal(new Point(350, 300), rectangle.EndPoint);
+        Assert.Equal(new Point(250, 150), rectangle.StartPoint);
+        Assert.Equal(new Point(350, 300), rectangle.EndPoint);
     }
 
     [Fact]
@@ -141,8 +141,8 @@ public class SvgFileParserTests {
 
         var circle = Assert.IsType<Circle>(result);
 
-        PointAssert.Equal(new Point(100, 200), circle.CenterPoint);
-        PointAssert.Equal(new Point(150, 212.5), circle.RadiusPoint);
+        Assert.Equal(new Point(100, 200), circle.CenterPoint);
+        Assert.Equal(new Point(150, 212.5), circle.RadiusPoint);
     }
 
     [Fact]
@@ -151,8 +151,8 @@ public class SvgFileParserTests {
 
         var ellipse = Assert.IsType<Ellipse>(result);
 
-        PointAssert.Equal(new Point(250, 150), ellipse.CenterPoint);
-        PointAssert.Equal(new Point(350, 200), ellipse.RadiusPoint);
+        Assert.Equal(new Point(250, 150), ellipse.CenterPoint);
+        Assert.Equal(new Point(350, 200), ellipse.RadiusPoint);
     }
 
     [Fact]
@@ -161,8 +161,8 @@ public class SvgFileParserTests {
 
         var rectangle = Assert.IsType<RegularPolygon>(result);
 
-        PointAssert.Equal(new Point(550, 200), rectangle.CenterPoint);
-        PointAssert.Equal(new Point(600, 300), rectangle.RadiusPoint);
+        Assert.Equal(new Point(550, 200), rectangle.CenterPoint);
+        Assert.Equal(new Point(600, 300), rectangle.RadiusPoint);
     }
 
     [Fact]
@@ -171,9 +171,9 @@ public class SvgFileParserTests {
 
         var rectangle = Assert.IsType<QuadraticBezier>(result);
 
-        PointAssert.Equal(new Point(50, 50), rectangle.StartPoint);
-        PointAssert.Equal(new Point(200, 100), rectangle.ControlPoint);
-        PointAssert.Equal(new Point(100, 350), rectangle.EndPoint);
+        Assert.Equal(new Point(50, 50), rectangle.StartPoint);
+        Assert.Equal(new Point(200, 100), rectangle.ControlPoint);
+        Assert.Equal(new Point(100, 350), rectangle.EndPoint);
     }
 
     [Fact]
@@ -182,10 +182,10 @@ public class SvgFileParserTests {
 
         var cubicBezier = Assert.IsType<CubicBezier>(result);
 
-        PointAssert.Equal(new Point(200, 50), cubicBezier.StartPoint);
-        PointAssert.Equal(new Point(200, 200), cubicBezier.ControlPoint1);
-        PointAssert.Equal(new Point(300, 200), cubicBezier.ControlPoint2);
-        PointAssert.Equal(new Point(250, 350), cubicBezier.EndPoint);
+        Assert.Equal(new Point(200, 50), cubicBezier.StartPoint);
+        Assert.Equal(new Point(200, 200), cubicBezier.ControlPoint1);
+        Assert.Equal(new Point(300, 200), cubicBezier.ControlPoint2);
+        Assert.Equal(new Point(250, 350), cubicBezier.EndPoint);
     }
 
     [Fact]
@@ -195,11 +195,11 @@ public class SvgFileParserTests {
         var closedPath = Assert.IsType<ClosedPath>(result);
 
         Assert.Equal(5, closedPath.Points.Count);
-        PointAssert.Equal(new Point(50, 90), closedPath.Points[0]);
-        PointAssert.Equal(new Point(100, 70), closedPath.Points[1]);
-        PointAssert.Equal(new Point(90, 40), closedPath.Points[2]);
-        PointAssert.Equal(new Point(70, 60), closedPath.Points[3]);
-        PointAssert.Equal(new Point(50, 70), closedPath.Points[4]);
+        Assert.Equal(new Point(50, 90), closedPath.Points[0]);
+        Assert.Equal(new Point(100, 70), closedPath.Points[1]);
+        Assert.Equal(new Point(90, 40), closedPath.Points[2]);
+        Assert.Equal(new Point(70, 60), closedPath.Points[3]);
+        Assert.Equal(new Point(50, 70), closedPath.Points[4]);
     }
 
     [Theory]

@@ -8,28 +8,28 @@ public class PointTests {
     public void Add() {
         var result = new Point(100, 150) + new Point(200, 250);
 
-        PointAssert.Equal(new Point(300, 400), result);
+        Assert.Equal(new Point(300, 400), result);
     }
 
     [Fact]
     public void Subtract() {
         var result = new Point(100, 150) - new Point(200, 100);
 
-        PointAssert.Equal(new Point(-100, 50), result);
+        Assert.Equal(new Point(-100, 50), result);
     }
 
     [Fact]
     public void Multiply() {
         var result = new Point(100, 150) * 2.5;
 
-        PointAssert.Equal(new Point(250, 375), result);
+        Assert.Equal(new Point(250, 375), result);
     }
 
     [Fact]
     public void Divide() {
         var result = new Point(100, 150) / 2.5;
 
-        PointAssert.Equal(new Point(40, 60), result);
+        Assert.Equal(new Point(40, 60), result);
     }
 
     [Fact]
@@ -69,7 +69,7 @@ public class PointTests {
     public void SnapToGrid(double x, double y, int gridSize, double expectedX, double expectedY) {
         var point = new Point(x, y);
 
-        PointAssert.Equal(new Point(expectedX, expectedY), point.SnapToGrid(gridSize));
+        Assert.Equal(new Point(expectedX, expectedY), point.SnapToGrid(gridSize));
     }
 
     [Theory]
@@ -85,28 +85,28 @@ public class PointTests {
     public void Snap_SnapToGrid(double x, double y, int gridSize, double expectedX, double expectedY) {
         var point = new Point(x, y);
 
-        PointAssert.Equal(new Point(expectedX, expectedY), point.Snap(true, gridSize, true, []));
+        Assert.Equal(new Point(expectedX, expectedY), point.Snap(true, gridSize, true, []));
     }
 
     [Fact]
     public void Snap_Not_SnapToPoints() {
         var point = new Point(90, 110);
 
-        PointAssert.Equal(new Point(100, 100), point.Snap(true, 50, false, [new Point(95, 105)]));
+        Assert.Equal(new Point(100, 100), point.Snap(true, 50, false, [new Point(95, 105)]));
     }
 
     [Fact]
     public void Snap_Not_SnapToGrid() {
         var point = new Point(90, 110);
 
-        PointAssert.Equal(new Point(105, 95), point.Snap(false, 50, true, [new Point(105, 95)]));
+        Assert.Equal(new Point(105, 95), point.Snap(false, 50, true, [new Point(105, 95)]));
     }
 
     [Fact]
     public void Snap_Not_SnapToPoints_And_Not_SnapToGrid() {
         var point = new Point(90, 110);
 
-        PointAssert.Equal(new Point(90, 110), point.Snap(false, 50, false, [new Point(95, 105)]));
+        Assert.Equal(new Point(90, 110), point.Snap(false, 50, false, [new Point(95, 105)]));
     }
 
     [Theory]
@@ -120,6 +120,6 @@ public class PointTests {
         var points = Enumerable.Range(0, pointCoordinates.Length / 2).Select(n => new Point(pointCoordinates[n * 2], pointCoordinates[n * 2 + 1]));
         var point = new Point(x, y);
 
-        PointAssert.Equal(new Point(expectedX, expectedY), point.Snap(false, 50, true, points));
+        Assert.Equal(new Point(expectedX, expectedY), point.Snap(false, 50, true, points));
     }
 }

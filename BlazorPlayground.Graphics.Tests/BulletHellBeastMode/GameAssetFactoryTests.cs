@@ -85,7 +85,7 @@ public class GameAssetFactoryTests {
         var result = GameAssetFactory.GetOrigin([]);
 
         Assert.NotNull(result);
-        PointAssert.Equal(new(0, 0), result);
+        Assert.Equal(new(0, 0), result);
     }
 
     [Fact]
@@ -93,7 +93,7 @@ public class GameAssetFactoryTests {
         var result = GameAssetFactory.GetOrigin([new Line(new(30, 50), new(50, 100))]);
 
         Assert.NotNull(result);
-        PointAssert.Equal(new(40, 75), result);
+        Assert.Equal(new(40, 75), result);
     }
 
     [Fact]
@@ -104,7 +104,7 @@ public class GameAssetFactoryTests {
         ]);
 
         Assert.NotNull(result);
-        PointAssert.Equal(new(20, 45), result);
+        Assert.Equal(new(20, 45), result);
     }
 
     [Fact]

@@ -32,11 +32,11 @@ public class EllipseTests {
         var result = ellipse.GetSnapPoints();
 
         Assert.Equal(5, result.Count);
-        PointAssert.Contains(result, new Point(100, 150));
-        PointAssert.Contains(result, new Point(200, 150));
-        PointAssert.Contains(result, new Point(0, 150));
-        PointAssert.Contains(result, new Point(100, 200));
-        PointAssert.Contains(result, new Point(100, 100));
+        Assert.Contains(new Point(100, 150), result);
+        Assert.Contains(new Point(200, 150), result);
+        Assert.Contains(new Point(0, 150), result);
+        Assert.Contains(new Point(100, 200), result);
+        Assert.Contains(new Point(100, 100), result);
     }
 
     [Fact]
@@ -46,8 +46,8 @@ public class EllipseTests {
         var result = ellipse.Anchors;
 
         Assert.Equal(2, result.Count);
-        PointAssert.Equal(new Point(100, 150), result[0].Get(ellipse));
-        PointAssert.Equal(new Point(200, 250), result[1].Get(ellipse));
+        Assert.Equal(new Point(100, 150), result[0].Get(ellipse));
+        Assert.Equal(new Point(200, 250), result[1].Get(ellipse));
     }
 
     [Fact]
@@ -59,8 +59,8 @@ public class EllipseTests {
         Assert.Equal(2, result.Count);
         result[0].Set(ellipse, new Point(110, 160));
         result[1].Set(ellipse, new Point(210, 260));
-        PointAssert.Equal(new Point(110, 160), ellipse.CenterPoint);
-        PointAssert.Equal(new Point(210, 260), ellipse.RadiusPoint);
+        Assert.Equal(new Point(110, 160), ellipse.CenterPoint);
+        Assert.Equal(new Point(210, 260), ellipse.RadiusPoint);
     }
 
     [Fact]
@@ -72,8 +72,8 @@ public class EllipseTests {
         var resultEllipse = Assert.IsType<Ellipse>(result);
 
         Assert.NotSame(ellipse, resultEllipse);
-        PointAssert.Equal(new Point(100, 150), resultEllipse.CenterPoint);
-        PointAssert.Equal(new Point(200, 250), resultEllipse.RadiusPoint);
+        Assert.Equal(new Point(100, 150), resultEllipse.CenterPoint);
+        Assert.Equal(new Point(200, 250), resultEllipse.RadiusPoint);
     }
 
 
