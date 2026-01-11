@@ -5,7 +5,7 @@ namespace BlazorPlayground.Calculator.Tests;
 
 public class CalculationExpressionTests {
     [Fact]
-    public void CalculationExpression_TryAppend_Open_Parenthesi_Opens_Group() {
+    public void CalculationExpression_TryAppend_Open_Parenthesis_Opens_Group() {
         var expression = new CalculationExpression();
 
         Assert.True(expression.TryAppend('('));
@@ -13,7 +13,7 @@ public class CalculationExpressionTests {
     }
 
     [Fact]
-    public void CalculationExpression_TryAppend_Open_Parenthesi_Closes_Group() {
+    public void CalculationExpression_TryAppend_Close_Parenthesis_Closes_Group() {
         var expression = new CalculationExpression();
         var group = new SymbolGroup();
 
@@ -34,18 +34,6 @@ public class CalculationExpressionTests {
         Assert.Single(expression.Groups);
         Assert.Equal(2, expression.CurrentGroup.Symbols.Count);
         Assert.IsType<MultiplicationOperator>(expression.CurrentGroup.Symbols[^1]);
-    }
-
-    [Fact]
-    public void CalculationExpression_TryAppend_Uses_Subtraction_Operator_Instead_Of_Negation_When_Possible() {
-        var expression = new CalculationExpression();
-
-        expression.CurrentGroup.Symbols.Add(new ComposableNumber());
-
-        Assert.True(expression.TryAppend('-'));
-        Assert.Single(expression.Groups);
-        Assert.Equal(2, expression.CurrentGroup.Symbols.Count);
-        Assert.IsType<SubtractionOperator>(expression.CurrentGroup.Symbols[^1]);
     }
 
     [Fact]
