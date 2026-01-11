@@ -30,6 +30,7 @@ internal class Backspace : ISymbol {
             return number.TryRemoveCharacter();
         }
 
+        // TODO perhaps remove the last symbol if there is any at this point
         return false;
     }
 }

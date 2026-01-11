@@ -37,6 +37,26 @@ public class CalculationExpressionTests {
     }
 
     [Fact]
+    public void CalculationExpression_TryAppend_Backspace_Removes_Empty_Group_If_Not_Single() {
+        var expression = new CalculationExpression();
+        var group = new SymbolGroup();
+
+        expression.CurrentGroup.Symbols.Add(group);
+        expression.Groups.Push(group);
+
+        Assert.True(expression.TryAppend('⌫'));
+        Assert.Empty(Assert.Single(expression.Groups).Symbols);
+    }
+
+    [Fact]
+    public void CalculationExpression_TryAppend_Backspace_Does_Not_Remove_Single_Group() {
+        var expression = new CalculationExpression();
+
+        Assert.False(expression.TryAppend('⌫'));
+        Assert.Empty(Assert.Single(expression.Groups).Symbols);
+    }
+
+    [Fact]
     public void CalculationExpression_TryAppend_Operator_Creates_Operator() {
         var expression = new CalculationExpression();
 

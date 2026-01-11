@@ -14,18 +14,24 @@ public class CalculationExpression {
 
     public bool TryAppend(char character) {
         if (character == '(') {
+            // TODO allow group opening with active evaluatable?
             return OpenGroup();
         }
         else if (character == ')') {
             return CloseGroup();
         }
-        else if (character == '⌫' && CurrentGroup.Symbols.LastOrDefault() is SymbolGroup group) {
-            Groups.Push(group);
-            return true;
+        else if (character == '⌫') {
+            if (CurrentGroup.Symbols.LastOrDefault() is SymbolGroup group) {
+                Groups.Push(group);
+                return true;
+            }
+            else if (Groups.Count > 1 && CurrentGroup.Symbols.Count == 0) {
+                Groups.Pop();
+                CurrentGroup.Symbols.RemoveAt(CurrentGroup.Symbols.Count - 1);
+                return true;
+            }
         }
 
-        // TODO backspace for empty group
-        
         var symbol = SymbolFactory.GetSymbol(character);
 
         return CurrentGroup.TryAppend(symbol);
