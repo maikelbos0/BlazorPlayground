@@ -38,6 +38,18 @@ public class BackspaceTests {
     }
 
     [Fact]
+    public void Backspace_TryAppendTo_Succeeds_When_Last_Symbol_Is_BinaryOperator() {
+        var backspace = new Backspace();
+        var symbols = new List<ISymbol>() {
+            new LiteralNumber(4),
+            new AdditionOperator('+')
+        };
+
+        Assert.True(backspace.TryAppendTo(symbols));
+        Assert.IsType<LiteralNumber>(Assert.Single(symbols));
+    }
+
+    [Fact]
     public void Backspace_TryAppendTo_Fails_When_Symbols_Is_Empty() {
         var backspace = new Backspace();
         var symbols = new List<ISymbol>();
