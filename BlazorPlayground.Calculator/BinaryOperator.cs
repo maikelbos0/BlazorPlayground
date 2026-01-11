@@ -14,7 +14,7 @@ internal abstract class BinaryOperator : ISymbol {
 
     public bool TryAppendTo(IList<ISymbol> symbols) {
         if (symbols.Count == 0) {
-            symbols.Add(new LiteralNumber(0));
+            symbols.Add(new ComposableNumber());
         }
 
         if (symbols[^1] is BinaryOperator) {
