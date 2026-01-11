@@ -23,8 +23,11 @@ internal class Backspace : ISymbol {
         }
 
         if (symbol is ComposableNumber number) {
+            if (number.Characters.Count <= 1) {
+                symbols.RemoveAt(symbols.Count - 1);
+                return true;
+            }
             return number.TryRemoveCharacter();
-            // TODO remove if no more characters
         }
 
         // TODO add backspace for groups

@@ -48,10 +48,36 @@ public class BackspaceTests {
             number
         };
 
-        number.Characters.Add('4');
+        number.Characters.AddRange('4', '5');
 
         Assert.True(backspace.TryAppendTo(symbols));
-        Assert.Empty(number.Characters);
+        Assert.Single(symbols);
+        Assert.Single(number.Characters);
+    }
+
+    [Theory]
+    [InlineData]
+    [InlineData('4')]
+    public void Backspace_TryAppendTo_Succeeds_When_Last_ComposableNumber_Has_Less_Than_Two_Characters(params char[] characters) {
+        var backspace = new Backspace();
+        var number = new ComposableNumber();
+        var symbols = new List<ISymbol>() {
+            number
+        };
+
+        number.Characters.AddRange(characters);
+
+        Assert.True(backspace.TryAppendTo(symbols));
+        Assert.Empty(symbols);
+    }
+
+    [Fact]
+    public void Backspace_TryAppendTo_Fails_For_Unsupported_Symbol() {
+        var backspace = new Backspace();
+        var symbols = new List<ISymbol>();
+
+        Assert.False(backspace.TryAppendTo(symbols));
+        Assert.Empty(symbols);
     }
 
     [Fact]
@@ -61,18 +87,5 @@ public class BackspaceTests {
 
         Assert.False(backspace.TryAppendTo(symbols));
         Assert.Empty(symbols);
-    }
-
-    // TODO this test can presumably go in the end; if we have nothing, why not pretend to have succeeded?
-    [Fact]
-    public void Backspace_TryAppendTo_Fails_When_Last_ComposableNumber_Is_Empty() {
-        var backspace = new Backspace();
-        var number = new ComposableNumber();
-        var symbols = new List<ISymbol>() {
-            number
-        };
-
-        Assert.False(backspace.TryAppendTo(symbols));
-        Assert.Empty(number.Characters);
     }
 }
