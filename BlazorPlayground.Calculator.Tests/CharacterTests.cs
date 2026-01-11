@@ -19,7 +19,7 @@ public class CharacterTests {
         var number = new ComposableNumber();
         var symbols = new List<ISymbol>() {
             new NegationOperator() {
-                Symbol = new NegationOperator(){
+                Symbol = new NegationOperator() {
                     Symbol = number
                 }
             }

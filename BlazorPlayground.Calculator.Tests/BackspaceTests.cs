@@ -1,26 +1,43 @@
 ﻿using System.Collections.Generic;
 using Xunit;
 
-namespace BlazorPlayground.Calculator.Tests; 
+namespace BlazorPlayground.Calculator.Tests;
 
 public class BackspaceTests {
     [Fact]
-    public void Backspace_TryAppendTo_Succeeds_When_Last_Symbol_Is_Unary_Operator_For_ComposableNumber() {
+    public void Backspace_TryAppendTo_Succeeds_When_Last_Symbol_Is_UnaryOperator_With_Symbol() {
         var backspace = new Backspace();
-        var number = new ComposableNumber();
         var symbols = new List<ISymbol>() {
             new NegationOperator() {
-                Symbol = new NegationOperator(){
-                    Symbol = number
-                }
-            }                
+                Symbol = new LiteralNumber(4)
+            }
         };
 
-        number.Characters.Add('4');
+        Assert.True(backspace.TryAppendTo(symbols));
+        Assert.IsType<LiteralNumber>(Assert.Single(symbols));
+    }
+
+    [Fact]
+    public void Backspace_TryAppendTo_Succeeds_When_Last_Symbol_Is_UnaryOperator_Without_Symbol() {
+        var backspace = new Backspace();
+        var symbols = new List<ISymbol>() {
+            new NegationOperator()
+        };
 
         Assert.True(backspace.TryAppendTo(symbols));
-        Assert.Single(symbols);
-        Assert.Empty(number.Characters);
+        Assert.Empty(symbols);
+    }
+
+    [Fact]
+    public void Backspace_TryAppendTo_Succeeds_When_Last_Symbol_Is_BinaryOperator() {
+        var backspace = new Backspace();
+        var symbols = new List<ISymbol>() {
+            new LiteralNumber(4),
+            new AdditionOperator('+')
+        };
+
+        Assert.True(backspace.TryAppendTo(symbols));
+        Assert.IsType<LiteralNumber>(Assert.Single(symbols));
     }
 
     [Fact]
@@ -38,18 +55,6 @@ public class BackspaceTests {
     }
 
     [Fact]
-    public void Backspace_TryAppendTo_Succeeds_When_Last_Symbol_Is_BinaryOperator() {
-        var backspace = new Backspace();
-        var symbols = new List<ISymbol>() {
-            new LiteralNumber(4),
-            new AdditionOperator('+')
-        };
-
-        Assert.True(backspace.TryAppendTo(symbols));
-        Assert.IsType<LiteralNumber>(Assert.Single(symbols));
-    }
-
-    [Fact]
     public void Backspace_TryAppendTo_Fails_When_Symbols_Is_Empty() {
         var backspace = new Backspace();
         var symbols = new List<ISymbol>();
@@ -58,6 +63,7 @@ public class BackspaceTests {
         Assert.Empty(symbols);
     }
 
+    // TODO this test can presumably go in the end; if we have nothing, why not pretend to have succeeded?
     [Fact]
     public void Backspace_TryAppendTo_Fails_When_Last_ComposableNumber_Is_Empty() {
         var backspace = new Backspace();

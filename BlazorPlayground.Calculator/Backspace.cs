@@ -12,8 +12,14 @@ internal class Backspace : ISymbol {
             return true;
         }
 
-        while (symbol is UnaryOperator op) {
-            symbol = op.Symbol;
+        if (symbol is UnaryOperator unaryOpeator) {
+            if (unaryOpeator.Symbol == null) {
+                symbols.RemoveAt(symbols.Count - 1);
+            }
+            else {
+                symbols[symbols.Count - 1] = unaryOpeator.Symbol;
+            }
+            return true;
         }
 
         if (symbol is ComposableNumber number) {
@@ -21,7 +27,6 @@ internal class Backspace : ISymbol {
             // TODO remove if no more characters
         }
 
-        // TODO add backspace for unary operators
         // TODO add backspace for groups
 
         return false;
