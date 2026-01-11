@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using Xunit;
 
 namespace BlazorPlayground.Calculator.Tests;
@@ -22,6 +22,18 @@ public class CalculationExpressionTests {
 
         Assert.True(expression.TryAppend(')'));
         Assert.Single(expression.Groups);
+    }
+
+    [Fact]
+    public void CalculationExpression_TryAppend_Backspace_Reopens_Group() {
+        var expression = new CalculationExpression();
+        var group = new SymbolGroup();
+
+        expression.CurrentGroup.Symbols.Add(group);
+
+        Assert.True(expression.TryAppend('⌫'));
+        Assert.Equal(2, expression.Groups.Count);
+        Assert.Same(group, expression.CurrentGroup);
     }
 
     [Fact]

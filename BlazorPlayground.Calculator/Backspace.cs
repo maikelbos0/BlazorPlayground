@@ -30,8 +30,6 @@ internal class Backspace : ISymbol {
             return number.TryRemoveCharacter();
         }
 
-        // TODO add backspace for groups
-
         return false;
     }
 }

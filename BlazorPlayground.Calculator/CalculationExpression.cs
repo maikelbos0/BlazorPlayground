@@ -19,12 +19,19 @@ public class CalculationExpression {
         else if (character == ')') {
             return CloseGroup();
         }
+        else if (character == '⌫' && CurrentGroup.Symbols.LastOrDefault() is SymbolGroup group) {
+            Groups.Push(group);
+            return true;
+        }
 
+        // TODO backspace for empty group
+        
         var symbol = SymbolFactory.GetSymbol(character);
 
         return CurrentGroup.TryAppend(symbol);
     }
 
+    // TODO inline these
     internal bool OpenGroup() {
         var group = new SymbolGroup();
         var success = CurrentGroup.TryAppend(group);
