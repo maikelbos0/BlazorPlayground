@@ -14,7 +14,6 @@ public class CalculationExpression {
 
     public bool TryAppend(char character) {
         if (character == '(') {
-            // TODO allow group opening with active evaluatable?
             var group = new SymbolGroup();
             var success = CurrentGroup.TryAppend(group);
 

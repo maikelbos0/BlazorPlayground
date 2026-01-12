@@ -72,11 +72,14 @@ public class BackspaceTests {
     }
 
     [Fact]
-    public void Backspace_TryAppendTo_Fails_For_Unsupported_Symbol() {
+    public void Backspace_TryAppendTo_Succeeds_For_LiteralNumber() {
         var backspace = new Backspace();
-        var symbols = new List<ISymbol>();
+        var number = new LiteralNumber(4);
+        var symbols = new List<ISymbol>() {
+            number
+        };
 
-        Assert.False(backspace.TryAppendTo(symbols));
+        Assert.True(backspace.TryAppendTo(symbols));
         Assert.Empty(symbols);
     }
 
