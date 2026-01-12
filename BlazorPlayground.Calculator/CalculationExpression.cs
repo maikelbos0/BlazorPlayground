@@ -17,8 +17,9 @@ public class CalculationExpression {
             // TODO allow group opening with active evaluatable?
             return OpenGroup();
         }
-        else if (character == ')') {
-            return CloseGroup();
+        else if (character == ')' && Groups.Count > 1) {
+            Groups.Pop().Close();
+            return true;
         }
         else if (character == '⌫') {
             if (CurrentGroup.Symbols.LastOrDefault() is SymbolGroup group) {
@@ -37,7 +38,7 @@ public class CalculationExpression {
         return CurrentGroup.TryAppend(symbol);
     }
 
-    // TODO inline these
+    // TODO inline
     internal bool OpenGroup() {
         var group = new SymbolGroup();
         var success = CurrentGroup.TryAppend(group);
@@ -49,23 +50,15 @@ public class CalculationExpression {
         return success;
     }
 
-    internal bool CloseGroup() {
-        if (Groups.Count == 1) {
-            return false;
-        }
-
-        Groups.Pop().Close();
-
-        return true;
-    }
-
     public void Clear() {
         Groups.Clear();
         Groups.Push(new());
     }
 
     public decimal Evaluate() {
-        while (CloseGroup()) { }
+        while (Groups.Count > 1) {
+            Groups.Pop().Close();
+        }
 
         var value = Groups.Pop().Evaluate();
 

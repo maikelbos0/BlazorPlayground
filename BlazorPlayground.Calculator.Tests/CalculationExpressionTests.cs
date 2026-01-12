@@ -25,6 +25,14 @@ public class CalculationExpressionTests {
     }
 
     [Fact]
+    public void CalculationExpression_TryAppend_Does_Not_Close_Root_Group() {
+        var expression = new CalculationExpression();
+        
+        Assert.False(expression.TryAppend(')'));
+        Assert.Single(expression.Groups);
+    }
+
+    [Fact]
     public void CalculationExpression_TryAppend_Backspace_Reopens_Group() {
         var expression = new CalculationExpression();
         var group = new SymbolGroup();
@@ -37,7 +45,7 @@ public class CalculationExpressionTests {
     }
 
     [Fact]
-    public void CalculationExpression_TryAppend_Backspace_Removes_Empty_Group_If_Not_Single() {
+    public void CalculationExpression_TryAppend_Backspace_Removes_Empty_Group_If_Not_Root() {
         var expression = new CalculationExpression();
         var group = new SymbolGroup();
 
@@ -49,7 +57,7 @@ public class CalculationExpressionTests {
     }
 
     [Fact]
-    public void CalculationExpression_TryAppend_Backspace_Does_Not_Remove_Single_Group() {
+    public void CalculationExpression_TryAppend_Backspace_Does_Not_Remove_Root_Group() {
         var expression = new CalculationExpression();
 
         Assert.False(expression.TryAppend('⌫'));
@@ -132,26 +140,6 @@ public class CalculationExpressionTests {
     }
 
     [Fact]
-    public void CalculationExpression_CloseGroup_Closes_Group() {
-        var expression = new CalculationExpression();
-        var group = new SymbolGroup();
-
-        expression.CurrentGroup.Symbols.Add(group);
-        expression.Groups.Push(group);
-
-        Assert.True(expression.CloseGroup());
-        Assert.Single(expression.Groups);
-    }
-
-    [Fact]
-    public void CalculationExpression_CloseGroup_Does_Nothing_For_Root_Group() {
-        var expression = new CalculationExpression();
-
-        Assert.False(expression.CloseGroup());
-        Assert.Single(expression.Groups);
-    }
-
-    [Fact]
     public void CalculationExpression_Clear_Clears_And_Starts_With_New_Group() {
         var expression = new CalculationExpression();
         var group = new SymbolGroup();
@@ -171,6 +159,24 @@ public class CalculationExpressionTests {
         var expression = new CalculationExpression();
 
         expression.CurrentGroup.Symbols.Add(new LiteralNumber(5.5M));
+
+        Assert.Equal(5.5M, expression.Evaluate());
+        Assert.Single(expression.Groups);
+        Assert.Equal(5.5M, Assert.IsType<LiteralNumber>(Assert.Single(expression.CurrentGroup.Symbols)).Value);
+    }
+
+    [Fact]
+    public void CalculationExpression_Closes_All_Groups() {
+        var expression = new CalculationExpression();
+        var outerGroup = new SymbolGroup();
+        var innerGroup = new SymbolGroup();
+        innerGroup.Symbols.Add(new LiteralNumber(5.5M));
+        innerGroup.Symbols.Add(new AdditionOperator('+'));
+        outerGroup.Symbols.Add(innerGroup);
+        outerGroup.Symbols.Add(new SubtractionOperator('-'));
+        expression.CurrentGroup.Symbols.Add(outerGroup);
+        expression.Groups.Push(outerGroup);
+        expression.Groups.Push(innerGroup);
 
         Assert.Equal(5.5M, expression.Evaluate());
         Assert.Single(expression.Groups);
