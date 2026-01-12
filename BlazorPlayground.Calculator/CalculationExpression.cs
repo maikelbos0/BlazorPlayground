@@ -15,7 +15,14 @@ public class CalculationExpression {
     public bool TryAppend(char character) {
         if (character == '(') {
             // TODO allow group opening with active evaluatable?
-            return OpenGroup();
+            var group = new SymbolGroup();
+            var success = CurrentGroup.TryAppend(group);
+
+            if (success) {
+                Groups.Push(group);
+            }
+
+            return success;
         }
         else if (character == ')' && Groups.Count > 1) {
             Groups.Pop().Close();
@@ -36,18 +43,6 @@ public class CalculationExpression {
         var symbol = SymbolFactory.GetSymbol(character);
 
         return CurrentGroup.TryAppend(symbol);
-    }
-
-    // TODO inline
-    internal bool OpenGroup() {
-        var group = new SymbolGroup();
-        var success = CurrentGroup.TryAppend(group);
-
-        if (success) {
-            Groups.Push(group);
-        }
-
-        return success;
     }
 
     public void Clear() {

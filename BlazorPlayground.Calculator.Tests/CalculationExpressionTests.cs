@@ -1,15 +1,23 @@
-﻿using System.Linq;
-using Xunit;
+﻿using Xunit;
 
 namespace BlazorPlayground.Calculator.Tests;
 
 public class CalculationExpressionTests {
     [Fact]
-    public void CalculationExpression_TryAppend_Open_Parenthesis_Opens_Group() {
+    public void CalculationExpression_TryAppend_Open_Parenthesis_Adds_New_Group_And_Opens_It() {
         var expression = new CalculationExpression();
 
         Assert.True(expression.TryAppend('('));
         Assert.Equal(2, expression.Groups.Count);
+    }
+    [Fact]
+    public void CalculationExpression_TryAppend_Open_Parenthesis_Does_Nothing_If_Group_Cannot_Be_Added() {
+        var expression = new CalculationExpression();
+
+        expression.CurrentGroup.Symbols.Add(new LiteralNumber(0));
+
+        Assert.False(expression.TryAppend('('));
+        Assert.Single(expression.Groups);
     }
 
     [Fact]
@@ -118,25 +126,6 @@ public class CalculationExpressionTests {
         Assert.Single(expression.Groups);
         Assert.Single(expression.CurrentGroup.Symbols);
         Assert.Empty(number.Characters);
-    }
-
-    [Fact]
-    public void CalculationExpression_OpenGroup_Adds_New_Group_And_Opens_It() {
-        var expression = new CalculationExpression();
-
-        Assert.True(expression.OpenGroup());
-        Assert.Equal(2, expression.Groups.Count);
-        Assert.Equal(expression.Groups.Peek(), expression.Groups.Last().Symbols.FirstOrDefault());
-    }
-
-    [Fact]
-    public void CalculationExpression_OpenGroup_Does_Nothing_When_Not_Possible() {
-        var expression = new CalculationExpression();
-
-        expression.CurrentGroup.Symbols.Add(new LiteralNumber(0));
-
-        Assert.False(expression.OpenGroup());
-        Assert.Single(expression.Groups);
     }
 
     [Fact]
